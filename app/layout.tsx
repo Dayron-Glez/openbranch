@@ -5,6 +5,7 @@ import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://openbranch.vercel.app'),
   title: {
     template: '%s — openbranch',
     default: 'openbranch — The open guide to building software the right way',
