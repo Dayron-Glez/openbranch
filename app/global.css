@@ -11,25 +11,25 @@
 @layer base {
   /* ── openbranch brand — light mode ── */
   :root {
-    --background: 42 18% 97%;
+    --background: 45 33% 98%;
     --foreground: 222 14% 6%;
     --card: 0 0% 100%;
     --card-foreground: 222 14% 6%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 14% 6%;
-    --primary: 148 60% 35%;
+    --primary: 140 45% 38%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 42 17% 93%;
+    --secondary: 45 27% 94%;
     --secondary-foreground: 222 14% 6%;
-    --muted: 42 17% 93%;
+    --muted: 45 27% 94%;
     --muted-foreground: 218 6% 45%;
-    --accent: 148 60% 35%;
+    --accent: 140 45% 38%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 42 17% 87%;
-    --input: 42 17% 87%;
-    --ring: 148 60% 35%;
+    --border: 44 19% 89%;
+    --input: 44 19% 89%;
+    --ring: 140 45% 38%;
     --radius: 0.625rem;
   }
 
@@ -41,25 +41,34 @@
     --card-foreground: 216 11% 94%;
     --popover: 222 13% 8%;
     --popover-foreground: 216 11% 94%;
-    --primary: 148 65% 55%;
+    --primary: 140 63% 57%;
     --primary-foreground: 222 15% 6%;
     --secondary: 222 13% 8%;
     --secondary-foreground: 216 10% 75%;
     --muted: 220 12% 10%;
     --muted-foreground: 218 6% 47%;
-    --accent: 148 65% 55%;
+    --accent: 140 63% 57%;
     --accent-foreground: 222 15% 6%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 12% 15%;
     --input: 220 12% 15%;
-    --ring: 148 65% 55%;
+    --ring: 140 63% 57%;
   }
-}
 
-/* ── body defaults ── */
-body {
-  font-feature-settings: "ss01", "cv11";
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html > body[data-scroll-locked] {
+    margin-right: 0 !important;
+    --removed-body-scroll-bar-size: 0px !important;
+  }
+
+  /* ── body defaults ── */
+  body {
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 }
