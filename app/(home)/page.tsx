@@ -14,7 +14,7 @@ const eyebrowClass =
   'mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted';
 
 const ledClass =
-  'mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]';
+  'led-wave mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]';
 
 const sectionClass = '';
 const sectionHeadClass = 'mb-12 max-w-[720px]';
