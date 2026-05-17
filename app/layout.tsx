@@ -1,5 +1,6 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
+import './animations.css';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import type { Metadata } from 'next';

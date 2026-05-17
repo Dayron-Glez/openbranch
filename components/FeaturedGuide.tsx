@@ -1,59 +1,62 @@
 import { IconEye, IconHeart, IconPR, IconArrowRight, IconBulb } from '@/icons';
 
+const ctaClass =
+  'group inline-flex h-[34px] items-center gap-2 rounded-[var(--r-8)] border border-transparent bg-ob-accent px-3.5 text-[13px] font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-[var(--d-fast)] ease-[var(--ease)] hover:brightness-[1.06] [&_svg]:size-3.5';
+
 export function FeaturedGuide() {
   return (
-    <div className="ob-featured">
-      <div className="ob-feat-side">
-        <span className="eyebrow">guide · 7 min read</span>
-        <h3>Trunk-based development, when you can&apos;t ship feature flags first.</h3>
-        <p>
+    <div className="mt-7 grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-[var(--r-12)] border border-line bg-bg-card max-[980px]:grid-cols-1">
+      <div className="flex flex-col justify-center gap-3.5 border-r border-line px-9 py-10 max-[980px]:border-b max-[980px]:border-r-0 max-[520px]:px-6">
+        <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-ob-accent">guide · 7 min read</span>
+        <h3 className="m-0 text-[28px] font-medium leading-[1.15] tracking-[0]">Trunk-based development, when you can&apos;t ship feature flags first.</h3>
+        <p className="m-0 max-w-[42ch] text-[14.5px] leading-[1.55] text-fg-2">
           What to do when your tests are slow, your team is junior, and trunk-based feels like
           reckless advice. A field-tested middle path.
         </p>
-        <div className="meta">
-          <div className="author-stack">
-            <span className="a">AK</span>
-            <span className="a">JM</span>
-            <span className="a">SP</span>
+        <div className="mt-2 flex items-center gap-3.5 font-mono text-[11.5px] text-fg-muted">
+          <div className="inline-flex">
+            <span className="ml-0 inline-flex size-[22px] items-center justify-center rounded-full border border-line bg-bg-elev font-mono text-[9px] outline-2 outline-bg-card">AK</span>
+            <span className="-ml-1.5 inline-flex size-[22px] items-center justify-center rounded-full border border-line bg-bg-elev font-mono text-[9px] outline-2 outline-bg-card">JM</span>
+            <span className="-ml-1.5 inline-flex size-[22px] items-center justify-center rounded-full border border-line bg-bg-elev font-mono text-[9px] outline-2 outline-bg-card">SP</span>
           </div>
           <span>Anya Kim &amp; 2 maintainers</span>
         </div>
-        <div className="meta">
-          <span><IconEye /> 18.2k reads</span>
-          <span><IconHeart /> 940</span>
-          <span><IconPR /> 12 revisions</span>
+        <div className="flex items-center gap-3.5 font-mono text-[11.5px] text-fg-muted [&_svg]:size-[13px]">
+          <span className="inline-flex items-center gap-1"><IconEye /> 18.2k reads</span>
+          <span className="inline-flex items-center gap-1"><IconHeart /> 940</span>
+          <span className="inline-flex items-center gap-1"><IconPR /> 12 revisions</span>
         </div>
-        <div className="cta">
-          <a href="#" className="ob-btn ob-btn-primary ob-btn-arrow">
+        <div className="mt-2">
+          <a href="#" className={ctaClass}>
             Read the guide
-            <IconArrowRight className="arr" />
+            <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
           </a>
         </div>
       </div>
 
-      <article className="ob-feat-preview" aria-label="Guide preview">
-        <h4><span className="anchor">#</span>The premise</h4>
-        <p>
-          Most trunk-based guides assume two things: <span className="ic">feature flags</span> are cheap
+      <article className="relative px-10 py-9 text-[14.5px] leading-[1.65] text-fg-2 after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-gradient-to-b after:from-transparent after:to-bg-card after:content-[''] max-[520px]:px-6" aria-label="Guide preview">
+        <h4 className="m-0 mb-3.5 text-[22px] font-medium tracking-[0] text-fg"><span className="mr-1.5 font-normal text-fg-faint">#</span>The premise</h4>
+        <p className="m-0 mb-4">
+          Most trunk-based guides assume two things: <span className="rounded-[var(--r-6)] border border-line bg-bg-elev px-1.5 py-px font-mono text-[0.85em] text-fg-2">feature flags</span> are cheap
           to add, and your CI runs in under five minutes. If neither is true for you, the standard advice
           will quietly make things worse.
         </p>
-        <p>Here&apos;s the version that works <em>before</em> you have either.</p>
-        <div className="ob-callout">
-          <IconBulb />
+        <p className="m-0 mb-4">Here&apos;s the version that works <em>before</em> you have either.</p>
+        <div className="my-4 grid grid-cols-[22px_1fr] gap-3 rounded-[var(--r-10)] bg-accent-soft px-4 py-3.5">
+          <IconBulb className="mt-px size-[18px] text-ob-accent" />
           <div>
-            <div className="t">Rule of thumb</div>
-            <div className="b">
-              A branch older than 24 hours is a long-lived branch — even if you didn&apos;t mean it to be.
+            <div className="mb-0.5 text-[13px] font-medium text-ob-accent">Rule of thumb</div>
+            <div className="text-[13px] text-fg-2">
+              A branch older than 24 hours is a long-lived branch - even if you didn&apos;t mean it to be.
             </div>
           </div>
         </div>
-        <h4><span className="anchor">#</span>The minimum viable setup</h4>
-        <pre>
-          <span className="pmt">$</span>{' '}git checkout -b feat/open-graph{'\n'}
-          <span className="cm"># branch from trunk · &lt;24h lifespan target</span>{'\n'}
-          <span className="pmt">$</span>{' '}openbranch lint --branch{'\n'}
-          <span className="cm"># enforces naming, size, age limits before push</span>
+        <h4 className="m-0 mb-3.5 text-[22px] font-medium tracking-[0] text-fg"><span className="mr-1.5 font-normal text-fg-faint">#</span>The minimum viable setup</h4>
+        <pre className="m-0 mt-2 overflow-hidden rounded-[var(--r-10)] border border-line bg-bg-elev px-4 py-3.5 font-mono text-[12.5px] leading-[1.7]">
+          <span className="text-ob-accent">$</span>{' '}git checkout -b feat/open-graph{'\n'}
+          <span className="text-fg-muted"># branch from trunk · &lt;24h lifespan target</span>{'\n'}
+          <span className="text-ob-accent">$</span>{' '}openbranch lint --branch{'\n'}
+          <span className="text-fg-muted"># enforces naming, size, age limits before push</span>
         </pre>
       </article>
     </div>

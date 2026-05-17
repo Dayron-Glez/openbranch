@@ -9,12 +9,18 @@ export function LogoMark({ size = 64, animate = false, className }: LogoMarkProp
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox={animate ? '-12 -12 88 88' : '0 0 64 64'}
       className={`${animate ? 'logo-play' : ''} ${className ?? ''}`.trim()}
       style={{ color: 'var(--fg)' }}
       aria-hidden="true"
     >
       <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
+        {animate ? (
+          <>
+            <circle className="n-halo" cx="40" cy="50" r="4.5" fill="none" stroke="var(--ob-accent)" strokeWidth="1.2" />
+            <circle className="n-shock" cx="40" cy="50" r="4.5" fill="none" stroke="var(--ob-accent)" strokeWidth="1.5" />
+          </>
+        ) : null}
         <line className="p-trunk" x1="18" y1="10" x2="18" y2="54" pathLength="100" />
         <path
           className="p-branch"
