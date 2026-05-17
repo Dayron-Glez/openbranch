@@ -1,24 +1,23 @@
-import { Nav } from '@/components/Nav';
-import { Hero } from '@/components/Hero';
-import { TopicCard } from '@/components/TopicCard';
-import { FeaturedGuide } from '@/components/FeaturedGuide';
-import { ValueProp } from '@/components/ValueProp';
-import { CommunityCTA } from '@/components/CommunityCTA';
-import { Footer } from '@/components/Footer';
-import { ScrollReveal } from '@/components/ScrollReveal';
-import {
-  IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb,
-} from '@/icons';
+import { Nav } from "@/components/Nav"
+import { Hero } from "@/components/Hero"
+import { TopicCard } from "@/components/TopicCard"
+import { FeaturedGuide } from "@/components/FeaturedGuide"
+import { ValueProp } from "@/components/ValueProp"
+import { CommunityCTA } from "@/components/CommunityCTA"
+import { Footer } from "@/components/Footer"
+import { ScrollReveal } from "@/components/ScrollReveal"
+import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
 
 const eyebrowClass =
-  'mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted';
+  "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
 
 const ledClass =
-  'led-wave mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]';
+  "led-wave mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]"
 
-const sectionClass = '';
-const sectionHeadClass = 'mb-12 max-w-[720px]';
-const headingClass = 'm-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]';
+const sectionClass = ""
+const sectionHeadClass = "mb-12 max-w-[720px]"
+const headingClass =
+  "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
 
 export default function HomePage() {
   return (
@@ -26,7 +25,11 @@ export default function HomePage() {
       <ScrollReveal />
       <div className="ambient pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
         <div className="ambient-dots absolute inset-0" />
-        <svg className="ambient-graph absolute inset-0 size-full" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+        <svg
+          className="ambient-graph absolute inset-0 size-full"
+          viewBox="0 0 1600 1000"
+          preserveAspectRatio="xMidYMid slice"
+        >
           <path className="path l1" pathLength="100" d="M180 60  L 180 940" />
           <path className="path l2" pathLength="100" d="M380 120 L 380 880" />
           <path className="path l3" pathLength="100" d="M620 80  L 620 920" />
@@ -62,7 +65,7 @@ export default function HomePage() {
           <circle className="node n7" cx="1480" cy="540" r="3.5" />
           <circle className="node-accent n7" cx="1480" cy="800" r="3.5" />
         </svg>
-        <div className="ambient-sweep absolute bottom-[-10%] top-[-10%]" />
+        <div className="ambient-sweep absolute top-[-10%] bottom-[-10%]" />
       </div>
       <Nav />
       <main className="relative z-[1] mx-auto grid max-w-[1100px] gap-[100px] px-8 pb-[100px] max-[520px]:px-5">
@@ -70,36 +73,88 @@ export default function HomePage() {
 
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
-            <span className={eyebrowClass}><span className={ledClass} />What you&apos;ll find</span>
-            <h2 className={headingClass}>Practical answers, <span className="font-light text-fg-2">not opinions disguised as best practices.</span></h2>
-            <p className="m-0 max-w-[56ch] text-base leading-[1.55] text-fg-2">Every guide is rooted in a real codebase, signed off by the maintainers who shipped it, and revisited when reality disagrees. Browse by topic.</p>
+            <span className={eyebrowClass}>
+              <span className={ledClass} />
+              What you&apos;ll find
+            </span>
+            <h2 className={headingClass}>
+              Practical answers,{" "}
+              <span className="text-fg-2 font-light">
+                not opinions disguised as best practices.
+              </span>
+            </h2>
+            <p className="text-fg-2 m-0 max-w-[56ch] text-base leading-[1.55]">
+              Every guide is rooted in a real codebase, signed off by the maintainers who shipped
+              it, and revisited when reality disagrees. Browse by topic.
+            </p>
           </div>
-          <div className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-1" data-scroll-reveal>
-            <TopicCard featured href="#" icon={<IconBranch />} title="Branching strategies"
+          <div
+            className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-1"
+            data-scroll-reveal
+          >
+            <TopicCard
+              href="#"
+              icon={<IconBranch />}
+              title="Branching strategies"
               description="Trunk-based, release branches, GitFlow - when each one earns its keep, and the warning signs you've outgrown it."
-              count="24 guides" updated="updated 2d ago" />
-            <TopicCard href="#" icon={<IconPR />} title="Pull requests & review"
+              count="24 guides"
+              updated="updated 2d ago"
+            />
+            <TopicCard
+              href="#"
+              icon={<IconPR />}
+              title="Pull requests & review"
               description="Templates that get reviewed, size limits that stick, and how to leave a comment that doesn't make someone defensive."
-              count="18 guides" updated="updated 5d ago" />
-            <TopicCard href="#" icon={<IconFlask />} title="Testing patterns"
+              count="18 guides"
+              updated="updated 5d ago"
+            />
+            <TopicCard
+              href="#"
+              icon={<IconFlask />}
+              title="Testing patterns"
               description="Contract tests, snapshot hygiene, killing flaky CI - patterns that hold up at 50 engineers and 50,000."
-              count="31 guides" updated="updated 1w ago" />
-            <TopicCard href="#" icon={<IconTag />} title="Releases & versioning"
+              count="31 guides"
+              updated="updated 1w ago"
+            />
+            <TopicCard
+              href="#"
+              icon={<IconTag />}
+              title="Releases & versioning"
               description="Semver in practice, changelogs your users actually read, and rollback drills that don't require a hero."
-              count="14 guides" updated="updated 1w ago" />
-            <TopicCard href="#" icon={<IconFork />} title="Contribution flows"
+              count="14 guides"
+              updated="updated 1w ago"
+            />
+            <TopicCard
+              href="#"
+              icon={<IconFork />}
+              title="Contribution flows"
               description="Onboarding new contributors, RFCs that ship, governance that scales without smothering momentum."
-              count="22 guides" updated="updated 3d ago" />
-            <TopicCard href="#" icon={<IconBulb />} title="Lessons from real teams"
+              count="22 guides"
+              updated="updated 3d ago"
+            />
+            <TopicCard
+              href="#"
+              icon={<IconBulb />}
+              title="Lessons from real teams"
               description='Post-mortems, redesigns, and the "we should have done this 6 months earlier" stories worth reading.'
-              count="19 stories" updated="updated yesterday" />
+              count="19 stories"
+              updated="updated yesterday"
+            />
           </div>
         </section>
 
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
-            <span className={eyebrowClass}><span className={ledClass} />This week&apos;s pick</span>
-            <h2 className={headingClass}>Real guides, <span className="font-light text-fg-2">read like you&apos;re pairing with someone senior.</span></h2>
+            <span className={eyebrowClass}>
+              <span className={ledClass} />
+              This week&apos;s pick
+            </span>
+            <h2 className={headingClass}>
+              Real guides,{" "}
+              <span className="text-fg-2 font-light">
+                read like you&apos;re pairing with someone senior.
+              </span>
+            </h2>
           </div>
           <div className="scroll-reveal" data-scroll-reveal>
             <FeaturedGuide />
@@ -108,8 +163,13 @@ export default function HomePage() {
 
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
-            <span className={eyebrowClass}><span className={ledClass} />Why openbranch</span>
-            <h2 className={headingClass}>Built like the codebases <span className="font-light text-fg-2">it documents.</span></h2>
+            <span className={eyebrowClass}>
+              <span className={ledClass} />
+              Why openbranch
+            </span>
+            <h2 className={headingClass}>
+              Built like the codebases <span className="text-fg-2 font-light">it documents.</span>
+            </h2>
           </div>
           <div className="scroll-reveal" data-scroll-reveal>
             <ValueProp />
@@ -120,5 +180,5 @@ export default function HomePage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }
