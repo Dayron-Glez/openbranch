@@ -16,7 +16,7 @@ const eyebrowClass =
 const ledClass =
   'mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]';
 
-const sectionClass = 'mx-auto mt-[120px] max-w-[1100px] px-8 max-[520px]:px-5';
+const sectionClass = '';
 const sectionHeadClass = 'mb-12 max-w-[720px]';
 const headingClass = 'm-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]';
 
@@ -65,31 +65,8 @@ export default function HomePage() {
         <div className="ambient-sweep absolute bottom-[-10%] top-[-10%]" />
       </div>
       <Nav />
-      <main className="relative z-[1]">
+      <main className="relative z-[1] mx-auto grid max-w-[1100px] gap-[100px] px-8 pb-[100px] max-[520px]:px-5">
         <Hero />
-
-        <div className="scroll-reveal scroll-reveal-line mx-auto mt-20 grid max-w-[1100px] grid-cols-4 border-y border-line px-8 py-6 max-[980px]:grid-cols-2 max-[980px]:px-6 max-[520px]:grid-cols-1" data-scroll-reveal>
-          {[
-            { n: '128', unit: '+', label: 'Guides & recipes' },
-            { n: '2,400', unit: '', label: 'Contributors' },
-            { n: '12.4', unit: 'k', label: 'GitHub stars' },
-            { n: '47', unit: '', label: 'Languages translated' },
-          ].map(({ n, unit, label }, index) => (
-            <div
-              key={label}
-              className={`border-line px-6 py-2 max-[980px]:py-4 ${
-                index === 3 ? 'border-r-0' : 'border-r'
-              } ${index === 1 ? 'max-[980px]:border-r-0' : ''} ${
-                index < 2 ? 'max-[980px]:border-b max-[980px]:pb-4' : ''
-              } scroll-reveal-child max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
-            >
-              <div className="text-[28px] font-medium tracking-[0]">
-                {n}{unit && <span className="ml-0.5 text-base font-normal text-fg-muted">{unit}</span>}
-              </div>
-              <div className="mt-1 font-mono text-[11px] uppercase tracking-[0.06em] text-fg-muted">{label}</div>
-            </div>
-          ))}
-        </div>
 
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>

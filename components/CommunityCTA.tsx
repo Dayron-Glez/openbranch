@@ -5,7 +5,7 @@ const buttonBase =
 
 export function CommunityCTA() {
   return (
-    <section className="scroll-reveal mx-auto mb-20 mt-[120px] max-w-[1100px] px-8 max-[520px]:px-5" data-scroll-reveal>
+    <section className="scroll-reveal" data-scroll-reveal>
       <div
         className="relative overflow-hidden rounded-[var(--r-16)] border border-line bg-bg-card px-12 py-16 text-center before:absolute before:inset-0 before:bg-[linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] before:bg-[size:24px_24px] before:[mask-image:radial-gradient(ellipse_60%_80%_at_center,black,transparent_70%)] before:content-[''] max-[980px]:px-6 max-[980px]:py-10"
         style={{ background: 'radial-gradient(ellipse 100% 80% at 50% 0%, rgba(94,227,154,.12), transparent 60%), var(--color-bg-card)' }}
