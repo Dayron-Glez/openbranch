@@ -54,5 +54,5 @@ export function BranchBlock({ children }: { children: ReactNode }) {
 }
 
 export function Cursor() {
-  return <span className="ml-1 inline-block h-[14px] w-2 translate-y-[-2px] bg-current motion-safe:animate-[ob-blink_1.1s_steps(1)_infinite]" aria-hidden />;
+  return <span className="ml-1 inline-block h-[14px] w-2 translate-y-[3px] bg-current motion-safe:animate-[ob-blink_1.1s_steps(1)_infinite]" aria-hidden />;
 }
