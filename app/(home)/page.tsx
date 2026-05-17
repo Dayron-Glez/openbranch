@@ -1,101 +1,87 @@
-import Link from 'next/link';
+import { Nav } from '@/components/Nav';
+import { Hero } from '@/components/Hero';
+import { TopicCard } from '@/components/TopicCard';
+import { FeaturedGuide } from '@/components/FeaturedGuide';
+import { ValueProp } from '@/components/ValueProp';
+import { CommunityCTA } from '@/components/CommunityCTA';
+import { Footer } from '@/components/Footer';
+import {
+  IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb,
+} from '@/icons';
 
 export default function HomePage() {
   return (
-    <main className="min-h-[calc(100vh-4rem)]">
-      {/* Hero */}
-      <section className="mx-auto max-w-5xl px-6 pb-24 pt-20 md:pt-32">
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 font-mono text-xs text-muted-foreground">
-          <span className="size-1.5 rounded-full bg-primary" />
-          open source · community driven
-        </div>
+    <>
+      <div className="ob-ambient" aria-hidden />
+      <Nav />
+      <main style={{ position: 'relative', zIndex: 1 }}>
+        <Hero />
 
-        <h1 className="mb-6 max-w-3xl text-5xl font-light leading-[0.95] tracking-[-0.035em] md:text-7xl">
-          <span className="text-muted-foreground">open</span>
-          <span className="font-semibold">branch</span>
-        </h1>
-
-        <p className="mb-10 max-w-xl text-lg leading-relaxed text-muted-foreground">
-          The open guide to building software the right way. Best practices,
-          contribution workflows, testing patterns, and Git strategies — learned
-          from real projects, shared with the community.
-        </p>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <Link
-            href="/docs"
-            className="inline-flex items-center gap-2 rounded-[10px] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Read the docs
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 7h10M7 2l5 5-5 5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </Link>
-          <a
-            href="https://github.com/Dayron-Glez/openbranch"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-[10px] border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-card"
-          >
-            View on GitHub
-          </a>
-        </div>
-      </section>
-
-      {/* Feature grid */}
-      <section className="mx-auto max-w-5xl px-6 pb-32">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((item) => (
-            <div
-              key={item.title}
-              className="rounded-[10px] border border-border bg-card p-5"
-            >
-              <div className="mb-3 font-mono text-xl text-primary">
-                {item.icon}
-              </div>
-              <h3 className="mb-1.5 text-sm font-medium">{item.title}</h3>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {item.desc}
-              </p>
+        {/* Stats strip */}
+        <div className="ob-stats">
+          {[
+            { n: '128', unit: '+', label: 'Guides & recipes' },
+            { n: '2,400', unit: '', label: 'Contributors' },
+            { n: '12.4', unit: 'k', label: 'GitHub stars' },
+            { n: '47', unit: '', label: 'Languages translated' },
+          ].map(({ n, unit, label }) => (
+            <div key={label} className="ob-stat">
+              <div className="n">{n}{unit && <span className="unit">{unit}</span>}</div>
+              <div className="l">{label}</div>
             </div>
           ))}
         </div>
-      </section>
-    </main>
+
+        {/* Topics */}
+        <section className="ob-block" id="topics">
+          <div className="ob-block-head">
+            <span className="ob-eyebrow"><span className="led" />What you&apos;ll find</span>
+            <h2>Practical answers, <span className="quiet">not opinions disguised as best practices.</span></h2>
+            <p>Every guide is rooted in a real codebase, signed off by the maintainers who shipped it, and revisited when reality disagrees. Browse by topic.</p>
+          </div>
+          <div className="ob-topics">
+            <TopicCard featured href="#" icon={<IconBranch />} title="Branching strategies"
+              description="Trunk-based, release branches, GitFlow — when each one earns its keep, and the warning signs you've outgrown it."
+              count="24 guides" updated="updated 2d ago" />
+            <TopicCard href="#" icon={<IconPR />} title="Pull requests & review"
+              description="Templates that get reviewed, size limits that stick, and how to leave a comment that doesn't make someone defensive."
+              count="18 guides" updated="updated 5d ago" />
+            <TopicCard href="#" icon={<IconFlask />} title="Testing patterns"
+              description="Contract tests, snapshot hygiene, killing flaky CI — patterns that hold up at 50 engineers and 50,000."
+              count="31 guides" updated="updated 1w ago" />
+            <TopicCard href="#" icon={<IconTag />} title="Releases & versioning"
+              description="Semver in practice, changelogs your users actually read, and rollback drills that don't require a hero."
+              count="14 guides" updated="updated 1w ago" />
+            <TopicCard href="#" icon={<IconFork />} title="Contribution flows"
+              description="Onboarding new contributors, RFCs that ship, governance that scales without smothering momentum."
+              count="22 guides" updated="updated 3d ago" />
+            <TopicCard href="#" icon={<IconBulb />} title="Lessons from real teams"
+              description='Post-mortems, redesigns, and the "we should have done this 6 months earlier" stories worth reading.'
+              count="19 stories" updated="updated yesterday" />
+          </div>
+        </section>
+
+        {/* Featured guide */}
+        <section className="ob-block">
+          <div className="ob-block-head">
+            <span className="ob-eyebrow"><span className="led" />This week&apos;s pick</span>
+            <h2>Real guides, <span className="quiet">read like you&apos;re pairing with someone senior.</span></h2>
+          </div>
+          <FeaturedGuide />
+        </section>
+
+        {/* Values */}
+        <section className="ob-block">
+          <div className="ob-block-head">
+            <span className="ob-eyebrow"><span className="led" />Why openbranch</span>
+            <h2>Built like the codebases <span className="quiet">it documents.</span></h2>
+          </div>
+          <ValueProp />
+        </section>
+
+        <CommunityCTA />
+      </main>
+      <Footer />
+    </>
   );
 }
-
-const features = [
-  {
-    icon: '⎇',
-    title: 'Git & Workflows',
-    desc: 'Atomic commits, semantic messages, branching strategies.',
-  },
-  {
-    icon: '✓',
-    title: 'Testing',
-    desc: 'Philosophy, patterns by hook type, mocking best practices.',
-  },
-  {
-    icon: '↑',
-    title: 'Contributing to OSS',
-    desc: 'Issues, PRs, communicating with maintainers.',
-  },
-  {
-    icon: '◈',
-    title: 'Best Practices',
-    desc: 'Architecture, separation of concerns, SSR patterns.',
-  },
-] as const;
