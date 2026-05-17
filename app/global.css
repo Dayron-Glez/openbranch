@@ -1,11 +1,11 @@
-@import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
-@import 'fumadocs-ui/css/preset.css';
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
 
 /* fonts */
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 /* Fumadocs HSL bridge -> Tailwind color utilities */
@@ -33,19 +33,19 @@
 
 /* openbranch landing tokens */
 @theme {
-  --color-bg: #0B0C0E;
+  --color-bg: #0b0c0e;
   --color-bg-elev: #111316;
-  --color-bg-card: #14171B;
-  --color-bg-hover: #181B20;
-  --color-line: #1F2328;
-  --color-line-2: #2A2F36;
-  --color-fg: #ECEEF1;
-  --color-fg-2: #B7BCC4;
-  --color-fg-muted: #6F7681;
-  --color-fg-faint: #3E444C;
+  --color-bg-card: #14171b;
+  --color-bg-hover: #181b20;
+  --color-line: #1f2328;
+  --color-line-2: #2a2f36;
+  --color-fg: #eceef1;
+  --color-fg-2: #b7bcc4;
+  --color-fg-muted: #6f7681;
+  --color-fg-faint: #3e444c;
   --color-ob-accent: oklch(78% 0.18 148);
-  --color-accent-soft: oklch(78% 0.18 148 / .15);
-  --color-accent-ring: oklch(78% 0.18 148 / .35);
+  --color-accent-soft: oklch(78% 0.18 148 / 0.15);
+  --color-accent-ring: oklch(78% 0.18 148 / 0.35);
   --color-accent-ink: #062612;
   --color-info: oklch(78% 0.13 230);
   --color-warn: oklch(80% 0.14 75);
@@ -101,13 +101,19 @@
   :root {
     --fg: var(--color-fg);
     --ob-accent: var(--color-ob-accent);
-    --r-6: 6px; --r-8: 8px; --r-10: 10px; --r-12: 12px; --r-16: 16px;
+    --r-6: 6px;
+    --r-8: 8px;
+    --r-10: 10px;
+    --r-12: 12px;
+    --r-16: 16px;
     --r-full: 999px;
-    --sh-2: 0 1px 2px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.04);
-    --sh-3: 0 8px 24px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.05);
-    --sh-4: 0 32px 96px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.04);
-    --ease: cubic-bezier(.2, .8, .2, 1);
-    --d-fast: 120ms; --d-base: 180ms; --d-slow: 260ms;
+    --sh-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --sh-3: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --sh-4: 0 32px 96px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --d-fast: 120ms;
+    --d-base: 180ms;
+    --d-slow: 260ms;
   }
 
   html {

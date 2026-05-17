@@ -6,6 +6,7 @@ labels: content
 ---
 
 **Which guide needs updating?**
+
 <!-- Link to the guide or path: docs/branching/trunk-based.mdx -->
 
 **What's wrong or missing?**
