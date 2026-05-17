@@ -74,8 +74,7 @@ export default function HomePage() {
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} />
-              What you&apos;ll find
+              <span className={ledClass} /> What you&apos;ll find
             </span>
             <h2 className={headingClass}>
               Practical answers,{" "}
@@ -146,8 +145,7 @@ export default function HomePage() {
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} />
-              This week&apos;s pick
+              <span className={ledClass} /> This week&apos;s pick
             </span>
             <h2 className={headingClass}>
               Real guides,{" "}
@@ -164,8 +162,7 @@ export default function HomePage() {
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} />
-              Why openbranch
+              <span className={ledClass} /> Why openbranch
             </span>
             <h2 className={headingClass}>
               Built like the codebases <span className="text-fg-2 font-light">it documents.</span>
