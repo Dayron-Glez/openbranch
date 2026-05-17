@@ -6,8 +6,16 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": ["eslint --max-warnings=0", "prettier --write"],
+    "*.{js,mjs,json,md,mdx,css}": "prettier --write"
   },
   "dependencies": {
     "fumadocs-core": "16.8.11",
