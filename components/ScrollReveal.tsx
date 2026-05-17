@@ -13,7 +13,7 @@ export function ScrollReveal() {
 
     const revealIfVisible = (item: HTMLElement) => {
       const rect = item.getBoundingClientRect();
-      const entersViewport = rect.top < window.innerHeight * 0.88 && rect.bottom > 0;
+      const entersViewport = rect.top < window.innerHeight * 0.78 && rect.bottom > 0;
       if (entersViewport) item.classList.add('is-visible');
       return entersViewport;
     };
@@ -27,8 +27,8 @@ export function ScrollReveal() {
         });
       },
       {
-        rootMargin: '0px 0px -6% 0px',
-        threshold: 0.04,
+        rootMargin: '0px 0px -14% 0px',
+        threshold: 0.12,
       },
     );
 
