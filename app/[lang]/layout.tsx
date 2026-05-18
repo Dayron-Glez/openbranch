@@ -1,6 +1,6 @@
-import { RootProvider } from "fumadocs-ui/provider/next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
+import { I18nRootProvider } from "@/components/I18nRootProvider"
 import { provider, getSearchLinks } from "@/lib/i18n.ui"
 import { i18n } from "@/lib/i18n"
 
@@ -17,9 +17,9 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
       suppressHydrationWarning
     >
       <body className="flex min-h-screen flex-col font-sans">
-        <RootProvider i18n={provider(lang)} search={{ options: { links: getSearchLinks(lang) } }}>
+        <I18nRootProvider i18n={provider(lang)} searchLinks={getSearchLinks(lang)}>
           {children}
-        </RootProvider>
+        </I18nRootProvider>
       </body>
     </html>
   )
