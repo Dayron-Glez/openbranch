@@ -118,13 +118,17 @@ export function Nav({ dict, lang }: NavProps) {
                   {l.toUpperCase()}
                 </span>
               ) : (
-                <Link
+                // Full-document navigation: switching locale changes <html lang>,
+                // the i18n provider and the theme script — a hard context switch,
+                // not an in-app route change. A soft <Link> transition would
+                // remount <html>/RootProvider on the client and warn.
+                <a
                   key={l}
                   href={localeHref[l]}
                   className={`${langSeg} text-fg-muted hover:bg-bg-hover hover:text-fg`}
                 >
                   {l.toUpperCase()}
-                </Link>
+                </a>
               )
             )}
           </div>
