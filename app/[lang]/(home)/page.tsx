@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { Nav } from "@/components/Nav"
 import { Hero } from "@/components/Hero"
 import { TopicCard } from "@/components/TopicCard"
@@ -7,6 +8,22 @@ import { CommunityCTA } from "@/components/CommunityCTA"
 import { Footer } from "@/components/Footer"
 import { ScrollReveal } from "@/components/ScrollReveal"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
+import { i18n } from "@/lib/i18n"
+import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
+import type { TopicItem } from "@/lib/landing-dictionary"
+
+const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
+  branch: <IconBranch />,
+  pr: <IconPR />,
+  flask: <IconFlask />,
+  tag: <IconTag />,
+  fork: <IconFork />,
+  bulb: <IconBulb />,
+}
+
+export function generateStaticParams() {
+  return i18n.languages.map((lang) => ({ lang }))
+}
 
 const eyebrowClass =
   "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
@@ -19,7 +36,9 @@ const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
   "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
 
-export default function HomePage() {
+export default async function HomePage({ params }: PageProps<"/[lang]">) {
+  const { lang } = await params
+  const dict = getLandingDict(lang)
   return (
     <>
       <ScrollReveal />
@@ -67,115 +86,74 @@ export default function HomePage() {
         </svg>
         <div className="ambient-sweep absolute top-[-10%] bottom-[-10%]" />
       </div>
-      <Nav />
+      <Nav dict={dict.nav} lang={lang} />
       <main className="relative z-[1] mx-auto grid max-w-[1100px] gap-[100px] px-8 pb-[100px] max-[520px]:px-5">
-        <Hero />
+        <Hero dict={dict.hero} lang={lang} />
 
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} /> What you&apos;ll find
+              <span className={ledClass} /> {dict.sections.topicsEyebrow}
             </span>
             <h2 className={headingClass}>
-              Practical answers,{" "}
-              <span className="text-fg-2 font-light">
-                not opinions disguised as best practices.
-              </span>
+              {dict.sections.topicsHeading}{" "}
+              <span className="text-fg-2 font-light">{dict.sections.topicsHeadingAccent}</span>
             </h2>
             <p className="text-fg-2 m-0 max-w-[56ch] text-base leading-[1.55]">
-              Every guide is rooted in a real codebase, signed off by the maintainers who shipped
-              it, and revisited when reality disagrees. Browse by topic.
+              {dict.sections.topicsIntro}
             </p>
           </div>
           <div
             className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-1"
             data-scroll-reveal
           >
-            <TopicCard
-              href="#"
-              icon={<IconBranch />}
-              title="Branching strategies"
-              description="Trunk-based, release branches, GitFlow - when each one earns its keep, and the warning signs you've outgrown it."
-              count="24 guides"
-              updated="updated 2d ago"
-            />
-            <TopicCard
-              href="#"
-              icon={<IconPR />}
-              title="Pull requests & review"
-              description="Templates that get reviewed, size limits that stick, and how to leave a comment that doesn't make someone defensive."
-              count="18 guides"
-              updated="updated 5d ago"
-            />
-            <TopicCard
-              href="#"
-              icon={<IconFlask />}
-              title="Testing patterns"
-              description="Contract tests, snapshot hygiene, killing flaky CI - patterns that hold up at 50 engineers and 50,000."
-              count="31 guides"
-              updated="updated 1w ago"
-            />
-            <TopicCard
-              href="#"
-              icon={<IconTag />}
-              title="Releases & versioning"
-              description="Semver in practice, changelogs your users actually read, and rollback drills that don't require a hero."
-              count="14 guides"
-              updated="updated 1w ago"
-            />
-            <TopicCard
-              href="#"
-              icon={<IconFork />}
-              title="Contribution flows"
-              description="Onboarding new contributors, RFCs that ship, governance that scales without smothering momentum."
-              count="22 guides"
-              updated="updated 3d ago"
-            />
-            <TopicCard
-              href="#"
-              icon={<IconBulb />}
-              title="Lessons from real teams"
-              description='Post-mortems, redesigns, and the "we should have done this 6 months earlier" stories worth reading.'
-              count="19 stories"
-              updated="updated yesterday"
-            />
+            {dict.topics.map((topic) => (
+              <TopicCard
+                key={topic.title}
+                href={localizedHref(lang, "/docs")}
+                icon={TOPIC_ICONS[topic.icon]}
+                title={topic.title}
+                description={topic.description}
+                count={topic.count}
+                updated={topic.updated}
+              />
+            ))}
           </div>
         </section>
 
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} /> This week&apos;s pick
+              <span className={ledClass} /> {dict.sections.featuredEyebrow}
             </span>
             <h2 className={headingClass}>
-              Real guides,{" "}
-              <span className="text-fg-2 font-light">
-                read like you&apos;re pairing with someone senior.
-              </span>
+              {dict.sections.featuredHeading}{" "}
+              <span className="text-fg-2 font-light">{dict.sections.featuredHeadingAccent}</span>
             </h2>
           </div>
           <div className="scroll-reveal" data-scroll-reveal>
-            <FeaturedGuide />
+            <FeaturedGuide dict={dict.featured} />
           </div>
         </section>
 
         <section className={sectionClass}>
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
             <span className={eyebrowClass}>
-              <span className={ledClass} /> Why openbranch
+              <span className={ledClass} /> {dict.sections.whyEyebrow}
             </span>
             <h2 className={headingClass}>
-              Built like the codebases <span className="text-fg-2 font-light">it documents.</span>
+              {dict.sections.whyHeading}{" "}
+              <span className="text-fg-2 font-light">{dict.sections.whyHeadingAccent}</span>
             </h2>
           </div>
           <div className="scroll-reveal" data-scroll-reveal>
-            <ValueProp />
+            <ValueProp dict={dict.valueProp} />
           </div>
         </section>
 
-        <CommunityCTA />
+        <CommunityCTA dict={dict.community} />
       </main>
-      <Footer />
+      <Footer dict={dict.footer} lang={lang} />
     </>
   )
 }

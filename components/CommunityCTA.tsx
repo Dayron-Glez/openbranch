@@ -1,9 +1,14 @@
 import { IconPR, IconGithub, IconArrowRight } from "@/icons"
+import type { LandingDict } from "@/lib/landing-dictionary"
 
 const buttonBase =
   "inline-flex h-[42px] items-center gap-2 rounded-[var(--r-8)] border border-transparent px-5 text-sm font-medium leading-none tracking-[0] no-underline transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] [&_svg]:size-3.5"
 
-export function CommunityCTA() {
+type CommunityCTAProps = {
+  readonly dict: LandingDict["community"]
+}
+
+export function CommunityCTA({ dict }: CommunityCTAProps) {
   return (
     <section className="scroll-reveal" data-scroll-reveal>
       <div
@@ -14,14 +19,13 @@ export function CommunityCTA() {
         }}
       >
         <span className="text-ob-accent relative mb-3.5 inline-block font-mono text-[11px] tracking-[0.08em] uppercase">
-          made by the community
+          {dict.eyebrow}
         </span>
         <h3 className="relative mx-auto mb-4 max-w-[22ch] text-[38px] leading-[1.1] font-medium tracking-[0] text-balance max-[980px]:text-[28px]">
-          The handbook gets better every time you open a PR.
+          {dict.title}
         </h3>
         <p className="text-fg-2 relative mx-auto mb-8 max-w-[56ch] text-[15.5px] leading-[1.55]">
-          Found a pattern that worked? Disagree with an existing guide? Open a pull request, write
-          up your story, or just add a sentence - the way we work is the way the docs grow.
+          {dict.body}
         </p>
         <div className="relative flex flex-wrap justify-center gap-2.5">
           <a
@@ -31,7 +35,7 @@ export function CommunityCTA() {
             className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
           >
             <IconPR />
-            Open your first PR
+            {dict.ctaPrimary}
             <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
           </a>
           <a
@@ -41,13 +45,13 @@ export function CommunityCTA() {
             className={`${buttonBase} border-line-2 bg-bg-card text-fg hover:border-fg-faint hover:bg-bg-hover`}
           >
             <IconGithub />
-            Browse the repo
+            {dict.ctaSecondary}
           </a>
         </div>
 
         <div className="relative mt-10 flex flex-col items-center gap-3.5">
           <span className="text-fg-muted font-mono text-[11px] tracking-[0.06em] uppercase">
-            2,400+ contributors · last 30 days
+            {dict.contributors}
           </span>
           <div className="inline-flex">
             {["AK", "JM", "SP", "RN", "TY", "DL", "MV", "CH"].map((initials, index) => (

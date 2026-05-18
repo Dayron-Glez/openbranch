@@ -1,4 +1,5 @@
 import { IconFork, IconGlobe, IconLock } from "@/icons"
+import type { LandingDict } from "@/lib/landing-dictionary"
 
 const valueClass =
   "border-r border-line px-7 py-8 last:border-r-0 max-[980px]:border-b max-[980px]:border-r-0 max-[980px]:last:border-b-0"
@@ -6,41 +7,30 @@ const valueClass =
 const badgeClass =
   "mb-4 inline-flex items-center gap-1.5 rounded-full border border-line bg-bg-elev px-2 py-[3px] font-mono text-[10.5px] tracking-[0.04em] text-fg-muted [&_svg]:size-[11px]"
 
-export function ValueProp() {
+const ICONS = [IconFork, IconGlobe, IconLock]
+
+type ValuePropProps = {
+  readonly dict: LandingDict["valueProp"]
+}
+
+export function ValueProp({ dict }: ValuePropProps) {
   return (
     <div className="border-line bg-bg-card grid grid-cols-3 overflow-hidden rounded-[var(--r-12)] border max-[980px]:grid-cols-1">
-      <div className={valueClass}>
-        <span className={badgeClass}>
-          <IconFork />
-          community-owned
-        </span>
-        <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">Every guide is a PR.</h4>
-        <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
-          No gatekeepers. The same workflow we document is the one we use to write the docs.
-        </p>
-      </div>
-      <div className={valueClass}>
-        <span className={badgeClass}>
-          <IconGlobe />
-          stack-agnostic
-        </span>
-        <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">No framework agenda.</h4>
-        <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
-          If a pattern only works in one stack, we say so. Most patterns here are older than your
-          build tool.
-        </p>
-      </div>
-      <div className={valueClass}>
-        <span className={badgeClass}>
-          <IconLock />
-          versioned
-        </span>
-        <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">Advice with an expiry.</h4>
-        <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
-          Every guide is dated, versioned, and revisited. We retire patterns that haven&apos;t aged
-          well, on purpose.
-        </p>
-      </div>
+      {dict.map((item, i) => {
+        const Icon = ICONS[i] ?? IconFork
+        return (
+          <div key={item.title} className={valueClass}>
+            <span className={badgeClass}>
+              <Icon />
+              {item.badge}
+            </span>
+            <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">{item.title}</h4>
+            <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
+              {item.body}
+            </p>
+          </div>
+        )
+      })}
     </div>
   )
 }
