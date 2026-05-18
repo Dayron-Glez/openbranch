@@ -1,10 +1,4 @@
 {
   "title": "openbranch",
-  "pages": [
-    "index",
-    "git",
-    "testing",
-    "contributing",
-    "best-practices"
-  ]
+  "pages": ["index", "git", "testing", "contributing", "best-practices"]
 }
