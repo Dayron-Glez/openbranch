@@ -59,42 +59,72 @@ export function Footer() {
           >
             Discussions
           </a>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/Dayron-Glez/openbranch/discussions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             RFC process
           </a>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/Dayron-Glez/openbranch/blob/main/CODE_OF_CONDUCT.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             Code of conduct
           </a>
         </div>
         <div>
           <h5 className={columnTitle}>Resources</h5>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/Dayron-Glez/openbranch/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             Changelog
           </a>
-          <a href="#" className={footerLink}>
+          <Link href="/docs" className={footerLink}>
             Style guide
-          </a>
-          <a href="#" className={footerLink}>
+          </Link>
+          <Link href="/docs" className={footerLink}>
             Translations
-          </a>
-          <a href="#" className={footerLink}>
+          </Link>
+          <Link href="/docs" className={footerLink}>
             Brand assets
-          </a>
+          </Link>
         </div>
         <div>
           <h5 className={columnTitle}>About</h5>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/Dayron-Glez/openbranch/graphs/contributors"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             Maintainers
           </a>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/Dayron-Glez/openbranch/blob/main/LICENSE"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             License · MIT
           </a>
-          <a href="#" className={footerLink}>
+          <a
+            href="https://github.com/sponsors/Dayron-Glez"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={footerLink}
+          >
             Sponsors
           </a>
-          <a href="#" className={footerLink}>
+          <Link href="/docs" className={footerLink}>
             Press kit
-          </a>
+          </Link>
         </div>
       </div>
       <div className="border-line text-fg-muted flex items-center justify-between border-t pt-6 font-mono text-[11px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
@@ -108,12 +138,12 @@ export function Footer() {
           >
             GitHub
           </a>
-          <a href="#" className="text-fg-muted hover:text-fg no-underline">
+          <Link href="/docs" className="text-fg-muted hover:text-fg no-underline">
             RSS
-          </a>
-          <a href="#" className="text-fg-muted hover:text-fg no-underline">
+          </Link>
+          <Link href="/docs" className="text-fg-muted hover:text-fg no-underline">
             Status
-          </a>
+          </Link>
         </div>
       </div>
     </footer>
