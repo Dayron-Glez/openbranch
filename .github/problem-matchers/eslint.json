@@ -1,15 +1,20 @@
 {
   "problemMatcher": [
     {
-      "owner": "eslint-unix",
+      "owner": "eslint-stylish",
       "pattern": [
         {
-          "regexp": "^(.+):(\\d+):(\\d+): (.+) \\[(Error|Warning|Info)\\/.+\\]$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "severity": 5,
-          "message": 4
+          "regexp": "^([^\\s].*)$",
+          "file": 1
+        },
+        {
+          "regexp": "^\\s+(\\d+):(\\d+)\\s+(error|warning)\\s+(.+?)\\s{2,}(.+)$",
+          "line": 1,
+          "column": 2,
+          "severity": 3,
+          "message": 4,
+          "code": 5,
+          "loop": true
         }
       ]
     }

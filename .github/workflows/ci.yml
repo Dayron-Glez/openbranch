@@ -25,7 +25,7 @@ jobs:
       - name: Lint
         run: |
           echo "::add-matcher::.github/problem-matchers/eslint.json"
-          npm run lint -- --format unix
+          npm run lint
 
       - name: Check formatting
         run: npm run format:check
