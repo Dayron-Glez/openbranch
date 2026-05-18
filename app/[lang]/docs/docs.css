@@ -10,7 +10,8 @@ article.flex {
  * This colours the active item text, its background tint, and the left
  * indicator bar without touching any other fd-primary usages in the layout.
  */
-#nd-sidebar {
+#nd-sidebar,
+#nd-toc {
   --color-fd-primary: var(--color-ob-accent);
 }
 
