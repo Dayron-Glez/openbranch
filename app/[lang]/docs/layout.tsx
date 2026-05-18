@@ -6,7 +6,7 @@ import { Logo } from "@/components/logo"
 
 export default async function Layout({ children, params }: LayoutProps<"/[lang]/docs">) {
   const { lang } = await params
-  const base = baseOptions(lang)
+  const base = baseOptions()
   return (
     <DocsLayout
       tree={source.pageTree[lang]}
