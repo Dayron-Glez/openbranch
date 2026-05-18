@@ -15,6 +15,28 @@ article.flex {
   --color-fd-primary: var(--color-ob-accent);
 }
 
+/* ── Callout icon alignment ───────────────────────────────────────────────── */
+
+/*
+ * Fumadocs callout: flex row with [bar | icon | content].
+ * The bar must stay full-height (align-items default stretch), so we
+ * only nudge the icon SVG to center itself in the cross axis.
+ */
+.my-4.flex.rounded-xl.border > svg {
+  align-self: center;
+}
+
+/* ── Prose heading colours ────────────────────────────────────────────────── */
+
+/*
+ * Section headings (h2–h4) inside DocsBody (.prose) use the brand accent,
+ * matching the "On this page" TOC heading colour for visual consistency.
+ * h1 is the page title rendered by <DocsTitle> outside .prose, left as-is.
+ */
+.prose :is(h2, h3, h4) {
+  color: var(--color-ob-accent);
+}
+
 /* ── TOC heading branding ─────────────────────────────────────────────────── */
 
 /*
