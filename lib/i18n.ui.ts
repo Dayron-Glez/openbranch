@@ -4,7 +4,7 @@ import { i18n } from "./i18n"
 export const { provider } = defineI18nUI(i18n, {
   es: {
     displayName: "Español",
-    search: "Buscar",
+    search: "Buscar en la documentación…",
     searchNoResult: "Sin resultados",
     toc: "En esta página",
     tocNoHeadings: "Sin encabezados",
@@ -17,5 +17,6 @@ export const { provider } = defineI18nUI(i18n, {
   },
   en: {
     displayName: "English",
+    search: "Search the docs…",
   },
 })
