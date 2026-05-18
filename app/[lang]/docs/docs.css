@@ -17,14 +17,10 @@ article.flex {
 /* ── TOC heading branding ─────────────────────────────────────────────────── */
 
 /*
- * "En esta página" / "On this page" — override Fumadocs' muted colour with
- * the brand accent, uppercase micro-type treatment to make it feel like a
- * deliberate section marker instead of a plain label.
+ * "En esta página" / "On this page" — just the brand accent colour.
+ * The clerk-style TOC provides its own visual hierarchy (SVG path + thumb),
+ * so we keep the heading in normal-case/weight and only swap the colour.
  */
 h3#toc-title {
   color: var(--color-ob-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.6875rem;
-  font-weight: 600;
 }
