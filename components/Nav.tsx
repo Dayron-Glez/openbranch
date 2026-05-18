@@ -12,8 +12,10 @@ import { localizedHref } from "@/lib/landing-dictionary"
 const navButton =
   "inline-flex h-[34px] items-center gap-2 rounded-[var(--r-8)] border border-transparent bg-ob-accent px-3.5 text-[13px] font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-[var(--d-fast)] ease-[var(--ease)] hover:brightness-[1.06] [&_svg]:size-3.5"
 
-const langToggle =
-  "inline-flex h-8 items-center justify-center rounded-[var(--r-8)] border border-transparent px-2 font-mono text-[12px] text-fg-muted no-underline transition-[background,border-color,color] duration-[var(--d-fast)] ease-[var(--ease)] hover:border-line hover:bg-bg-elev hover:text-fg"
+const langSeg =
+  "rounded-[var(--r-6)] px-2 py-1 font-mono text-[11px] tracking-[0.04em] transition-colors duration-[var(--d-fast)] ease-[var(--ease)]"
+
+const LOCALES = ["es", "en"] as const
 
 type NavProps = {
   readonly dict: LandingDict["nav"]
@@ -24,11 +26,11 @@ export function Nav({ dict, lang }: NavProps) {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const { setOpenSearch } = useSearchContext()
-  const otherLang = lang === "en" ? "es" : "en"
+  const current = lang === "en" ? "en" : "es"
   const stripped = pathname.replace(/^\/en(?=\/|$)/, "") || "/"
-  let switchHref = stripped
-  if (otherLang === "en") {
-    switchHref = stripped === "/" ? "/en" : `/en${stripped}`
+  const localeHref = {
+    es: stripped,
+    en: stripped === "/" ? "/en" : `/en${stripped}`,
   }
 
   useEffect(() => {
@@ -87,7 +89,7 @@ export function Nav({ dict, lang }: NavProps) {
             onClick={() => setOpenSearch(true)}
           >
             <IconSearch />
-            <span className="flex-1 text-left">{dict.searchPlaceholder}</span>
+            <span className="min-w-0 flex-1 truncate text-left">{dict.searchPlaceholder}</span>
             <span className="border-line bg-bg text-fg-muted inline-flex items-center gap-0.5 rounded-[var(--r-6)] border px-[5px] py-px font-mono text-[10.5px]">
               ⌘ K
             </span>
@@ -101,14 +103,31 @@ export function Nav({ dict, lang }: NavProps) {
           >
             <IconGithub />
           </a>
-          <Link
-            href={switchHref}
-            className={langToggle}
+          <div
+            className="border-line bg-bg-elev flex items-center gap-0.5 rounded-[var(--r-8)] border p-0.5"
+            role="group"
             aria-label={dict.switchLang}
-            title={dict.switchLang}
           >
-            {otherLang.toUpperCase()}
-          </Link>
+            {LOCALES.map((l) =>
+              l === current ? (
+                <span
+                  key={l}
+                  aria-current="true"
+                  className={`${langSeg} bg-accent-soft text-fg cursor-default`}
+                >
+                  {l.toUpperCase()}
+                </span>
+              ) : (
+                <Link
+                  key={l}
+                  href={localeHref[l]}
+                  className={`${langSeg} text-fg-muted hover:bg-bg-hover hover:text-fg`}
+                >
+                  {l.toUpperCase()}
+                </Link>
+              )
+            )}
+          </div>
           <Link
             href={localizedHref(lang, "/docs")}
             className={`${navButton} group max-[520px]:hidden`}

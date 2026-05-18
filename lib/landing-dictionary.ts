@@ -114,7 +114,7 @@ const es: LandingDict = {
       { path: "/docs/testing", label: "Pruebas", exact: false },
       { path: "/docs/contributing", label: "Contribuir", exact: false },
     ],
-    searchPlaceholder: "Buscar en la documentación...",
+    searchPlaceholder: "Buscar documentación...",
     searchAria: "Buscar en la documentación",
     githubAria: "GitHub",
     getStarted: "Empezar",
