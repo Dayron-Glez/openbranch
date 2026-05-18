@@ -2,3 +2,29 @@
 article.flex {
   margin-left: 0;
 }
+
+/* ── Sidebar branding ─────────────────────────────────────────────────────── */
+
+/*
+ * Remap Fumadocs' primary token to the openbranch accent inside the sidebar.
+ * This colours the active item text, its background tint, and the left
+ * indicator bar without touching any other fd-primary usages in the layout.
+ */
+#nd-sidebar {
+  --color-fd-primary: var(--color-ob-accent);
+}
+
+/* ── TOC heading branding ─────────────────────────────────────────────────── */
+
+/*
+ * "En esta página" / "On this page" — override Fumadocs' muted colour with
+ * the brand accent, uppercase micro-type treatment to make it feel like a
+ * deliberate section marker instead of a plain label.
+ */
+h3#toc-title {
+  color: var(--color-ob-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}

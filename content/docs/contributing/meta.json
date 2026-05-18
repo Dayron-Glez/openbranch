@@ -1,4 +1,5 @@
 {
   "title": "Contribuir al código abierto",
+  "icon": "GitPullRequest",
   "pages": ["index", "ci-guardrails"]
 }
