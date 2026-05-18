@@ -1,0 +1,221 @@
+---
+title: Contribution guardrails
+description: How a public, fork-based project teaches contributors instead of relying on a maintainer's attention — templates, CI, static analysis, inline feedback, and branch protection.
+---
+
+A first-time contributor opens a pull request from their fork. They got a
+comment wrong, broke formatting, and introduced a type error. What happens next
+is the difference between a project that scales and one that burns out its
+maintainers.
+
+Without guardrails, the only thing between that PR and your `main` branch is
+_you_, reading every diff. Guardrails flip this: the project teaches the
+contributor what's wrong, where, and how to fix it — before you ever look.
+
+This is the exact setup openbranch runs on itself, including the parts that
+went wrong.
+
+## The mental model: layers, not a wall
+
+No single check catches everything. Each layer exists to catch what the
+previous one lets through:
+
+| Layer             | Catches                                 | Runs where           |
+| ----------------- | --------------------------------------- | -------------------- |
+| Templates         | Missing context, unclear intent         | Before code          |
+| CI gate           | Type errors, broken build, lint, format | Every PR             |
+| Static analysis   | Code smells, bugs, security             | Every PR (forks too) |
+| Inline feedback   | "Where exactly?"                        | On the diff          |
+| Branch protection | Humans merging red                      | At the merge button  |
+
+<Callout type="info">
+  The goal is not to block people. It's to make the feedback loop so fast and so specific that
+  contributors fix their own PRs without waiting on a review.
+</Callout>
+
+## Layer 1 — Templates set expectations before code
+
+Issue and PR templates are the cheapest guardrail you will ever add. They cost
+one folder and they change behaviour immediately: a contributor filling in
+"What problem does this solve?" either writes something coherent or realizes
+they haven't thought it through yet.
+
+```
+.github/
+├── ISSUE_TEMPLATE/
+│   ├── new-guide.md
+│   ├── improve-guide.md
+│   ├── bug-report.md
+│   └── feature-request.md
+└── PULL_REQUEST_TEMPLATE.md
+```
+
+The PR template's job is to define "done" so you don't have to repeat it in
+every review. A checklist the contributor reads _before_ requesting review:
+
+```markdown
+## Checklist
+
+- [ ] Content is accurate and tested against a real codebase
+- [ ] `npm run build` passes
+- [ ] No TypeScript errors (`npm run types:check` passes)
+- [ ] Follows the writing style of existing guides
+```
+
+## Layer 2 — CI is the real gate
+
+A template is a polite request. CI is enforcement. On every pull request, run
+the checks that have an objective right answer:
+
+```yaml
+- name: Lint
+  run: npm run lint
+- name: Check formatting
+  run: npm run format:check
+- name: Type check
+  run: npm run types:check
+- name: Build
+  run: npm run build
+```
+
+<Callout type="warn">
+  Pre-commit hooks (Husky, lint-staged) are a *local convenience*, not a guard. A contributor can
+  skip them with `git commit --no-verify`, and they never run in a fork's environment. Hooks give
+  fast feedback; CI is what actually enforces. Run both — but never trust the hook alone.
+</Callout>
+
+## Layer 3 — Static analysis that survives forks
+
+Here is the gotcha that catches most people: **GitHub Actions does not expose
+repository secrets to pull requests opened from forks.** This is a security
+feature — otherwise any stranger could open a PR that prints your secrets.
+
+The consequence: a code scanner that authenticates with a `SONAR_TOKEN` stored
+as a secret will silently _not run_ on exactly the PRs you most need it on —
+the ones from people you don't know.
+
+The fix is to not need the secret in CI at all. SonarCloud's **Automatic
+Analysis** analyses the repository from its own platform via the GitHub App,
+with no token in your workflow. Fork PRs get the same Quality Gate comment as
+everyone else.
+
+<Callout type="info">
+  If a check needs a secret to run, ask what happens when a fork PR can't see that secret. If the
+  answer is "the check is skipped," that check is not protecting you from outside contributions.
+</Callout>
+
+## Layer 4 — Inline feedback, and a war story
+
+Contributors should not have to open the Actions log, scroll through install
+output, and parse a stack trace to learn they have an unused variable on line 45. GitHub _problem matchers_ turn linter output into annotations rendered
+directly on the diff — red marks on the exact lines.
+
+Getting this working on openbranch took three attempts, and the lesson is
+worth more than the result.
+
+**Attempt 1.** Use ESLint's `compact` formatter, which a problem matcher can
+parse:
+
+```
+The compact formatter is no longer part of core ESLint.
+Install it manually with `npm install -D eslint-formatter-compact`
+```
+
+ESLint 9 removed `compact` from core.
+
+**Attempt 2.** Fine, use `unix` instead:
+
+```
+The unix formatter is no longer part of core ESLint.
+Install it manually with `npm install -D eslint-formatter-unix`
+```
+
+ESLint 9 removed almost every formatter from core. Only `stylish`, `json`,
+`junit`, `tap`, `checkstyle`, and `html` remain.
+
+**Attempt 3.** `eslint-formatter-github` emits native GitHub annotation
+commands and needs no matcher — but installing it pulled in **101 transitive
+packages** (`@octokit/*`) and a fistful of advisories, to format some text.
+
+**What shipped.** A problem matcher for the _default_ `stylish` formatter. Zero
+new dependencies. `.github/problem-matchers/eslint.json`:
+
+```json
+{
+  "problemMatcher": [
+    {
+      "owner": "eslint-stylish",
+      "pattern": [
+        { "regexp": "^([^\\s].*)$", "file": 1 },
+        {
+          "regexp": "^\\s+(\\d+):(\\d+)\\s+(error|warning)\\s+(.+?)\\s{2,}(.+)$",
+          "line": 1,
+          "column": 2,
+          "severity": 3,
+          "message": 4,
+          "code": 5,
+          "loop": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+Wired into the workflow with no formatter flag, because `stylish` is the
+default:
+
+```yaml
+- name: Lint
+  run: |
+    echo "::add-matcher::.github/problem-matchers/eslint.json"
+    npm run lint
+```
+
+<Callout type="warn">
+  When a tool's ecosystem churns under you, the solution with the fewest moving parts wins. A
+  20-line JSON file you control beats 101 packages you don't — even when the 101 packages are "the
+  recommended way".
+</Callout>
+
+## Layer 5 — Branch protection makes the rest non-decorative
+
+Everything above is theatre if a human can click merge on a red PR. Branch
+protection requires the checks to pass before the merge button works — and
+applies the rule to admins too, so it can't be quietly bypassed:
+
+```bash
+gh api repos/OWNER/REPO/branches/main/protection --method PUT --input - <<'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "checks": [
+      { "context": "Type check & build" },
+      { "context": "SonarCloud Code Analysis" }
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
+```
+
+<Callout type="info">
+The `context` strings must match exactly: the CI one is the *job name* from
+your workflow, the scanner one is the check name the app reports. Run `gh pr
+checks <number>` on an open PR to read the exact names before you wire them in.
+</Callout>
+
+## The payoff
+
+Stack the layers and a stranger's first contribution now gets, with zero
+manual effort from you:
+
+- a template that told them what "done" means before they wrote a line,
+- a red X with the failing line annotated _in the diff_,
+- a Quality Gate comment from static analysis — even though it's a fork,
+- a merge button that stays disabled until the PR is genuinely green.
+
+You reviewed none of that. You spent your attention on the part a machine
+can't check: whether the contribution is _good_.

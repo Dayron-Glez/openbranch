@@ -1,3 +1,4 @@
 {
-  "title": "Contribuir al código abierto"
+  "title": "Contribuir al código abierto",
+  "pages": ["index", "ci-guardrails"]
 }
