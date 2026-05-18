@@ -1,4 +1,0 @@
-/* Left-align article within the docs main column instead of centering via mx-auto */
-article.flex {
-  margin-left: 0;
-}

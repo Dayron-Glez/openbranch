@@ -14,19 +14,19 @@ import {
   Cursor,
 } from "@/components/Terminal"
 import { IconArrowRight } from "@/icons"
-
-const PHRASES = [
-  "shipping software.",
-  "merging branches.",
-  "reviewing pull requests.",
-  "writing better tests.",
-  "building great teams.",
-]
+import type { LandingDict } from "@/lib/landing-dictionary"
+import { localizedHref } from "@/lib/landing-dictionary"
 
 const buttonBase =
   "inline-flex h-[42px] items-center gap-2 rounded-[var(--r-8)] border border-transparent px-5 text-sm font-medium leading-none tracking-[0] no-underline transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] [&_svg]:size-3.5"
 
-export function Hero() {
+type HeroProps = {
+  readonly dict: LandingDict["hero"]
+  readonly lang: string
+}
+
+export function Hero({ dict, lang }: HeroProps) {
+  const PHRASES = dict.phrases
   const [logoRun, setLogoRun] = useState(0)
   const [phraseIdx, setPhraseIdx] = useState(0)
   const [displayed, setDisplayed] = useState("")
@@ -52,12 +52,7 @@ export function Hero() {
     }
   }, [displayed, phase, phraseIdx])
 
-  const stats = [
-    { n: "128", unit: "+", label: "Guides & recipes" },
-    { n: "2,400", unit: "", label: "Contributors" },
-    { n: "12.4", unit: "k", label: "GitHub stars" },
-    { n: "47", unit: "", label: "Languages translated" },
-  ]
+  const stats = dict.stats
 
   return (
     <section className="relative pt-18">
@@ -67,8 +62,7 @@ export function Hero() {
           <button
             type="button"
             className="text-fg appearance-none border-0 bg-transparent p-0 outline-none focus:outline-none focus-visible:outline-none"
-            aria-label="Replay openbranch logo animation"
-            title="Click to replay"
+            aria-label={dict.replayAria}
             onClick={() => setLogoRun((run) => run + 1)}
           >
             <LogoMark key={logoRun} size={64} animate className="overflow-visible" />
@@ -76,7 +70,7 @@ export function Hero() {
         </div>
 
         <h1 className="intro-title mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
-          The open guide to
+          {dict.titleLead}
           <br />
           <span className="text-ob-accent font-medium">
             {displayed}
@@ -88,15 +82,15 @@ export function Hero() {
           </span>
         </h1>
         <p className="intro-copy text-fg-2 mx-auto mb-9 max-w-[48ch] text-lg leading-[1.55] text-pretty">
-          A community handbook on how real teams actually ship software.
+          {dict.subtitle}
         </p>
 
         <div className="intro-actions flex flex-wrap justify-center gap-2.5">
           <Link
-            href="/docs"
+            href={localizedHref(lang, "/docs")}
             className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
           >
-            Read the handbook
+            {dict.cta}
             <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
           </Link>
         </div>

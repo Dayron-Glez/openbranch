@@ -1,0 +1,49 @@
+/* Left-align article within the docs main column instead of centering via mx-auto */
+article.flex {
+  margin-left: 0;
+}
+
+/* ── Sidebar branding ─────────────────────────────────────────────────────── */
+
+/*
+ * Remap Fumadocs' primary token to the openbranch accent inside the sidebar.
+ * This colours the active item text, its background tint, and the left
+ * indicator bar without touching any other fd-primary usages in the layout.
+ */
+#nd-sidebar,
+#nd-toc {
+  --color-fd-primary: var(--color-ob-accent);
+}
+
+/* ── Callout icon alignment ───────────────────────────────────────────────── */
+
+/*
+ * Fumadocs callout: flex row with [bar | icon | content].
+ * The bar must stay full-height (align-items default stretch), so we
+ * only nudge the icon SVG to center itself in the cross axis.
+ */
+.my-4.flex.rounded-xl.border > svg {
+  align-self: center;
+}
+
+/* ── Prose heading colours ────────────────────────────────────────────────── */
+
+/*
+ * Section headings (h2–h4) inside DocsBody (.prose) use the brand accent,
+ * matching the "On this page" TOC heading colour for visual consistency.
+ * h1 is the page title rendered by <DocsTitle> outside .prose, left as-is.
+ */
+.prose :is(h2, h3, h4) {
+  color: var(--color-ob-accent);
+}
+
+/* ── TOC heading branding ─────────────────────────────────────────────────── */
+
+/*
+ * "En esta página" / "On this page" — just the brand accent colour.
+ * The clerk-style TOC provides its own visual hierarchy (SVG path + thumb),
+ * so we keep the heading in normal-case/weight and only swap the colour.
+ */
+h3#toc-title {
+  color: var(--color-ob-accent);
+}

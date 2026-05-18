@@ -1,8 +1,5 @@
-import { RootProvider } from "fumadocs-ui/provider/next"
 import "./global.css"
 import "./animations.css"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -19,16 +16,6 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Layout({ children }: LayoutProps<"/">) {
-  return (
-    <html
-      lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable} dark`}
-      suppressHydrationWarning
-    >
-      <body className="flex min-h-screen flex-col font-sans">
-        <RootProvider>{children}</RootProvider>
-      </body>
-    </html>
-  )
+export default function RootLayout({ children }: LayoutProps<"/">) {
+  return children
 }

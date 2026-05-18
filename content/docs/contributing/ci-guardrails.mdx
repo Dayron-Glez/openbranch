@@ -1,0 +1,232 @@
+---
+title: Guardarraíles de contribución
+description: Cómo un proyecto público basado en forks enseña a los contribuidores en lugar de depender de la atención del maintainer — plantillas, CI, análisis estático, feedback inline y protección de rama.
+icon: Shield
+---
+
+Un contribuidor primerizo abre un pull request desde su fork. Dejó mal un
+comentario, rompió el formato e introdujo un error de tipos. Lo que pasa
+después es la diferencia entre un proyecto que escala y uno que quema a sus
+maintainers.
+
+Sin guardarraíles, lo único entre ese PR y tu rama `main` eres _tú_, leyendo
+cada diff. Los guardarraíles le dan la vuelta: el proyecto le enseña al
+contribuidor qué está mal, dónde y cómo arreglarlo — antes de que tú lo mires.
+
+Este es el montaje exacto que corre openbranch sobre sí mismo, incluidas las
+partes que salieron mal.
+
+## El modelo mental: capas, no un muro
+
+Ningún chequeo solo lo atrapa todo. Cada capa existe para atrapar lo que la
+anterior deja pasar:
+
+| Capa               | Atrapa                                      | Corre en                |
+| ------------------ | ------------------------------------------- | ----------------------- |
+| Plantillas         | Falta de contexto, intención poco clara     | Antes del código        |
+| Puerta de CI       | Errores de tipos, build roto, lint, formato | Cada PR                 |
+| Análisis estático  | Code smells, bugs, seguridad                | Cada PR (también forks) |
+| Feedback inline    | "¿Dónde exactamente?"                       | Sobre el diff           |
+| Protección de rama | Humanos mergeando en rojo                   | En el botón de merge    |
+
+<Callout type="info">
+  El objetivo no es bloquear a la gente. Es que el ciclo de feedback sea tan rápido y tan específico
+  que los contribuidores arreglen sus propios PRs sin esperar a una revisión.
+</Callout>
+
+## Capa 1 — Las plantillas fijan expectativas antes del código
+
+Las plantillas de issues y PRs son el guardarraíl más barato que añadirás
+nunca. Cuestan una carpeta y cambian el comportamiento de inmediato: un
+contribuidor que rellena "¿Qué problema resuelve esto?" o escribe algo
+coherente o se da cuenta de que aún no lo había pensado.
+
+```
+.github/
+├── ISSUE_TEMPLATE/
+│   ├── new-guide.md
+│   ├── improve-guide.md
+│   ├── bug-report.md
+│   └── feature-request.md
+└── PULL_REQUEST_TEMPLATE.md
+```
+
+El trabajo de la plantilla de PR es definir "terminado" para que no tengas que
+repetirlo en cada revisión. Un checklist que el contribuidor lee _antes_ de
+pedir revisión:
+
+```markdown
+## Checklist
+
+- [ ] El contenido es preciso y probado contra una base de código real
+- [ ] `npm run build` pasa
+- [ ] Sin errores de TypeScript (`npm run types:check` pasa)
+- [ ] Sigue el estilo de escritura de las guías existentes
+```
+
+## Capa 2 — El CI es la puerta de verdad
+
+Una plantilla es una petición educada. El CI es la imposición. En cada pull
+request, corre los chequeos que tienen una respuesta objetivamente correcta:
+
+```yaml
+- name: Lint
+  run: npm run lint
+- name: Check formatting
+  run: npm run format:check
+- name: Type check
+  run: npm run types:check
+- name: Build
+  run: npm run build
+```
+
+<Callout type="warn">
+  Los hooks de pre-commit (Husky, lint-staged) son una *comodidad local*, no un guardia. Un
+  contribuidor puede saltárselos con `git commit --no-verify`, y nunca corren en el entorno de un
+  fork. Los hooks dan feedback rápido; el CI es lo que de verdad impone. Usa ambos — pero nunca
+  confíes solo en el hook.
+</Callout>
+
+## Capa 3 — Análisis estático que sobrevive a los forks
+
+Aquí está la trampa que pilla a casi todo el mundo: **GitHub Actions no expone
+los secrets del repo a los pull requests abiertos desde forks.** Es una medida
+de seguridad — de lo contrario cualquier desconocido podría abrir un PR que
+imprima tus secrets.
+
+La consecuencia: un escáner de código que se autentica con un `SONAR_TOKEN`
+guardado como secret _no correrá_ en silencio justo en los PRs donde más lo
+necesitas — los de gente que no conoces.
+
+La solución es no necesitar el secret en el CI. El **Automatic Analysis** de
+SonarCloud analiza el repositorio desde su propia plataforma vía la GitHub App,
+sin token en tu workflow. Los PRs de forks reciben el mismo comentario de
+Quality Gate que cualquier otro.
+
+<Callout type="info">
+  Si un chequeo necesita un secret para correr, pregúntate qué pasa cuando un PR de fork no puede
+  ver ese secret. Si la respuesta es "el chequeo se salta", ese chequeo no te está protegiendo de
+  las contribuciones externas.
+</Callout>
+
+## Capa 4 — Feedback inline, y una historia de guerra
+
+Los contribuidores no deberían tener que abrir el log de Actions, hacer scroll
+entre el output de instalación y parsear un stack trace para enterarse de que
+tienen una variable sin usar en la línea 45. Los _problem matchers_ de GitHub
+convierten el output del linter en anotaciones renderizadas directamente sobre
+el diff — marcas rojas en las líneas exactas.
+
+Conseguir que esto funcionara en openbranch costó tres intentos, y la lección
+vale más que el resultado.
+
+**Intento 1.** Usar el formatter `compact` de ESLint, que un problem matcher
+puede parsear:
+
+```
+The compact formatter is no longer part of core ESLint.
+Install it manually with `npm install -D eslint-formatter-compact`
+```
+
+ESLint 9 eliminó `compact` del core.
+
+**Intento 2.** Bien, usar `unix` en su lugar:
+
+```
+The unix formatter is no longer part of core ESLint.
+Install it manually with `npm install -D eslint-formatter-unix`
+```
+
+ESLint 9 eliminó casi todos los formatters del core. Solo quedan `stylish`,
+`json`, `junit`, `tap`, `checkstyle` y `html`.
+
+**Intento 3.** `eslint-formatter-github` emite los comandos de anotación
+nativos de GitHub y no necesita matcher — pero instalarlo arrastró **101
+paquetes transitivos** (`@octokit/*`) y un puñado de advisories, para formatear
+un poco de texto.
+
+**Lo que se envió.** Un problem matcher para el formatter `stylish` _por
+defecto_. Cero dependencias nuevas. `.github/problem-matchers/eslint.json`:
+
+```json
+{
+  "problemMatcher": [
+    {
+      "owner": "eslint-stylish",
+      "pattern": [
+        { "regexp": "^([^\\s].*)$", "file": 1 },
+        {
+          "regexp": "^\\s+(\\d+):(\\d+)\\s+(error|warning)\\s+(.+?)\\s{2,}(.+)$",
+          "line": 1,
+          "column": 2,
+          "severity": 3,
+          "message": 4,
+          "code": 5,
+          "loop": true
+        }
+      ]
+    }
+  ]
+}
+```
+
+Conectado al workflow sin flag de formatter, porque `stylish` es el de defecto:
+
+```yaml
+- name: Lint
+  run: |
+    echo "::add-matcher::.github/problem-matchers/eslint.json"
+    npm run lint
+```
+
+<Callout type="warn">
+  Cuando el ecosistema de una herramienta cambia bajo tus pies, gana la solución con menos piezas
+  móviles. Un JSON de 20 líneas que controlas le gana a 101 paquetes que no controlas — incluso
+  cuando los 101 paquetes son "la forma recomendada".
+</Callout>
+
+## Capa 5 — La protección de rama hace que lo demás no sea decorativo
+
+Todo lo anterior es teatro si un humano puede darle a merge en un PR rojo. La
+protección de rama exige que los chequeos pasen antes de que el botón de merge
+funcione — y aplica la regla también a los admins, para que no se pueda saltar
+en silencio:
+
+```bash
+gh api repos/OWNER/REPO/branches/main/protection --method PUT --input - <<'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "checks": [
+      { "context": "Type check & build" },
+      { "context": "SonarCloud Code Analysis" }
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": null,
+  "restrictions": null
+}
+EOF
+```
+
+<Callout type="info">
+Las cadenas de `context` deben coincidir exactamente: la del CI es el *nombre
+del job* de tu workflow, la del escáner es el nombre del check que reporta la
+app. Corre `gh pr checks <número>` en un PR abierto para leer los nombres
+exactos antes de conectarlos.
+</Callout>
+
+## El resultado
+
+Apila las capas y la primera contribución de un desconocido ahora recibe, con
+cero esfuerzo manual tuyo:
+
+- una plantilla que le dijo qué significa "terminado" antes de escribir una
+  línea,
+- una X roja con la línea que falla anotada _en el diff_,
+- un comentario de Quality Gate del análisis estático — aunque sea un fork,
+- un botón de merge que sigue deshabilitado hasta que el PR esté de verdad en
+  verde.
+
+No revisaste nada de eso. Gastaste tu atención en la parte que una máquina no
+puede chequear: si la contribución es _buena_.
