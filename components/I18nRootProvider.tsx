@@ -24,12 +24,12 @@ export function I18nRootProvider({ i18n, searchLinks, children }: Props) {
       i18n={{
         ...i18n,
         onLocaleChange: (locale) => {
-          const path = window.location.pathname.replace(/^\/en(?=\/|$)/, "") || "/"
+          const path = globalThis.location.pathname.replace(/^\/en(?=\/|$)/, "") || "/"
           let target = path
           if (locale === "en") {
             target = path === "/" ? "/en" : `/en${path}`
           }
-          window.location.assign(target)
+          globalThis.location.assign(target)
         },
       }}
       search={{ options: { links: searchLinks } }}

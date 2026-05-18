@@ -103,11 +103,8 @@ export function Nav({ dict, lang }: NavProps) {
           >
             <IconGithub />
           </a>
-          <div
-            className="border-line bg-bg-elev flex items-center gap-0.5 rounded-[var(--r-8)] border p-0.5"
-            role="group"
-            aria-label={dict.switchLang}
-          >
+          <fieldset className="border-line bg-bg-elev flex items-center gap-0.5 rounded-[var(--r-8)] border p-0.5">
+            <legend className="sr-only">{dict.switchLang}</legend>
             {LOCALES.map((l) =>
               l === current ? (
                 <span
@@ -131,7 +128,7 @@ export function Nav({ dict, lang }: NavProps) {
                 </a>
               )
             )}
-          </div>
+          </fieldset>
           <Link
             href={localizedHref(lang, "/docs")}
             className={`${navButton} group max-[520px]:hidden`}
