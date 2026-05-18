@@ -26,7 +26,10 @@ export function Nav({ dict, lang }: NavProps) {
   const { setOpenSearch } = useSearchContext()
   const otherLang = lang === "en" ? "es" : "en"
   const stripped = pathname.replace(/^\/en(?=\/|$)/, "") || "/"
-  const switchHref = otherLang === "en" ? `/en${stripped === "/" ? "" : stripped}` : stripped
+  let switchHref = stripped
+  if (otherLang === "en") {
+    switchHref = stripped === "/" ? "/en" : `/en${stripped}`
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
