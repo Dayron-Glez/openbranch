@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React from "react"
 import { useDocsSearch } from "fumadocs-core/search/client"
 import {
   SearchDialog,
@@ -51,9 +51,10 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
 
   const { search, setSearch, query } = useDocsSearch({ type: "fetch", locale })
 
-  useEffect(() => {
-    if (open) setSearch("")
-  }, [open, setSearch])
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen) setSearch("")
+    onOpenChange(nextOpen)
+  }
 
   const results = !query.data || query.data === "empty" ? [] : query.data
   const isEmpty = !search.trim()
@@ -70,7 +71,7 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
             <Link
               key={href}
               href={href}
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
               className="text-fd-foreground hover:bg-fd-accent flex items-center gap-3 rounded-md px-4 py-2 text-sm transition-colors"
             >
               <ArrowUpRight className="text-fd-muted-foreground size-3.5 shrink-0" />
@@ -99,7 +100,7 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
             <li key={item.id}>
               <Link
                 href={item.url}
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleOpenChange(false)}
                 className={`text-fd-foreground hover:bg-fd-accent flex items-start gap-3 rounded-md px-4 py-2 transition-colors ${isText ? "pl-9" : ""}`}
               >
                 <span
@@ -125,7 +126,7 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
   return (
     <SearchDialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       search={search}
       onSearchChange={setSearch}
       isLoading={query.isLoading}
