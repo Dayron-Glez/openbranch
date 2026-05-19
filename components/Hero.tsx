@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, type RefObject } from "react"
+import gsap from "gsap"
 import Link from "next/link"
 import { LogoMark } from "@/components/LogoMark"
 import {
@@ -17,6 +18,72 @@ import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 
+function useHeroAnimation(
+  markRef: RefObject<HTMLDivElement | null>,
+  wordRefs: RefObject<HTMLSpanElement[]>,
+  copyRef: RefObject<HTMLParagraphElement | null>,
+  actionsRef: RefObject<HTMLDivElement | null>,
+  terminalRef: RefObject<HTMLDivElement | null>
+) {
+  useEffect(() => {
+    const mm = gsap.matchMedia()
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const tl = gsap.timeline()
+
+      // 1. Logo container — make it visible; CSS draw animation fires automatically
+      tl.set(markRef.current, { opacity: 1 })
+
+      // 2. Headline words — clip-path reveal, staggered ~90 ms each
+      tl.fromTo(
+        wordRefs.current,
+        { clipPath: "inset(0 0 110% 0)" },
+        { clipPath: "inset(0 0 0% 0)", duration: 0.65, stagger: 0.09, ease: "power3.out" },
+        "+=0.08"
+      )
+
+      // 3. Subtitle fade up (overlaps end of headline)
+      tl.fromTo(
+        copyRef.current,
+        { y: 22, opacity: 0, filter: "blur(5px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "power2.out" },
+        "-=0.3"
+      )
+
+      // 4. CTA
+      tl.fromTo(
+        actionsRef.current,
+        { y: 16, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+        "-=0.5"
+      )
+
+      // 5. Terminal — springs in last
+      tl.fromTo(
+        terminalRef.current,
+        { y: 36, opacity: 0, scale: 0.965, filter: "blur(10px)" },
+        { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.85, ease: "power3.out" },
+        "-=0.4"
+      )
+
+      return () => tl.kill()
+    })
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      const els = [
+        markRef.current,
+        ...wordRefs.current,
+        copyRef.current,
+        actionsRef.current,
+        terminalRef.current,
+      ].filter(Boolean)
+      gsap.set(els, { opacity: 1, clearProps: "clipPath,y,filter,scale" })
+    })
+
+    return () => mm.revert()
+  }, [])
+}
+
 const buttonBase =
   "inline-flex h-[42px] items-center gap-2 rounded-[var(--r-8)] border border-transparent px-5 text-sm font-medium leading-none tracking-[0] no-underline transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] [&_svg]:size-3.5"
 
@@ -31,6 +98,16 @@ export function Hero({ dict, lang }: HeroProps) {
   const [phraseIdx, setPhraseIdx] = useState(0)
   const [displayed, setDisplayed] = useState("")
   const [phase, setPhase] = useState<"typing" | "waiting" | "deleting">("typing")
+
+  const markRef = useRef<HTMLDivElement>(null)
+  const wordRefs = useRef<HTMLSpanElement[]>([])
+  const copyRef = useRef<HTMLParagraphElement>(null)
+  const actionsRef = useRef<HTMLDivElement>(null)
+  const terminalRef = useRef<HTMLDivElement>(null)
+
+  useHeroAnimation(markRef, wordRefs, copyRef, actionsRef, terminalRef)
+
+  const titleWords = dict.titleLead.split(" ")
 
   useEffect(() => {
     const phrase = PHRASES[phraseIdx]
@@ -58,7 +135,7 @@ export function Hero({ dict, lang }: HeroProps) {
     <section className="relative pt-18">
       {/* Centred intro content */}
       <div className="text-center">
-        <div className="intro-mark mb-8 flex min-h-16 justify-center">
+        <div ref={markRef} className="intro-mark mb-8 flex min-h-16 justify-center">
           <button
             type="button"
             className="text-fg appearance-none border-0 bg-transparent p-0 outline-none focus:outline-none focus-visible:outline-none"
@@ -69,8 +146,19 @@ export function Hero({ dict, lang }: HeroProps) {
           </button>
         </div>
 
-        <h1 className="intro-title mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
-          {dict.titleLead}
+        <h1 className="mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
+          {titleWords.map((word, i) => (
+            <span
+              key={i}
+              className="intro-word"
+              ref={(el) => {
+                if (el) wordRefs.current[i] = el
+              }}
+            >
+              {word}
+              {i < titleWords.length - 1 ? " " : ""}
+            </span>
+          ))}
           <br />
           <span className="text-ob-accent font-medium">
             {displayed}
@@ -81,11 +169,14 @@ export function Hero({ dict, lang }: HeroProps) {
             />
           </span>
         </h1>
-        <p className="intro-copy text-fg-2 mx-auto mb-9 max-w-[48ch] text-lg leading-[1.55] text-pretty">
+        <p
+          ref={copyRef}
+          className="intro-copy text-fg-2 mx-auto mb-9 max-w-[48ch] text-lg leading-[1.55] text-pretty"
+        >
           {dict.subtitle}
         </p>
 
-        <div className="intro-actions flex flex-wrap justify-center gap-2.5">
+        <div ref={actionsRef} className="intro-actions flex flex-wrap justify-center gap-2.5">
           <Link
             href={localizedHref(lang, "/docs")}
             className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
@@ -97,7 +188,10 @@ export function Hero({ dict, lang }: HeroProps) {
       </div>
 
       {/* Terminal */}
-      <div className="intro-terminal relative mx-auto mt-16 max-w-[920px] before:absolute before:inset-[-1px] before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-[40px] before:content-['']">
+      <div
+        ref={terminalRef}
+        className="intro-terminal relative mx-auto mt-16 max-w-[920px] before:absolute before:inset-[-1px] before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-[40px] before:content-['']"
+      >
         <Terminal>
           <TerminalLine>
             <Prompt />
