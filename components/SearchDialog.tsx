@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useDocsSearch } from "fumadocs-core/search/client"
 import {
   SearchDialog,
@@ -20,7 +21,7 @@ interface Props extends SharedProps {
   links?: SearchLink[]
 }
 
-function ResultIcon({ type }: { type: "page" | "heading" | "text" }) {
+function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
   if (type === "page") return <FileText />
   if (type === "heading") return <Hash />
   return <AlignLeft />
@@ -43,7 +44,7 @@ const KBD_LABELS = {
   },
 } as const
 
-export function CustomSearchDialog({ open, onOpenChange, links = [] }: Props) {
+export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<Props>) {
   const pathname = usePathname()
   const locale = pathname.startsWith("/en") ? "en" : "es"
   const t = KBD_LABELS[locale]
@@ -52,6 +53,68 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Props) {
 
   const results = !query.data || query.data === "empty" ? [] : query.data
   const isEmpty = !search.trim()
+
+  let listContent: React.ReactNode
+  if (isEmpty) {
+    listContent =
+      links.length > 0 ? (
+        <section>
+          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
+            {t.suggestions}
+          </p>
+          {links.map(([label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => onOpenChange(false)}
+              className="text-fd-foreground hover:bg-fd-accent flex items-center gap-3 rounded-md px-4 py-2 text-sm transition-colors"
+            >
+              <ArrowUpRight className="text-fd-muted-foreground size-3.5 shrink-0" />
+              <span>{label}</span>
+            </Link>
+          ))}
+        </section>
+      ) : null
+  } else if (results.length === 0) {
+    listContent = <p className="text-fd-muted-foreground py-8 text-center text-sm">{t.empty}</p>
+  } else {
+    listContent = (
+      <ul>
+        {results.map((item) => {
+          const isPage = item.type === "page"
+          const isText = item.type === "text"
+          return (
+            <li key={item.id}>
+              <Link
+                href={item.url}
+                onClick={() => onOpenChange(false)}
+                className={`text-fd-foreground hover:bg-fd-accent flex items-start gap-3 rounded-md px-4 py-2 transition-colors ${isText ? "pl-9" : ""}`}
+              >
+                <span
+                  className={`mt-0.5 shrink-0 [&_svg]:size-3.5 ${
+                    isPage ? "text-fd-foreground" : "text-fd-muted-foreground"
+                  }`}
+                >
+                  <ResultIcon type={item.type} />
+                </span>
+                <span
+                  className={
+                    isPage
+                      ? "text-sm font-medium"
+                      : isText
+                        ? "text-fd-muted-foreground text-xs"
+                        : "text-fd-muted-foreground text-sm"
+                  }
+                  /* fumadocs wraps highlights in <mark> — content is generated from our own docs */
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
 
   return (
     <SearchDialog
@@ -71,65 +134,7 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Props) {
           />
         </SearchDialogHeader>
 
-        <div className="max-h-[360px] overflow-y-auto py-1.5">
-          {isEmpty ? (
-            links.length > 0 && (
-              <section>
-                <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
-                  {t.suggestions}
-                </p>
-                {links.map(([label, href]) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => onOpenChange(false)}
-                    className="text-fd-foreground hover:bg-fd-accent flex items-center gap-3 rounded-md px-4 py-2 text-sm transition-colors"
-                  >
-                    <ArrowUpRight className="text-fd-muted-foreground size-3.5 shrink-0" />
-                    <span>{label}</span>
-                  </Link>
-                ))}
-              </section>
-            )
-          ) : results.length === 0 ? (
-            <p className="text-fd-muted-foreground py-8 text-center text-sm">{t.empty}</p>
-          ) : (
-            <ul>
-              {results.map((item) => {
-                const isPage = item.type === "page"
-                const isText = item.type === "text"
-                return (
-                  <li key={item.id}>
-                    <Link
-                      href={item.url}
-                      onClick={() => onOpenChange(false)}
-                      className={`text-fd-foreground hover:bg-fd-accent flex items-start gap-3 rounded-md px-4 py-2 transition-colors ${isText ? "pl-9" : ""}`}
-                    >
-                      <span
-                        className={`mt-0.5 shrink-0 [&_svg]:size-3.5 ${
-                          isPage ? "text-fd-foreground" : "text-fd-muted-foreground"
-                        }`}
-                      >
-                        <ResultIcon type={item.type} />
-                      </span>
-                      <span
-                        className={
-                          isPage
-                            ? "text-sm font-medium"
-                            : isText
-                              ? "text-fd-muted-foreground text-xs"
-                              : "text-fd-muted-foreground text-sm"
-                        }
-                        /* fumadocs wraps highlights in <mark> — content is generated from our own docs */
-                        dangerouslySetInnerHTML={{ __html: item.content }}
-                      />
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </div>
+        <div className="max-h-90 overflow-y-auto py-1.5">{listContent}</div>
 
         <SearchDialogFooter className="border-fd-border flex items-center gap-4 border-t px-4 py-2">
           {(
