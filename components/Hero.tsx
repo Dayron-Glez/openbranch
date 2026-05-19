@@ -226,7 +226,7 @@ export function Hero({ dict, lang }: HeroProps) {
             {displayed}
             <span
               aria-hidden
-              className="bg-ob-accent ml-px inline-block w-[2px] translate-y-[1px] animate-[ob-blink_1s_steps(1)_infinite] rounded-sm align-baseline"
+              className="bg-ob-accent ml-px inline-block w-0.5 translate-y-px animate-[ob-blink_1s_steps(1)_infinite] rounded-sm align-baseline"
               style={{ height: "0.85em" }}
             />
           </span>
@@ -244,7 +244,7 @@ export function Hero({ dict, lang }: HeroProps) {
             className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
           >
             {dict.cta}
-            <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
+            <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
           </Link>
         </div>
       </div>
@@ -252,7 +252,7 @@ export function Hero({ dict, lang }: HeroProps) {
       {/* Terminal */}
       <div
         ref={terminalRef}
-        className="intro-terminal relative mx-auto mt-16 max-w-[920px] before:absolute before:inset-[-1px] before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-[40px] before:content-['']"
+        className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-['']"
       >
         <Terminal>
           {/* CMD1 — typing in progress or fully styled */}
@@ -371,7 +371,7 @@ export function Hero({ dict, lang }: HeroProps) {
             key={label}
             className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
           >
-            <div className="text-[28px] font-medium tracking-[0]">
+            <div className="text-[28px] font-medium tracking-normal">
               {n}
               {unit && <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>}
             </div>
