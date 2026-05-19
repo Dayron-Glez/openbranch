@@ -11,15 +11,10 @@ import {
   SearchDialogOverlay,
 } from "fumadocs-ui/components/dialog/search"
 import type { SharedProps } from "fumadocs-ui/components/dialog/search"
-import { AlignLeft, ArrowUpRight, FileText, Hash } from "lucide-react"
+import { AlignLeft, FileText, Hash } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-
-type SearchLink = [name: string, href: string]
-
-interface Props extends SharedProps {
-  links?: SearchLink[]
-}
+import { getSearchLinks } from "@/lib/i18n.ui"
 
 function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
   if (type === "page") return <FileText />
@@ -44,10 +39,11 @@ const KBD_LABELS = {
   },
 } as const
 
-export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<Props>) {
+export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>) {
   const pathname = usePathname()
   const locale = pathname.startsWith("/en") ? "en" : "es"
   const t = KBD_LABELS[locale]
+  const searchLinks = getSearchLinks(locale)
 
   const { search, setSearch, query } = useDocsSearch({ type: "fetch", locale })
 
@@ -62,19 +58,19 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
   let listContent: React.ReactNode
   if (isEmpty) {
     listContent =
-      links.length > 0 ? (
+      searchLinks.length > 0 ? (
         <section>
           <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
             {t.suggestions}
           </p>
-          {links.map(([label, href]) => (
+          {searchLinks.map(([label, href, Icon]) => (
             <Link
               key={href}
               href={href}
               onClick={() => handleOpenChange(false)}
               className="text-fd-foreground hover:bg-fd-accent flex items-center gap-3 rounded-md px-4 py-2 text-sm transition-colors"
             >
-              <ArrowUpRight className="text-fd-muted-foreground size-3.5 shrink-0" />
+              <Icon className="text-fd-muted-foreground size-3.5 shrink-0" />
               <span>{label}</span>
             </Link>
           ))}
