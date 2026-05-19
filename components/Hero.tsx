@@ -50,17 +50,11 @@ function useTerminalAnimation() {
     return () => clearTimeout(t)
   }, [step, cmd1Chars])
 
-  // Step 1: fetching line → branch block appears all at once
+  // Steps 1-5: sequential output lines
   useEffect(() => {
-    if (step !== 1) return
-    const t = setTimeout(() => setStep(2), 150)
-    return () => clearTimeout(t)
-  }, [step])
-
-  // Step 2: branch block visible — pause before CMD2 starts
-  useEffect(() => {
-    if (step !== 2) return
-    const t = setTimeout(() => setStep(6), 600)
+    if (step < 1 || step > 5) return
+    const delays = [150, 120, 120, 120, 500]
+    const t = setTimeout(() => setStep((s) => s + 1), delays[step - 1])
     return () => clearTimeout(t)
   }, [step])
 
@@ -289,7 +283,7 @@ export function Hero({ dict, lang }: HeroProps) {
             </TerminalLine>
           )}
 
-          {/* Branch block: all lines appear at once (recipe output) */}
+          {/* Branch block: lines reveal one by one */}
           {step >= 2 && (
             <BranchBlock>
               <TerminalLine>
@@ -297,21 +291,27 @@ export function Hero({ dict, lang }: HeroProps) {
                 <span>a4f1e2c</span>
                 <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
               </TerminalLine>
-              <TerminalLine>
-                <span>○</span>
-                <span>9b2d8a1</span>
-                <Dim>Wrap unfinished work in a feature flag</Dim>
-              </TerminalLine>
-              <TerminalLine>
-                <span>○</span>
-                <span>7c0e44d</span>
-                <Dim>Open PR · &lt; 400 lines diff target</Dim>
-              </TerminalLine>
-              <TerminalLine>
-                <span>○</span>
-                <span>3f12a89</span>
-                <Dim>Squash · merge · delete branch</Dim>
-              </TerminalLine>
+              {step >= 3 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>9b2d8a1</span>
+                  <Dim>Wrap unfinished work in a feature flag</Dim>
+                </TerminalLine>
+              )}
+              {step >= 4 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>7c0e44d</span>
+                  <Dim>Open PR · &lt; 400 lines diff target</Dim>
+                </TerminalLine>
+              )}
+              {step >= 5 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>3f12a89</span>
+                  <Dim>Squash · merge · delete branch</Dim>
+                </TerminalLine>
+              )}
             </BranchBlock>
           )}
 
