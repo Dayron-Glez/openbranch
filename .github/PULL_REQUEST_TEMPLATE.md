@@ -1,34 +1,34 @@
-## 📋 Descripción
+## 📋 Description
 
-Describe brevemente qué hace este PR y por qué es necesario.
+Briefly describe what this PR does and why it is needed.
 
 ---
 
-## 🔗 Issue relacionado
+## 🔗 Related issue
 
 Closes #
 
 ---
 
-## 📍 Área afectada
+## 📍 Area affected
 
 - [ ] 🏠 Landing page
-- [ ] 📚 Docs — contenido (MDX)
+- [ ] 📚 Docs — content (MDX)
 - [ ] 🎨 Docs — UI / layout
 - [ ] 🌐 i18n / locale routing
 - [ ] 🔍 Search
-- [ ] ⚙️ Config / infraestructura (CI, dependencias, build)
+- [ ] ⚙️ Config / infrastructure (CI, dependencies, build)
 
 ---
 
-## 🏷 Tipo de cambio
+## 🏷 Type of change
 
-- [ ] 🚀 Nueva funcionalidad
+- [ ] 🚀 New feature
 - [ ] 🐛 Bug fix
-- [ ] 🎨 Style / UI (cambios visuales)
-- [ ] ♻️ Refactor (mejora de código sin cambiar funcionalidad)
-- [ ] 📚 Contenido (guías, recetas, traducción)
-- [ ] 🔧 Chore (config, dependencias, CI/CD)
+- [ ] 🎨 Style / UI (visual changes)
+- [ ] ♻️ Refactor (code improvement without changing behaviour)
+- [ ] 📚 Content (guides, recipes, translation)
+- [ ] 🔧 Chore (config, dependencies, CI/CD)
 
 ---
 
@@ -36,40 +36,40 @@ Closes #
 
 ### General
 
-- [ ] El código compila sin errores (`npm run build` pasa)
-- [ ] Sin errores de TypeScript (`npm run types:check` pasa)
-- [ ] He probado los cambios manualmente en `npm run dev`
-- [ ] No rompe funcionalidad existente
+- [ ] Builds without errors (`npm run build` passes)
+- [ ] No TypeScript errors (`npm run types:check` passes)
+- [ ] Manually tested in `npm run dev`
+- [ ] Does not break existing functionality
 
-### 🎨 Si toca UI / animaciones
+### 🎨 If it touches UI / animations
 
-- [ ] Los componentes renderizan correctamente
-- [ ] Es responsive (mobile, tablet, desktop)
-- [ ] `prefers-reduced-motion` respetado si hay animaciones
-- [ ] Sin regresiones visuales en `/` y `/en`
+- [ ] Components render correctly
+- [ ] Responsive across breakpoints (mobile, tablet, desktop)
+- [ ] `prefers-reduced-motion` respected if animations are involved
+- [ ] No visual regressions on `/` and `/en`
 
-### 📚 Si toca contenido (MDX)
+### 📚 If it touches content (MDX)
 
-- [ ] El contenido es preciso y accionable
-- [ ] Sigue el estilo de escritura del proyecto (conciso, sin relleno)
-- [ ] Ambas variantes de idioma actualizadas si aplica (`*.mdx` + `*.en.mdx`)
-- [ ] Registrado en `meta.json` / `meta.en.json` si es una guía nueva
-- [ ] MDX renderiza sin errores (`npm run build` pasa)
+- [ ] Content is accurate and actionable
+- [ ] Follows the project writing style (concise, no fluff)
+- [ ] Both language variants updated if applicable (`*.mdx` + `*.en.mdx`)
+- [ ] Registered in `meta.json` / `meta.en.json` if a new guide was added
+- [ ] MDX renders without errors (`npm run build` passes)
 
-### ⚙️ Si toca config / infraestructura
+### ⚙️ If it touches config / infrastructure
 
-- [ ] Sin warnings de SonarCloud introducidos
-- [ ] Las rutas de i18n siguen funcionando (`/` y `/en`)
-- [ ] `GET /llms.txt`, `/og/*`, `/api/search` siguen respondiendo
-
----
-
-## 📸 Capturas / evidencia
-
-Capturas, GIFs o pasos de validación manual si aplica.
+- [ ] No new SonarCloud warnings introduced
+- [ ] i18n routes still work (`/` and `/en`)
+- [ ] `GET /llms.txt`, `/og/*`, `/api/search` still respond correctly
 
 ---
 
-## 📝 Notas adicionales
+## 📸 Screenshots / evidence
 
-Cualquier contexto adicional para el reviewer.
+Screenshots, GIFs, or manual validation steps if applicable.
+
+---
+
+## 📝 Additional notes
+
+Any extra context for the reviewer.
