@@ -18,6 +18,68 @@ import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 
+const CMD1 = 'openbranch recipe "trunk-based"'
+const CMD2 = "openbranch apply --to atlas/"
+
+function useTerminalAnimation() {
+  const [step, setStep] = useState(-1)
+  const [cmd1Chars, setCmd1Chars] = useState(0)
+  const [cmd2Chars, setCmd2Chars] = useState(0)
+
+  // Kick off after the GSAP terminal entrance (~2 s) + buffer
+  useEffect(() => {
+    const reduced =
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    if (reduced) {
+      setStep(9)
+      setCmd1Chars(CMD1.length)
+      setCmd2Chars(CMD2.length)
+      return
+    }
+    const t = setTimeout(() => setStep(0), 2300)
+    return () => clearTimeout(t)
+  }, [])
+
+  // Step 0: type CMD1 char-by-char
+  useEffect(() => {
+    if (step !== 0) return
+    if (cmd1Chars < CMD1.length) {
+      const t = setTimeout(() => setCmd1Chars((n) => n + 1), 55)
+      return () => clearTimeout(t)
+    }
+    const t = setTimeout(() => setStep(1), 280)
+    return () => clearTimeout(t)
+  }, [step, cmd1Chars])
+
+  // Steps 1-5: sequential output lines
+  useEffect(() => {
+    if (step < 1 || step > 5) return
+    const delays = [150, 120, 120, 120, 500]
+    const t = setTimeout(() => setStep((s) => s + 1), delays[step - 1])
+    return () => clearTimeout(t)
+  }, [step])
+
+  // Step 6: type CMD2 char-by-char
+  useEffect(() => {
+    if (step !== 6) return
+    if (cmd2Chars < CMD2.length) {
+      const t = setTimeout(() => setCmd2Chars((n) => n + 1), 55)
+      return () => clearTimeout(t)
+    }
+    const t = setTimeout(() => setStep(7), 280)
+    return () => clearTimeout(t)
+  }, [step, cmd2Chars])
+
+  // Steps 7-8: success lines
+  useEffect(() => {
+    if (step !== 7 && step !== 8) return
+    const t = setTimeout(() => setStep((s) => s + 1), step === 7 ? 160 : 250)
+    return () => clearTimeout(t)
+  }, [step])
+
+  return { step, cmd1Chars, cmd2Chars }
+}
+
 function useHeroAnimation(
   markRef: RefObject<HTMLDivElement | null>,
   wordRefs: RefObject<HTMLSpanElement[]>,
@@ -108,6 +170,7 @@ export function Hero({ dict, lang }: HeroProps) {
   useHeroAnimation(markRef, wordRefs, copyRef, actionsRef, terminalRef)
 
   const titleWords = dict.titleLead.split(" ")
+  const { step, cmd1Chars, cmd2Chars } = useTerminalAnimation()
 
   useEffect(() => {
     const phrase = PHRASES[phraseIdx]
@@ -193,58 +256,112 @@ export function Hero({ dict, lang }: HeroProps) {
         className="intro-terminal relative mx-auto mt-16 max-w-[920px] before:absolute before:inset-[-1px] before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-[40px] before:content-['']"
       >
         <Terminal>
-          <TerminalLine>
-            <Prompt />
-            <span>
-              <Highlight>openbranch</Highlight> recipe <Dim>&quot;trunk-based&quot;</Dim>
-            </span>
-          </TerminalLine>
-          <TerminalLine>
-            <Dim>→ fetching guide · 2.1 KB · cached</Dim>
-          </TerminalLine>
-          <BranchBlock>
+          {/* CMD1 — typing in progress or fully styled */}
+          {step >= 0 && (
             <TerminalLine>
-              <span className="text-ob-accent">●</span>
-              <span>a4f1e2c</span>
-              <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
+              <Prompt />
+              <span>
+                {step === 0 ? (
+                  <>
+                    {CMD1.slice(0, cmd1Chars)}
+                    <Cursor />
+                  </>
+                ) : (
+                  <>
+                    <Highlight>openbranch</Highlight>
+                    {" recipe "}
+                    <Dim>&quot;trunk-based&quot;</Dim>
+                  </>
+                )}
+              </span>
             </TerminalLine>
+          )}
+
+          {/* Output: fetching */}
+          {step >= 1 && (
             <TerminalLine>
-              <span>○</span>
-              <span>9b2d8a1</span>
-              <Dim>Wrap unfinished work in a feature flag</Dim>
+              <Dim>→ fetching guide · 2.1 KB · cached</Dim>
             </TerminalLine>
+          )}
+
+          {/* Branch block: lines reveal one by one */}
+          {step >= 2 && (
+            <BranchBlock>
+              <TerminalLine>
+                <span className="text-ob-accent">●</span>
+                <span>a4f1e2c</span>
+                <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
+              </TerminalLine>
+              {step >= 3 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>9b2d8a1</span>
+                  <Dim>Wrap unfinished work in a feature flag</Dim>
+                </TerminalLine>
+              )}
+              {step >= 4 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>7c0e44d</span>
+                  <Dim>Open PR · &lt; 400 lines diff target</Dim>
+                </TerminalLine>
+              )}
+              {step >= 5 && (
+                <TerminalLine>
+                  <span>○</span>
+                  <span>3f12a89</span>
+                  <Dim>Squash · merge · delete branch</Dim>
+                </TerminalLine>
+              )}
+            </BranchBlock>
+          )}
+
+          {/* CMD2 — typing in progress or fully styled */}
+          {step >= 6 && (
             <TerminalLine>
-              <span>○</span>
-              <span>7c0e44d</span>
-              <Dim>Open PR · &lt; 400 lines diff target</Dim>
+              <Prompt />
+              <span>
+                {step === 6 ? (
+                  <>
+                    {CMD2.slice(0, cmd2Chars)}
+                    <Cursor />
+                  </>
+                ) : (
+                  <>
+                    <Highlight>openbranch</Highlight>
+                    {" apply "}
+                    <Dim>--to atlas/</Dim>
+                  </>
+                )}
+              </span>
             </TerminalLine>
+          )}
+
+          {/* Success lines */}
+          {step >= 7 && (
             <TerminalLine>
-              <span>○</span>
-              <span>3f12a89</span>
-              <Dim>Squash · merge · delete branch</Dim>
+              <Ok />
+              <span>
+                Generated <Highlight>CONTRIBUTING.md</Highlight>
+                {" · "}
+                <Highlight>.github/PULL_REQUEST_TEMPLATE.md</Highlight>
+              </span>
             </TerminalLine>
-          </BranchBlock>
-          <TerminalLine>
-            <Prompt />
-            <span>
-              <Highlight>openbranch</Highlight> apply <Dim>--to atlas/</Dim>
-            </span>
-          </TerminalLine>
-          <TerminalLine>
-            <Ok />
-            <span>
-              Generated <Highlight>CONTRIBUTING.md</Highlight> ·{" "}
-              <Highlight>.github/PULL_REQUEST_TEMPLATE.md</Highlight>
-            </span>
-          </TerminalLine>
-          <TerminalLine>
-            <Ok />
-            <span>Wired branch protections · enforced PR size limit · 2-reviewer rule</span>
-          </TerminalLine>
-          <TerminalLine>
-            <Prompt />
-            <Cursor />
-          </TerminalLine>
+          )}
+          {step >= 8 && (
+            <TerminalLine>
+              <Ok />
+              <span>Wired branch protections · enforced PR size limit · 2-reviewer rule</span>
+            </TerminalLine>
+          )}
+
+          {/* Idle cursor (step -1) or final prompt (step 9+) */}
+          {(step === -1 || step >= 9) && (
+            <TerminalLine>
+              <Prompt />
+              <Cursor />
+            </TerminalLine>
+          )}
         </Terminal>
       </div>
 
