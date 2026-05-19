@@ -83,6 +83,14 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
         {results.map((item) => {
           const isPage = item.type === "page"
           const isText = item.type === "text"
+          let contentClassName: string
+          if (isPage) {
+            contentClassName = "text-sm font-medium"
+          } else if (isText) {
+            contentClassName = "text-fd-muted-foreground text-xs"
+          } else {
+            contentClassName = "text-fd-muted-foreground text-sm"
+          }
           return (
             <li key={item.id}>
               <Link
@@ -98,13 +106,7 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
                   <ResultIcon type={item.type} />
                 </span>
                 <span
-                  className={
-                    isPage
-                      ? "text-sm font-medium"
-                      : isText
-                        ? "text-fd-muted-foreground text-xs"
-                        : "text-fd-muted-foreground text-sm"
-                  }
+                  className={contentClassName}
                   /* fumadocs wraps highlights in <mark> — content is generated from our own docs */
                   dangerouslySetInnerHTML={{ __html: item.content }}
                 />
