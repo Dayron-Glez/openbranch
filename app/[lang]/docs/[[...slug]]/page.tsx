@@ -14,12 +14,12 @@ import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { gitConfig } from "@/lib/shared"
 
-export default async function Page(props: PageProps<"/[lang]/docs/[[...slug]]">) {
+export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...slug]]">>) {
   const { lang, slug } = await props.params
   const page = source.getPage(slug, lang)
   if (!page) notFound()
 
-  const MDX = page.data.body
+  const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
 
   return (
@@ -40,7 +40,7 @@ export default async function Page(props: PageProps<"/[lang]/docs/[[...slug]]">)
         />
       </div>
       <DocsBody>
-        <MDX
+        <MdxContent
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
