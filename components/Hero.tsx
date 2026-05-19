@@ -211,7 +211,7 @@ export function Hero({ dict, lang }: HeroProps) {
         <h1 className="mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
           {titleWords.map((word, i) => (
             <span
-              key={i}
+              key={`${word}-${i}`}
               className="intro-word"
               ref={(el) => {
                 if (el) wordRefs.current[i] = el
