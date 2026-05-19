@@ -48,7 +48,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
   const { search, setSearch, query } = useDocsSearch({ type: "fetch", locale })
 
   const handleOpenChange = (nextOpen: boolean) => {
-    if (nextOpen) setSearch("")
+    if (!nextOpen) setSearch("")
     onOpenChange(nextOpen)
   }
 
