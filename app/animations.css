@@ -393,6 +393,29 @@
   }
 }
 
+/* Terminal commit hash — brief accent flash when the line mounts */
+@keyframes ob-hash-in {
+  0% {
+    opacity: 0;
+    color: var(--color-ob-accent);
+    text-shadow: 0 0 8px oklch(78% 0.18 148 / 0.55);
+  }
+  40% {
+    opacity: 1;
+    color: var(--color-ob-accent);
+    text-shadow: 0 0 5px oklch(78% 0.18 148 / 0.3);
+  }
+  100% {
+    opacity: 1;
+    color: inherit;
+    text-shadow: none;
+  }
+}
+
+.terminal-hash {
+  animation: ob-hash-in 0.45s ease forwards;
+}
+
 /* Section eyebrow dot — ripple wave */
 .led-wave {
   position: relative;
@@ -439,6 +462,13 @@
 
   .intro-word {
     clip-path: none !important;
+  }
+
+  .terminal-hash {
+    animation: none;
+    opacity: 1;
+    color: inherit;
+    text-shadow: none;
   }
 
   .docs-page-content {

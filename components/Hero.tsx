@@ -283,32 +283,32 @@ export function Hero({ dict, lang }: HeroProps) {
             </TerminalLine>
           )}
 
-          {/* Branch block: lines reveal one by one */}
+          {/* Branch block: lines reveal one by one, hash flashes accent on mount */}
           {step >= 2 && (
             <BranchBlock>
               <TerminalLine>
                 <span className="text-ob-accent">●</span>
-                <span>a4f1e2c</span>
+                <span className="terminal-hash">a4f1e2c</span>
                 <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
               </TerminalLine>
               {step >= 3 && (
                 <TerminalLine>
                   <span>○</span>
-                  <span>9b2d8a1</span>
+                  <span className="terminal-hash">9b2d8a1</span>
                   <Dim>Wrap unfinished work in a feature flag</Dim>
                 </TerminalLine>
               )}
               {step >= 4 && (
                 <TerminalLine>
                   <span>○</span>
-                  <span>7c0e44d</span>
+                  <span className="terminal-hash">7c0e44d</span>
                   <Dim>Open PR · &lt; 400 lines diff target</Dim>
                 </TerminalLine>
               )}
               {step >= 5 && (
                 <TerminalLine>
                   <span>○</span>
-                  <span>3f12a89</span>
+                  <span className="terminal-hash">3f12a89</span>
                   <Dim>Squash · merge · delete branch</Dim>
                 </TerminalLine>
               )}
