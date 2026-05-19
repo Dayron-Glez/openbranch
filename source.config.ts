@@ -1,12 +1,11 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config"
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema"
+import { maturitySchema } from "./lib/maturity"
 
-// You can customize Zod schemas for frontmatter and `meta.json` here
-// see https://fumadocs.dev/docs/mdx/collections
 export const docs = defineDocs({
   dir: "content/docs",
   docs: {
-    schema: pageSchema,
+    schema: pageSchema.extend({ maturity: maturitySchema }),
     postprocess: {
       includeProcessedMarkdown: true,
     },
