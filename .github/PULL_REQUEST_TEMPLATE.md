@@ -1,28 +1,75 @@
-## What does this PR change?
+## 📋 Descripción
 
-<!-- Brief description -->
+Describe brevemente qué hace este PR y por qué es necesario.
+
+---
+
+## 🔗 Issue relacionado
 
 Closes #
 
 ---
 
-## Type of change
+## 📍 Área afectada
 
-- [ ] New guide / recipe
-- [ ] Improvement to existing content
-- [ ] Bug fix (site or content)
-- [ ] New site feature
-- [ ] Refactor / chore
-
----
-
-## Checklist
-
-- [ ] Content is accurate and tested against a real codebase or team experience
-- [ ] MDX renders without errors (`npm run build` passes)
-- [ ] No TypeScript errors (`npm run types:check` passes)
-- [ ] Follows the writing style of existing guides (concise, actionable, no fluff)
+- [ ] 🏠 Landing page
+- [ ] 📚 Docs — contenido (MDX)
+- [ ] 🎨 Docs — UI / layout
+- [ ] 🌐 i18n / locale routing
+- [ ] 🔍 Search
+- [ ] ⚙️ Config / infraestructura (CI, dependencias, build)
 
 ---
 
-## Evidence (screenshots, links)
+## 🏷 Tipo de cambio
+
+- [ ] 🚀 Nueva funcionalidad
+- [ ] 🐛 Bug fix
+- [ ] 🎨 Style / UI (cambios visuales)
+- [ ] ♻️ Refactor (mejora de código sin cambiar funcionalidad)
+- [ ] 📚 Contenido (guías, recetas, traducción)
+- [ ] 🔧 Chore (config, dependencias, CI/CD)
+
+---
+
+## ✅ Checklist
+
+### General
+
+- [ ] El código compila sin errores (`npm run build` pasa)
+- [ ] Sin errores de TypeScript (`npm run types:check` pasa)
+- [ ] He probado los cambios manualmente en `npm run dev`
+- [ ] No rompe funcionalidad existente
+
+### 🎨 Si toca UI / animaciones
+
+- [ ] Los componentes renderizan correctamente
+- [ ] Es responsive (mobile, tablet, desktop)
+- [ ] `prefers-reduced-motion` respetado si hay animaciones
+- [ ] Sin regresiones visuales en `/` y `/en`
+
+### 📚 Si toca contenido (MDX)
+
+- [ ] El contenido es preciso y accionable
+- [ ] Sigue el estilo de escritura del proyecto (conciso, sin relleno)
+- [ ] Ambas variantes de idioma actualizadas si aplica (`*.mdx` + `*.en.mdx`)
+- [ ] Registrado en `meta.json` / `meta.en.json` si es una guía nueva
+- [ ] MDX renderiza sin errores (`npm run build` pasa)
+
+### ⚙️ Si toca config / infraestructura
+
+- [ ] Sin warnings de SonarCloud introducidos
+- [ ] Las rutas de i18n siguen funcionando (`/` y `/en`)
+- [ ] `GET /llms.txt`, `/og/*`, `/api/search` siguen respondiendo
+
+---
+
+## 📸 Capturas / evidencia
+
+Capturas, GIFs o pasos de validación manual si aplica.
+
+---
+
+## 📝 Notas adicionales
+
+Cualquier contexto adicional para el reviewer.
