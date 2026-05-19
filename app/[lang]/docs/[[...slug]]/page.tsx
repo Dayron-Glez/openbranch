@@ -1,5 +1,7 @@
 import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
 import { MaturityBadge } from "@/components/MaturityBadge"
+import { MaturityFilter } from "@/components/MaturityFilter"
+import type { FilterPage } from "@/components/MaturityFilter"
 import {
   DocsBody,
   DocsDescription,
@@ -22,6 +24,23 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
 
+  // Build child-page list for section-index pages (slug has exactly one segment).
+  // Leaf pages and the root index do not render the filter.
+  let sectionPages: FilterPage[] | null = null
+  if (slug && slug.length === 1) {
+    const children = source
+      .getPages(lang)
+      .filter((p) => p.slugs[0] === slug[0] && p.slugs.length > 1)
+    if (children.length > 0) {
+      sectionPages = children.map((p) => ({
+        title: p.data.title,
+        url: p.url,
+        description: p.data.description,
+        maturity: p.data.maturity,
+      }))
+    }
+  }
+
   return (
     <DocsPage
       toc={page.data.toc}
@@ -40,6 +59,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
         />
       </div>
       <DocsBody>
+        {sectionPages && <MaturityFilter pages={sectionPages} />}
         <MdxContent
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
