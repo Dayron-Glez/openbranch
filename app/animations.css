@@ -471,11 +471,6 @@
     text-shadow: none;
   }
 
-  .docs-page-content {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
   .ambient,
   .scroll-reveal,
   .scroll-reveal-child,
