@@ -28,8 +28,7 @@ function useTerminalAnimation() {
 
   // Kick off after the GSAP terminal entrance (~2 s) + buffer
   useEffect(() => {
-    const reduced =
-      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduced) {
       setStep(9)
       setCmd1Chars(CMD1.length)
