@@ -2,6 +2,7 @@
 
 import type { ComponentProps, ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
+import { CustomSearchDialog } from "@/components/SearchDialog"
 
 type RootProviderProps = ComponentProps<typeof RootProvider>
 type I18nConfig = NonNullable<RootProviderProps["i18n"]>
@@ -32,7 +33,7 @@ export function I18nRootProvider({ i18n, searchLinks, children }: Props) {
           globalThis.location.assign(target)
         },
       }}
-      search={{ options: { links: searchLinks } }}
+      search={{ SearchDialog: CustomSearchDialog, options: { links: searchLinks } }}
     >
       {children}
     </RootProvider>
