@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect } from "react"
 import { useDocsSearch } from "fumadocs-core/search/client"
 import {
   SearchDialog,
@@ -50,6 +50,10 @@ export function CustomSearchDialog({ open, onOpenChange, links = [] }: Readonly<
   const t = KBD_LABELS[locale]
 
   const { search, setSearch, query } = useDocsSearch({ type: "fetch", locale })
+
+  useEffect(() => {
+    if (open) setSearch("")
+  }, [open, setSearch])
 
   const results = !query.data || query.data === "empty" ? [] : query.data
   const isEmpty = !search.trim()
