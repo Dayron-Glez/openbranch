@@ -1,4 +1,12 @@
 import { defineI18nUI } from "fumadocs-ui/i18n"
+import {
+  BookOpen,
+  FlaskConical,
+  GitBranch,
+  GitPullRequest,
+  Lightbulb,
+  type LucideIcon,
+} from "lucide-react"
 import { i18n } from "./i18n"
 
 export const { provider } = defineI18nUI(i18n, {
@@ -21,22 +29,22 @@ export const { provider } = defineI18nUI(i18n, {
   },
 })
 
-type SearchLink = [name: string, href: string]
+export type SearchLink = [name: string, href: string, icon: LucideIcon]
 
 const SEARCH_LINKS: Record<"es" | "en", SearchLink[]> = {
   es: [
-    ["Documentación", "/docs"],
-    ["Git y flujos de trabajo", "/docs/git"],
-    ["Pruebas", "/docs/testing"],
-    ["Contribuir al código abierto", "/docs/contributing"],
-    ["Guardarraíles de contribución", "/docs/contributing/ci-guardrails"],
+    ["Documentación", "/docs", BookOpen],
+    ["Git y flujos de trabajo", "/docs/git", GitBranch],
+    ["Pruebas", "/docs/testing", FlaskConical],
+    ["Contribuir al código abierto", "/docs/contributing", GitPullRequest],
+    ["Buenas prácticas", "/docs/best-practices", Lightbulb],
   ],
   en: [
-    ["Documentation", "/en/docs"],
-    ["Git & Workflows", "/en/docs/git"],
-    ["Testing", "/en/docs/testing"],
-    ["Contributing to OSS", "/en/docs/contributing"],
-    ["Contribution guardrails", "/en/docs/contributing/ci-guardrails"],
+    ["Documentation", "/en/docs", BookOpen],
+    ["Git & Workflows", "/en/docs/git", GitBranch],
+    ["Testing", "/en/docs/testing", FlaskConical],
+    ["Contributing to OSS", "/en/docs/contributing", GitPullRequest],
+    ["Best practices", "/en/docs/best-practices", Lightbulb],
   ],
 }
 
