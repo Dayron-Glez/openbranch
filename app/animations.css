@@ -90,38 +90,20 @@
   animation: amb-sweep 32s linear infinite;
 }
 
-/* Landing entrance choreography */
+/* Landing entrance choreography — driven by GSAP (useHeroAnimation hook in Hero.tsx) */
 .intro-mark,
-.intro-title,
 .intro-copy,
 .intro-actions,
 .intro-meta,
 .intro-terminal {
-  opacity: 0;
+  opacity: 0; /* GSAP animates to opacity: 1 */
 }
 
-.intro-mark {
-  animation: hero-mark-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
-}
-
-.intro-title {
-  animation: hero-title-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
-}
-
-.intro-copy {
-  animation: hero-rise-in 0.8s var(--ease) 0.48s both;
-}
-
-.intro-actions {
-  animation: hero-rise-in 0.75s var(--ease) 0.62s both;
-}
-
-.intro-meta {
-  animation: hero-rise-in 0.75s var(--ease) 0.76s both;
-}
-
-.intro-terminal {
-  animation: terminal-stage-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
+/* Each headline word; GSAP animates clip-path inset(0 0 110% 0) → inset(0 0 0% 0) */
+.intro-word {
+  display: inline-block;
+  clip-path: inset(0 0 110% 0);
+  will-change: clip-path;
 }
 
 .scroll-reveal,
@@ -187,68 +169,6 @@
   to {
     opacity: 1;
     transform: scale(1);
-  }
-}
-
-@keyframes hero-mark-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.86);
-    filter: blur(8px);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.04);
-    filter: blur(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-@keyframes hero-title-in {
-  from {
-    opacity: 0;
-    transform: translateY(28px) scale(0.985);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-@keyframes hero-rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-    filter: blur(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-@keyframes terminal-stage-in {
-  from {
-    opacity: 0;
-    transform: translateY(36px) scale(0.965);
-    filter: blur(10px);
-  }
-  65% {
-    opacity: 1;
-    transform: translateY(-3px) scale(1.006);
-    filter: blur(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -473,6 +393,29 @@
   }
 }
 
+/* Terminal commit hash — brief accent flash when the line mounts */
+@keyframes ob-hash-in {
+  0% {
+    opacity: 0;
+    color: var(--color-ob-accent);
+    text-shadow: 0 0 8px oklch(78% 0.18 148 / 0.55);
+  }
+  40% {
+    opacity: 1;
+    color: var(--color-ob-accent);
+    text-shadow: 0 0 5px oklch(78% 0.18 148 / 0.3);
+  }
+  100% {
+    opacity: 1;
+    color: inherit;
+    text-shadow: none;
+  }
+}
+
+.terminal-hash {
+  animation: ob-hash-in 0.45s ease forwards;
+}
+
 /* Section eyebrow dot — ripple wave */
 .led-wave {
   position: relative;
@@ -507,13 +450,28 @@
     animation: none;
   }
 
-  .ambient,
+  /* GSAP handles intro-* and intro-word visibility via gsap.matchMedia().
+     These rules act as a CSS safety net in case JS has not run yet. */
   .intro-mark,
-  .intro-title,
   .intro-copy,
   .intro-actions,
   .intro-meta,
-  .intro-terminal,
+  .intro-terminal {
+    opacity: 1 !important;
+  }
+
+  .intro-word {
+    clip-path: none !important;
+  }
+
+  .terminal-hash {
+    animation: none;
+    opacity: 1;
+    color: inherit;
+    text-shadow: none;
+  }
+
+  .ambient,
   .scroll-reveal,
   .scroll-reveal-child,
   .scroll-reveal-stagger > * {

@@ -3,6 +3,7 @@ import { source } from "@/lib/source"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { baseOptions } from "@/lib/layout.shared"
 import { Logo } from "@/components/logo"
+import { DocsPageTransition } from "@/components/DocsPageTransition"
 
 export default async function Layout({ children, params }: LayoutProps<"/[lang]/docs">) {
   const { lang } = await params
@@ -14,7 +15,7 @@ export default async function Layout({ children, params }: LayoutProps<"/[lang]/
       nav={{ ...base.nav, title: <Logo /> }}
       containerProps={{ style: { "--fd-sidebar-width": "268px" } as React.CSSProperties }}
     >
-      {children}
+      <DocsPageTransition>{children}</DocsPageTransition>
     </DocsLayout>
   )
 }
