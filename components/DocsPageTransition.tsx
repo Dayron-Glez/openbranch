@@ -11,12 +11,13 @@ export function DocsPageTransition({ children }: Readonly<{ children: React.Reac
   useLayoutEffect(() => {
     const mm = gsap.matchMedia()
     mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // y/transform intentionally omitted — a transform on this wrapper
+      // breaks position:sticky on the fumadocs TOC (#nd-toc)
       gsap.from(ref.current, {
         opacity: 0,
-        y: 10,
-        duration: 0.35,
-        ease: "power2.out",
-        clearProps: "all",
+        duration: 0.3,
+        ease: "power1.out",
+        clearProps: "opacity",
       })
     })
     return () => mm.revert()
