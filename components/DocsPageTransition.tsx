@@ -4,7 +4,7 @@ import { useRef, useLayoutEffect } from "react"
 import { usePathname } from "next/navigation"
 import gsap from "gsap"
 
-export function DocsPageTransition({ children }: { children: React.ReactNode }) {
+export function DocsPageTransition({ children }: Readonly<{ children: React.ReactNode }>) {
   const ref = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
