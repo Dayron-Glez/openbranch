@@ -21,6 +21,8 @@
     "*.{js,mjs,json,md,mdx,css}": "prettier --write"
   },
   "dependencies": {
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "clsx": "^2.1.1",
     "fumadocs-core": "16.8.11",
     "fumadocs-mdx": "15.0.5",
     "fumadocs-ui": "16.8.11",
