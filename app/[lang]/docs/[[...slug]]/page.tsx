@@ -2,6 +2,7 @@ import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
 import { MaturityBadge } from "@/components/MaturityBadge"
 import { MaturityFilter } from "@/components/MaturityFilter"
 import type { FilterPage } from "@/components/MaturityFilter"
+import { wantedByTopic } from "@/lib/wanted"
 import {
   DocsBody,
   DocsDescription,
@@ -28,10 +29,13 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   // Build child-page list for section-index pages (slug has exactly one segment).
   // Leaf pages and the root index do not render the filter.
   let sectionPages: FilterPage[] | null = null
+  let topicCounts: { real: number; wanted: number } | null = null
+
   if (slug?.length === 1) {
     const children = source
       .getPages(lang)
       .filter((p) => p.slugs[0] === slug[0] && p.slugs.length > 1)
+
     if (children.length > 0) {
       sectionPages = children.map((p) => ({
         title: p.data.title,
@@ -39,6 +43,11 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
         description: p.data.description,
         maturity: p.data.maturity,
       }))
+    }
+
+    const wantedItems = wantedByTopic(slug[0])
+    if (wantedItems.length > 0) {
+      topicCounts = { real: children.length, wanted: wantedItems.length }
     }
   }
 
@@ -60,15 +69,26 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
         />
       </div>
       <DocsBody>
-        {sectionPages && <MaturityFilter pages={sectionPages} />}
-        <DocsScrollReveal>
-          <MdxContent
-            components={getMDXComponents({
-              // this allows you to link to other pages with relative file paths
-              a: createRelativeLink(source, page),
-            })}
-          />
-        </DocsScrollReveal>
+        {topicCounts && (
+          <p className="text-fd-muted-foreground mb-4 text-sm">
+            {topicCounts.real} guides curated · {topicCounts.wanted} wanted
+          </p>
+        )}
+        <div
+          {...(topicCounts && topicCounts.real < 4 && topicCounts.wanted > 0
+            ? { "data-layout": "curated" }
+            : {})}
+        >
+          {sectionPages && <MaturityFilter pages={sectionPages} />}
+          <DocsScrollReveal>
+            <MdxContent
+              components={getMDXComponents({
+                // this allows you to link to other pages with relative file paths
+                a: createRelativeLink(source, page),
+              })}
+            />
+          </DocsScrollReveal>
+        </div>
       </DocsBody>
     </DocsPage>
   )
