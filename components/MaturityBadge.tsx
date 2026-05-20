@@ -1,10 +1,10 @@
 import { MATURITY_CLASSES, MATURITY_LABEL, MATURITY_SIZE_CLASSES } from "@/lib/maturity"
 import type { Maturity } from "@/lib/maturity"
 
-type MaturityBadgeProps = Readonly<{
+type MaturityBadgeProps = {
   maturity: Maturity
   size?: "xs" | "md" | "lg"
-}>
+}
 
 export function MaturityBadge({ maturity, size = "md" }: MaturityBadgeProps) {
   return (

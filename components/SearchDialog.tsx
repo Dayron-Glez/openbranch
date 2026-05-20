@@ -16,7 +16,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { getSearchLinks } from "@/lib/i18n.ui"
 
-function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
+function ResultIcon({ type }: { type: "page" | "heading" | "text" }) {
   if (type === "page") return <FileText />
   if (type === "heading") return <Hash />
   return <AlignLeft />

@@ -4,7 +4,7 @@ import { PlusCircle } from "lucide-react"
 import { buildSuggestUrl } from "@/lib/suggest-url"
 import { useDocsUI } from "@/components/DocsUIProvider"
 
-export function SuggestGuideButton({ sectionName }: Readonly<{ sectionName: string }>) {
+export function SuggestGuideButton({ sectionName }: { sectionName: string }) {
   const { suggestGuide } = useDocsUI()
   const url = buildSuggestUrl(sectionName)
 

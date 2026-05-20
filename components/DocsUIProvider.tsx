@@ -9,7 +9,10 @@ const DocsUICtx = createContext<DocsDictionary>(docsDictionary.es)
 export function DocsUIProvider({
   dict,
   children,
-}: Readonly<{ dict: DocsDictionary; children: React.ReactNode }>) {
+}: {
+  dict: DocsDictionary
+  children: React.ReactNode
+}) {
   return <DocsUICtx.Provider value={dict}>{children}</DocsUICtx.Provider>
 }
 
