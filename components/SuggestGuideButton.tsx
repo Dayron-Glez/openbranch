@@ -1,5 +1,6 @@
 "use client"
 
+import { PlusCircle } from "lucide-react"
 import { buildSuggestUrl } from "@/lib/suggest-url"
 
 export function SuggestGuideButton({ sectionName }: Readonly<{ sectionName: string }>) {
@@ -15,11 +16,12 @@ export function SuggestGuideButton({ sectionName }: Readonly<{ sectionName: stri
         "border-line text-fd-muted-foreground border border-dashed",
         "hover:border-ob-accent hover:bg-ob-accent/8 hover:text-ob-accent transition-colors",
         "focus-visible:border-ob-accent focus-visible:bg-ob-accent/8 focus-visible:text-ob-accent",
+        "[&_svg]:size-4 [&_svg]:shrink-0",
         "outline-none",
       ].join(" ")}
       aria-label={`Suggest a new guide for ${sectionName}`}
     >
-      <span aria-hidden="true">+</span>
+      <PlusCircle />
       <span>Suggest a guide</span>
     </a>
   )
