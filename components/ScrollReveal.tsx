@@ -6,14 +6,14 @@ export function ScrollReveal() {
   useEffect(() => {
     const items = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"))
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       items.forEach((item) => item.classList.add("is-visible"))
       return
     }
 
     const revealIfVisible = (item: HTMLElement) => {
       const rect = item.getBoundingClientRect()
-      const entersViewport = rect.top < window.innerHeight * 0.78 && rect.bottom > 0
+      const entersViewport = rect.top < globalThis.innerHeight * 0.78 && rect.bottom > 0
       if (entersViewport) item.classList.add("is-visible")
       return entersViewport
     }
