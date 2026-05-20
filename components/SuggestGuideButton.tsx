@@ -2,8 +2,10 @@
 
 import { PlusCircle } from "lucide-react"
 import { buildSuggestUrl } from "@/lib/suggest-url"
+import { useDocsUI } from "@/components/DocsUIProvider"
 
 export function SuggestGuideButton({ sectionName }: Readonly<{ sectionName: string }>) {
+  const { suggestGuide } = useDocsUI()
   const url = buildSuggestUrl(sectionName)
 
   return (
@@ -19,10 +21,10 @@ export function SuggestGuideButton({ sectionName }: Readonly<{ sectionName: stri
         "[&_svg]:size-4 [&_svg]:shrink-0",
         "outline-none",
       ].join(" ")}
-      aria-label={`Suggest a new guide for ${sectionName}`}
+      aria-label={`${suggestGuide} — ${sectionName}`}
     >
       <PlusCircle />
-      <span>Suggest a guide</span>
+      <span>{suggestGuide}</span>
     </a>
   )
 }

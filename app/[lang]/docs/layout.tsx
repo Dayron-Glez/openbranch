@@ -6,6 +6,9 @@ import { Logo } from "@/components/logo"
 import { DocsPageTransition } from "@/components/DocsPageTransition"
 import { DocsSidebarItem } from "@/components/DocsSidebar"
 import { MaturityProvider } from "@/components/MaturityProvider"
+import { DocsUIProvider } from "@/components/DocsUIProvider"
+import { docsDictionary } from "@/lib/dictionaries/docs"
+import type { DocsLocale } from "@/lib/dictionaries/docs"
 import type { Maturity } from "@/lib/maturity"
 import type {
   Node as PageTreeNode,
@@ -43,17 +46,22 @@ export default async function Layout({ children, params }: LayoutProps<"/[lang]/
     children: rawTree.children.map(augmentTree),
   }
 
+  const locale = (lang as DocsLocale) in docsDictionary ? (lang as DocsLocale) : "es"
+  const dict = docsDictionary[locale]
+
   return (
     <MaturityProvider map={maturityMap}>
-      <DocsLayout
-        tree={tree}
-        {...base}
-        nav={{ ...base.nav, title: <Logo /> }}
-        containerProps={{ style: { "--fd-sidebar-width": "268px" } as React.CSSProperties }}
-        sidebar={{ components: { Item: DocsSidebarItem } }}
-      >
-        <DocsPageTransition>{children}</DocsPageTransition>
-      </DocsLayout>
+      <DocsUIProvider dict={dict}>
+        <DocsLayout
+          tree={tree}
+          {...base}
+          nav={{ ...base.nav, title: <Logo /> }}
+          containerProps={{ style: { "--fd-sidebar-width": "268px" } as React.CSSProperties }}
+          sidebar={{ components: { Item: DocsSidebarItem } }}
+        >
+          <DocsPageTransition>{children}</DocsPageTransition>
+        </DocsLayout>
+      </DocsUIProvider>
     </MaturityProvider>
   )
 }
