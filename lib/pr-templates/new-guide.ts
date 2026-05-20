@@ -1,48 +1,37 @@
 import { gitConfig } from "@/lib/shared"
 import type { Wanted } from "@/lib/wanted"
 
-function buildTemplate(wanted: Wanted): string {
-  return `---
-title: ${wanted.title}
-description: ${wanted.description}
-topic: ${wanted.topic}
-maturity: draft
-authors: []
+function buildIssueBody(wanted: Wanted): string {
+  return `## Guide request
+
+**Topic:** \`${wanted.topic}\`
+**Estimated time:** ${wanted.est_minutes ? `~${wanted.est_minutes} min` : "unknown"}
+**Requested by:** ${wanted.requested_count} readers
+
+### Description
+
+${wanted.description}
+
+### Suggested outline
+
+- Why it works
+- What it looks like
+- When not to use it
+- Failure modes
+
 ---
-
-{/* requested by ${wanted.requested_count} readers${wanted.est_minutes ? ` · est ~${wanted.est_minutes}min` : ""} */}
-
-## Why it works
-
-TODO
-
-## What it looks like
-
-TODO
-
-## When not to use it
-
-TODO
-
-## Failure modes
-
-TODO
-`
+_To contribute this guide, comment below and open a branch from this issue._`
 }
 
-export function buildPrUrl(wanted: Wanted): string {
+export function buildIssueUrl(wanted: Wanted): string {
   const owner = process.env.NEXT_PUBLIC_REPO_OWNER ?? gitConfig.user
   const repo = process.env.NEXT_PUBLIC_REPO_NAME ?? gitConfig.repo
-  const branch = gitConfig.branch
-
-  const filePath = `content/docs/${wanted.topic}/${wanted.id}.mdx`
-  const template = buildTemplate(wanted)
-  const commitMsg = `docs(${wanted.topic}): add ${wanted.id}`
 
   const params = new URLSearchParams({
-    value: template,
-    message: commitMsg,
+    title: `[guide] ${wanted.title}`,
+    body: buildIssueBody(wanted),
+    labels: "guide-wanted",
   })
 
-  return `https://github.com/${owner}/${repo}/new/${branch}/${filePath}?${params.toString()}`
+  return `https://github.com/${owner}/${repo}/issues/new?${params.toString()}`
 }

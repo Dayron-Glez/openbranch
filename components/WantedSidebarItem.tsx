@@ -1,14 +1,14 @@
 "use client"
 
-import { buildPrUrl } from "@/lib/pr-templates/new-guide"
+import { buildIssueUrl } from "@/lib/pr-templates/new-guide"
 import type { Wanted } from "@/lib/wanted"
 
 export function WantedSidebarItem({ wanted }: Readonly<{ wanted: Wanted }>) {
-  const prUrl = buildPrUrl(wanted)
+  const issueUrl = buildIssueUrl(wanted)
 
   return (
     <a
-      href={prUrl}
+      href={issueUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={[
@@ -18,7 +18,7 @@ export function WantedSidebarItem({ wanted }: Readonly<{ wanted: Wanted }>) {
         "focus-visible:border-ob-accent focus-visible:bg-ob-accent/8 focus-visible:text-ob-accent",
         "outline-none",
       ].join(" ")}
-      aria-label={`Open PR to create: ${wanted.title}`}
+      aria-label={`Open issue to request: ${wanted.title}`}
     >
       <span className="shrink-0 text-sm" aria-hidden="true">
         +
@@ -28,7 +28,7 @@ export function WantedSidebarItem({ wanted }: Readonly<{ wanted: Wanted }>) {
         className="text-ob-accent shrink-0 font-mono text-xs opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
         aria-hidden="true"
       >
-        PR →
+        Issue →
       </span>
     </a>
   )
