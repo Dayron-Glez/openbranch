@@ -40,8 +40,12 @@ export function Nav({ dict, lang }: NavProps) {
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  function isActive(href: string, exact: boolean) {
-    return exact ? pathname === href : pathname.startsWith(href)
+  function isActiveExact(href: string) {
+    return pathname === href
+  }
+
+  function isActivePrefix(href: string) {
+    return pathname.startsWith(href)
   }
 
   const homeHref = lang === "en" ? "/en" : "/"
@@ -73,7 +77,9 @@ export function Nav({ dict, lang }: NavProps) {
                 key={path}
                 href={href}
                 className={`hover:bg-bg-elev hover:text-fg rounded-[var(--r-6)] px-3 py-1.5 text-[13.5px] no-underline transition-colors duration-[var(--d-fast)] ease-[var(--ease)] ${
-                  isActive(href, exact) ? "bg-accent-soft text-fg" : "text-fg-muted"
+                  (exact ? isActiveExact(href) : isActivePrefix(href))
+                    ? "bg-accent-soft text-fg"
+                    : "text-fg-muted"
                 }`}
               >
                 {label}

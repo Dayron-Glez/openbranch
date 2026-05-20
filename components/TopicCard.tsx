@@ -1,14 +1,14 @@
 import type { ReactNode } from "react"
 import { IconArrowRight } from "@/icons"
 
-type TopicCardProps = Readonly<{
+type TopicCardProps = {
   href?: string
   icon: ReactNode
   title: string
   description: string
   count: string
   updated: string
-}>
+}
 
 export function TopicCard({
   href = "#",

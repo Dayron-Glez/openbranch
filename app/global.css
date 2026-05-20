@@ -74,6 +74,21 @@
     --input: 44 19% 89%;
     --ring: 140 45% 38%;
     --radius: 0.625rem;
+    --fg: var(--color-fg);
+    --ob-accent: var(--color-ob-accent);
+    --r-6: 6px;
+    --r-8: 8px;
+    --r-10: 10px;
+    --r-12: 12px;
+    --r-16: 16px;
+    --r-full: 999px;
+    --sh-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --sh-3: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --sh-4: 0 32px 96px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --d-fast: 120ms;
+    --d-base: 180ms;
+    --d-slow: 260ms;
   }
 
   .dark {
@@ -96,24 +111,6 @@
     --border: 220 12% 15%;
     --input: 220 12% 15%;
     --ring: 140 63% 57%;
-  }
-
-  :root {
-    --fg: var(--color-fg);
-    --ob-accent: var(--color-ob-accent);
-    --r-6: 6px;
-    --r-8: 8px;
-    --r-10: 10px;
-    --r-12: 12px;
-    --r-16: 16px;
-    --r-full: 999px;
-    --sh-2: 0 1px 2px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    --sh-3: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
-    --sh-4: 0 32px 96px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-    --d-fast: 120ms;
-    --d-base: 180ms;
-    --d-slow: 260ms;
   }
 
   html {

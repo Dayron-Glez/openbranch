@@ -4,7 +4,7 @@ import { useLayoutEffect } from "react"
 import { usePathname } from "next/navigation"
 import gsap from "gsap"
 
-export function DocsPageTransition({ children }: Readonly<{ children: React.ReactNode }>) {
+export function DocsPageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   useLayoutEffect(() => {

@@ -43,7 +43,7 @@ export function FeaturedGuide({ dict }: FeaturedGuideProps) {
           </span>
         </div>
         <div className="mt-2">
-          <a href="#" className={ctaClass}>
+          <a href="/docs" className={ctaClass}>
             {dict.cta}
             <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
           </a>
