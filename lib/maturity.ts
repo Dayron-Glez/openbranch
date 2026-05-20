@@ -20,6 +20,14 @@ export const MATURITY_LABEL: Record<Maturity, string> = {
   archived: "archived",
 }
 
+export const MATURITY_SHORT_LABEL: Record<Maturity, string> = {
+  draft: "draft",
+  rfc: "rfc",
+  "field-tested": "field",
+  "battle-tested": "battle",
+  archived: "archived",
+}
+
 export const MATURITY_CLASSES: Record<Maturity, string> = {
   draft: "text-fg-muted border-line bg-transparent",
   rfc: "text-info border-info/30 bg-info/8",

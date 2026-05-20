@@ -27,7 +27,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   // Build child-page list for section-index pages (slug has exactly one segment).
   // Leaf pages and the root index do not render the filter.
   let sectionPages: FilterPage[] | null = null
-  if (slug && slug.length === 1) {
+  if (slug?.length === 1) {
     const children = source
       .getPages(lang)
       .filter((p) => p.slugs[0] === slug[0] && p.slugs.length > 1)
