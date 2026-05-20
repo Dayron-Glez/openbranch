@@ -18,7 +18,7 @@ const itemCls = [
   "[&_svg]:size-4 [&_svg]:shrink-0",
 ].join(" ")
 
-export function DocsSidebarItem({ item }: { item: PageTreeItem }) {
+export function DocsSidebarItem({ item }: Readonly<{ item: PageTreeItem }>) {
   const pathname = usePathname()
   const maturity = useMaturityMap().get(item.url)
   const active = item.url === pathname
@@ -37,7 +37,7 @@ export function DocsSidebarItem({ item }: { item: PageTreeItem }) {
 }
 
 // Duplicates MaturityBadge markup — client components cannot import server components.
-function BadgeXs({ maturity }: { maturity: Maturity }) {
+function BadgeXs({ maturity }: Readonly<{ maturity: Maturity }>) {
   return (
     <span
       className={[

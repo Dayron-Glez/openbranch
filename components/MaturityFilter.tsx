@@ -44,19 +44,19 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
 
   return (
     <div className="not-prose mb-8 flex flex-col gap-6">
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by maturity">
+      <fieldset className="flex flex-wrap gap-2">
+        <legend className="sr-only">Filter by maturity</legend>
         {nonEmptyStates.map((m) => (
           <button
             key={m}
-            role="checkbox"
             aria-pressed={active.has(m)}
-            aria-label={`Maturity: ${MATURITY_LABEL[m]}, ${counts[m]} guide${counts[m] !== 1 ? "s" : ""}`}
+            aria-label={`Maturity: ${MATURITY_LABEL[m]}, ${counts[m]} guide${counts[m] === 1 ? "" : "s"}`}
             onClick={() => toggle(m)}
             className={[
               "inline-flex cursor-pointer items-center gap-1.5 rounded-full border font-mono tracking-[0.02em] transition-opacity",
               MATURITY_CLASSES[m],
               MATURITY_SIZE_CLASSES.lg,
-              !active.has(m) ? "opacity-40" : "",
+              active.has(m) ? "" : "opacity-40",
             ]
               .filter(Boolean)
               .join(" ")}
@@ -65,7 +65,7 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
             {counts[m]} {MATURITY_LABEL[m]}
           </button>
         ))}
-      </div>
+      </fieldset>
 
       {visible.length === 0 ? (
         <p className="text-fg-muted font-mono text-sm">No guides match the selected filters.</p>
@@ -94,7 +94,7 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
 }
 
 // Duplicates MaturityBadge markup to avoid importing a server component into a client module.
-function BadgeInline({ maturity }: { maturity: Maturity }) {
+function BadgeInline({ maturity }: Readonly<{ maturity: Maturity }>) {
   return (
     <span
       className={[
