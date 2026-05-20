@@ -12,6 +12,7 @@ import {
 } from "fumadocs-ui/layouts/docs/page"
 import { notFound } from "next/navigation"
 import { getMDXComponents } from "@/components/mdx"
+import { DocsScrollReveal } from "@/components/DocsScrollReveal"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { gitConfig } from "@/lib/shared"
@@ -60,12 +61,14 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       </div>
       <DocsBody>
         {sectionPages && <MaturityFilter pages={sectionPages} />}
-        <MdxContent
-          components={getMDXComponents({
-            // this allows you to link to other pages with relative file paths
-            a: createRelativeLink(source, page),
-          })}
-        />
+        <DocsScrollReveal>
+          <MdxContent
+            components={getMDXComponents({
+              // this allows you to link to other pages with relative file paths
+              a: createRelativeLink(source, page),
+            })}
+          />
+        </DocsScrollReveal>
       </DocsBody>
     </DocsPage>
   )
