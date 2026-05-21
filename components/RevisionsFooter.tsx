@@ -29,8 +29,8 @@ export function RevisionsFooter({ revisions, slug }: Props) {
     )
   }
 
-  const sinceDate = new Date(revisions[revisions.length - 1].authoredAt).toISOString().slice(0, 7)
-  const countLabel = `${revisions.length} commit${revisions.length !== 1 ? "s" : ""}`
+  const sinceDate = new Date(revisions.at(-1)!.authoredAt).toISOString().slice(0, 7)
+  const countLabel = `${revisions.length} commit${revisions.length === 1 ? "" : "s"}`
 
   return (
     <div className="bg-fd-card mt-12 overflow-hidden rounded-[--radius] border font-mono text-xs">

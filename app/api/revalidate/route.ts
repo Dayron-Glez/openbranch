@@ -1,5 +1,5 @@
 import { revalidateTag } from "next/cache"
-import { createHmac, timingSafeEqual } from "crypto"
+import { createHmac, timingSafeEqual } from "node:crypto"
 
 function verifyHmac(body: string, signature: string | null, secret: string): boolean {
   if (!signature) return false
