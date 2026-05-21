@@ -28,7 +28,7 @@ export function formatRelativeTime(iso: string): string {
   return `${Math.floor(diffDay / 365)}y`
 }
 
-const VERSION_RE = /^(v\d+\.\d+(?:\.\d+)?):\s*(.+)$/
+const VERSION_RE = /^(v\d+\.\d+(?:\.\d+)?):\s*([^\r\n]+)/
 
 function parseCommitMessage(raw: string): { message: string; version?: string } {
   const firstLine = raw.split("\n")[0].trim()
