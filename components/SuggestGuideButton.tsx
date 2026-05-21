@@ -14,12 +14,12 @@ export function SuggestGuideButton({ sectionName }: { sectionName: string }) {
       target="_blank"
       rel="noopener noreferrer"
       className={[
-        "flex w-full flex-row items-center gap-2 rounded-lg p-2 text-start text-sm",
-        "border-line text-fd-muted-foreground border border-dashed",
-        "hover:border-ob-accent hover:bg-ob-accent/8 hover:text-ob-accent transition-colors",
-        "focus-visible:border-ob-accent focus-visible:bg-ob-accent/8 focus-visible:text-ob-accent",
-        "[&_svg]:size-4 [&_svg]:shrink-0",
-        "outline-none",
+        "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium",
+        "border-fd-border text-fd-muted-foreground border border-dashed",
+        "hover:border-ob-accent hover:text-ob-accent transition-colors",
+        "focus-visible:border-ob-accent focus-visible:text-ob-accent",
+        "[&_svg]:size-3.5 [&_svg]:shrink-0",
+        "whitespace-nowrap outline-none",
       ].join(" ")}
       aria-label={`${suggestGuide} — ${sectionName}`}
     >
