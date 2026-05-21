@@ -47,7 +47,7 @@ export function RevisionsFooter({ revisions, slug }: Props) {
           aria-hidden
         />
         <span className="text-fd-foreground/70 tracking-widest uppercase">revisions</span>
-        <span className="ml-auto tracking-[0.04em]">
+        <span className="ml-auto tracking-[0.04em] uppercase">
           since {sinceDate} · <span className="text-fd-primary">{countLabel}</span>
         </span>
       </div>
