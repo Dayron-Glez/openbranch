@@ -8,7 +8,7 @@ type Props = {
 export function RevisionsFooter({ revisions }: Props) {
   if (!revisions || revisions.length === 0) {
     return (
-      <div className="border-line text-fg-muted mt-12 rounded-[--radius] border border-dashed p-4 font-mono text-xs">
+      <div className="border-line text-fg-muted mt-12 rounded-md border border-dashed p-4 font-mono text-xs">
         <span className="bg-ob-accent mr-2 inline-block size-1.5 rounded-full align-middle" />
         No revisions yet — be the first to edit.
       </div>
@@ -19,7 +19,7 @@ export function RevisionsFooter({ revisions }: Props) {
   const countLabel = `${revisions.length} commit${revisions.length === 1 ? "" : "s"}`
 
   return (
-    <div className="border-line bg-bg-card mt-12 overflow-hidden rounded-[--radius] border font-mono text-xs">
+    <div className="border-line bg-bg-card mt-12 overflow-hidden rounded-md border font-mono text-xs">
       {/* Header */}
       <div
         className="border-line text-fg-muted flex items-center gap-2.5 border-b px-5 py-3.5"
