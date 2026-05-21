@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import Link from "next/link"
 import { IconArrowRight } from "@/icons"
 
 type TopicCardProps = {
@@ -19,7 +20,7 @@ export function TopicCard({
   updated,
 }: TopicCardProps) {
   return (
-    <a
+    <Link
       href={href}
       className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-[var(--r-12)] border px-7 pt-7 pb-6 text-inherit no-underline transition-[background,border-color] duration-[var(--d-base)] ease-[var(--ease)]"
     >
@@ -32,11 +33,11 @@ export function TopicCard({
         <span className="border-line bg-bg-elev text-fg-2 rounded-[var(--r-6)] border px-[7px] py-0.5">
           {count}
         </span>
-        <span>{updated}</span>
+        {updated && <span>{updated}</span>}
         <span className="group-hover:text-fg ml-auto transition-[transform,color] duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px] [&_svg]:size-3.5">
           <IconArrowRight />
         </span>
       </div>
-    </a>
+    </Link>
   )
 }

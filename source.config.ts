@@ -1,4 +1,5 @@
 import { defineConfig, defineDocs } from "fumadocs-mdx/config"
+import lastModified from "fumadocs-mdx/plugins/last-modified"
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema"
 import { maturitySchema } from "./lib/maturity"
 
@@ -16,6 +17,7 @@ export const docs = defineDocs({
 })
 
 export default defineConfig({
+  plugins: [lastModified()],
   mdxOptions: {
     // MDX options
   },

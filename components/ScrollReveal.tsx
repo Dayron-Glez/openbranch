@@ -1,15 +1,13 @@
 "use client"
 
 import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export function ScrollReveal() {
-  useEffect(() => {
-    const items = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"))
+  const pathname = usePathname()
 
-    if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      items.forEach((item) => item.classList.add("is-visible"))
-      return
-    }
+  useEffect(() => {
+    const reducedMotion = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
 
     const revealIfVisible = (item: HTMLElement) => {
       const rect = item.getBoundingClientRect()
@@ -26,18 +24,29 @@ export function ScrollReveal() {
           observer.unobserve(entry.target)
         })
       },
-      {
-        rootMargin: "0px 0px -14% 0px",
-        threshold: 0.12,
-      }
+      { rootMargin: "0px 0px -14% 0px", threshold: 0.12 }
     )
 
-    items.forEach((item) => {
-      if (!revealIfVisible(item)) observer.observe(item)
+    // Query inside rAF so elements are in the DOM and laid out before checking visibility.
+    // Next.js may still be committing RSC content when useEffect fires on back navigation.
+    const frame = requestAnimationFrame(() => {
+      const items = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"))
+
+      if (reducedMotion) {
+        items.forEach((item) => item.classList.add("is-visible"))
+        return
+      }
+
+      items.forEach((item) => {
+        if (!revealIfVisible(item)) observer.observe(item)
+      })
     })
 
-    return () => observer.disconnect()
-  }, [])
+    return () => {
+      cancelAnimationFrame(frame)
+      observer.disconnect()
+    }
+  }, [pathname])
 
   return null
 }
