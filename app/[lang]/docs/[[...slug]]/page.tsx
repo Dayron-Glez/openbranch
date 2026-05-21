@@ -26,8 +26,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
 
   const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
-  const slugString = page.slugs.join("/")
-  const revisions = await getRevisions(slugString)
+  const revisions = await getRevisions(page.path)
 
   // Build child-page list for section-index pages (slug has exactly one segment).
   // Leaf pages and the root index do not render the filter.

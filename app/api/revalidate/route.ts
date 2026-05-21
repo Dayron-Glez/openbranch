@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
   let revalidated = 0
   for (const file of modifiedFiles) {
-    const match = /^content\/docs\/(.+)\.(?:en\.)?mdx$/.exec(file)
+    const match = /^content\/docs\/(.+\.(?:en\.)?mdx)$/.exec(file)
     if (match) {
       revalidateTag(`revisions:${match[1]}`, "max")
       revalidated++

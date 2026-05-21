@@ -37,9 +37,9 @@ function parseCommitMessage(raw: string): { message: string; version?: string } 
   return { message: firstLine }
 }
 
-export async function getRevisions(slug: string): Promise<Revision[] | null> {
+export async function getRevisions(filePath: string): Promise<Revision[] | null> {
   const { user, repo } = gitConfig
-  const path = `content/docs/${slug}.mdx`
+  const path = `content/docs/${filePath}`
   const url = new URL(`https://api.github.com/repos/${user}/${repo}/commits`)
   url.searchParams.set("path", path)
   url.searchParams.set("per_page", "5")
@@ -52,16 +52,16 @@ export async function getRevisions(slug: string): Promise<Revision[] | null> {
     },
     next: {
       revalidate: 3600,
-      tags: [`revisions:${slug}`],
+      tags: [`revisions:${filePath}`],
     },
   })
 
   if (res.status === 403) {
-    console.warn(`[revisions] rate-limited for ${slug}, returning null`)
+    console.warn(`[revisions] rate-limited for ${filePath}, returning null`)
     return null
   }
   if (!res.ok) {
-    console.error(`[revisions] GitHub API error ${res.status} for ${slug}`)
+    console.error(`[revisions] GitHub API error ${res.status} for ${filePath}`)
     return null
   }
 
