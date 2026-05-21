@@ -1,22 +1,24 @@
 import type { Revision } from "@/lib/changelog"
 import { formatRelativeTime } from "@/lib/changelog"
+import type { RevisionsDictionary } from "@/lib/dictionaries/docs"
 
 type Props = {
   revisions: Revision[] | null
+  dict: RevisionsDictionary
 }
 
-export function RevisionsFooter({ revisions }: Props) {
+export function RevisionsFooter({ revisions, dict }: Props) {
   if (!revisions || revisions.length === 0) {
     return (
       <div className="border-line text-fg-muted mt-12 flex items-center gap-2 rounded-md border border-dashed p-4 font-mono text-xs">
         <span className="bg-ob-accent size-1.5 shrink-0 rounded-full" aria-hidden />
-        <span>No revisions yet — be the first to edit.</span>
+        <span>{dict.empty}</span>
       </div>
     )
   }
 
   const sinceDate = new Date(revisions.at(-1)!.authoredAt).toISOString().slice(0, 7)
-  const countLabel = `${revisions.length} commit${revisions.length === 1 ? "" : "s"}`
+  const countLabel = `${revisions.length} ${revisions.length === 1 ? dict.commit : dict.commits}`
 
   return (
     <div className="border-line bg-bg-card mt-12 overflow-hidden rounded-md border font-mono text-xs">
@@ -33,9 +35,9 @@ export function RevisionsFooter({ revisions }: Props) {
           style={{ boxShadow: "0 0 0 3px var(--color-accent-soft)" }}
           aria-hidden
         />
-        <span className="text-fg-2 tracking-widest uppercase">revisions</span>
+        <span className="text-fg-2 tracking-widest uppercase">{dict.title}</span>
         <span className="ml-auto tracking-[0.04em] uppercase">
-          since {sinceDate} · <span className="text-ob-accent">{countLabel}</span>
+          {dict.since} {sinceDate} · <span className="text-ob-accent">{countLabel}</span>
         </span>
       </div>
 

@@ -4,6 +4,7 @@ import { MaturityFilter } from "@/components/MaturityFilter"
 import type { FilterPage } from "@/components/MaturityFilter"
 import { getRevisions } from "@/lib/changelog"
 import { RevisionsFooter } from "@/components/RevisionsFooter"
+import { docsDictionary, type DocsLocale } from "@/lib/dictionaries/docs"
 import {
   DocsBody,
   DocsDescription,
@@ -27,6 +28,8 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
   const revisions = await getRevisions(page.path)
+  const locale: DocsLocale = lang in docsDictionary ? (lang as DocsLocale) : "es"
+  const revisionsDict = docsDictionary[locale].revisions
 
   // Build child-page list for section-index pages (slug has exactly one segment).
   // Leaf pages and the root index do not render the filter.
@@ -72,7 +75,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
             })}
           />
         </DocsScrollReveal>
-        <RevisionsFooter revisions={revisions} />
+        <RevisionsFooter revisions={revisions} dict={revisionsDict} />
       </DocsBody>
     </DocsPage>
   )
