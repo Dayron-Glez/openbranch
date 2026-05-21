@@ -73,7 +73,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
             })}
           />
         </DocsScrollReveal>
-        <RevisionsFooter revisions={revisions} slug={slugString} />
+        <RevisionsFooter revisions={revisions} />
       </DocsBody>
     </DocsPage>
   )
