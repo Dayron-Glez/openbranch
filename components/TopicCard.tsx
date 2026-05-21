@@ -32,7 +32,7 @@ export function TopicCard({
         <span className="border-line bg-bg-elev text-fg-2 rounded-[var(--r-6)] border px-[7px] py-0.5">
           {count}
         </span>
-        <span>{updated}</span>
+        {updated && <span>{updated}</span>}
         <span className="group-hover:text-fg ml-auto transition-[transform,color] duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px] [&_svg]:size-3.5">
           <IconArrowRight />
         </span>

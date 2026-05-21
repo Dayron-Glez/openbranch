@@ -14,10 +14,10 @@ export type StatItem = {
 
 export type TopicItem = {
   readonly icon: "branch" | "pr" | "flask" | "tag" | "fork" | "bulb"
+  readonly slug: string
+  readonly countUnit: string
   readonly title: string
   readonly description: string
-  readonly count: string
-  readonly updated: string
 }
 
 export type ValuePropItem = {
@@ -155,51 +155,51 @@ const es: LandingDict = {
   topics: [
     {
       icon: "branch",
+      slug: "git",
+      countUnit: "guías",
       title: "Estrategias de ramas",
       description:
         "Trunk-based, release branches, GitFlow - cuándo cada una vale la pena y las señales de que se te quedó pequeña.",
-      count: "24 guías",
-      updated: "actualizado hace 2d",
     },
     {
       icon: "pr",
+      slug: "pull-requests",
+      countUnit: "guías",
       title: "Pull requests y revisión",
       description:
         "Plantillas que sí se revisan, límites de tamaño que se respetan y cómo dejar un comentario que no ponga a nadie a la defensiva.",
-      count: "18 guías",
-      updated: "actualizado hace 5d",
     },
     {
       icon: "flask",
+      slug: "testing",
+      countUnit: "guías",
       title: "Patrones de pruebas",
       description:
         "Contract tests, higiene de snapshots, matar CI inestable - patrones que aguantan con 50 ingenieros y con 50.000.",
-      count: "31 guías",
-      updated: "actualizado hace 1sem",
     },
     {
       icon: "tag",
+      slug: "releases",
+      countUnit: "guías",
       title: "Releases y versionado",
       description:
         "Semver en la práctica, changelogs que tus usuarios sí leen y simulacros de rollback que no necesitan un héroe.",
-      count: "14 guías",
-      updated: "actualizado hace 1sem",
     },
     {
       icon: "fork",
+      slug: "contributing",
+      countUnit: "guías",
       title: "Flujos de contribución",
       description:
         "Onboarding de nuevos contribuidores, RFCs que se entregan, gobernanza que escala sin ahogar el ritmo.",
-      count: "22 guías",
-      updated: "actualizado hace 3d",
     },
     {
       icon: "bulb",
+      slug: "best-practices",
+      countUnit: "historias",
       title: "Lecciones de equipos reales",
       description:
         'Post-mortems, rediseños y las historias de "deberíamos haber hecho esto 6 meses antes" que vale la pena leer.',
-      count: "19 historias",
-      updated: "actualizado ayer",
     },
   ],
   featured: {
@@ -351,51 +351,51 @@ const en: LandingDict = {
   topics: [
     {
       icon: "branch",
+      slug: "git",
+      countUnit: "guides",
       title: "Branching strategies",
       description:
         "Trunk-based, release branches, GitFlow - when each one earns its keep, and the warning signs you've outgrown it.",
-      count: "24 guides",
-      updated: "updated 2d ago",
     },
     {
       icon: "pr",
+      slug: "pull-requests",
+      countUnit: "guides",
       title: "Pull requests & review",
       description:
         "Templates that get reviewed, size limits that stick, and how to leave a comment that doesn't make someone defensive.",
-      count: "18 guides",
-      updated: "updated 5d ago",
     },
     {
       icon: "flask",
+      slug: "testing",
+      countUnit: "guides",
       title: "Testing patterns",
       description:
         "Contract tests, snapshot hygiene, killing flaky CI - patterns that hold up at 50 engineers and 50,000.",
-      count: "31 guides",
-      updated: "updated 1w ago",
     },
     {
       icon: "tag",
+      slug: "releases",
+      countUnit: "guides",
       title: "Releases & versioning",
       description:
         "Semver in practice, changelogs your users actually read, and rollback drills that don't require a hero.",
-      count: "14 guides",
-      updated: "updated 1w ago",
     },
     {
       icon: "fork",
+      slug: "contributing",
+      countUnit: "guides",
       title: "Contribution flows",
       description:
         "Onboarding new contributors, RFCs that ship, governance that scales without smothering momentum.",
-      count: "22 guides",
-      updated: "updated 3d ago",
     },
     {
       icon: "bulb",
+      slug: "best-practices",
+      countUnit: "stories",
       title: "Lessons from real teams",
       description:
         'Post-mortems, redesigns, and the "we should have done this 6 months earlier" stories worth reading.',
-      count: "19 stories",
-      updated: "updated yesterday",
     },
   ],
   featured: {
