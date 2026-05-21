@@ -1,8 +1,11 @@
 "use client"
 
 import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 export function ScrollReveal() {
+  const pathname = usePathname()
+
   useEffect(() => {
     const reducedMotion = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
 
@@ -13,48 +16,37 @@ export function ScrollReveal() {
       return entersViewport
     }
 
-    const setup = () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add("is-visible")
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: "0px 0px -14% 0px", threshold: 0.12 }
+    )
+
+    // Query inside rAF so elements are in the DOM and laid out before checking visibility.
+    // Next.js may still be committing RSC content when useEffect fires on back navigation.
+    const frame = requestAnimationFrame(() => {
       const items = Array.from(document.querySelectorAll<HTMLElement>("[data-scroll-reveal]"))
 
       if (reducedMotion) {
         items.forEach((item) => item.classList.add("is-visible"))
-        return () => {}
+        return
       }
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return
-            entry.target.classList.add("is-visible")
-            observer.unobserve(entry.target)
-          })
-        },
-        { rootMargin: "0px 0px -14% 0px", threshold: 0.12 }
-      )
-
-      // rAF ensures layout is complete before checking visibility
-      requestAnimationFrame(() => {
-        items.forEach((item) => {
-          if (!revealIfVisible(item)) observer.observe(item)
-        })
+      items.forEach((item) => {
+        if (!revealIfVisible(item)) observer.observe(item)
       })
-
-      return () => observer.disconnect()
-    }
-
-    // Handle bfcache restore (browser back/forward via mouse buttons or keyboard)
-    const onPageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) setup()
-    }
-
-    window.addEventListener("pageshow", onPageShow)
-    const cleanup = setup()
+    })
 
     return () => {
-      window.removeEventListener("pageshow", onPageShow)
-      cleanup()
+      cancelAnimationFrame(frame)
+      observer.disconnect()
     }
-  }, [])
+  }, [pathname])
 
   return null
 }
