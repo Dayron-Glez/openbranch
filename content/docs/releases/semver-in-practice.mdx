@@ -1,0 +1,181 @@
+---
+title: SemVer en la práctica
+description: Cuándo SemVer es la herramienta correcta, cuándo no lo es, y qué hacer con los servicios donde las versiones son un asunto interno — además de changelogs que la gente realmente lee.
+icon: Tag
+maturity: rfc
+---
+
+Un equipo en un monorepo debate sobre hacer un bump de versión major. El
+cambio de API en cuestión es en una librería interna — usada por exactamente
+dos servicios, ambos del mismo equipo, ambos desplegados simultáneamente. El
+"consumidor" del cambio breaking son ellos mismos, esta tarde.
+
+La mitad del equipo dice "es un cambio breaking, eso es major, esa es la
+regla". La otra mitad dice "controlamos ambos lados, ¿por qué gastar una
+versión major en algo que nadie más va a saber?"
+
+Ambas mitades tienen razón. Simplemente dejaron de ponerse de acuerdo en para
+qué sirve SemVer.
+
+## Lo que SemVer dice en realidad
+
+SemVer es un protocolo de comunicación. Existe para que **un consumidor que
+no controlas** pueda leer un número de versión y saber si actualizar romperá
+su build. La promesa:
+
+| Bump  | Significado para el consumidor                  |
+| ----- | ----------------------------------------------- |
+| Patch | No cambié nada que puedas observar              |
+| Minor | Añadí algo; el código antiguo sigue funcionando |
+| Major | Rompí algo; debes leer el changelog             |
+
+Esa promesa es valiosa en exactamente una situación: cuando el consumidor
+está lejos en el tiempo, la propiedad o la distancia organizativa. Un
+desconocido que instale tu librería desde npm dentro de cinco años necesita
+saber si actualizar romperá su build. SemVer es cómo se lo dices.
+
+<Callout type="info">
+  El valor de SemVer no está en el número de versión. Está en la disciplina de preguntarse, antes de
+  cada release, "¿he roto a alguien que no puedo ver?" Si la respuesta es "no, porque no hay nadie
+  que no pueda ver", el número de versión ya no lleva información útil.
+</Callout>
+
+## Para librerías que publicas: tómatelo en serio
+
+Si tu código vive en un registro público, en un CDN que alguien más fija, o
+dentro de un contrato del que depende un equipo externo — SemVer no es
+negociable y la disciplina importa más que el número.
+
+La disciplina:
+
+- **Ten una definición de "breaking" que quepa en un párrafo.** No es una
+  cuestión de gusto. Renombrar una función pública es breaking. Añadir un
+  parámetro requerido es breaking. Cambiar un tipo de retorno es breaking.
+  Añadir un parámetro opcional no lo es.
+- **Ejecuta un test downstream.** Mantén una pequeña app consumidora fijada a
+  tu major actual. Ejecuta su build contra tu `main`. Si se rompe, debes un
+  bump major.
+- **Depreca antes de eliminar.** Marca el nombre antiguo como `@deprecated`,
+  apunta al nuevo, despliega eso como minor. Elimínalo en el siguiente major.
+  Los consumidores que siguen las deprecaciones migran a su ritmo.
+
+```typescript
+// En v2.4 (minor)
+/** @deprecated Usa `findById` en su lugar. Eliminado en v3.0. */
+export function getById(id: string) {
+  return findById(id)
+}
+
+// En v3.0 (major)
+// `getById` ha desaparecido.
+```
+
+## Para servicios: SemVer es la herramienta equivocada
+
+Un servicio no se consume con líneas `import`. Se consume con peticiones HTTP,
+llamadas gRPC o colas de mensajes. El consumidor es otro proceso en ejecución
+— actualizado con un calendario diferente, posiblemente con varias versiones
+funcionando a la vez.
+
+Un servicio no necesita un número de versión. Necesita:
+
+- **Un contrato de API vigente** — schema, OpenAPI, protobuf — registrado en
+  el repo y verificado en CI.
+- **Una ventana de deprecación progresiva.** Cuando el contrato cambia, la
+  forma antigua sigue funcionando durante un periodo publicado (90 días, dos
+  ciclos de release, lo que encaje). Ambas formas son válidas durante la
+  ventana.
+- **Tests de contrato en la frontera.** Cada consumidor ejecuta un test que
+  verifica que puede parsear lo que devuelve el servicio. El servicio ejecuta
+  un test que verifica que produce lo que espera cada consumidor.
+
+Si debes poner un número a un servicio, el número que importa es la **versión
+de API** — habitualmente en la ruta URL o una cabecera — y solo cambia cuando
+rompes el contrato.
+
+```
+GET /v1/users/123       # actual
+GET /v2/users/123       # nueva forma — ambas activas durante la ventana de deprecación
+```
+
+La versión del software desplegado (`my-service:1.42.7`) es contabilidad para
+los operadores, no un contrato con los consumidores.
+
+## El término medio: libs internas que "parecen publicadas"
+
+Volvamos al monorepo. Las librerías internas usadas entre fronteras de equipo
+— un paquete de tipos compartidos, un helper de auth, un wrapper de logging
+— están en el incómodo término medio. No están publicadas, pero los
+consumidores _sí_ tienen calendarios de actualización distintos y puede que
+no estén en la sala cuando despliegas.
+
+Lo correcto es tratarlas como librerías públicas, con un atajo: puedes
+acortar la ventana de deprecación porque puedes hacer grep de cada caller.
+Una deprecación de dos semanas en una librería pública sería hostil; una
+deprecación de dos semanas en tu monorepo donde abriste un PR añadiendo la
+etiqueta `@deprecated` a cada caller es razonable.
+
+El atajo que no tienes: saltarte el bump major porque "controlamos ambos
+lados". Si los call sites pertenecen a otros equipos, no controlas ambos
+lados — controlas el código y ellos controlan el calendario.
+
+## Un changelog que la gente lee
+
+La mayoría de changelogs son listas autogeneradas de títulos de commits.
+Nadie los lee, incluida la gente que los escribió.
+
+Un changelog que se lee está **organizado por la pregunta del lector, no por
+tu log de commits:**
+
+```markdown
+## v3.0.0 — 2024-11-15
+
+### Si llamas a `getById`
+
+Ha desaparecido. Usa `findById`. Migración: `git grep getById` y renombra.
+
+### Si importas desde `~/auth/legacy`
+
+La ruta es ahora `~/auth`. El re-export antiguo fue eliminado.
+
+### Si usas `<Form onSubmit>`
+
+Ahora recibe `(values, helpers)` en lugar de solo `values`. Añade un segundo
+parámetro.
+
+### Si ninguno de los anteriores aplica
+
+La actualización es segura. Lee el resto solo si quieres saber qué mejoró.
+
+---
+
+### Otros cambios
+
+- Renderizado inicial más rápido (#1234)
+- Mejores mensajes de error para props inválidas (#1240)
+```
+
+El cambio está agrupado por a quién afecta. El lector escanea los encabezados
+y o bien se encuentra o no. Si no lo hace, ha terminado. Si lo hace, el paso
+de migración está justo ahí.
+
+<Callout type="warn">
+  Una lista autogenerada de commits "feat:" y "fix:" no es un changelog. Es un log de commits con
+  una plantilla más bonita. El autor sigue teniendo que hacer el trabajo de decir qué necesita hacer
+  el lector.
+</Callout>
+
+## El resultado
+
+Dejas de discutir sobre si algo es major. Te preguntas: **¿a quién se lo
+estoy diciendo y qué necesitan hacer?**
+
+- Desconocidos que dependen de tu librería: SemVer con disciplina, depreca
+  antes de eliminar.
+- Otros servicios que llaman a tu servicio: versiones de contrato y ventanas
+  de deprecación, no versiones desplegadas.
+- Otros equipos en tu monorepo: como una librería pero con una ventana más corta.
+- Tú mismo, esta tarde: despliégalo. El número de versión puede esperar.
+
+La herramienta correcta para cada caso. Sin majors bumpeados que nadie notó;
+sin actualizaciones rotas que todos notaron.
