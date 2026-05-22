@@ -1,0 +1,149 @@
+---
+title: Cultura de revisión
+description: Límites de tamaño que se respetan, plantillas que sí se rellenan y patrones de comentarios que enseñan en vez de avergonzar — cultura de revisión que escala más allá de que un senior lea cada diff.
+icon: GitPullRequest
+maturity: rfc
+---
+
+Un pull request de 800 líneas lleva tres días abierto. Dos revisores lo
+abrieron, hicieron scroll y cerraron la pestaña. Nadie quiere ser quien
+encuentre un problema estructural a la segunda hora. El autor recarga la
+página cada veinte minutos.
+
+Esto no es un problema de pereza ni de mala fe. Es un problema de incentivos.
+Un PR grande es caro de revisar y barato de aplazar, así que se aplaza hasta
+que ya no se puede — y entonces recibe una aprobación de trámite porque
+bloquearlo se ha vuelto político.
+
+La solución no es "revisar más rápido". Es eliminar las situaciones en las que
+aplazar tiene sentido.
+
+## El coste real de un PR grande
+
+El coste a nivel de equipo de un PR de 800 líneas no son las dos horas que
+alguien pasa leyéndolo. Es:
+
+- el trabajo que el autor no puede hacer mientras está abierto,
+- el trabajo que se acumula detrás porque nadie va a hacer rebase sobre él,
+- el déficit de confianza cuando un revisor aprueba sin haber leído de verdad,
+- el bug que llega a producción porque nadie podía tener todo en la cabeza.
+
+Cada uno de esos costes escala peor que linealmente con el tamaño del PR.
+
+<Callout type="info">
+  La investigación sobre tamaño de PR y detección de defectos muestra de forma consistente que la
+  efectividad de la revisión cae bruscamente a partir de ~400 líneas modificadas. A partir de 1000,
+  los revisores encuentran aproximadamente los mismos problemas que si hubieran aprobado sin leer.
+</Callout>
+
+## Límites de tamaño: suave y duro
+
+Elige dos números y publícalos.
+
+| Límite | Líneas modificadas | Qué ocurre                                                             |
+| ------ | ------------------ | ---------------------------------------------------------------------- |
+| Suave  | 200                | El autor considera dividirlo; el revisor puede solicitarlo             |
+| Duro   | 600                | El autor debe dividirlo o escribir una justificación en la descripción |
+
+Los números importan menos que tenerlos. Con un límite publicado, el autor
+divide el PR antes de abrirlo, no después de que un revisor lo pida. La
+conversación pasa de "¿es esto demasiado grande?" (subjetivo) a "¿supera el
+límite?" (sí o no).
+
+Las excepciones existen — código generado, renombrados masivos, actualizaciones
+de librerías — y su sitio es la descripción del PR, no la cabeza del revisor.
+
+## La plantilla de PR define qué es "terminado"
+
+Una plantilla de PR no es un formulario. Es un contrato que dice: _estas son
+las cosas que el autor confirma antes de pedir revisión._ El objetivo es
+adelantar el trabajo, no añadir burocracia.
+
+```markdown
+## Qué ha cambiado
+
+Un resumen de 2-3 líneas del cambio.
+
+## Por qué
+
+Qué problema resuelve. Enlace al issue.
+
+## Cómo verificar
+
+Lo mínimo que puede hacer el revisor para ganar confianza — un comando a
+ejecutar, una pantalla que abrir, una consulta que lanzar.
+
+## Checklist
+
+- [ ] Tests añadidos o actualizados
+- [ ] Sin nuevos errores de lint o tipos
+- [ ] Los cambios de API pública tienen una ruta de deprecación
+- [ ] Notas de migración añadidas si el esquema ha cambiado
+```
+
+El campo "cómo verificar" es la parte más infravaluada de cualquier plantilla
+de PR. Los revisores que pueden verificar un cambio en 30 segundos lo aprueban.
+Los que tienen que reingeniería inversa del proceso de verificación no lo hacen.
+
+## Patrones de comentarios: los que funcionan, los que no
+
+La diferencia entre un comentario que se atiende y uno que genera resentimiento
+rara vez está en el fondo. Está en el enfoque.
+
+**Prefija tu intención.** Conventional Comments usa etiquetas — `nit:`,
+`suggestion:`, `question:`, `issue:`, `praise:`. Tardan medio segundo en
+escribirse y le dicen al autor si tiene que corregir, considerar o simplemente
+reconocer.
+
+```
+nit: preferiría `await` en vez de `.then()` para mantener consistencia con el
+resto del archivo
+
+question: ¿está tragándose el error a propósito? quien llama no puede
+distinguir un 404 de un fallo de transporte
+
+issue (blocker): esto introduce un N+1 — línea 84 hace una consulta dentro de
+un bucle sobre `users`
+```
+
+**Pregunta, no afirmes, cuando no estés seguro.** "Esto parece incorrecto"
+pone al autor a la defensiva. "¿Hay alguna razón por la que esto no sea X?"
+invita a una conversación. Si resulta que te equivocas, no tienes que
+retractarte de nada.
+
+**Elogia los aciertos estructurales, no los superficiales.** "Buena extracción
+a una función pura" importa. "Buen nombre de variable" suena a relleno.
+
+<Callout type="warn">
+  La forma más rápida de perder a un contribuidor junior es soltar veinte comentarios sin etiquetar
+  en su primer PR. No pueden distinguir cuáles son bloqueantes, cuáles de estilo y cuáles son tu
+  preferencia personal. Etiquétalos o agrúpalos.
+</Callout>
+
+## Aprobar con comentarios vs. solicitar cambios
+
+"Solicitar cambios" es una señal fuerte. Dice: _no aprobaré esto hasta que lo
+resolvamos._ Úsalo cuando haya un bloqueante real — un bug de corrección, un
+riesgo de pérdida de datos, un problema de seguridad.
+
+"Aprobar con comentarios" dice: _confío en el autor para gestionar esto y no
+quiero ser el guardián de si han desplegado._ Úsalo para nits, sugerencias y
+limpiezas posteriores.
+
+El peso político importa. Un revisor que solicita cambios en cada PR se
+convierte en un cuello de botella y en un foco de frustración. Un revisor que
+aprueba con comentarios en todo deja de ser una señal significativa. La
+calibración es: **solicita cambios cuando no te gustaría ver esto mergeado
+tal como está; aprueba con comentarios en cualquier otro caso.**
+
+## El resultado
+
+Combina todo esto y la experiencia de revisión cambia:
+
+- el PR es lo suficientemente pequeño para leerlo de una sentada,
+- la descripción le dice al revisor cómo verificar en 30 segundos,
+- los comentarios llegan etiquetados para que el autor sepa cuál es un bloqueante,
+- la aprobación es real porque nadie aprueba lo que no ha leído.
+
+No conseguiste revisiones más rápidas revisando más rápido. Las conseguiste
+haciendo cada una más pequeña, más clara y más honesta.
