@@ -1,23 +1,23 @@
-import { MATURITY_CLASSES, MATURITY_LABEL, MATURITY_SIZE_CLASSES } from "@/lib/maturity"
+import { MATURITY_CLASSES, MATURITY_LABEL } from "@/lib/maturity"
 import type { Maturity } from "@/lib/maturity"
+import { Badge } from "@/components/ui/badge"
 
 type MaturityBadgeProps = {
   maturity: Maturity
-  size?: "xs" | "md" | "lg"
 }
 
-export function MaturityBadge({ maturity, size = "md" }: Readonly<MaturityBadgeProps>) {
+export function MaturityBadge({ maturity }: Readonly<MaturityBadgeProps>) {
   return (
-    <span
+    <Badge
+      variant="outline"
       className={[
-        "inline-flex items-center gap-1.5 rounded-full border font-mono tracking-[0.02em] whitespace-nowrap",
+        "gap-1.5 font-mono tracking-[0.02em] whitespace-nowrap",
         MATURITY_CLASSES[maturity],
-        MATURITY_SIZE_CLASSES[size],
       ].join(" ")}
       aria-label={`Maturity: ${maturity}`}
     >
       <span className="size-1.5 shrink-0 rounded-full bg-current" aria-hidden />
       {MATURITY_LABEL[maturity]}
-    </span>
+    </Badge>
   )
 }

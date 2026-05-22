@@ -1,5 +1,8 @@
 import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
+import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/components/SuggestGuideButton"
+import { Clock } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import {
   DocsBody,
   DocsDescription,
@@ -32,6 +35,9 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
     ? source.getPages(lang).filter((p) => p.slugs[0] === sectionSlug && p.slugs.length === 2)
     : []
 
+  const rawText = isSectionPage ? "" : await page.data.getText("processed")
+  const readingMinutes = isSectionPage ? 0 : getReadingTime(rawText)
+
   return (
     <DocsPage
       toc={page.data.toc}
@@ -40,7 +46,18 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       tableOfContentPopover={{ style: "clerk" }}
       footer={{ items: neighbours }}
     >
-      <DocsTitle>{page.data.title}</DocsTitle>
+      <div className="flex flex-wrap items-center gap-3">
+        <DocsTitle className="leading-tight">{page.data.title}</DocsTitle>
+        {!isSectionPage && (
+          <Badge
+            variant="outline"
+            className="bg-accent-soft text-ob-accent gap-1.5 border-transparent font-mono"
+          >
+            <Clock className="size-3" />
+            {formatReadingTime(readingMinutes, lang)}
+          </Badge>
+        )}
+      </div>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="flex flex-row items-center gap-2 border-b pb-6">
         <MarkdownCopyButton markdownUrl={markdownUrl} />

@@ -13,6 +13,8 @@ import { i18n } from "@/lib/i18n"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
+import { getWeeklyPick } from "@/lib/weekly-pick"
+import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 
 const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   branch: <IconBranch />,
@@ -27,6 +29,13 @@ export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
 
+function buildAuthorsDisplay(authors: string[], lang: string): string {
+  if (authors.length === 0) return ""
+  if (authors.length === 1) return authors[0]
+  const rest = authors.length - 1
+  return lang === "es" ? `${authors[0]} y ${rest} más` : `${authors[0]} & ${rest} more`
+}
+
 const eyebrowClass =
   "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
 
@@ -38,9 +47,32 @@ const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
   "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
 
-export default async function HomePage({ params }: PageProps<"/[lang]">) {
+export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">>) {
   const { lang } = await params
   const dict = getLandingDict(lang)
+
+  const pick = await getWeeklyPick(lang)
+
+  const authorsDisplay = pick ? buildAuthorsDisplay(pick.authors, lang) : ""
+
+  const guide = pick
+    ? {
+        kicker:
+          lang === "es"
+            ? `guía · ${formatReadingTime(getReadingTime(pick.rawText), lang)}`
+            : `guide · ${formatReadingTime(getReadingTime(pick.rawText), lang)}`,
+        title: pick.title,
+        summary: pick.description,
+        href: pick.href,
+        excerpt: pick.excerpt,
+        firstHeading: pick.firstHeading,
+        authors: pick.authors,
+        authorsDisplay,
+        maturity: pick.maturity,
+        lastModified: pick.lastModified,
+      }
+    : null
+
   return (
     <>
       <ScrollReveal />
@@ -100,9 +132,11 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               <span className="text-fg-2 font-light">{dict.sections.featuredHeadingAccent}</span>
             </h2>
           </div>
-          <div className="scroll-reveal" data-scroll-reveal>
-            <FeaturedGuide dict={dict.featured} />
-          </div>
+          {guide && (
+            <div className="scroll-reveal" data-scroll-reveal>
+              <FeaturedGuide dict={dict.featured} guide={guide} lang={lang} />
+            </div>
+          )}
         </section>
 
         <section className={sectionClass}>
