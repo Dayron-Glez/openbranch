@@ -1,0 +1,177 @@
+---
+title: SemVer in practice
+description: When SemVer is the right tool, when it isn't, and what to do for services where versions are an internal concern — plus changelogs people actually read.
+icon: Tag
+maturity: rfc
+---
+
+A monorepo team is debating a major version bump. The API change in question
+is to an internal library — used by exactly two services, both owned by the
+same team, both deployed simultaneously. The "consumer" of the breaking
+change is them, this afternoon.
+
+Half the team says "it's a breaking change, that's major, that's the rule."
+The other half says "we control both sides, why are we burning a major
+version on something nobody else will ever know about?"
+
+Both halves are right. They just stopped agreeing about what SemVer is for.
+
+## What SemVer actually says
+
+SemVer is a communication protocol. It exists so that **a consumer you do
+not control** can read a version number and know whether upgrading will
+break their build. The promise:
+
+| Bump  | Meaning to a consumer                          |
+| ----- | ---------------------------------------------- |
+| Patch | I changed nothing you can observe              |
+| Minor | I added something; old code still works        |
+| Major | I broke something; you must read the changelog |
+
+That promise is precious in exactly one situation: when the consumer is far
+away in time, ownership, or organisational distance. A stranger pulling your
+library from npm five years from now needs to know whether the upgrade will
+break their build. SemVer is how you tell them.
+
+<Callout type="info">
+  SemVer's value is not in the version number. It's in the discipline of asking, before every
+  release, "have I broken anyone I can't see?" If the answer is "no, because there is nobody I can't
+  see," the version number is no longer carrying useful information.
+</Callout>
+
+## For libraries you publish: take it seriously
+
+If your code lives on a public registry, on a CDN someone else pins to, or
+inside a contract that an outside team depends on — SemVer is non-negotiable
+and the discipline matters more than the number.
+
+The discipline:
+
+- **Have a definition of "breaking" that fits one paragraph.** It's not a
+  matter of taste. Renaming a public function is breaking. Adding a required
+  parameter is breaking. Changing a return type is breaking. Adding an
+  optional parameter is not.
+- **Run a downstream test.** Keep a small consuming app pinned to your
+  current major. Run its build against your `main`. If it breaks, you owe a
+  major bump.
+- **Deprecate before you remove.** Mark the old name `@deprecated`, point at
+  the new one, ship that as a minor. Remove it in the next major. Consumers
+  who follow the deprecations migrate at their pace.
+
+```typescript
+// In v2.4 (minor)
+/** @deprecated Use `findById` instead. Removed in v3.0. */
+export function getById(id: string) {
+  return findById(id)
+}
+
+// In v3.0 (major)
+// `getById` is gone.
+```
+
+## For services: SemVer is the wrong tool
+
+A service is not consumed by `import` lines. It's consumed by HTTP requests,
+gRPC calls, or message queues. The consumer is another running process —
+upgraded on a different schedule, possibly multiple versions of it running
+at once.
+
+A service does not need a version number. It needs:
+
+- **A current API contract** — schema, OpenAPI, protobuf — checked into the
+  repo and verified in CI.
+- **A rolling deprecation window.** When the contract changes, the old shape
+  keeps working for a published period (90 days, two release cycles,
+  whatever fits). Both shapes are valid during the window.
+- **Contract tests at the boundary.** Each consumer runs a test that asserts
+  it can still parse what the service returns. The service runs a test
+  asserting it produces what each consumer expects.
+
+If you must put a number on a service, the number that matters is the **API
+version** — usually in the URL path or a header — and it changes only when
+you break the contract.
+
+```
+GET /v1/users/123       # current
+GET /v2/users/123       # new shape — both live during deprecation window
+```
+
+The deployed-software version (`my-service:1.42.7`) is bookkeeping for
+operators, not a contract with consumers.
+
+## The middle ground: internal libs that "look published"
+
+Back to the monorepo. Internal libraries used across team boundaries — a
+shared types package, an auth helper, a logging wrapper — sit in the awkward
+middle. They are not published, but the consumers _are_ on different
+upgrade schedules and may not be in the room when you ship.
+
+The right move is to treat them like public libraries, with one shortcut:
+you can shorten the deprecation window because you can grep for every
+caller. A two-week deprecation in a public library would be hostile; a
+two-week deprecation in your monorepo where you opened a PR adding the
+`@deprecated` tag to every caller is reasonable.
+
+The shortcut you do not get: skipping the major bump because "we control
+both sides." If the call sites belong to other teams, you do not control
+both sides — you control the code and they control the calendar.
+
+## A changelog people read
+
+Most changelogs are auto-generated lists of commit subjects. Nobody reads
+them, including the people who wrote them.
+
+A changelog that gets read is **organised by the reader's question, not by
+your commit log:**
+
+```markdown
+## v3.0.0 — 2024-11-15
+
+### If you call `getById`
+
+It's gone. Use `findById`. Migration: `git grep getById` and rename.
+
+### If you import from `~/auth/legacy`
+
+The path is now `~/auth`. The old re-export was removed.
+
+### If you use `<Form onSubmit>`
+
+It now receives `(values, helpers)` instead of just `values`. Add a second
+parameter.
+
+### If none of the above apply
+
+Upgrade is safe. Read the rest only if you want to know what improved.
+
+---
+
+### Other changes
+
+- Faster initial render (#1234)
+- Better error messages for invalid props (#1240)
+```
+
+The change is grouped by who it affects. A reader scans the headers and
+either finds themselves or doesn't. If they don't, they're done. If they
+do, the migration step is right there.
+
+<Callout type="warn">
+  An auto-generated list of "feat:" and "fix:" commits is not a changelog. It's a commit log with a
+  nicer template. The author still has to do the work of saying what the reader needs to do.
+</Callout>
+
+## The payoff
+
+You stop arguing about whether something is major. You ask: **who am I
+telling, and what do they need to do?**
+
+- Strangers depending on your library: SemVer with discipline, deprecate
+  before you remove.
+- Other services calling your service: contract versions and deprecation
+  windows, not deployed versions.
+- Other teams in your monorepo: like a library but with a shorter window.
+- Yourself, this afternoon: ship it. The version number can wait.
+
+The right tool for each. No bumped majors that nobody noticed; no broken
+upgrades that everyone did.
