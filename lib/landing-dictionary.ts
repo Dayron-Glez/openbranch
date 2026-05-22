@@ -66,12 +66,9 @@ export type LandingDict = {
   }
   readonly topics: ReadonlyArray<TopicItem>
   readonly featured: {
-    readonly authors: string
-    readonly reads: string
-    readonly likes: string
-    readonly revisions: string
     readonly cta: string
     readonly previewAria: string
+    readonly updatedLabel: string
   }
   readonly valueProp: ReadonlyArray<ValuePropItem>
   readonly community: {
@@ -190,12 +187,9 @@ const es: LandingDict = {
     },
   ],
   featured: {
-    authors: "Anya Kim y 2 maintainers",
-    reads: "18,2k lecturas",
-    likes: "940",
-    revisions: "12 revisiones",
     cta: "Leer la guía",
     previewAria: "Vista previa de la guía",
+    updatedLabel: "actualizado",
   },
   valueProp: [
     {
@@ -370,12 +364,9 @@ const en: LandingDict = {
     },
   ],
   featured: {
-    authors: "Anya Kim & 2 maintainers",
-    reads: "18.2k reads",
-    likes: "940",
-    revisions: "12 revisions",
     cta: "Read the guide",
     previewAria: "Guide preview",
+    updatedLabel: "updated",
   },
   valueProp: [
     {

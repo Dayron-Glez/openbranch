@@ -1,4 +1,5 @@
 import { source } from "./source"
+import type { Maturity } from "./maturity"
 
 const mulberry32 = (seed: number): (() => number) => {
   let s = seed
@@ -32,12 +33,22 @@ const makeExcerpt = (text: string, maxLength = 450): string => {
   return (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed) + "…"
 }
 
+type PageMeta = {
+  lastModified?: Date
+  maturity?: Maturity
+  authors?: string[]
+}
+
 export type WeeklyPick = {
   readonly title: string
   readonly description: string
   readonly href: string
   readonly excerpt: string
   readonly rawText: string
+  readonly firstHeading: string | null
+  readonly authors: string[]
+  readonly maturity: Maturity
+  readonly lastModified: Date | null
 }
 
 export async function getWeeklyPick(lang: string, date = new Date()): Promise<WeeklyPick | null> {
@@ -54,6 +65,8 @@ export async function getWeeklyPick(lang: string, date = new Date()): Promise<We
 
   const page = seededShuffle(guides, cycle)[position]
   const rawText = await page.data.getText("processed")
+  const toc = page.data.toc as Array<{ title: string }>
+  const meta = page.data as unknown as PageMeta
 
   return {
     title: page.data.title,
@@ -61,5 +74,9 @@ export async function getWeeklyPick(lang: string, date = new Date()): Promise<We
     href: page.url,
     excerpt: makeExcerpt(rawText),
     rawText,
+    firstHeading: toc[0]?.title ?? null,
+    authors: meta.authors ?? [],
+    maturity: meta.maturity ?? "draft",
+    lastModified: meta.lastModified ?? null,
   }
 }

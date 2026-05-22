@@ -40,11 +40,22 @@ const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
   "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
 
-export default async function HomePage({ params }: PageProps<"/[lang]">) {
+export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">>) {
   const { lang } = await params
   const dict = getLandingDict(lang)
 
   const pick = await getWeeklyPick(lang)
+
+  const authorsDisplay = pick
+    ? pick.authors.length === 0
+      ? ""
+      : pick.authors.length === 1
+        ? pick.authors[0]
+        : lang === "es"
+          ? `${pick.authors[0]} y ${pick.authors.length - 1} más`
+          : `${pick.authors[0]} & ${pick.authors.length - 1} more`
+    : ""
+
   const guide = pick
     ? {
         kicker:
@@ -55,6 +66,11 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         summary: pick.description,
         href: pick.href,
         excerpt: pick.excerpt,
+        firstHeading: pick.firstHeading,
+        authors: pick.authors,
+        authorsDisplay,
+        maturity: pick.maturity,
+        lastModified: pick.lastModified,
       }
     : null
 
@@ -119,7 +135,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           </div>
           {guide && (
             <div className="scroll-reveal" data-scroll-reveal>
-              <FeaturedGuide dict={dict.featured} guide={guide} />
+              <FeaturedGuide dict={dict.featured} guide={guide} lang={lang} />
             </div>
           )}
         </section>
