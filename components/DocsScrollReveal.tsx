@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 
-export function DocsScrollReveal({ children }: { children: React.ReactNode }) {
+export function DocsScrollReveal({ children }: { readonly children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

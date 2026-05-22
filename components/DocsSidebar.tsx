@@ -28,7 +28,7 @@ function getItemOffset(depth: number): string {
   return `calc(${2 + 3 * depth} * var(--spacing))`
 }
 
-export function DocsSidebarItem({ item }: { item: PageTreeItem }) {
+export function DocsSidebarItem({ item }: { readonly item: PageTreeItem }) {
   const pathname = usePathname()
   const depth = useFolderDepth()
   const active = item.url === pathname

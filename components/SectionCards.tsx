@@ -3,7 +3,7 @@ import type { source } from "@/lib/source"
 
 type Page = (typeof source)["$inferPage"]
 
-export function SectionCards({ pages }: { pages: Page[] }) {
+export function SectionCards({ pages }: { readonly pages: Page[] }) {
   if (pages.length === 0) return null
 
   return (
