@@ -1,0 +1,146 @@
+---
+title: Review culture
+description: Size limits that hold, templates that get filled in, and comment patterns that teach instead of shame — review culture that scales past one senior reading every diff.
+icon: GitPullRequest
+maturity: rfc
+---
+
+An 800-line pull request sits open for three days. Two reviewers opened it,
+scrolled, closed the tab. Nobody wants to be the one who finds a structural
+problem on hour two. The author refreshes the page every twenty minutes.
+
+This is not a problem of laziness or bad faith. It's a problem of incentives.
+A big PR is expensive to review and cheap to defer, so it gets deferred until
+it can't be anymore — and then it gets a rubber-stamp approval because
+blocking is now political.
+
+The fix is not "review faster." It's removing the situations where deferral
+makes sense.
+
+## The real cost of a big PR
+
+The team-level cost of an 800-line PR is not the two hours someone spends
+reading it. It's:
+
+- the work the author can't do while it's open,
+- the work that piles up behind it because nobody will rebase against it,
+- the trust deficit when a reviewer signs off without really reading,
+- the bug that ships because nobody could hold the whole thing in their head.
+
+Every one of those costs scales worse than linearly with PR size.
+
+<Callout type="info">
+  Research on PR size and defect detection consistently finds review effectiveness drops sharply
+  past ~400 lines changed. Past 1000, reviewers find roughly the same number of issues as if they
+  approved without reading.
+</Callout>
+
+## Size caps: soft and hard
+
+Pick two numbers and publish them.
+
+| Cap  | Lines changed | What happens                                                      |
+| ---- | ------------- | ----------------------------------------------------------------- |
+| Soft | 200           | Author considers splitting; reviewer can request it               |
+| Hard | 600           | Author must split, or write a justification in the PR description |
+
+The numbers matter less than having them at all. With a published cap, the
+author splits the PR before opening it, not after a reviewer asks. The
+conversation moves from "is this too big?" (subjective) to "is this over the
+cap?" (yes or no).
+
+Exemptions exist — generated code, mass rename, library upgrade — and they
+belong in the PR description, not in the reviewer's head.
+
+## The PR template defines "done"
+
+A PR template is not a form. It's a contract that says: _these are the things
+the author confirms before asking for review._ The point is to shift work
+left, not to add bureaucracy.
+
+```markdown
+## What changed
+
+A 2-3 line summary of the change.
+
+## Why
+
+What problem this solves. Link to the issue.
+
+## How to verify
+
+The minimum the reviewer can do to gain confidence — a command to run, a
+screen to open, a query to execute.
+
+## Checklist
+
+- [ ] Tests added or updated
+- [ ] No new lint or type errors
+- [ ] Public API changes have a deprecation path
+- [ ] Migration notes added if the schema changed
+```
+
+The "how to verify" field is the most undervalued part of any PR template.
+Reviewers who can verify a change in 30 seconds approve it. Reviewers who have
+to reverse-engineer the verification path do not.
+
+## Comment patterns: the ones that work, the ones that don't
+
+The difference between a comment that gets acted on and one that breeds
+resentment is rarely the substance. It's the framing.
+
+**Prefix your intent.** Conventional Comments uses labels — `nit:`,
+`suggestion:`, `question:`, `issue:`, `praise:`. They take half a second to
+type and they tell the author whether to fix, consider, or just acknowledge.
+
+```
+nit: prefer `await` over `.then()` for consistency with the rest of the file
+
+question: is this swallowing the error on purpose? the caller can't
+distinguish a 404 from a transport failure
+
+issue (blocker): this introduces an N+1 — line 84 queries inside a loop
+over `users`
+```
+
+**Ask, don't assert, when you're not sure.** "This looks wrong" puts the
+author on the defensive. "Is there a reason this isn't X?" invites a
+conversation. If you turn out to be wrong, you didn't have to walk anything
+back.
+
+**Praise the structural wins, not the surface ones.** "Nice extraction into a
+pure function" matters. "Nice variable name" reads as filler.
+
+<Callout type="warn">
+  The single fastest way to lose a junior contributor is to dump twenty unlabelled comments on their
+  first PR. They cannot tell which ones are blockers, which are style, and which are your personal
+  preference. Label them or batch them.
+</Callout>
+
+## Approve-with-comments vs request-changes
+
+"Request changes" is a strong signal. It says: _I will not approve this until
+we resolve this._ Use it when there is a real blocker — a correctness bug, a
+data-loss risk, a security issue.
+
+"Approve with comments" says: _I trust the author to handle these, and I do
+not want to be the gatekeeper for whether they shipped._ Use it for nits,
+suggestions, and follow-up cleanups.
+
+The political weight matters. A reviewer who request-changes on every PR
+becomes a bottleneck and a target of frustration. A reviewer who
+approve-with-comments on everything stops being a meaningful signal. The
+calibration is: **request changes when you would be unhappy to see this merged
+as-is; approve with comments otherwise.**
+
+## The payoff
+
+Stack these and the review experience changes:
+
+- the PR is small enough to read in one sitting,
+- the description tells the reviewer how to verify in 30 seconds,
+- comments arrive labelled so the author knows what's a blocker,
+- approval is real because nobody approves what they didn't read.
+
+You did not get faster reviews by reviewing faster. You got faster reviews by
+making each one smaller, clearer, and more honest.
