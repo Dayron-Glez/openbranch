@@ -1,4 +1,5 @@
 import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
+import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/components/SuggestGuideButton"
 import {
   DocsBody,
@@ -32,6 +33,9 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
     ? source.getPages(lang).filter((p) => p.slugs[0] === sectionSlug && p.slugs.length === 2)
     : []
 
+  const rawText = isSectionPage ? "" : await page.data.getText("processed")
+  const readingMinutes = isSectionPage ? 0 : getReadingTime(rawText)
+
   return (
     <DocsPage
       toc={page.data.toc}
@@ -43,6 +47,11 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="flex flex-row items-center gap-2 border-b pb-6">
+        {!isSectionPage && (
+          <span className="text-fd-muted-foreground font-mono text-[11px]">
+            {formatReadingTime(readingMinutes, lang)}
+          </span>
+        )}
         <MarkdownCopyButton markdownUrl={markdownUrl} />
         {isSectionPage && <SuggestGuideButton sectionName={page.data.title} />}
       </div>
