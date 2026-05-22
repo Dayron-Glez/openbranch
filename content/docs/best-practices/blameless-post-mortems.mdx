@@ -1,0 +1,179 @@
+---
+title: Post-mortems sin culpables
+description: Un formato de post-mortem que va más allá de "añadiremos más monitorización" y encuentra lecciones estructurales — plantilla, cinco porqués sin chivos expiatorios y un patrón de difusión que construye memoria institucional.
+icon: Lightbulb
+maturity: rfc
+---
+
+Un proveedor de pagos devuelve errores 500 durante cuarenta minutos. El
+equipo escribe un post-mortem. La acción resultante es "mejorar la
+monitorización del proveedor de pagos." Seis meses después, un proveedor
+diferente devuelve errores 500 durante una hora. El nuevo post-mortem dice
+"mejorar la monitorización de ese proveedor también."
+
+Los post-mortems son inculpadores, puntuales y bien asistidos. También son
+inútiles. Siguen documentando el mismo modo de fallo con ropa diferente
+porque nunca llegan al nivel donde vive la lección.
+
+La solución no es "ser más inculpador". Es una estructura que obliga al
+análisis a ir más allá de la causa próxima.
+
+## El modelo mental: los incidentes revelan el sistema, no al operador
+
+Un post-mortem no es un registro de lo que una persona hizo mal. Es un
+registro de lo que el sistema permitió. Si un único error de un único
+operador puede tumbar producción, la lección es sobre el sistema que le dio
+a una persona tanta superficie de carga — no sobre el operador.
+
+La pregunta más útil en un post-mortem no es "¿por qué ocurrió esto?" sino
+**"¿por qué el sistema no lo detectó antes?"** Cada capa frente al fallo
+tuvo la oportunidad de sacarlo a la superficie. Cada una que no lo hizo es
+una lección.
+
+<Callout type="info">
+  Si tus post-mortems terminan sistemáticamente con acciones orientadas a "que la gente tenga más
+  cuidado", tu equipo está documentando síntomas. El cuidado es la defensa más cara y menos
+  duradera. Úsalo como combustible para diseñar sistemas que no lo necesiten.
+</Callout>
+
+## La plantilla
+
+Un post-mortem que produce lecciones estructurales cubre cinco cosas, en
+este orden:
+
+```markdown
+# Incidente — <resumen en una línea> — <fecha>
+
+## Qué ocurrió
+
+Una narrativa de 3-5 frases. Todavía no el timeline — la historia.
+"Un deploy a las 14:32 deshabilitó el procesamiento de pagos para clientes
+europeos durante 38 minutos. El deploy fue revertido a las 15:10 tras
+confirmar que el rollback no perdería transacciones en curso. ~2.400
+clientes vieron errores. No se perdieron datos."
+
+## Timeline
+
+El reloj. Solo los hechos, en UTC, con timestamps.
+14:32 — Deploy de v2.41.0 en eu-west-1 completado.
+14:35 — Primer reporte de cliente en #support.
+14:38 — Alerta disparada (latencia p99 > 5s en /pay).
+14:41 — On-call reconoce la alerta.
+14:54 — Hipótesis: incompatibilidad de schema en la config de env.
+15:02 — Rollback iniciado.
+15:10 — Rollback completado, latencia normal.
+
+## Factores contribuyentes
+
+No "la causa". Factores — en plural. El deploy salió, Y el entorno de
+staging no tenía las mismas env vars, Y la validación del schema se ejecuta
+en tiempo de petición no de arranque, Y la alerta de latencia está
+configurada por encima del umbral que un cliente llamaría "roto". Cualquiera
+de ellos habría parado esto.
+
+## Qué hizo bien el sistema
+
+El rollback funcionó en 8 minutos. La rotación de on-call avisó a la
+persona correcta. La alerta de latencia acabó disparándose. Nómbralos —
+sobreviven solo si los notas.
+
+## Lecciones y acciones
+
+Separa "estructural" de "pulido". Ver más abajo.
+```
+
+El orden importa. La gente escribe el timeline primero porque es mecánico;
+luego escribe factores contribuyentes que coinciden con el timeline que
+recuerda. Escribe primero la narrativa, luego el timeline contra los datos
+fuente (logs de chat, dashboards, historial de deploys). La narrativa cambia
+cuando reconstruyes el timeline.
+
+## Los cinco porqués que no se detienen ante el error humano
+
+La técnica de los cinco porqués es famosa y famosamente mala. Se usa para
+recorrer una cadena hasta llegar a "el ingeniero cometió un error" y
+detenerse. Eso no es profundidad; es una forma educada de acabar donde
+empezaste.
+
+La regla: **un "por qué" que aterriza en la elección de una persona no es
+un porqué terminal.** Sigue. Las siguientes preguntas son: ¿por qué ese era
+el camino más fácil? ¿Por qué el sistema no les advirtió? ¿Por qué pensaron
+que era seguro?
+
+Un ejemplo trabajado. El deploy deshabilita los pagos.
+
+1. ¿Por qué el deploy rompió los pagos? — Falta una env var en la config de prod.
+2. ¿Por qué faltaba? — El PR la añadió a `staging.env` pero no a `prod.env`.
+3. _(parada por error humano)_ El ingeniero se olvidó.
+4. _(cinco porqués reales)_ ¿Por qué nada detectó la var que faltaba? — El
+   arranque tiene éxito sin ella; la var solo se lee en la primera petición.
+5. ¿Por qué se lee de forma lazy una var requerida? — Originalmente opcional
+   con un valor por defecto. El valor por defecto se eliminó en v2.0 sin
+   cambiar la validación.
+6. ¿Por qué el deploy no falló rápido? — No hay un paso `validateConfig()`
+   entre el arranque y el tráfico.
+
+Acción del punto #3: "tener cuidado con los archivos de env." Acción del
+punto #6: "añadir `validateConfig()` entre el arranque y la aceptación de
+tráfico; fallar el deploy si falta una var requerida."
+
+La segunda sobrevive al siguiente ingeniero que se une al equipo.
+
+<Callout type="warn">
+  "Tendremos más cuidado" no es una acción. Es una frase escrita para que la reunión pueda terminar.
+  Si encuentras una en tus acciones, trátala como una señal de que el análisis se detuvo un porqué
+  demasiado pronto.
+</Callout>
+
+## Acciones: estructurales vs. pulido
+
+Tras el análisis, tendrás una lista de cosas que hacer. Divídela en dos
+columnas:
+
+| Estructural                                                    | Pulido                                   |
+| -------------------------------------------------------------- | ---------------------------------------- |
+| Cambia el modo de fallo del sistema                            | Mejora la experiencia del mismo fallo    |
+| `validateConfig()` entre el arranque y el tráfico              | Mejor redacción en el runbook            |
+| Alerta sobre síntoma visible al cliente, no proxy interno      | Añadir el número del on-call a la wiki   |
+| Validación del schema movida de tiempo de petición al arranque | Actualizar el dashboard con un panel más |
+
+Los items de pulido están bien. No son la lección. Un post-mortem con cinco
+items de pulido y cero cambios estructurales está documentando cuidado, no
+aprendizaje.
+
+La lista estructural debe tener al menos un item con propietario y fecha
+límite que no sea "el próximo sprint" (real, en el calendario). Si no lo
+tiene, el análisis no llegó a un nivel que produzca cambio estructural —
+vuelve a los porqués.
+
+## El patrón de difusión
+
+Un post-mortem que vive en una carpeta que nadie abre tiene el impacto de
+uno sin escribir. El patrón que escala:
+
+- **Leído en un foro recurrente.** Un slot semanal de 30 minutos donde se
+  repasan los últimos post-mortems. La asistencia es abierta; el on-call que
+  gestionó el incidente lo lidera. Se animan las preguntas.
+- **Una cabecera de resumen que cualquiera puede leer en dos minutos.** Las
+  secciones "Qué ocurrió" y "Lecciones", sin jerga. El resto es para los
+  curiosos y los que implementan la solución.
+- **Buscable, con etiquetas.** "Incompatibilidad de configuración",
+  "interrupción de terceros", "problema en tiempo de deploy" — etiquetas que
+  permiten al siguiente on-call encontrar trabajo previo cuando sospecha un
+  patrón recurrente.
+
+El foro importa más que el documento. Escuchar a un compañero decir
+"pensamos que era un problema del cliente durante quince minutos" es la
+memoria institucional que el documento solo nunca construye.
+
+## El resultado
+
+El mismo proveedor de pagos cae un año después. El on-call abre el runbook
+y el post-mortem anterior. El cambio estructural del año pasado —
+`validateConfig()` y la alerta visible al cliente — se dispara en sesenta
+segundos. El on-call hace el rollback en seis minutos. Quinientos clientes
+ven errores en lugar de dos mil.
+
+No preveniste el fallo. Diseñaste un sistema que lo sobrevivió más rápido
+que la última vez. El post-mortem que sacó la lección a la superficie es la
+razón.

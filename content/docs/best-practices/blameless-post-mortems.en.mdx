@@ -1,0 +1,172 @@
+---
+title: Blameless post-mortems
+description: A post-mortem format that gets past "we'll add more monitoring" and finds structural lessons — template, five whys without scapegoating, and a sharing pattern that builds institutional memory.
+icon: Lightbulb
+maturity: rfc
+---
+
+A payment provider returns 500s for forty minutes. The team writes a
+post-mortem. The action item is "improve monitoring of the payment
+provider." Six months later, a different provider returns 500s for an hour.
+The new post-mortem says "improve monitoring of that provider too."
+
+The post-mortems are blameless, on time, well-attended. They are also
+useless. They keep documenting the same failure mode wearing different
+clothes because they never reach the level where the lesson lives.
+
+The fix is not "be more blameless." It's a structure that forces the
+analysis past the proximate cause.
+
+## The mental model: incidents reveal the system, not the operator
+
+A post-mortem is not a record of what one person did wrong. It is a record
+of what the system allowed. If a single mistake from a single operator could
+take down production, the lesson is about the system that gave one person
+that much load-bearing surface — not about the operator.
+
+The most useful question in a post-mortem is not "why did this happen?" but
+**"why did the system not catch this earlier?"** Every layer in front of the
+failure had a chance to surface it. Each one that didn't is a lesson.
+
+<Callout type="info">
+  If your post-mortems consistently end with action items aimed at "people being more careful," your
+  team is documenting symptoms. Carefulness is the most expensive and least durable defense. Burn it
+  as fuel for designing systems that don't need it.
+</Callout>
+
+## The template
+
+A post-mortem that produces structural lessons covers five things, in this
+order:
+
+```markdown
+# Incident — <one-line summary> — <date>
+
+## What happened
+
+A 3-5 sentence narrative. Not a timeline yet — the story.
+"A deploy at 14:32 disabled payment processing for European customers for
+38 minutes. The deploy was rolled back at 15:10 after the on-call confirmed
+the rollback wouldn't lose in-flight transactions. ~2,400 customers saw
+errors. No data was lost."
+
+## Timeline
+
+The clock. Just the facts, in UTC, with timestamps.
+14:32 — Deploy of v2.41.0 to eu-west-1 completes.
+14:35 — First customer report in #support.
+14:38 — Alert fires (latency p99 > 5s for /pay).
+14:41 — On-call acknowledged.
+14:54 — Hypothesis: schema mismatch in env config.
+15:02 — Rollback initiated.
+15:10 — Rollback complete, latency normal.
+
+## Contributing factors
+
+Not "the cause." Factors — plural. The deploy went out, AND the staging env
+didn't have the same env vars, AND the schema validation runs at request
+time not boot time, AND the latency alert is set above the threshold a
+customer would call "broken." Any one of those would have stopped this.
+
+## What the system did right
+
+The rollback worked in 8 minutes. The on-call rotation paged the right
+person. The latency alert eventually fired. Name these — they survive only
+if you notice them.
+
+## Lessons and action items
+
+Separate "structural" from "polish." See below.
+```
+
+The order matters. People write the timeline first because it's mechanical;
+they then write contributing factors that match the timeline they remember.
+Write the narrative first, then the timeline against the source data
+(chat logs, dashboards, deploy history). The narrative changes when you
+reconstruct the timeline.
+
+## The five whys that doesn't stop at human error
+
+The five-whys technique is famous and famously bad. It gets used to walk a
+chain back to "the engineer made a mistake" and stop. That's not depth;
+that's a polite way to end up where you started.
+
+The rule: **a "why" that lands on a person's choice is not a terminal why.**
+Keep going. The next questions are: why was that the easiest path? Why
+didn't the system warn them? Why did they think it was safe?
+
+A worked example. Deploy disabled payments.
+
+1. Why did the deploy break payments? — Missing env var in the prod config.
+2. Why was it missing? — The PR added it to `staging.env` but not `prod.env`.
+3. _(human-error stop)_ The engineer forgot.
+4. _(real five whys)_ Why didn't anything catch the missing var? — Boot
+   succeeds without it; the var is only read on the first request.
+5. Why is a required var read lazily? — Originally optional with a default.
+   The default was removed in v2.0 without changing the validation.
+6. Why didn't the deploy fail-fast? — There's no `validateConfig()` step
+   between boot and traffic.
+
+Action item from stop #3: "be careful with env files." Action item from
+stop #6: "add `validateConfig()` between boot and accepting traffic; fail
+the deploy if a required var is missing."
+
+The second one survives the next engineer joining the team.
+
+<Callout type="warn">
+  "We will be more careful" is not an action item. It is a sentence written so the meeting can end.
+  If you find one in your action items, treat it as a sign that the analysis stopped one why too
+  early.
+</Callout>
+
+## Action items: structural vs polish
+
+After analysis, you'll have a list of things to do. Split it into two
+columns:
+
+| Structural                                            | Polish                                      |
+| ----------------------------------------------------- | ------------------------------------------- |
+| Changes the system's failure mode                     | Improves the experience of the same failure |
+| `validateConfig()` between boot and traffic           | Better wording in the runbook               |
+| Alert on customer-visible symptom, not internal proxy | Add the on-call's number to the wiki        |
+| Schema validation moved from request time to boot     | Update the dashboard with one more panel    |
+
+Polish items are fine. They are not the lesson. A post-mortem with five
+polish items and zero structural changes is documenting carefulness, not
+learning.
+
+The structural list should have at least one item with an owner and a
+deadline that is not "next sprint" (real, on the calendar). If it doesn't,
+the analysis didn't reach a level that produces structural change — go
+back to the whys.
+
+## The sharing pattern
+
+A post-mortem that lives in a folder nobody opens has the impact of an
+unwritten one. The pattern that scales:
+
+- **Read at a recurring forum.** A 30-minute weekly slot where the latest
+  post-mortems get walked through. Attendance is open; the on-call who ran
+  the incident leads it. Questions are encouraged.
+- **A summary header anyone can read in two minutes.** The "What happened"
+  and "Lessons" sections, no jargon. The rest is for the curious and the
+  ones implementing the fix.
+- **Searchable, with tags.** "Configuration mismatch," "third-party
+  outage," "deploy-time issue" — tags that let the next on-call find prior
+  art when they suspect a recurring pattern.
+
+The forum matters more than the document. Hearing a peer say "we thought
+this was a customer issue for fifteen minutes" is the institutional memory
+the document alone never builds.
+
+## The payoff
+
+Same payment provider goes down a year later. The on-call opens the
+runbook and the previous post-mortem. The structural change from last year
+— `validateConfig()` and the customer-visible alert — fires within sixty
+seconds. The on-call rolls back in six minutes. Five hundred customers see
+errors instead of two thousand.
+
+You did not prevent the failure. You designed a system that survived it
+faster than last time. The post-mortem that surfaced the lesson is the
+reason.
