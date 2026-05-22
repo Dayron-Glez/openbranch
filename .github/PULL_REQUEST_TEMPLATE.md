@@ -53,6 +53,7 @@ Closes #
 - [ ] Content is accurate and actionable
 - [ ] Follows the project writing style (concise, no fluff)
 - [ ] Both language variants updated if applicable (`*.mdx` + `*.en.mdx`)
+- [ ] Added your name to `authors:` in frontmatter if you wrote or substantially edited the guide
 - [ ] Registered in `meta.json` / `meta.en.json` if a new guide was added
 - [ ] MDX renders without errors (`npm run build` passes)
 
