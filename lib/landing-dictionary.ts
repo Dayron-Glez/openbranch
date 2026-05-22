@@ -157,7 +157,7 @@ const es: LandingDict = {
       icon: "branch",
       slug: "git",
       countUnit: "guías",
-      title: "Estrategias de ramas",
+      title: "Git y flujos de trabajo",
       description:
         "Trunk-based, release branches, GitFlow - cuándo cada una vale la pena y las señales de que se te quedó pequeña.",
     },
@@ -173,7 +173,7 @@ const es: LandingDict = {
       icon: "flask",
       slug: "testing",
       countUnit: "guías",
-      title: "Patrones de pruebas",
+      title: "Pruebas",
       description:
         "Contract tests, higiene de snapshots, matar CI inestable - patrones que aguantan con 50 ingenieros y con 50.000.",
     },
@@ -189,7 +189,7 @@ const es: LandingDict = {
       icon: "fork",
       slug: "contributing",
       countUnit: "guías",
-      title: "Flujos de contribución",
+      title: "Contribuir al código abierto",
       description:
         "Onboarding de nuevos contribuidores, RFCs que se entregan, gobernanza que escala sin ahogar el ritmo.",
     },
@@ -197,7 +197,7 @@ const es: LandingDict = {
       icon: "bulb",
       slug: "best-practices",
       countUnit: "historias",
-      title: "Lecciones de equipos reales",
+      title: "Buenas prácticas",
       description:
         'Post-mortems, rediseños y las historias de "deberíamos haber hecho esto 6 meses antes" que vale la pena leer.',
     },
@@ -353,7 +353,7 @@ const en: LandingDict = {
       icon: "branch",
       slug: "git",
       countUnit: "guides",
-      title: "Branching strategies",
+      title: "Git & Workflows",
       description:
         "Trunk-based, release branches, GitFlow - when each one earns its keep, and the warning signs you've outgrown it.",
     },
@@ -369,7 +369,7 @@ const en: LandingDict = {
       icon: "flask",
       slug: "testing",
       countUnit: "guides",
-      title: "Testing patterns",
+      title: "Testing",
       description:
         "Contract tests, snapshot hygiene, killing flaky CI - patterns that hold up at 50 engineers and 50,000.",
     },
@@ -385,7 +385,7 @@ const en: LandingDict = {
       icon: "fork",
       slug: "contributing",
       countUnit: "guides",
-      title: "Contribution flows",
+      title: "Contributing to OSS",
       description:
         "Onboarding new contributors, RFCs that ship, governance that scales without smothering momentum.",
     },
@@ -393,7 +393,7 @@ const en: LandingDict = {
       icon: "bulb",
       slug: "best-practices",
       countUnit: "stories",
-      title: "Lessons from real teams",
+      title: "Best Practices",
       description:
         'Post-mortems, redesigns, and the "we should have done this 6 months earlier" stories worth reading.',
     },

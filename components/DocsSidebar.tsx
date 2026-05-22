@@ -40,7 +40,7 @@ export function DocsSidebarItem({ item }: { item: PageTreeItem }) {
       className={depth >= 1 ? `${baseCls} ${highlightCls}` : baseCls}
       style={{ paddingInlineStart: getItemOffset(depth) }}
     >
-      <span className="min-w-0 flex-1">{item.name}</span>
+      <span className="line-clamp-2 min-w-0 flex-1">{item.name}</span>
     </SidebarItem>
   )
 }
