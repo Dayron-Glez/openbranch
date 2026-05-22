@@ -29,6 +29,13 @@ export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
 
+function buildAuthorsDisplay(authors: string[], lang: string): string {
+  if (authors.length === 0) return ""
+  if (authors.length === 1) return authors[0]
+  const rest = authors.length - 1
+  return lang === "es" ? `${authors[0]} y ${rest} más` : `${authors[0]} & ${rest} more`
+}
+
 const eyebrowClass =
   "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
 
@@ -46,15 +53,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
 
   const pick = await getWeeklyPick(lang)
 
-  const authorsDisplay = pick
-    ? pick.authors.length === 0
-      ? ""
-      : pick.authors.length === 1
-        ? pick.authors[0]
-        : lang === "es"
-          ? `${pick.authors[0]} y ${pick.authors.length - 1} más`
-          : `${pick.authors[0]} & ${pick.authors.length - 1} more`
-    : ""
+  const authorsDisplay = pick ? buildAuthorsDisplay(pick.authors, lang) : ""
 
   const guide = pick
     ? {
