@@ -6,12 +6,6 @@ import { FeaturedGuideStats } from "@/components/FeaturedGuideStats"
 const ctaClass =
   "group inline-flex h-[34px] items-center gap-2 rounded-[var(--r-8)] border border-transparent bg-ob-accent px-3.5 text-[13px] font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-[var(--d-fast)] ease-[var(--ease)] hover:brightness-[1.06] [&_svg]:size-3.5"
 
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
-}
-
 type FeaturedGuideDynamic = {
   readonly kicker: string
   readonly title: string
@@ -40,26 +34,13 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
         </span>
         <h3 className="m-0 text-[28px] leading-[1.15] font-medium tracking-[0]">{guide.title}</h3>
         <p className="text-fg-2 m-0 max-w-[42ch] text-[14.5px] leading-[1.55]">{guide.summary}</p>
-        {guide.authors.length > 0 && (
-          <div className="text-fg-muted mt-2 flex items-center gap-3.5 font-mono text-[11.5px]">
-            <div className="inline-flex">
-              {guide.authors.slice(0, 3).map((author, i) => (
-                <span
-                  key={author}
-                  className={`border-line bg-bg-elev outline-bg-card ${i === 0 ? "ml-0" : "-ml-1.5"} inline-flex size-[22px] items-center justify-center rounded-full border font-mono text-[9px] outline-2`}
-                >
-                  {getInitials(author)}
-                </span>
-              ))}
-            </div>
-            <span>{guide.authorsDisplay}</span>
-          </div>
-        )}
         <FeaturedGuideStats
           maturity={guide.maturity}
           lastModified={guide.lastModified}
           lang={lang}
           updatedLabel={dict.updatedLabel}
+          authors={guide.authors}
+          authorsDisplay={guide.authorsDisplay}
         />
         <div className="mt-2">
           <a href={guide.href} className={ctaClass}>

@@ -3,14 +3,23 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { MaturityBadge } from "@/components/MaturityBadge"
+import { Badge } from "@/components/ui/badge"
 import { formatRelativeDate } from "@/lib/section-stats"
 import type { Maturity } from "@/lib/maturity"
+
+function getInitials(name: string): string {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
+}
 
 type FeaturedGuideStatsProps = {
   readonly maturity: Maturity
   readonly lastModified: Date | null
   readonly lang: string
   readonly updatedLabel: string
+  readonly authors: string[]
+  readonly authorsDisplay: string
 }
 
 export function FeaturedGuideStats({
@@ -18,6 +27,8 @@ export function FeaturedGuideStats({
   lastModified,
   lang,
   updatedLabel,
+  authors,
+  authorsDisplay,
 }: FeaturedGuideStatsProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -34,7 +45,7 @@ export function FeaturedGuideStats({
         gsap.to(items, {
           opacity: 1,
           y: 0,
-          stagger: 0.15,
+          stagger: 0.12,
           duration: 0.45,
           ease: "power2.out",
         })
@@ -51,14 +62,46 @@ export function FeaturedGuideStats({
   const relativeDate = formatRelativeDate(lastModified, lang)
 
   return (
-    <div ref={ref} className="flex items-center gap-3">
-      <span data-stat="">
-        <MaturityBadge maturity={maturity} size="xs" />
-      </span>
-      {lastModified && (
-        <span data-stat="" className="text-fg-muted font-mono text-[11px]">
-          {updatedLabel} {relativeDate}
+    <div ref={ref} className="flex items-center gap-2">
+      {authors.length > 0 && (
+        <span data-stat="" className="inline-flex items-center gap-2">
+          <span className="inline-flex items-center">
+            {authors.slice(0, 3).map((author, i) => (
+              <span
+                key={author}
+                className={`border-line bg-accent-soft text-ob-accent outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} inline-flex size-[22px] items-center justify-center rounded-full border font-mono text-[9px] font-medium outline-2`}
+              >
+                {getInitials(author)}
+              </span>
+            ))}
+          </span>
+          <span className="text-fg-2 text-[12px] leading-none">{authorsDisplay}</span>
         </span>
+      )}
+
+      {authors.length > 0 && (
+        <span
+          data-stat=""
+          className="text-fg-faint inline-flex items-center text-[10px]"
+          aria-hidden
+        >
+          ·
+        </span>
+      )}
+
+      <span data-stat="" className="inline-flex items-center">
+        <MaturityBadge maturity={maturity} />
+      </span>
+
+      {lastModified && (
+        <Badge
+          data-stat=""
+          variant="outline"
+          className="border-line text-fg-muted gap-1.5 font-mono tracking-[0.02em] whitespace-nowrap"
+        >
+          <span className="size-1.5 shrink-0 rounded-full bg-current" aria-hidden />
+          {updatedLabel} {relativeDate}
+        </Badge>
       )}
     </div>
   )

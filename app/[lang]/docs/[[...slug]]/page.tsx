@@ -2,6 +2,7 @@ import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/components/SuggestGuideButton"
 import { Clock } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import {
   DocsBody,
   DocsDescription,
@@ -48,10 +49,13 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       <div className="flex flex-wrap items-center gap-3">
         <DocsTitle className="leading-tight">{page.data.title}</DocsTitle>
         {!isSectionPage && (
-          <span className="bg-accent-soft text-ob-accent inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] font-medium">
+          <Badge
+            variant="outline"
+            className="bg-accent-soft text-ob-accent gap-1.5 border-transparent font-mono"
+          >
             <Clock className="size-3" />
             {formatReadingTime(readingMinutes, lang)}
-          </span>
+          </Badge>
         )}
       </div>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>

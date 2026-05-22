@@ -2,13 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import {
-  MATURITY_CLASSES,
-  MATURITY_LABEL,
-  MATURITY_SIZE_CLASSES,
-  MATURITY_VALUES,
-} from "@/lib/maturity"
+import { MATURITY_CLASSES, MATURITY_LABEL, MATURITY_VALUES } from "@/lib/maturity"
 import type { Maturity } from "@/lib/maturity"
+import { Badge, badgeVariants } from "@/components/ui/badge"
 
 export type FilterPage = {
   title: string
@@ -53,9 +49,9 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
             aria-label={`Maturity: ${MATURITY_LABEL[m]}, ${counts[m]} guide${counts[m] === 1 ? "" : "s"}`}
             onClick={() => toggle(m)}
             className={[
-              "inline-flex cursor-pointer items-center gap-1.5 rounded-full border font-mono tracking-[0.02em] transition-opacity",
+              badgeVariants({ variant: "outline" }),
+              "cursor-pointer gap-1.5 font-mono tracking-[0.02em] transition-opacity",
               MATURITY_CLASSES[m],
-              MATURITY_SIZE_CLASSES.lg,
               active.has(m) ? "" : "opacity-40",
             ]
               .filter(Boolean)
@@ -93,19 +89,18 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
   )
 }
 
-// Duplicates MaturityBadge markup to avoid importing a server component into a client module.
 function BadgeInline({ maturity }: { readonly maturity: Maturity }) {
   return (
-    <span
+    <Badge
+      variant="outline"
       className={[
-        "inline-flex items-center gap-1.5 rounded-full border font-mono tracking-[0.02em] whitespace-nowrap",
+        "gap-1.5 font-mono tracking-[0.02em] whitespace-nowrap",
         MATURITY_CLASSES[maturity],
-        MATURITY_SIZE_CLASSES.xs,
       ].join(" ")}
       aria-label={`Maturity: ${maturity}`}
     >
       <span className="size-1.5 shrink-0 rounded-full bg-current" aria-hidden />
       {MATURITY_LABEL[maturity]}
-    </span>
+    </Badge>
   )
 }
