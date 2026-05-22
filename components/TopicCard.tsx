@@ -18,7 +18,7 @@ export function TopicCard({
   description,
   count,
   updated,
-}: TopicCardProps) {
+}: Readonly<TopicCardProps>) {
   return (
     <Link
       href={href}

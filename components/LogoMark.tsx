@@ -4,7 +4,7 @@ type LogoMarkProps = {
   className?: string
 }
 
-export function LogoMark({ size = 64, animate = false, className }: LogoMarkProps) {
+export function LogoMark({ size = 64, animate = false, className }: Readonly<LogoMarkProps>) {
   return (
     <svg
       width={size}

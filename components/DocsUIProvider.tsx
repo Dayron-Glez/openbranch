@@ -10,8 +10,8 @@ export function DocsUIProvider({
   dict,
   children,
 }: {
-  dict: DocsDictionary
-  children: React.ReactNode
+  readonly dict: DocsDictionary
+  readonly children: React.ReactNode
 }) {
   return <DocsUICtx.Provider value={dict}>{children}</DocsUICtx.Provider>
 }

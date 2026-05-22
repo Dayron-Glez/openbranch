@@ -1,0 +1,139 @@
+---
+title: Branching strategies
+description: A decision framework based on team size, shipping cadence, and the cost of being wrong — with the warning signs you've outgrown your current model.
+icon: GitBranch
+maturity: rfc
+---
+
+A team of six engineers ships from `main` every day. Two years later they're
+fifty, GitFlow is on the wiki, and a release takes a week of merge conflicts
+and "wait, was that fix in the last cut?". Nobody decided to make it harder.
+The branching model just stayed the same while everything around it changed.
+
+Picking a branching strategy is not picking a favourite. It's picking which
+problems you're willing to have — because every model trades one set of pains
+for another.
+
+## The mental model: how often can you actually ship?
+
+Forget the diagrams. Every branching model is a different answer to one
+question: **how often can a change in `main` reach a real user?**
+
+| Strategy         | Answer                        | Implied cost                                |
+| ---------------- | ----------------------------- | ------------------------------------------- |
+| Trunk-based      | Today, multiple times         | Investment in CI, tests, and feature flags  |
+| Release branches | Every sprint or fixed cadence | Coordination overhead per cut               |
+| GitFlow          | When `develop` is "ready"     | Two long-lived branches, manual integration |
+
+Pick the model that matches how often you _actually_ ship — not how often
+you'd like to.
+
+<Callout type="info">
+  If you ship every two weeks but pretend you ship daily, trunk-based will feel chaotic. If you ship
+  daily but pretend you ship monthly, GitFlow will feel like wading through cement.
+</Callout>
+
+## Trunk-based: the model with the fewest surprises
+
+One long-lived branch (`main`). Short-lived feature branches that merge within
+hours or a day. Every merge to `main` is potentially deployable.
+
+It works when:
+
+- CI is fast enough that nobody bypasses it (under ~10 minutes end-to-end)
+- Tests catch enough regressions that a green build is a real signal
+- You can ship unfinished work safely — usually with **feature flags**
+
+It does not work when:
+
+- A flaky CI means people sit on changes until the queue clears
+- You ship to an environment where rollback is hard (mobile, embedded, on-prem)
+- Your test suite gives green for code that is visibly broken
+
+The honest version: **trunk-based without feature flags is just "fast and
+fragile."** If you can't afford the flag infrastructure yet, release branches
+are not a regression — they're an honest signal of what your tooling supports.
+
+## Release branches: the in-between
+
+`main` accumulates merged work. On a cadence (every sprint, every Friday, every
+month), you cut a branch from `main` — `release/2024-11` — stabilise it with
+fixes, ship it, and tag.
+
+The win: a stable surface to test and deploy from, separate from ongoing work.
+The cost: cherry-picking. Every fix that needs to go to the release branch is
+a manual decision and a chance to forget.
+
+This model fits teams that:
+
+- Ship to environments with downtime cost (data pipelines, batch systems)
+- Have a QA step that needs a stable target
+- Cannot afford the feature-flag investment trunk-based assumes
+
+<Callout type="warn">
+  Cherry-picking is where this model breaks down. If you cherry-pick more than two or three fixes
+  per release, you have a different problem — either your tests don't catch regressions, or you're
+  cutting too early. Don't normalise the cherry-pick treadmill.
+</Callout>
+
+## GitFlow: the model with the highest ceiling, the highest floor
+
+Two long-lived branches (`main` and `develop`), plus `feature/*`, `release/*`,
+and `hotfix/*`. Vincent Driessen wrote it in 2010 for software with **explicit
+versioned releases** — desktop apps, libraries, on-prem products.
+
+It justifies its cost when:
+
+- You ship discrete versions that users install (not continuously deployed services)
+- Multiple versions live in production simultaneously and need separate hotfixes
+- A regulated environment requires explicit "this is what we shipped" branches
+
+It is a tax on everything else:
+
+- Two long-lived branches means twice the merge surface
+- Every feature crosses three branches before reaching production
+- Newcomers spend a week learning the dance before their first PR lands
+
+Driessen himself added a note to the original post in 2020: _"if you are
+building software that is explicitly versioned, GitFlow is great. If you are
+running a web app, you almost certainly don't want GitFlow."_ Use it on
+purpose, not by default.
+
+## Warning signs you've outgrown your model
+
+Three from trunk-based:
+
+1. **Feature flags outnumber features.** You wrote the flag, the feature, the
+   flag-removal, and the cleanup. The flag is still there.
+2. **`main` is read-only on release day.** If shipping requires a freeze, your
+   "always deployable" claim is fiction.
+3. **A hotfix needs three reviewers and a meeting.** The model assumes you can
+   fix forward fast. If you can't, you're paying the cost without the benefit.
+
+Three from release branches:
+
+1. **You're cherry-picking more than three fixes per release.** Stabilisation
+   has become a parallel branch of work.
+2. **Two release branches exist at once.** You started overlapping releases to
+   keep up with the schedule, and the cost is doubling.
+3. **Nobody remembers which fix is in which release.** Track them, or move to
+   trunk-based.
+
+Three from GitFlow:
+
+1. **`develop` and `main` diverge for weeks at a time.** You're maintaining two
+   parallel realities and the merge to `main` is now its own project.
+2. **Hotfixes skip `develop`.** Then someone re-introduces the bug on the next
+   feature merge. The model promised this wouldn't happen.
+3. **You can't explain GitFlow to a new hire in 10 minutes.** Onboarding cost
+   is part of the model's cost.
+
+## The payoff
+
+Pick on purpose, not by inheritance. Re-pick when the team size, the shipping
+cadence, or the tooling changes — not when somebody on the team finds a new
+blog post.
+
+The right model is the one whose costs you can pay this quarter, with the
+tooling you actually have. The wrong model is the one you picked two years ago
+and never revisited.

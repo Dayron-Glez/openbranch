@@ -10,7 +10,7 @@ export function Terminal({
   title = "~/atlas · git",
   tags = ["main", "fish"],
   children,
-}: TerminalProps) {
+}: Readonly<TerminalProps>) {
   return (
     <div className="border-line-2 bg-bg-card overflow-hidden rounded-[var(--r-12)] border shadow-[var(--sh-4)]">
       <div className="border-line bg-bg-elev flex items-center gap-2 border-b px-4 py-3">
@@ -38,7 +38,7 @@ export function Terminal({
   )
 }
 
-export function TerminalLine({ children }: { children: ReactNode }) {
+export function TerminalLine({ children }: { readonly children: ReactNode }) {
   return <div className="flex gap-[14px]">{children}</div>
 }
 
@@ -50,15 +50,15 @@ export function Ok() {
   return <span className="text-ob-accent">✓</span>
 }
 
-export function Highlight({ children }: { children: ReactNode }) {
+export function Highlight({ children }: { readonly children: ReactNode }) {
   return <span className="text-fg">{children}</span>
 }
 
-export function Dim({ children }: { children: ReactNode }) {
+export function Dim({ children }: { readonly children: ReactNode }) {
   return <span className="text-fg-muted">{children}</span>
 }
 
-export function BranchBlock({ children }: { children: ReactNode }) {
+export function BranchBlock({ children }: { readonly children: ReactNode }) {
   return (
     <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-[12.5px]">
       {children}

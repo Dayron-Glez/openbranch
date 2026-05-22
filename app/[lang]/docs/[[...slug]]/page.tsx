@@ -10,8 +10,10 @@ import {
 import { notFound } from "next/navigation"
 import { getMDXComponents } from "@/components/mdx"
 import { DocsScrollReveal } from "@/components/DocsScrollReveal"
+import { SectionCards } from "@/components/SectionCards"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
+import { findNeighbour } from "fumadocs-core/page-tree"
 
 export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...slug]]">>) {
   const { lang, slug } = await props.params
@@ -22,12 +24,21 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const markdownUrl = getPageMarkdownUrl(page).url
   const isSectionPage = slug?.length === 1
 
+  const tree = source.pageTree[lang]
+  const neighbours = findNeighbour(tree, page.url)
+
+  const sectionSlug = slug?.[0]
+  const sectionChildren = isSectionPage
+    ? source.getPages(lang).filter((p) => p.slugs[0] === sectionSlug && p.slugs.length === 2)
+    : []
+
   return (
     <DocsPage
       toc={page.data.toc}
       full={page.data.full}
       tableOfContent={{ style: "clerk" }}
       tableOfContentPopover={{ style: "clerk" }}
+      footer={{ items: neighbours }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
@@ -43,6 +54,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
             })}
           />
         </DocsScrollReveal>
+        <SectionCards pages={sectionChildren} />
       </DocsBody>
     </DocsPage>
   )

@@ -1,0 +1,145 @@
+---
+title: Estrategias de ramas
+description: Un framework de decisión basado en el tamaño del equipo, la cadencia de entrega y el coste de equivocarse — con las señales de que has superado tu modelo actual.
+icon: GitBranch
+maturity: rfc
+---
+
+Un equipo de seis ingenieros despliega desde `main` cada día. Dos años
+después son cincuenta, GitFlow está en la wiki y un release supone una semana
+de conflictos de merge y "espera, ¿ese fix estaba en el último corte?". Nadie
+decidió hacerlo más difícil. El modelo de ramas simplemente se quedó igual
+mientras todo lo demás cambiaba.
+
+Elegir una estrategia de ramas no es elegir una favorita. Es elegir qué
+problemas estás dispuesto a tener — porque cada modelo intercambia un conjunto
+de dolores por otro.
+
+## El modelo mental: ¿con qué frecuencia puedes enviar realmente?
+
+Olvida los diagramas. Cada modelo de ramas es una respuesta diferente a una
+sola pregunta: **¿con qué frecuencia puede un cambio en `main` llegar a un
+usuario real?**
+
+| Estrategia       | Respuesta                     | Coste implícito                             |
+| ---------------- | ----------------------------- | ------------------------------------------- |
+| Trunk-based      | Hoy, varias veces             | Inversión en CI, tests y feature flags      |
+| Release branches | Cada sprint o cadencia fija   | Coordinación adicional por cada corte       |
+| GitFlow          | Cuando `develop` está "listo" | Dos ramas de larga vida, integración manual |
+
+Elige el modelo que coincida con la frecuencia con que _realmente_ despligas,
+no con la que te gustaría.
+
+<Callout type="info">
+  Si despliegas cada dos semanas pero finges hacerlo a diario, trunk-based se sentirá caótico. Si
+  despliegas cada día pero finges hacerlo mensualmente, GitFlow se sentirá como caminar entre
+  cemento.
+</Callout>
+
+## Trunk-based: el modelo con menos sorpresas
+
+Una rama de larga vida (`main`). Ramas de feature de corta vida que se mergean
+en horas o un día. Cada merge a `main` es potencialmente desplegable.
+
+Funciona cuando:
+
+- El CI es lo suficientemente rápido para que nadie lo saltee (menos de ~10 minutos de extremo a extremo)
+- Los tests detectan suficientes regresiones para que un build verde sea una señal real
+- Puedes desplegar trabajo sin terminar de forma segura — habitualmente con **feature flags**
+
+No funciona cuando:
+
+- Un CI inestable hace que la gente acumule cambios hasta que la cola se despeje
+- Despliegas a un entorno donde el rollback es difícil (mobile, embedded, on-prem)
+- Tu suite de tests da verde para código que está visiblemente roto
+
+La versión honesta: **trunk-based sin feature flags es solo "rápido y
+frágil."** Si todavía no puedes permitirte la infraestructura de flags, las
+release branches no son una regresión — son una señal honesta de lo que
+soporta tu tooling.
+
+## Release branches: el punto intermedio
+
+`main` acumula trabajo mergeado. Con una cadencia (cada sprint, cada viernes,
+cada mes), cortas una rama desde `main` — `release/2024-11` — la estabilizas
+con fixes, la despliegas y la etiquetas.
+
+La ventaja: una superficie estable para probar y desplegar, separada del
+trabajo en curso. El coste: los cherry-picks. Cada fix que necesita ir a la
+rama de release es una decisión manual y una oportunidad de olvidarlo.
+
+Este modelo encaja en equipos que:
+
+- Despliegan a entornos con coste por tiempo de inactividad (pipelines de datos, sistemas batch)
+- Tienen una etapa de QA que necesita un objetivo estable
+- No pueden permitirse la inversión en feature flags que asume trunk-based
+
+<Callout type="warn">
+  Los cherry-picks son donde este modelo se rompe. Si cherry-pickeas más de dos o tres fixes por
+  release, tienes un problema diferente — o tus tests no detectan regresiones, o estás cortando
+  demasiado pronto. No normalices el treadmill del cherry-pick.
+</Callout>
+
+## GitFlow: el modelo con el techo más alto y el suelo más alto
+
+Dos ramas de larga vida (`main` y `develop`), más `feature/*`, `release/*` y
+`hotfix/*`. Vincent Driessen lo escribió en 2010 para software con **releases
+versionados explícitos** — aplicaciones de escritorio, librerías, productos
+on-prem.
+
+Justifica su coste cuando:
+
+- Distribuyes versiones discretas que los usuarios instalan (no servicios desplegados continuamente)
+- Múltiples versiones conviven en producción simultáneamente y necesitan hotfixes separados
+- Un entorno regulado requiere ramas explícitas de "esto es lo que desplegamos"
+
+Es un impuesto sobre todo lo demás:
+
+- Dos ramas de larga vida significa el doble de superficie de merge
+- Cada feature cruza tres ramas antes de llegar a producción
+- Los nuevos dedican una semana a aprender el proceso antes de que aterrice su primer PR
+
+El propio Driessen añadió una nota al post original en 2020: _"si estás
+construyendo software versionado explícitamente, GitFlow es genial. Si estás
+ejecutando una web app, casi seguro no quieres GitFlow."_ Úsalo a propósito,
+no por defecto.
+
+## Señales de que has superado tu modelo
+
+Tres desde trunk-based:
+
+1. **Los feature flags superan en número a las features.** Escribiste el flag,
+   la feature, la eliminación del flag y la limpieza. El flag sigue ahí.
+2. **`main` es de solo lectura el día de release.** Si desplegar requiere un
+   freeze, tu afirmación de "siempre desplegable" es ficticia.
+3. **Un hotfix necesita tres revisores y una reunión.** El modelo asume que
+   puedes corregir hacia adelante rápido. Si no puedes, estás pagando el coste
+   sin el beneficio.
+
+Tres desde release branches:
+
+1. **Cherry-pickeas más de tres fixes por release.** La estabilización se ha
+   convertido en una rama paralela de trabajo.
+2. **Existen dos release branches a la vez.** Empezaste a solapar releases para
+   mantener el ritmo y el coste se está duplicando.
+3. **Nadie recuerda qué fix está en qué release.** Haz seguimiento, o pasa a
+   trunk-based.
+
+Tres desde GitFlow:
+
+1. **`develop` y `main` divergen durante semanas.** Estás manteniendo dos
+   realidades paralelas y el merge a `main` es ahora su propio proyecto.
+2. **Los hotfixes se saltan `develop`.** Luego alguien reintroduce el bug en el
+   siguiente merge de feature. El modelo prometía que esto no pasaría.
+3. **No puedes explicar GitFlow a un nuevo miembro del equipo en 10 minutos.**
+   El coste de onboarding es parte del coste del modelo.
+
+## El resultado
+
+Elige con intención, no por herencia. Vuelve a elegir cuando cambie el tamaño
+del equipo, la cadencia de entrega o el tooling — no cuando alguien del equipo
+encuentre un nuevo post de blog.
+
+El modelo correcto es el cuyos costes puedes pagar este trimestre, con el
+tooling que realmente tienes. El modelo incorrecto es el que elegiste hace dos
+años y nunca revisaste.

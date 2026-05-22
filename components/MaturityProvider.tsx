@@ -9,8 +9,8 @@ export function MaturityProvider({
   map,
   children,
 }: {
-  map: Record<string, Maturity>
-  children: React.ReactNode
+  readonly map: Record<string, Maturity>
+  readonly children: React.ReactNode
 }) {
   const value = useMemo(() => new Map(Object.entries(map)), [map])
   return <MaturityMapCtx.Provider value={value}>{children}</MaturityMapCtx.Provider>

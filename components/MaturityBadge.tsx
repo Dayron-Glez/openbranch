@@ -6,7 +6,7 @@ type MaturityBadgeProps = {
   size?: "xs" | "md" | "lg"
 }
 
-export function MaturityBadge({ maturity, size = "md" }: MaturityBadgeProps) {
+export function MaturityBadge({ maturity, size = "md" }: Readonly<MaturityBadgeProps>) {
   return (
     <span
       className={[

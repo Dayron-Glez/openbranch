@@ -18,7 +18,7 @@ export type FilterPage = {
 }
 
 type MaturityFilterProps = {
-  pages: FilterPage[]
+  readonly pages: FilterPage[]
 }
 
 export function MaturityFilter({ pages }: MaturityFilterProps) {
@@ -94,7 +94,7 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
 }
 
 // Duplicates MaturityBadge markup to avoid importing a server component into a client module.
-function BadgeInline({ maturity }: { maturity: Maturity }) {
+function BadgeInline({ maturity }: { readonly maturity: Maturity }) {
   return (
     <span
       className={[

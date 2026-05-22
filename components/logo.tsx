@@ -5,7 +5,7 @@ interface LogoProps {
   iconOnly?: boolean
 }
 
-function BranchIcon({ className }: { className?: string }) {
+function BranchIcon({ className }: { readonly className?: string }) {
   return (
     <svg viewBox="0 0 64 64" fill="none" aria-hidden="true" className={className}>
       <g stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
@@ -19,7 +19,7 @@ function BranchIcon({ className }: { className?: string }) {
   )
 }
 
-export function Logo({ className, iconOnly = false }: LogoProps) {
+export function Logo({ className, iconOnly = false }: Readonly<LogoProps>) {
   if (iconOnly) {
     return <BranchIcon className={cn("size-7", className)} />
   }
