@@ -66,25 +66,12 @@ export type LandingDict = {
   }
   readonly topics: ReadonlyArray<TopicItem>
   readonly featured: {
-    readonly kicker: string
-    readonly title: string
-    readonly summary: string
     readonly authors: string
     readonly reads: string
     readonly likes: string
     readonly revisions: string
     readonly cta: string
     readonly previewAria: string
-    readonly premiseHeading: string
-    readonly premiseP1Lead: string
-    readonly premiseP1Tail: string
-    readonly featureFlags: string
-    readonly premiseP2: string
-    readonly ruleLabel: string
-    readonly ruleBody: string
-    readonly setupHeading: string
-    readonly setupComment1: string
-    readonly setupComment2: string
   }
   readonly valueProp: ReadonlyArray<ValuePropItem>
   readonly community: {
@@ -203,28 +190,12 @@ const es: LandingDict = {
     },
   ],
   featured: {
-    kicker: "guía · 7 min de lectura",
-    title: "Trunk-based development, cuando no puedes enviar feature flags primero.",
-    summary:
-      "Qué hacer cuando tus pruebas son lentas, tu equipo es júnior y trunk-based suena a consejo temerario. Un camino intermedio probado en el campo.",
     authors: "Anya Kim y 2 maintainers",
     reads: "18,2k lecturas",
     likes: "940",
     revisions: "12 revisiones",
     cta: "Leer la guía",
     previewAria: "Vista previa de la guía",
-    premiseHeading: "La premisa",
-    premiseP1Lead: "La mayoría de las guías de trunk-based asumen dos cosas: las ",
-    premiseP1Tail:
-      " son baratas de añadir y tu CI corre en menos de cinco minutos. Si ninguna es cierta para ti, el consejo estándar empeorará las cosas en silencio.",
-    featureFlags: "feature flags",
-    premiseP2: "Esta es la versión que funciona antes de tener cualquiera de las dos.",
-    ruleLabel: "Regla general",
-    ruleBody:
-      "Una rama con más de 24 horas es una rama de larga duración - aunque no fuera tu intención.",
-    setupHeading: "El setup mínimo viable",
-    setupComment1: "# rama desde trunk · objetivo de vida <24h",
-    setupComment2: "# obliga nombres, tamaño y límites de edad antes del push",
   },
   valueProp: [
     {
@@ -399,28 +370,12 @@ const en: LandingDict = {
     },
   ],
   featured: {
-    kicker: "guide · 7 min read",
-    title: "Trunk-based development, when you can't ship feature flags first.",
-    summary:
-      "What to do when your tests are slow, your team is junior, and trunk-based feels like reckless advice. A field-tested middle path.",
     authors: "Anya Kim & 2 maintainers",
     reads: "18.2k reads",
     likes: "940",
     revisions: "12 revisions",
     cta: "Read the guide",
     previewAria: "Guide preview",
-    premiseHeading: "The premise",
-    premiseP1Lead: "Most trunk-based guides assume two things: ",
-    premiseP1Tail:
-      " are cheap to add, and your CI runs in under five minutes. If neither is true for you, the standard advice will quietly make things worse.",
-    featureFlags: "feature flags",
-    premiseP2: "Here's the version that works before you have either.",
-    ruleLabel: "Rule of thumb",
-    ruleBody:
-      "A branch older than 24 hours is a long-lived branch - even if you didn't mean it to be.",
-    setupHeading: "The minimum viable setup",
-    setupComment1: "# branch from trunk · <24h lifespan target",
-    setupComment2: "# enforces naming, size, age limits before push",
   },
   valueProp: [
     {

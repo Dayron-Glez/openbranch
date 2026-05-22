@@ -13,6 +13,8 @@ import { i18n } from "@/lib/i18n"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
+import { getWeeklyPick } from "@/lib/weekly-pick"
+import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 
 const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   branch: <IconBranch />,
@@ -41,6 +43,21 @@ const headingClass =
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const { lang } = await params
   const dict = getLandingDict(lang)
+
+  const pick = await getWeeklyPick(lang)
+  const guide = pick
+    ? {
+        kicker:
+          lang === "es"
+            ? `guía · ${formatReadingTime(getReadingTime(pick.rawText), lang)}`
+            : `guide · ${formatReadingTime(getReadingTime(pick.rawText), lang)}`,
+        title: pick.title,
+        summary: pick.description,
+        href: pick.href,
+        excerpt: pick.excerpt,
+      }
+    : null
+
   return (
     <>
       <ScrollReveal />
@@ -100,9 +117,11 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               <span className="text-fg-2 font-light">{dict.sections.featuredHeadingAccent}</span>
             </h2>
           </div>
-          <div className="scroll-reveal" data-scroll-reveal>
-            <FeaturedGuide dict={dict.featured} />
-          </div>
+          {guide && (
+            <div className="scroll-reveal" data-scroll-reveal>
+              <FeaturedGuide dict={dict.featured} guide={guide} />
+            </div>
+          )}
         </section>
 
         <section className={sectionClass}>
