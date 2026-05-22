@@ -1,6 +1,7 @@
 import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/components/SuggestGuideButton"
+import { Clock } from "lucide-react"
 import {
   DocsBody,
   DocsDescription,
@@ -44,14 +45,17 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       tableOfContentPopover={{ style: "clerk" }}
       footer={{ items: neighbours }}
     >
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
-      <div className="flex flex-row items-center gap-2 border-b pb-6">
+      <div className="flex flex-wrap items-center gap-3">
+        <DocsTitle className="leading-tight">{page.data.title}</DocsTitle>
         {!isSectionPage && (
-          <span className="text-fd-muted-foreground font-mono text-[11px]">
+          <span className="bg-accent-soft text-ob-accent inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[11px] font-medium">
+            <Clock className="size-3" />
             {formatReadingTime(readingMinutes, lang)}
           </span>
         )}
+      </div>
+      <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
+      <div className="flex flex-row items-center gap-2 border-b pb-6">
         <MarkdownCopyButton markdownUrl={markdownUrl} />
         {isSectionPage && <SuggestGuideButton sectionName={page.data.title} />}
       </div>
