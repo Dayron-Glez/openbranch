@@ -1,0 +1,167 @@
+---
+title: Acabar con el CI inestable
+description: Un proceso sistemático — cuantificar, poner en cuarentena, identificar la causa raíz, corregir, reintegrar — que convierte "la build es inestable" de un estado permanente en un problema con línea de llegada.
+icon: FlaskConical
+maturity: rfc
+---
+
+La build está en rojo. Alguien la reintenta. Está en verde. Alguien mergea.
+Al día siguiente, el mismo test falla en un PR diferente. Nadie investiga
+porque nadie cree que el fallo sea real.
+
+Este es el peor estado en el que puede estar un CI — peor que una suite
+lenta, peor que no tener tests en absoluto. Un test en el que no confías es
+un test que oculta fallos reales detrás de la suposición de que el fallo "era
+solo inestabilidad". Has dejado de detectar regresiones y has empezado a
+detectar opiniones.
+
+La solución no es "reescribir la suite". Es un proceso que funciona con la
+suite que ya tienes.
+
+## La inestabilidad es información
+
+Un test inestable te está diciendo algo. La información podría ser:
+
+- "Dependo de un reloj que no puedes controlar"
+- "Comparto estado con un test que se ejecutó antes que yo"
+- "Estoy en carrera con una llamada de red que asumí como síncrona"
+- "Tengo una fuga de conexión a base de datos"
+
+Cada uno de esos es un bug. El test resulta ser donde salió a la superficie,
+pero el bug está en el sistema bajo prueba o en la infraestructura de tests.
+Tratar la inestabilidad como ruido — reintentando hasta el verde — es
+desperdiciar señal gratuita.
+
+<Callout type="info">
+  Un test que falla el 1% de las veces en una suite de 500 tests significa que aproximadamente 1 de
+  cada 4 PRs falla sin motivo real. Eso no es un problema de herramientas. Es un impuesto a la
+  productividad medido en horas por ingeniero por semana.
+</Callout>
+
+## Paso 1 — Cuantificar
+
+No puedes arreglar lo que no mides. Antes de cambiar nada, obtén una tasa de
+inestabilidad por test.
+
+La versión mínima viable: ejecuta la suite N veces sobre el mismo commit y
+cuenta los fallos por test.
+
+```bash
+for i in {1..50}; do
+  npm test -- --reporter=json --output="results-$i.json"
+done
+```
+
+Analiza los resultados, agrupa por test, cuenta los fallos. Ordena por tasa
+de fallo descendente. Los 10 tests más altos de esa lista representarán ~80%
+del dolor de tu CI.
+
+Para equipos con presupuesto, ejecuta la suite en cada commit exitoso a main
+y almacena el resultado por test — en un mes construyes un historial de
+inestabilidad que supera cualquier heurística.
+
+## Paso 2 — Poner en cuarentena, no eliminar
+
+Mueve los tests más inestables a una suite separada que **no bloquee el
+merge**. Márcalos claramente en el archivo de test:
+
+```typescript
+// EN CUARENTENA: tasa de inestabilidad ~8%, ver #1234
+test.skip('el pago reintenta en 503', () => { ... })
+```
+
+Este es el paso políticamente más difícil. La gente quiere "simplemente
+arreglarlos" o "simplemente deshabilitarlos para siempre". Ninguna funciona.
+Arreglarlos en bloque lleva semanas; necesitas la build verde ahora.
+Deshabilitarlos para siempre significa perder la señal que sí llevaban.
+
+La cuarentena te da un plazo. Los tests en cuarentena siguen ejecutándose —
+simplemente no bloquean los PRs. Si se recuperan (pasando de forma
+consistente), vuelven. Si nadie los arregla en N semanas, se eliminan con
+una nota que explica qué se perdió.
+
+<Callout type="warn">
+  Establece un SLA de cuarentena — dos semanas, cuatro semanas, lo que encaje en tu ciclo. Un test
+  en cuarentena sin propietario ni plazo es un test eliminado que aún no has admitido haber
+  eliminado.
+</Callout>
+
+## Paso 3 — Identificar la causa raíz por categoría
+
+Los tests inestables se agrupan en unas pocas categorías. Diagnosticar la
+categoría te señala la solución.
+
+| Categoría         | Síntoma                                       | Causa raíz típica                              |
+| ----------------- | --------------------------------------------- | ---------------------------------------------- |
+| Tiempo            | Falla en máquinas lentas, pasa en local       | `setTimeout`, polling sin presupuesto de retry |
+| Estado compartido | Falla con otros tests, pasa solo              | Base de datos, singletons globales, env vars   |
+| Deps externas     | Falla en errores de red                       | Llama a APIs reales en tests                   |
+| Orden de tests    | Falla según qué test se ejecutó antes         | Igual que estado compartido, más ordenación    |
+| Fugas de recursos | Falla al final de la suite, pasa al principio | Conexiones, file handles, presión de memoria   |
+
+Ejecuta el test sospechoso solo. Si pasa, es estado compartido u ordenación.
+Ejecútalo 20 veces seguidas. Si algunos pasan y otros no, es tiempo o
+recurso. Ejecútalo contra un mock y un servicio real por turnos. Si solo
+falla el real, es una dep externa.
+
+## Paso 4 — La solución por categoría
+
+**Tiempo.** Reemplaza `setTimeout` con esperas deterministas — espera un nodo
+DOM específico, una línea de log específica, un evento específico. El polling
+con un presupuesto de retry está bien; "dormir 500ms y esperar" no lo está.
+
+```typescript
+// Mal
+await new Promise((r) => setTimeout(r, 500))
+expect(screen.getByText("Cargado")).toBeVisible()
+
+// Bien
+await screen.findByText("Cargado", {}, { timeout: 5000 })
+```
+
+**Estado compartido.** Cada test debe configurar y limpiar su propio estado.
+Si la suite accede a una base de datos, dale a cada test su propio esquema o
+transacción.
+
+```typescript
+beforeEach(async () => {
+  schema = await db.createSchema(`test_${randomId()}`)
+})
+afterEach(async () => {
+  await schema.drop()
+})
+```
+
+**Deps externas.** Los tests no deben llamar a servicios reales. Usa un mock,
+un fake (implementación en memoria) o un contenedor hermético. Si necesitas
+probar la integración real, eso es un contract test — suite separada, cadencia
+separada, presupuesto de inestabilidad separado.
+
+**Orden de tests.** Ejecuta la suite con `--shuffle` (o el equivalente de tu
+runner) en CI. Los tests que dependen del orden fallan rápido. Luego arregla
+el estado compartido.
+
+**Fugas de recursos.** Rastrea los handles abiertos. La mayoría de runners
+puede imprimir "handles activos tras la suite" — conéctalo y falla la build si
+el número no es cero.
+
+## Paso 5 — Criterios de reintegración
+
+Un test sale de cuarentena cuando:
+
+1. Ha pasado 50 ejecuciones consecutivas en la suite de cuarentena, y
+2. La causa raíz está documentada en el PR que lo corrigió.
+
+Ambos importan. El primero prueba que la solución funciona. El segundo evita
+que el equipo reintroduzca el mismo patrón en otro test el trimestre que viene.
+
+## El resultado
+
+Una suite donde:
+
+- confías en que un rojo es un fallo real,
+- confías en que un verde es un pase real,
+- la tasa de inestabilidad por test está publicada y con tendencia a la baja,
+- los nuevos tests inestables se detectan antes de convertirse en normales.
+
+No reescribiste tus tests. Tomaste los que tenías y los hiciste honestos.
