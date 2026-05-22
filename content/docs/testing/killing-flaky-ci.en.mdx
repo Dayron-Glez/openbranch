@@ -1,0 +1,163 @@
+---
+title: Killing flaky CI
+description: A systematic process — quantify, quarantine, root-cause, fix, re-integrate — that turns "the build is flaky" from a permanent state into a problem with a finish line.
+icon: FlaskConical
+maturity: rfc
+---
+
+The build is red. Someone retries it. It's green. Someone merges. Tomorrow,
+the same test fails on a different PR. Nobody investigates because nobody
+believes the failure is real.
+
+This is the worst state CI can be in — worse than a slow suite, worse than no
+tests at all. A test you don't trust is a test that hides real failures
+behind the assumption that the failure was "just flakiness." You have stopped
+catching regressions and started catching opinions.
+
+The fix is not "rewrite the suite." It's a process that works on the suite
+you already have.
+
+## Flakiness is information
+
+A flaky test is telling you something. The information might be:
+
+- "I depend on a clock you can't control"
+- "I share state with a test that ran before me"
+- "I'm racing against a network call I assumed was synchronous"
+- "I leak a database connection"
+
+Every one of those is a bug. The test happens to be where it surfaced, but
+the bug is in the system under test or in the test infrastructure. Treating
+flakiness as noise — retrying until green — is throwing away free signal.
+
+<Callout type="info">
+  A test that fails 1% of the time on a suite of 500 tests means roughly 1 in 4 PRs fails for no
+  good reason. That's not a tooling problem. That's a productivity tax measured in hours per
+  engineer per week.
+</Callout>
+
+## Step 1 — Quantify
+
+You cannot fix what you don't measure. Before changing anything, get a per-test
+flake rate.
+
+The minimum viable version: run the suite N times on the same commit and
+count failures per test.
+
+```bash
+for i in {1..50}; do
+  npm test -- --reporter=json --output="results-$i.json"
+done
+```
+
+Parse the outputs, group by test, count failures. Sort by failure rate
+descending. The top 10 tests in that list will account for ~80% of your CI
+pain.
+
+For teams with budget, run the suite on every successful main commit and
+store the per-test outcome — over a month you build a flake history that
+beats any heuristic.
+
+## Step 2 — Quarantine, don't delete
+
+Move the top flaky tests to a separate suite that does **not gate the merge**.
+Mark them clearly in the test file:
+
+```typescript
+// QUARANTINED: flake rate ~8%, see #1234
+test.skip('payment retries on 503', () => { ... })
+```
+
+This is the politically hardest step. People want to "just fix them" or "just
+disable them forever." Neither works. Fixing them in batch takes weeks; you
+need the build green now. Disabling them forever means losing whatever signal
+they did carry.
+
+Quarantine buys you a deadline. Tests in quarantine still run — they just
+don't block PRs. If they recover (consistently passing), they come back. If
+nobody fixes them in N weeks, they get deleted with a note explaining what
+was lost.
+
+<Callout type="warn">
+  Set a quarantine SLA — two weeks, four weeks, whatever fits your cycle. A test in quarantine with
+  no owner and no deadline is a deleted test you haven't admitted to deleting yet.
+</Callout>
+
+## Step 3 — Root-cause by category
+
+Flaky tests cluster into a handful of categories. Diagnosing the category
+points you at the fix.
+
+| Category       | Symptom                                  | Typical root cause                         |
+| -------------- | ---------------------------------------- | ------------------------------------------ |
+| Timing         | Fails on slow machines, passes locally   | `setTimeout`, polling without retry budget |
+| Shared state   | Fails when run with others, passes alone | Database, global singletons, env vars      |
+| External deps  | Fails on networking errors               | Hitting real APIs in tests                 |
+| Test ordering  | Fails depending on which test ran before | Same as shared state, plus ordering        |
+| Resource leaks | Fails late in the suite, passes early    | Connections, file handles, memory pressure |
+
+Run the suspect test alone. If it passes, it's shared state or ordering. Run
+it 20 times in a row. If some pass and some fail, it's timing or resource.
+Run it against a mock and a real service in turn. If only the real one
+fails, it's an external dep.
+
+## Step 4 — The fix per category
+
+**Timing.** Replace `setTimeout` with deterministic waiters — wait for a
+specific DOM node, a specific log line, a specific event. Polling with a
+retry budget is okay; "sleep 500ms and hope" is not.
+
+```typescript
+// Bad
+await new Promise((r) => setTimeout(r, 500))
+expect(screen.getByText("Loaded")).toBeVisible()
+
+// Good
+await screen.findByText("Loaded", {}, { timeout: 5000 })
+```
+
+**Shared state.** Each test must set up and tear down its own state. If the
+suite hits a database, give each test its own schema or transaction.
+
+```typescript
+beforeEach(async () => {
+  schema = await db.createSchema(`test_${randomId()}`)
+})
+afterEach(async () => {
+  await schema.drop()
+})
+```
+
+**External deps.** Tests should not hit real services. Use a mock, a fake
+(in-memory implementation), or a hermetic container. If you need to test
+the real integration, that's a contract test — separate suite, separate
+cadence, separate budget for flakiness.
+
+**Test ordering.** Run the suite with `--shuffle` (or your runner's
+equivalent) in CI. Tests that depend on order fail fast. Then fix the shared
+state.
+
+**Resource leaks.** Track open handles. Most runners can print "active
+handles after suite" — wire it up, fail the build if the number is non-zero.
+
+## Step 5 — Re-integration criteria
+
+A test comes out of quarantine when:
+
+1. It has passed 50 consecutive runs in the quarantine suite, and
+2. The root cause is documented in the PR that fixed it.
+
+Both matter. The first proves the fix works. The second prevents the team
+from re-introducing the same pattern in another test next quarter.
+
+## The payoff
+
+A suite where:
+
+- you trust a red as a real failure,
+- you trust a green as a real pass,
+- the flake rate per test is published and trending down,
+- new flaky tests get caught before they become normal.
+
+You did not rewrite your tests. You took the ones you had and made them
+honest.
