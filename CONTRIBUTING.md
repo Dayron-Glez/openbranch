@@ -128,7 +128,7 @@ One logical change per commit. PRs can have multiple commits if each one is self
 
 ```bash
 bun install
-bun run dev      # http://localhost:3000
+bun dev          # http://localhost:3000
 bun run build    # production build + type check
 ```
 
