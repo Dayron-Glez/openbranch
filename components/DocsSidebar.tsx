@@ -23,8 +23,7 @@ const highlightCls = [
   "data-[active=true]:before:inset-s-2.5",
 ].join(" ")
 
-// Matches fumadocs getItemOffset: depth 0 → 8px, depth 1 → 20px, depth 2 → 32px…
-function getItemOffset(depth: number): string {
+const getItemOffset = (depth: number): string => {
   return `calc(${2 + 3 * depth} * var(--spacing))`
 }
 

@@ -8,12 +8,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { formatRelativeDate } from "@/lib/section-stats"
 import type { Maturity } from "@/lib/maturity"
 
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
-}
-
 type FeaturedGuideStatsProps = {
   readonly maturity: Maturity
   readonly lastModified: Date | null
@@ -21,6 +15,12 @@ type FeaturedGuideStatsProps = {
   readonly updatedLabel: string
   readonly authors: string[]
   readonly authorsDisplay: string
+}
+
+const getInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
 }
 
 export function FeaturedGuideStats({

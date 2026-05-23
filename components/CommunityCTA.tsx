@@ -11,7 +11,7 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
   return (
     <section className="scroll-reveal" data-scroll-reveal>
       <div
-        className="border-line bg-bg-card relative overflow-hidden rounded-[var(--r-16)] border px-12 py-16 text-center before:absolute before:inset-0 before:bg-[linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] before:[mask-image:radial-gradient(ellipse_60%_80%_at_center,black,transparent_70%)] before:bg-[size:24px_24px] before:content-[''] max-[980px]:px-6 max-[980px]:py-10"
+        className="border-line bg-bg-card relative overflow-hidden rounded-(--r-16) border px-12 py-16 text-center before:absolute before:inset-0 before:bg-[linear-gradient(rgba(255,255,255,.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.025)_1px,transparent_1px)] before:mask-[radial-gradient(ellipse_60%_80%_at_center,black,transparent_70%)] before:bg-size-[24px_24px] before:content-[''] max-[980px]:px-6 max-[980px]:py-10"
         style={{
           background:
             "radial-gradient(ellipse 100% 80% at 50% 0%, rgba(94,227,154,.12), transparent 60%), var(--color-bg-card)",
@@ -20,7 +20,7 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
         <span className="text-ob-accent relative mb-3.5 inline-block font-mono text-[11px] tracking-[0.08em] uppercase">
           {dict.eyebrow}
         </span>
-        <h3 className="relative mx-auto mb-4 max-w-[22ch] text-[38px] leading-[1.1] font-medium tracking-[0] text-balance max-[980px]:text-[28px]">
+        <h3 className="relative mx-auto mb-4 max-w-[22ch] text-[38px] leading-[1.1] font-medium tracking-normal text-balance max-[980px]:text-[28px]">
           {dict.title}
         </h3>
         <p className="text-fg-2 relative mx-auto mb-8 max-w-[56ch] text-[15.5px] leading-[1.55]">
@@ -35,7 +35,7 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
             >
               <IconPR />
               {dict.ctaPrimary}
-              <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
+              <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
             </a>
           </Button>
           <Button asChild variant="outline" className="no-underline">

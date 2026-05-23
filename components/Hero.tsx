@@ -22,12 +22,11 @@ import { Button } from "@/components/ui/button"
 const CMD1 = 'openbranch recipe "trunk-based"'
 const CMD2 = "openbranch apply --to atlas/"
 
-function useTerminalAnimation() {
-  const [step, setStep] = useState(-1)
-  const [cmd1Chars, setCmd1Chars] = useState(0)
-  const [cmd2Chars, setCmd2Chars] = useState(0)
+const useTerminalAnimation = () => {
+  const [step, setStep] = useState<number>(-1)
+  const [cmd1Chars, setCmd1Chars] = useState<number>(0)
+  const [cmd2Chars, setCmd2Chars] = useState<number>(0)
 
-  // Kick off after the GSAP terminal entrance (~2 s) + buffer
   useEffect(() => {
     const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduced) {
@@ -40,7 +39,6 @@ function useTerminalAnimation() {
     return () => clearTimeout(t)
   }, [])
 
-  // Step 0: type CMD1 char-by-char
   useEffect(() => {
     if (step !== 0) return
     if (cmd1Chars < CMD1.length) {
@@ -51,7 +49,6 @@ function useTerminalAnimation() {
     return () => clearTimeout(t)
   }, [step, cmd1Chars])
 
-  // Steps 1-5: sequential output lines
   useEffect(() => {
     if (step < 1 || step > 5) return
     const delays = [150, 120, 120, 120, 500]
@@ -59,7 +56,6 @@ function useTerminalAnimation() {
     return () => clearTimeout(t)
   }, [step])
 
-  // Step 6: type CMD2 char-by-char
   useEffect(() => {
     if (step !== 6) return
     if (cmd2Chars < CMD2.length) {
@@ -70,7 +66,6 @@ function useTerminalAnimation() {
     return () => clearTimeout(t)
   }, [step, cmd2Chars])
 
-  // Steps 7-8: success lines
   useEffect(() => {
     if (step !== 7 && step !== 8) return
     const t = setTimeout(() => setStep((s) => s + 1), step === 7 ? 160 : 250)
@@ -80,23 +75,21 @@ function useTerminalAnimation() {
   return { step, cmd1Chars, cmd2Chars }
 }
 
-function useHeroAnimation(
+const useHeroAnimation = (
   markRef: RefObject<HTMLDivElement | null>,
   wordRefs: RefObject<HTMLSpanElement[]>,
   copyRef: RefObject<HTMLParagraphElement | null>,
   actionsRef: RefObject<HTMLDivElement | null>,
   terminalRef: RefObject<HTMLDivElement | null>
-) {
+) => {
   useEffect(() => {
     const mm = gsap.matchMedia()
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline()
 
-      // 1. Logo container — make it visible; CSS draw animation fires automatically
       tl.set(markRef.current, { opacity: 1 })
 
-      // 2. Headline words — clip-path reveal, staggered ~90 ms each
       tl.fromTo(
         wordRefs.current,
         { clipPath: "inset(0 0 110% 0)" },
@@ -104,7 +97,6 @@ function useHeroAnimation(
         "+=0.08"
       )
 
-      // 3. Subtitle fade up (overlaps end of headline)
       tl.fromTo(
         copyRef.current,
         { y: 22, opacity: 0, filter: "blur(5px)" },
@@ -112,7 +104,6 @@ function useHeroAnimation(
         "-=0.3"
       )
 
-      // 4. CTA
       tl.fromTo(
         actionsRef.current,
         { y: 16, opacity: 0 },
@@ -120,7 +111,6 @@ function useHeroAnimation(
         "-=0.5"
       )
 
-      // 5. Terminal — springs in last
       tl.fromTo(
         terminalRef.current,
         { y: 36, opacity: 0, scale: 0.965, filter: "blur(10px)" },
@@ -193,7 +183,6 @@ export function Hero({ dict, lang }: HeroProps) {
 
   return (
     <section className="relative pt-18">
-      {/* Centred intro content */}
       <div className="text-center">
         <div ref={markRef} className="intro-mark mb-8 flex min-h-16 justify-center">
           <button
@@ -240,19 +229,17 @@ export function Hero({ dict, lang }: HeroProps) {
           <Button asChild variant="accent" className="group no-underline">
             <Link href={localizedHref(lang, "/docs")}>
               {dict.cta}
-              <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
+              <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
             </Link>
           </Button>
         </div>
       </div>
 
-      {/* Terminal */}
       <div
         ref={terminalRef}
         className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-['']"
       >
         <Terminal>
-          {/* CMD1 — typing in progress or fully styled */}
           {step >= 0 && (
             <TerminalLine>
               <Prompt />
@@ -273,14 +260,12 @@ export function Hero({ dict, lang }: HeroProps) {
             </TerminalLine>
           )}
 
-          {/* Output: fetching */}
           {step >= 1 && (
             <TerminalLine>
               <Dim>→ fetching guide · 2.1 KB · cached</Dim>
             </TerminalLine>
           )}
 
-          {/* Branch block: lines reveal one by one, hash flashes accent on mount */}
           {step >= 2 && (
             <BranchBlock>
               <TerminalLine>
@@ -312,7 +297,6 @@ export function Hero({ dict, lang }: HeroProps) {
             </BranchBlock>
           )}
 
-          {/* CMD2 — typing in progress or fully styled */}
           {step >= 6 && (
             <TerminalLine>
               <Prompt />
@@ -333,7 +317,6 @@ export function Hero({ dict, lang }: HeroProps) {
             </TerminalLine>
           )}
 
-          {/* Success lines */}
           {step >= 7 && (
             <TerminalLine>
               <Ok />
@@ -351,7 +334,6 @@ export function Hero({ dict, lang }: HeroProps) {
             </TerminalLine>
           )}
 
-          {/* Idle cursor (step -1) or final prompt (step 9+) */}
           {(step === -1 || step >= 9) && (
             <TerminalLine>
               <Prompt />
@@ -361,7 +343,6 @@ export function Hero({ dict, lang }: HeroProps) {
         </Terminal>
       </div>
 
-      {/* Stats strip — part of intro, no extra gap */}
       <div className="border-line mt-12 grid grid-cols-4 border-y py-6 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
         {stats.map(({ n, unit, label }, i) => (
           <div
