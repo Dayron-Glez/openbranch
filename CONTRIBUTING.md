@@ -28,7 +28,7 @@ Thanks for taking the time. openbranch is built the same way it documents softwa
 
 1. Fork the repo and create a branch from `main`.
 2. Make your changes (see sections below for content vs code).
-3. Run `npm run build` — it must pass with no TypeScript errors before you open a PR.
+3. Run `bun run build` — it must pass with no TypeScript errors before you open a PR.
 4. Open a pull request using the provided template.
 
 ---
@@ -127,9 +127,9 @@ One logical change per commit. PRs can have multiple commits if each one is self
 ## Running the project locally
 
 ```bash
-npm install
-npm run dev      # http://localhost:3000
-npm run build    # production build + type check
+bun install
+bun dev          # http://localhost:3000
+bun run build    # production build + type check
 ```
 
 The site is bilingual. The Spanish root is `/`, the English root is `/en`.
