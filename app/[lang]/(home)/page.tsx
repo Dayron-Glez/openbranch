@@ -37,7 +37,7 @@ function buildAuthorsDisplay(authors: string[], lang: string): string {
 }
 
 const eyebrowClass =
-  "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
+  "mb-3.5 inline-block font-mono text-(--text-sm) uppercase tracking-[0.08em] text-fg-muted"
 
 const ledClass =
   "led-wave mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]"
@@ -45,7 +45,7 @@ const ledClass =
 const sectionClass = ""
 const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
-  "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
+  "m-0 mb-[18px] text-balance text-(--text-7xl) font-medium leading-[1.05] tracking-[0] max-[980px]:text-(--text-5xl)"
 
 export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">>) {
   const { lang } = await params

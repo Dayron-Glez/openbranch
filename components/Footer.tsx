@@ -1,13 +1,13 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { LogoMark } from "@/components/LogoMark"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Separator } from "@/components/ui/separator"
 
 const columnTitle =
-  "m-0 mb-3.5 font-mono text-[10.5px] font-normal uppercase tracking-[0.08em] text-fg-muted"
+  "m-0 mb-3.5 font-mono text-(--text-xs) font-normal uppercase tracking-[0.08em] text-fg-muted"
 const footerLink =
-  "block py-1 text-[13px] text-fg-2 no-underline transition-colors duration-[var(--d-fast)] ease-[var(--ease)] hover:text-fg"
+  "block py-1 text-(--text-base) text-fg-2 no-underline transition-colors duration-[var(--d-fast)] ease-[var(--ease)] hover:text-fg"
 
 type FooterProps = {
   readonly dict: LandingDict["footer"]
@@ -30,7 +30,7 @@ export function Footer({ dict, lang }: FooterProps) {
               <span className="font-semibold">branch</span>
             </span>
           </Link>
-          <p className="text-fg-muted mt-3.5 max-w-[32ch] text-[13px] leading-[1.55]">
+          <p className="text-fg-muted mt-3.5 max-w-[32ch] leading-[1.55] text-(--text-base)">
             {dict.tagline}
           </p>
         </div>
@@ -58,7 +58,7 @@ export function Footer({ dict, lang }: FooterProps) {
         ))}
       </div>
       <Separator className="border-line mb-6" />
-      <div className="text-fg-muted flex items-center justify-between font-mono text-[11px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
+      <div className="text-fg-muted flex items-center justify-between font-mono text-(--text-sm) max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
         <span>{dict.legal}</span>
         <div className="flex gap-3">
           <a

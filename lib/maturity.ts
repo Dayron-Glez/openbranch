@@ -1,4 +1,4 @@
-import { z } from "zod"
+﻿import { z } from "zod"
 
 export const MATURITY_VALUES = [
   "draft",
@@ -37,7 +37,7 @@ export const MATURITY_CLASSES: Record<Maturity, string> = {
 }
 
 export const MATURITY_SIZE_CLASSES: Record<"xs" | "md" | "lg", string> = {
-  xs: "px-1.5 py-0.5 text-[9.5px]",
-  md: "px-2.5 py-1 text-[10.5px]",
-  lg: "px-3 py-1.5 text-[11.5px]",
+  xs: "px-1.5 py-0.5 text-(--text-2xs)",
+  md: "px-2.5 py-1 text-(--text-xs)",
+  lg: "px-3 py-1.5 text-(--text-sm)",
 }

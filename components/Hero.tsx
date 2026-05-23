@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect, useRef, type RefObject } from "react"
 import gsap from "gsap"
@@ -195,7 +195,7 @@ export function Hero({ dict, lang }: HeroProps) {
           </button>
         </div>
 
-        <h1 className="mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
+        <h1 className="mx-auto mb-6 leading-[1.12] font-normal tracking-[-0.03em] text-(--text-hero) max-[980px]:text-(--text-6xl) max-[520px]:text-(--text-5xl)">
           {titleWords.map((word, i) => (
             <span
               key={`${word}-${i}`}
@@ -205,7 +205,7 @@ export function Hero({ dict, lang }: HeroProps) {
               }}
             >
               {word}
-              {i < titleWords.length - 1 ? " " : ""}
+              {i < titleWords.length - 1 ? "Â " : ""}
             </span>
           ))}
           <br />
@@ -262,36 +262,36 @@ export function Hero({ dict, lang }: HeroProps) {
 
           {step >= 1 && (
             <TerminalLine>
-              <Dim>→ fetching guide · 2.1 KB · cached</Dim>
+              <Dim>â†’ fetching guide Â· 2.1 KB Â· cached</Dim>
             </TerminalLine>
           )}
 
           {step >= 2 && (
             <BranchBlock>
               <TerminalLine>
-                <span className="text-ob-accent">●</span>
+                <span className="text-ob-accent">â—</span>
                 <span className="terminal-hash">a4f1e2c</span>
                 <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
               </TerminalLine>
               {step >= 3 && (
                 <TerminalLine>
-                  <span>○</span>
+                  <span>â—‹</span>
                   <span className="terminal-hash">9b2d8a1</span>
                   <Dim>Wrap unfinished work in a feature flag</Dim>
                 </TerminalLine>
               )}
               {step >= 4 && (
                 <TerminalLine>
-                  <span>○</span>
+                  <span>â—‹</span>
                   <span className="terminal-hash">7c0e44d</span>
-                  <Dim>Open PR · &lt; 400 lines diff target</Dim>
+                  <Dim>Open PR Â· &lt; 400 lines diff target</Dim>
                 </TerminalLine>
               )}
               {step >= 5 && (
                 <TerminalLine>
-                  <span>○</span>
+                  <span>â—‹</span>
                   <span className="terminal-hash">3f12a89</span>
-                  <Dim>Squash · merge · delete branch</Dim>
+                  <Dim>Squash Â· merge Â· delete branch</Dim>
                 </TerminalLine>
               )}
             </BranchBlock>
@@ -322,7 +322,7 @@ export function Hero({ dict, lang }: HeroProps) {
               <Ok />
               <span>
                 Generated <Highlight>CONTRIBUTING.md</Highlight>
-                {" · "}
+                {" Â· "}
                 <Highlight>.github/PULL_REQUEST_TEMPLATE.md</Highlight>
               </span>
             </TerminalLine>
@@ -330,7 +330,7 @@ export function Hero({ dict, lang }: HeroProps) {
           {step >= 8 && (
             <TerminalLine>
               <Ok />
-              <span>Wired branch protections · enforced PR size limit · 2-reviewer rule</span>
+              <span>Wired branch protections Â· enforced PR size limit Â· 2-reviewer rule</span>
             </TerminalLine>
           )}
 
@@ -349,11 +349,11 @@ export function Hero({ dict, lang }: HeroProps) {
             key={label}
             className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
           >
-            <div className="text-[28px] font-medium tracking-normal">
+            <div className="font-medium tracking-normal text-(--text-4xl)">
               {n}
               {unit && <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>}
             </div>
-            <div className="text-fg-muted mt-1 font-mono text-[11px] tracking-[0.06em] uppercase">
+            <div className="text-fg-muted mt-1 font-mono tracking-[0.06em] text-(--text-sm) uppercase">
               {label}
             </div>
           </div>

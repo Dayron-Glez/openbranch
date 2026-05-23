@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+﻿import { cn } from "@/lib/utils"
 
 interface LogoProps {
   className?: string
@@ -27,7 +27,7 @@ export function Logo({ className, iconOnly = false }: Readonly<LogoProps>) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <BranchIcon className="size-7 shrink-0" />
-      <span className="text-[17px] leading-none tracking-[0]" aria-label="openbranch">
+      <span className="leading-none tracking-[0] text-(--text-2xl)" aria-label="openbranch">
         <span className="font-light opacity-70">open</span>
         <span className="font-semibold">branch</span>
       </span>

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+﻿import type { ReactNode } from "react"
 import Link from "next/link"
 import { IconArrowRight } from "@/icons"
 
@@ -28,8 +28,10 @@ export function TopicCard({
         {icon}
       </span>
       <h3 className="m-0 text-lg font-medium tracking-[0]">{title}</h3>
-      <p className="text-fg-muted m-0 max-w-[36ch] text-[13.5px] leading-[1.55]">{description}</p>
-      <div className="text-fg-muted mt-2.5 flex items-center gap-3 font-mono text-[11px] tracking-[0.04em]">
+      <p className="text-fg-muted m-0 max-w-[36ch] leading-[1.55] text-(--text-base-lg)">
+        {description}
+      </p>
+      <div className="text-fg-muted mt-2.5 flex items-center gap-3 font-mono tracking-[0.04em] text-(--text-sm)">
         <span className="border-line bg-bg-elev text-fg-2 rounded-[var(--r-6)] border px-[7px] py-0.5">
           {count}
         </span>

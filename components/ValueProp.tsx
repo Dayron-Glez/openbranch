@@ -1,4 +1,4 @@
-import { IconFork, IconGlobe, IconLock } from "@/icons"
+﻿import { IconFork, IconGlobe, IconLock } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { Badge } from "@/components/ui/badge"
 
@@ -20,13 +20,13 @@ export function ValueProp({ dict }: ValuePropProps) {
           <div key={item.title} className={valueClass}>
             <Badge
               variant="outline"
-              className="border-line bg-bg-elev text-fg-muted mb-4 gap-1.5 font-mono text-[10.5px] tracking-[0.04em] [&_svg]:size-[11px]"
+              className="border-line bg-bg-elev text-fg-muted mb-4 gap-1.5 font-mono tracking-[0.04em] text-(--text-xs) [&_svg]:size-[11px]"
             >
               <Icon />
               {item.badge}
             </Badge>
-            <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">{item.title}</h4>
-            <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
+            <h4 className="m-0 mb-1.5 font-medium tracking-[0] text-(--text-2xl)">{item.title}</h4>
+            <p className="text-fg-muted m-0 max-w-[30ch] leading-[1.55] text-(--text-base-lg)">
               {item.body}
             </p>
           </div>

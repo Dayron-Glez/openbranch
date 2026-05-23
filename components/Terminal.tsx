@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+﻿import type { ReactNode } from "react"
 
 type TerminalProps = {
   title?: string
@@ -7,7 +7,7 @@ type TerminalProps = {
 }
 
 export function Terminal({
-  title = "~/atlas · git",
+  title = "~/atlas Â· git",
   tags = ["main", "fish"],
   children,
 }: Readonly<TerminalProps>) {
@@ -24,14 +24,14 @@ export function Terminal({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="border-line text-fg-muted rounded-[var(--r-6)] border px-2 py-0.5 font-mono text-[10.5px]"
+              className="border-line text-fg-muted rounded-[var(--r-6)] border px-2 py-0.5 font-mono text-(--text-xs)"
             >
               {tag}
             </span>
           ))}
         </div>
       </div>
-      <div className="text-fg px-6 py-[22px] font-mono text-[13.5px] leading-[1.75] max-[520px]:overflow-x-auto max-[520px]:px-4">
+      <div className="text-fg px-6 py-[22px] font-mono leading-[1.75] text-(--text-base-lg) max-[520px]:overflow-x-auto max-[520px]:px-4">
         {children}
       </div>
     </div>
@@ -47,7 +47,7 @@ export function Prompt() {
 }
 
 export function Ok() {
-  return <span className="text-ob-accent">✓</span>
+  return <span className="text-ob-accent">âœ“</span>
 }
 
 export function Highlight({ children }: { readonly children: ReactNode }) {
@@ -60,7 +60,7 @@ export function Dim({ children }: { readonly children: ReactNode }) {
 
 export function BranchBlock({ children }: { readonly children: ReactNode }) {
   return (
-    <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-[12.5px]">
+    <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-(--text-md)">
       {children}
     </div>
   )
