@@ -1,8 +1,7 @@
 import { IconPR, IconGithub, IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
-
-const buttonBase =
-  "inline-flex h-[42px] items-center gap-2 rounded-[var(--r-8)] border border-transparent px-5 text-sm font-medium leading-none tracking-[0] no-underline transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] [&_svg]:size-3.5"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 type CommunityCTAProps = {
   readonly dict: LandingDict["community"]
@@ -28,25 +27,27 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
           {dict.body}
         </p>
         <div className="relative flex flex-wrap justify-center gap-2.5">
-          <a
-            href="https://github.com/Dayron-Glez/openbranch"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
-          >
-            <IconPR />
-            {dict.ctaPrimary}
-            <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
-          </a>
-          <a
-            href="https://github.com/Dayron-Glez/openbranch"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${buttonBase} border-line-2 bg-bg-card text-fg hover:border-fg-faint hover:bg-bg-hover`}
-          >
-            <IconGithub />
-            {dict.ctaSecondary}
-          </a>
+          <Button asChild variant="accent" className="group no-underline">
+            <a
+              href="https://github.com/Dayron-Glez/openbranch"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconPR />
+              {dict.ctaPrimary}
+              <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
+            </a>
+          </Button>
+          <Button asChild variant="outline" className="no-underline">
+            <a
+              href="https://github.com/Dayron-Glez/openbranch"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <IconGithub />
+              {dict.ctaSecondary}
+            </a>
+          </Button>
         </div>
 
         <div className="relative mt-10 flex flex-col items-center gap-3.5">
@@ -55,18 +56,20 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
           </span>
           <div className="inline-flex">
             {["AK", "JM", "SP", "RN", "TY", "DL", "MV", "CH"].map((initials, index) => (
-              <span
+              <Avatar
                 key={initials}
-                className={`border-line-2 bg-bg-elev text-fg-2 outline-bg-card inline-flex size-8 items-center justify-center rounded-full border font-mono text-[11px] outline-2 ${
-                  index === 0 ? "ml-0" : "-ml-2"
-                }`}
+                className={`border-line-2 outline-bg-card size-8 border outline-2 ${index === 0 ? "ml-0" : "-ml-2"}`}
               >
-                {initials}
-              </span>
+                <AvatarFallback className="bg-bg-elev text-fg-2 font-mono text-[11px]">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
             ))}
-            <span className="bg-accent-soft text-ob-accent outline-bg-card -ml-2 inline-flex size-8 items-center justify-center rounded-full border border-transparent font-mono text-[11px] outline-2">
-              +2.4k
-            </span>
+            <Avatar className="outline-bg-card -ml-2 size-8 border border-transparent outline-2">
+              <AvatarFallback className="bg-accent-soft text-ob-accent font-mono text-[11px]">
+                +2.4k
+              </AvatarFallback>
+            </Avatar>
           </div>
         </div>
       </div>

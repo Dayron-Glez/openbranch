@@ -17,6 +17,7 @@ import {
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
+import { Button } from "@/components/ui/button"
 
 const CMD1 = 'openbranch recipe "trunk-based"'
 const CMD2 = "openbranch apply --to atlas/"
@@ -145,9 +146,6 @@ function useHeroAnimation(
   }, [])
 }
 
-const buttonBase =
-  "inline-flex h-[42px] items-center gap-2 rounded-[var(--r-8)] border border-transparent px-5 text-sm font-medium leading-none tracking-[0] no-underline transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] [&_svg]:size-3.5"
-
 type HeroProps = {
   readonly dict: LandingDict["hero"]
   readonly lang: string
@@ -239,13 +237,12 @@ export function Hero({ dict, lang }: HeroProps) {
         </p>
 
         <div ref={actionsRef} className="intro-actions flex flex-wrap justify-center gap-2.5">
-          <Link
-            href={localizedHref(lang, "/docs")}
-            className={`${buttonBase} group bg-ob-accent text-accent-ink hover:brightness-[1.06]`}
-          >
-            {dict.cta}
-            <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
-          </Link>
+          <Button asChild variant="accent" className="group no-underline">
+            <Link href={localizedHref(lang, "/docs")}>
+              {dict.cta}
+              <IconArrowRight className="transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-[3px]" />
+            </Link>
+          </Button>
         </div>
       </div>
 
