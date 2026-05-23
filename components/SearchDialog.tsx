@@ -15,6 +15,7 @@ import { AlignLeft, FileText, Hash } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { getSearchLinks } from "@/lib/i18n.ui"
+import { Kbd } from "@/components/ui/kbd"
 
 function ResultIcon({ type }: { type: "page" | "heading" | "text" }) {
   if (type === "page") return <FileText />
@@ -151,9 +152,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
               key={key}
               className="text-fd-muted-foreground flex items-center gap-1.5 text-[11px]"
             >
-              <kbd className="border-fd-border bg-fd-background rounded border px-1 py-px font-mono text-[10px]">
-                {key}
-              </kbd>
+              <Kbd className="border-fd-border bg-fd-background font-mono text-[10px]">{key}</Kbd>
               {label}
             </span>
           ))}
