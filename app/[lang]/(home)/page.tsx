@@ -78,7 +78,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
       <ScrollReveal />
       <AmbientBackground />
       <Nav dict={dict.nav} lang={lang} />
-      <main className="relative z-[1] mx-auto grid max-w-[1100px] gap-[100px] px-8 pb-[100px] max-[520px]:px-5">
+      <main className="relative z-1 mx-auto grid max-w-275 gap-25 px-8 pb-25 max-[520px]:px-5">
         <Hero dict={dict.hero} lang={lang} />
 
         <section className={sectionClass} id="topics">
