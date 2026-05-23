@@ -1,140 +1,15 @@
-﻿"use client"
+"use client"
 
-import { useState, useEffect, useRef, type RefObject } from "react"
-import gsap from "gsap"
+import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { LogoMark } from "@/components/shared/LogoMark"
-import {
-  Terminal,
-  TerminalLine,
-  Prompt,
-  Ok,
-  Highlight,
-  Dim,
-  BranchBlock,
-  Cursor,
-} from "@/components/home/Terminal"
+import { HeroTerminal } from "@/components/home/HeroTerminal"
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
-
-const CMD1 = 'openbranch recipe "trunk-based"'
-const CMD2 = "openbranch apply --to atlas/"
-
-const useTerminalAnimation = () => {
-  const [step, setStep] = useState<number>(-1)
-  const [cmd1Chars, setCmd1Chars] = useState<number>(0)
-  const [cmd2Chars, setCmd2Chars] = useState<number>(0)
-
-  useEffect(() => {
-    const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduced) {
-      setStep(9)
-      setCmd1Chars(CMD1.length)
-      setCmd2Chars(CMD2.length)
-      return
-    }
-    const t = setTimeout(() => setStep(0), 2300)
-    return () => clearTimeout(t)
-  }, [])
-
-  useEffect(() => {
-    if (step !== 0) return
-    if (cmd1Chars < CMD1.length) {
-      const t = setTimeout(() => setCmd1Chars((n) => n + 1), 55)
-      return () => clearTimeout(t)
-    }
-    const t = setTimeout(() => setStep(1), 280)
-    return () => clearTimeout(t)
-  }, [step, cmd1Chars])
-
-  useEffect(() => {
-    if (step < 1 || step > 5) return
-    const delays = [150, 120, 120, 120, 500]
-    const t = setTimeout(() => setStep((s) => s + 1), delays[step - 1])
-    return () => clearTimeout(t)
-  }, [step])
-
-  useEffect(() => {
-    if (step !== 6) return
-    if (cmd2Chars < CMD2.length) {
-      const t = setTimeout(() => setCmd2Chars((n) => n + 1), 55)
-      return () => clearTimeout(t)
-    }
-    const t = setTimeout(() => setStep(7), 280)
-    return () => clearTimeout(t)
-  }, [step, cmd2Chars])
-
-  useEffect(() => {
-    if (step !== 7 && step !== 8) return
-    const t = setTimeout(() => setStep((s) => s + 1), step === 7 ? 160 : 250)
-    return () => clearTimeout(t)
-  }, [step])
-
-  return { step, cmd1Chars, cmd2Chars }
-}
-
-const useHeroAnimation = (
-  markRef: RefObject<HTMLDivElement | null>,
-  wordRefs: RefObject<HTMLSpanElement[]>,
-  copyRef: RefObject<HTMLParagraphElement | null>,
-  actionsRef: RefObject<HTMLDivElement | null>,
-  terminalRef: RefObject<HTMLDivElement | null>
-) => {
-  useEffect(() => {
-    const mm = gsap.matchMedia()
-
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      const tl = gsap.timeline()
-
-      tl.set(markRef.current, { opacity: 1 })
-
-      tl.fromTo(
-        wordRefs.current,
-        { clipPath: "inset(0 0 110% 0)" },
-        { clipPath: "inset(0 0 0% 0)", duration: 0.65, stagger: 0.09, ease: "power3.out" },
-        "+=0.08"
-      )
-
-      tl.fromTo(
-        copyRef.current,
-        { y: 22, opacity: 0, filter: "blur(5px)" },
-        { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "power2.out" },
-        "-=0.3"
-      )
-
-      tl.fromTo(
-        actionsRef.current,
-        { y: 16, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
-        "-=0.5"
-      )
-
-      tl.fromTo(
-        terminalRef.current,
-        { y: 36, opacity: 0, scale: 0.965, filter: "blur(10px)" },
-        { y: 0, opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.85, ease: "power3.out" },
-        "-=0.4"
-      )
-
-      return () => tl.kill()
-    })
-
-    mm.add("(prefers-reduced-motion: reduce)", () => {
-      const els = [
-        markRef.current,
-        ...wordRefs.current,
-        copyRef.current,
-        actionsRef.current,
-        terminalRef.current,
-      ].filter(Boolean)
-      gsap.set(els, { opacity: 1, clearProps: "clipPath,y,filter,scale" })
-    })
-
-    return () => mm.revert()
-  }, [])
-}
+import { useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
+import { useHeroAnimation } from "@/lib/hooks/use-hero-animation"
 
 type HeroProps = {
   readonly dict: LandingDict["hero"]
@@ -177,9 +52,7 @@ export function Hero({ dict, lang }: HeroProps) {
       setPhraseIdx((i) => (i + 1) % PHRASES.length)
       setPhase("typing")
     }
-  }, [displayed, phase, phraseIdx])
-
-  const stats = dict.stats
+  }, [displayed, phase, phraseIdx, PHRASES])
 
   return (
     <section className="relative pt-18">
@@ -205,7 +78,7 @@ export function Hero({ dict, lang }: HeroProps) {
               }}
             >
               {word}
-              {i < titleWords.length - 1 ? "Â " : ""}
+              {i < titleWords.length - 1 ? " " : ""}
             </span>
           ))}
           <br />
@@ -218,6 +91,7 @@ export function Hero({ dict, lang }: HeroProps) {
             />
           </span>
         </h1>
+
         <p
           ref={copyRef}
           className="intro-copy text-fg-2 mx-auto mb-9 max-w-[48ch] text-lg leading-[1.55] text-pretty"
@@ -239,112 +113,11 @@ export function Hero({ dict, lang }: HeroProps) {
         ref={terminalRef}
         className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-['']"
       >
-        <Terminal>
-          {step >= 0 && (
-            <TerminalLine>
-              <Prompt />
-              <span>
-                {step === 0 ? (
-                  <>
-                    {CMD1.slice(0, cmd1Chars)}
-                    <Cursor />
-                  </>
-                ) : (
-                  <>
-                    <Highlight>openbranch</Highlight>
-                    {" recipe "}
-                    <Dim>&quot;trunk-based&quot;</Dim>
-                  </>
-                )}
-              </span>
-            </TerminalLine>
-          )}
-
-          {step >= 1 && (
-            <TerminalLine>
-              <Dim>â†’ fetching guide Â· 2.1 KB Â· cached</Dim>
-            </TerminalLine>
-          )}
-
-          {step >= 2 && (
-            <BranchBlock>
-              <TerminalLine>
-                <span className="text-ob-accent">â—</span>
-                <span className="terminal-hash">a4f1e2c</span>
-                <Dim>Pull from main, branch with intent (&lt;24h)</Dim>
-              </TerminalLine>
-              {step >= 3 && (
-                <TerminalLine>
-                  <span>â—‹</span>
-                  <span className="terminal-hash">9b2d8a1</span>
-                  <Dim>Wrap unfinished work in a feature flag</Dim>
-                </TerminalLine>
-              )}
-              {step >= 4 && (
-                <TerminalLine>
-                  <span>â—‹</span>
-                  <span className="terminal-hash">7c0e44d</span>
-                  <Dim>Open PR Â· &lt; 400 lines diff target</Dim>
-                </TerminalLine>
-              )}
-              {step >= 5 && (
-                <TerminalLine>
-                  <span>â—‹</span>
-                  <span className="terminal-hash">3f12a89</span>
-                  <Dim>Squash Â· merge Â· delete branch</Dim>
-                </TerminalLine>
-              )}
-            </BranchBlock>
-          )}
-
-          {step >= 6 && (
-            <TerminalLine>
-              <Prompt />
-              <span>
-                {step === 6 ? (
-                  <>
-                    {CMD2.slice(0, cmd2Chars)}
-                    <Cursor />
-                  </>
-                ) : (
-                  <>
-                    <Highlight>openbranch</Highlight>
-                    {" apply "}
-                    <Dim>--to atlas/</Dim>
-                  </>
-                )}
-              </span>
-            </TerminalLine>
-          )}
-
-          {step >= 7 && (
-            <TerminalLine>
-              <Ok />
-              <span>
-                Generated <Highlight>CONTRIBUTING.md</Highlight>
-                {" Â· "}
-                <Highlight>.github/PULL_REQUEST_TEMPLATE.md</Highlight>
-              </span>
-            </TerminalLine>
-          )}
-          {step >= 8 && (
-            <TerminalLine>
-              <Ok />
-              <span>Wired branch protections Â· enforced PR size limit Â· 2-reviewer rule</span>
-            </TerminalLine>
-          )}
-
-          {(step === -1 || step >= 9) && (
-            <TerminalLine>
-              <Prompt />
-              <Cursor />
-            </TerminalLine>
-          )}
-        </Terminal>
+        <HeroTerminal step={step} cmd1Chars={cmd1Chars} cmd2Chars={cmd2Chars} />
       </div>
 
       <div className="border-line mt-12 grid grid-cols-4 border-y py-6 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
-        {stats.map(({ n, unit, label }, i) => (
+        {dict.stats.map(({ n, unit, label }, i) => (
           <div
             key={label}
             className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
