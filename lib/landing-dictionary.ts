@@ -1,11 +1,5 @@
 export type Lang = "es" | "en"
 
-export type NavLink = {
-  readonly path: string
-  readonly label: string
-  readonly exact: boolean
-}
-
 export type StatItem = {
   readonly n: string
   readonly unit: string
@@ -37,10 +31,8 @@ export type FooterColumn = {
 
 export type LandingDict = {
   readonly nav: {
-    readonly links: ReadonlyArray<NavLink>
     readonly searchPlaceholder: string
     readonly searchAria: string
-    readonly githubAria: string
     readonly githubStarsAria: string
     readonly githubStarsTooltip: string
     readonly discordAria: string
@@ -92,17 +84,12 @@ export type LandingDict = {
   }
 }
 
-const GH = "https://github.com/Dayron-Glez/openbranch"
+import { GH_URL as GH } from "@/lib/constants"
 
 const es: LandingDict = {
   nav: {
-    links: [
-      { path: "/docs", label: "Documentación", exact: false },
-      { path: "/docs/contributing", label: "Contribuir", exact: false },
-    ],
     searchPlaceholder: "Buscar documentación...",
     searchAria: "Buscar en la documentación",
-    githubAria: "GitHub",
     githubStarsAria: "Ver en GitHub",
     githubStarsTooltip: "¡Dale una estrella!",
     discordAria: "Discord",
@@ -275,13 +262,8 @@ const es: LandingDict = {
 
 const en: LandingDict = {
   nav: {
-    links: [
-      { path: "/docs", label: "Docs", exact: false },
-      { path: "/docs/contributing", label: "Contributing", exact: false },
-    ],
     searchPlaceholder: "Search the docs...",
     searchAria: "Search the docs",
-    githubAria: "GitHub",
     githubStarsAria: "View on GitHub",
     githubStarsTooltip: "Give us a star!",
     discordAria: "Discord",

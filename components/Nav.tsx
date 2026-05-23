@@ -9,15 +9,13 @@ import { IconSearch, IconStar, IconDiscord, IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { fetchGitHubStars } from "@/lib/github-stars"
+import { GH_REPO, GH_URL, DISCORD_URL } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Kbd } from "@/components/ui/kbd"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const LOCALES = ["es", "en"] as const
-const GH_REPO = "Dayron-Glez/openbranch"
-const GH_URL = "https://github.com/Dayron-Glez/openbranch"
-const DISCORD_URL = "https://discord.com/channels/1505714245092769864/1505714246082760835"
 
 type NavProps = {
   readonly dict: LandingDict["nav"]
