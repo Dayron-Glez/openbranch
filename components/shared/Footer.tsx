@@ -1,5 +1,5 @@
 ﻿import Link from "next/link"
-import { LogoMark } from "@/components/LogoMark"
+import { LogoMark } from "@/components/shared/LogoMark"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Separator } from "@/components/ui/separator"

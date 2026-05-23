@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
-import { MaturityBadge } from "@/components/MaturityBadge"
+import { MaturityBadge } from "@/components/docs/MaturityBadge"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { formatRelativeDate } from "@/lib/section-stats"

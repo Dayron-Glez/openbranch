@@ -1,8 +1,8 @@
-"use client"
+﻿"use client"
 
 import type { ComponentProps, ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
-import { CustomSearchDialog } from "@/components/SearchDialog"
+import { CustomSearchDialog } from "@/components/docs/SearchDialog"
 
 type RootProviderProps = ComponentProps<typeof RootProvider>
 type I18nConfig = NonNullable<RootProviderProps["i18n"]>

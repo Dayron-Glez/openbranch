@@ -1,8 +1,8 @@
-"use client"
+﻿"use client"
 
-import { PlusCircle } from "lucide-react"
+import { IconCirclePlus } from "@tabler/icons-react"
 import { buildSuggestUrl } from "@/lib/suggest-url"
-import { useDocsUI } from "@/components/DocsUIProvider"
+import { useDocsUI } from "@/components/docs/DocsUIProvider"
 import { Button } from "@/components/ui/button"
 
 export function SuggestGuideButton({ sectionName }: { readonly sectionName: string }) {
@@ -21,7 +21,7 @@ export function SuggestGuideButton({ sectionName }: { readonly sectionName: stri
         rel="noopener noreferrer"
         aria-label={`${suggestGuide} — ${sectionName}`}
       >
-        <PlusCircle />
+        <IconCirclePlus />
         <span>{suggestGuide}</span>
       </a>
     </Button>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, type RefObject } from "react"
 import gsap from "gsap"
 import Link from "next/link"
-import { LogoMark } from "@/components/LogoMark"
+import { LogoMark } from "@/components/shared/LogoMark"
 import {
   Terminal,
   TerminalLine,
@@ -13,7 +13,7 @@ import {
   Dim,
   BranchBlock,
   Cursor,
-} from "@/components/Terminal"
+} from "@/components/home/Terminal"
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
