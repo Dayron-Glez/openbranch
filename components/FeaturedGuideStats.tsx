@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { MaturityBadge } from "@/components/MaturityBadge"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { formatRelativeDate } from "@/lib/section-stats"
 import type { Maturity } from "@/lib/maturity"
 
@@ -67,12 +68,14 @@ export function FeaturedGuideStats({
         <span data-stat="" className="inline-flex items-center gap-2">
           <span className="inline-flex items-center">
             {authors.slice(0, 3).map((author, i) => (
-              <span
+              <Avatar
                 key={author}
-                className={`border-line bg-accent-soft text-ob-accent outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} inline-flex size-[22px] items-center justify-center rounded-full border font-mono text-[9px] font-medium outline-2`}
+                className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-[22px] border outline-2`}
               >
-                {getInitials(author)}
-              </span>
+                <AvatarFallback className="text-ob-accent bg-transparent font-mono text-[9px] font-medium">
+                  {getInitials(author)}
+                </AvatarFallback>
+              </Avatar>
             ))}
           </span>
           <span className="text-fg-2 text-[12px] leading-none">{authorsDisplay}</span>
