@@ -97,9 +97,7 @@ const GH = "https://github.com/Dayron-Glez/openbranch"
 const es: LandingDict = {
   nav: {
     links: [
-      { path: "/docs", label: "Documentación", exact: true },
-      { path: "/docs/git", label: "Git", exact: false },
-      { path: "/docs/testing", label: "Pruebas", exact: false },
+      { path: "/docs", label: "Documentación", exact: false },
       { path: "/docs/contributing", label: "Contribuir", exact: false },
     ],
     searchPlaceholder: "Buscar documentación...",
@@ -278,9 +276,7 @@ const es: LandingDict = {
 const en: LandingDict = {
   nav: {
     links: [
-      { path: "/docs", label: "Docs", exact: true },
-      { path: "/docs/git", label: "Git", exact: false },
-      { path: "/docs/testing", label: "Testing", exact: false },
+      { path: "/docs", label: "Docs", exact: false },
       { path: "/docs/contributing", label: "Contributing", exact: false },
     ],
     searchPlaceholder: "Search the docs...",

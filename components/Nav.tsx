@@ -49,14 +49,6 @@ export function Nav({ dict, lang }: NavProps) {
       .catch(() => null)
   }, [])
 
-  const isActiveExact = (href: string): boolean => {
-    return pathname === href
-  }
-
-  const isActivePrefix = (href: string): boolean => {
-    return pathname.startsWith(href)
-  }
-
   const homeHref = lang === "en" ? "/en" : "/"
 
   return (
@@ -65,7 +57,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-300 items-center gap-8 px-8 py-3.5 max-[980px]:gap-4 max-[520px]:px-4">
+      <div className="mx-auto flex max-w-300 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
@@ -78,26 +70,7 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1 max-[980px]:hidden">
-          {dict.links.map(({ path, label, exact }) => {
-            const href = localizedHref(lang, path)
-            return (
-              <Link
-                key={path}
-                href={href}
-                className={`hover:bg-bg-elev hover:text-fg rounded-(--r-6) px-3 py-1.5 text-[13.5px] no-underline transition-colors duration-(--d-fast) ease-(--ease) ${
-                  (exact ? isActiveExact(href) : isActivePrefix(href))
-                    ? "bg-accent-soft text-fg"
-                    : "text-fg-muted"
-                }`}
-              >
-                {label}
-              </Link>
-            )
-          })}
-        </div>
-
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1">
           <button
             className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
@@ -111,43 +84,41 @@ export function Nav({ dict, lang }: NavProps) {
           </button>
 
           <TooltipProvider>
-            <div className="flex items-center gap-1.5">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    size="icon"
-                    aria-label={dict.discordAria}
-                    className="[&_svg]:size-4"
-                  >
-                    <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer">
-                      <IconDiscord className="text-[#5865F2]" />
-                    </a>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{dict.discordTooltip}</TooltipContent>
-              </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  aria-label={dict.discordAria}
+                  className="[&_svg]:size-4"
+                >
+                  <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer">
+                    <IconDiscord className="text-[#5865F2]" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{dict.discordTooltip}</TooltipContent>
+            </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    aria-label={dict.githubStarsAria}
-                    className="h-8 gap-1.5 px-2.5 [&_svg]:size-3.5"
-                  >
-                    <a href={GH_URL} target="_blank" rel="noopener noreferrer">
-                      <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
-                      {stars !== null && (
-                        <span className="font-mono text-[11px] tabular-nums">{stars}</span>
-                      )}
-                    </a>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>{dict.githubStarsTooltip}</TooltipContent>
-              </Tooltip>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  asChild
+                  variant="ghost"
+                  aria-label={dict.githubStarsAria}
+                  className="h-8 gap-1.5 px-2.5 [&_svg]:size-3.5"
+                >
+                  <a href={GH_URL} target="_blank" rel="noopener noreferrer">
+                    <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
+                    {stars !== null && (
+                      <span className="font-mono text-[11px] tabular-nums">{stars}</span>
+                    )}
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{dict.githubStarsTooltip}</TooltipContent>
+            </Tooltip>
           </TooltipProvider>
 
           {/* Full-document navigation: switching locale changes <html lang>,
