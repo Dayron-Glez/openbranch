@@ -445,6 +445,29 @@
   }
 }
 
+/* GitHub star icon — idle spin every 5 s */
+.star-spin {
+  animation: star-spin 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes star-spin {
+  0%,
+  72%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  80% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  88% {
+    transform: rotate(340deg) scale(1.1);
+  }
+  94% {
+    transform: rotate(360deg) scale(1.05);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .led-wave::after {
     animation: none;
@@ -469,6 +492,10 @@
     opacity: 1;
     color: inherit;
     text-shadow: none;
+  }
+
+  .star-spin {
+    animation: none;
   }
 
   .ambient,

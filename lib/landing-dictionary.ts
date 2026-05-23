@@ -41,6 +41,10 @@ export type LandingDict = {
     readonly searchPlaceholder: string
     readonly searchAria: string
     readonly githubAria: string
+    readonly githubStarsAria: string
+    readonly githubStarsTooltip: string
+    readonly discordAria: string
+    readonly discordTooltip: string
     readonly getStarted: string
     readonly switchLang: string
   }
@@ -101,6 +105,10 @@ const es: LandingDict = {
     searchPlaceholder: "Buscar documentación...",
     searchAria: "Buscar en la documentación",
     githubAria: "GitHub",
+    githubStarsAria: "Ver en GitHub",
+    githubStarsTooltip: "¡Dale una estrella!",
+    discordAria: "Discord",
+    discordTooltip: "¡Únete al Discord!",
     getStarted: "Empezar",
     switchLang: "Cambiar idioma",
   },
@@ -278,6 +286,10 @@ const en: LandingDict = {
     searchPlaceholder: "Search the docs...",
     searchAria: "Search the docs",
     githubAria: "GitHub",
+    githubStarsAria: "View on GitHub",
+    githubStarsTooltip: "Give us a star!",
+    discordAria: "Discord",
+    discordTooltip: "Join our Discord!",
     getStarted: "Get started",
     switchLang: "Change language",
   },
