@@ -5,14 +5,19 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useSearchContext } from "fumadocs-ui/contexts/search"
 import { LogoMark } from "@/components/LogoMark"
-import { IconSearch, IconGithub, IconArrowRight } from "@/icons"
+import { IconSearch, IconStar, IconDiscord, IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
+import { fetchGitHubStars } from "@/lib/github-stars"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Kbd } from "@/components/ui/kbd"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const LOCALES = ["es", "en"] as const
+const GH_REPO = "Dayron-Glez/openbranch"
+const GH_URL = "https://github.com/Dayron-Glez/openbranch"
+const DISCORD_URL = "https://discord.com/channels/1505714245092769864/1505714246082760835"
 
 type NavProps = {
   readonly dict: LandingDict["nav"]
@@ -20,12 +25,13 @@ type NavProps = {
 }
 
 export function Nav({ dict, lang }: NavProps) {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState<boolean>(false)
+  const [stars, setStars] = useState<string | null>(null)
   const pathname = usePathname()
   const { setOpenSearch } = useSearchContext()
   const current = lang === "en" ? "en" : "es"
   const stripped = pathname.replace(/^\/en(?=\/|$)/, "") || "/"
-  const localeHref = {
+  const localeHref: Record<string, string> = {
     es: stripped,
     en: stripped === "/" ? "/en" : `/en${stripped}`,
   }
@@ -37,13 +43,11 @@ export function Nav({ dict, lang }: NavProps) {
     return () => globalThis.removeEventListener("scroll", onScroll)
   }, [])
 
-  const isActiveExact = (href: string): boolean => {
-    return pathname === href
-  }
-
-  const isActivePrefix = (href: string): boolean => {
-    return pathname.startsWith(href)
-  }
+  useEffect(() => {
+    fetchGitHubStars(GH_REPO)
+      .then(setStars)
+      .catch(() => null)
+  }, [])
 
   const homeHref = lang === "en" ? "/en" : "/"
 
@@ -53,7 +57,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-300 items-center gap-8 px-8 py-3.5 max-[980px]:gap-4 max-[520px]:px-4">
+      <div className="mx-auto flex max-w-300 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
@@ -66,26 +70,7 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <div className="flex items-center gap-1 max-[980px]:hidden">
-          {dict.links.map(({ path, label, exact }) => {
-            const href = localizedHref(lang, path)
-            return (
-              <Link
-                key={path}
-                href={href}
-                className={`hover:bg-bg-elev hover:text-fg rounded-(--r-6) px-3 py-1.5 text-[13.5px] no-underline transition-colors duration-(--d-fast) ease-(--ease) ${
-                  (exact ? isActiveExact(href) : isActivePrefix(href))
-                    ? "bg-accent-soft text-fg"
-                    : "text-fg-muted"
-                }`}
-              >
-                {label}
-              </Link>
-            )
-          })}
-        </div>
-
-        <div className="ml-auto flex items-center gap-2.5">
+        <div className="ml-auto flex items-center gap-1">
           <button
             className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
@@ -97,21 +82,45 @@ export function Nav({ dict, lang }: NavProps) {
               ⌘ K
             </Kbd>
           </button>
-          <Button
-            asChild
-            variant="ghost"
-            size="icon"
-            aria-label={dict.githubAria}
-            className="[&_svg]:size-4"
-          >
-            <a
-              href="https://github.com/Dayron-Glez/openbranch"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconGithub />
-            </a>
-          </Button>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  aria-label={dict.discordAria}
+                  className="[&_svg]:size-4"
+                >
+                  <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer">
+                    <IconDiscord className="text-[#5865F2]" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{dict.discordTooltip}</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  asChild
+                  variant="ghost"
+                  aria-label={dict.githubStarsAria}
+                  className="h-8 gap-1.5 px-2.5 [&_svg]:size-3.5"
+                >
+                  <a href={GH_URL} target="_blank" rel="noopener noreferrer">
+                    <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
+                    {stars !== null && (
+                      <span className="font-mono text-[11px] tabular-nums">{stars}</span>
+                    )}
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{dict.githubStarsTooltip}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
           {/* Full-document navigation: switching locale changes <html lang>,
               the i18n provider and the theme script — a hard context switch,
               not an in-app route change. */}
@@ -135,6 +144,7 @@ export function Nav({ dict, lang }: NavProps) {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
+
           <Button
             asChild
             variant="accent"

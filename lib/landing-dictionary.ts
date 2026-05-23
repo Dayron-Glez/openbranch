@@ -41,6 +41,10 @@ export type LandingDict = {
     readonly searchPlaceholder: string
     readonly searchAria: string
     readonly githubAria: string
+    readonly githubStarsAria: string
+    readonly githubStarsTooltip: string
+    readonly discordAria: string
+    readonly discordTooltip: string
     readonly getStarted: string
     readonly switchLang: string
   }
@@ -93,14 +97,16 @@ const GH = "https://github.com/Dayron-Glez/openbranch"
 const es: LandingDict = {
   nav: {
     links: [
-      { path: "/docs", label: "Documentación", exact: true },
-      { path: "/docs/git", label: "Git", exact: false },
-      { path: "/docs/testing", label: "Pruebas", exact: false },
+      { path: "/docs", label: "Documentación", exact: false },
       { path: "/docs/contributing", label: "Contribuir", exact: false },
     ],
     searchPlaceholder: "Buscar documentación...",
     searchAria: "Buscar en la documentación",
     githubAria: "GitHub",
+    githubStarsAria: "Ver en GitHub",
+    githubStarsTooltip: "¡Dale una estrella!",
+    discordAria: "Discord",
+    discordTooltip: "¡Únete al Discord!",
     getStarted: "Empezar",
     switchLang: "Cambiar idioma",
   },
@@ -270,14 +276,16 @@ const es: LandingDict = {
 const en: LandingDict = {
   nav: {
     links: [
-      { path: "/docs", label: "Docs", exact: true },
-      { path: "/docs/git", label: "Git", exact: false },
-      { path: "/docs/testing", label: "Testing", exact: false },
+      { path: "/docs", label: "Docs", exact: false },
       { path: "/docs/contributing", label: "Contributing", exact: false },
     ],
     searchPlaceholder: "Search the docs...",
     searchAria: "Search the docs",
     githubAria: "GitHub",
+    githubStarsAria: "View on GitHub",
+    githubStarsTooltip: "Give us a star!",
+    discordAria: "Discord",
+    discordTooltip: "Join our Discord!",
     getStarted: "Get started",
     switchLang: "Change language",
   },
