@@ -70,13 +70,13 @@ export function Nav({ dict, lang }: NavProps) {
 
         <div className="ml-auto flex items-center gap-1">
           <button
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-(--text-md) transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[length:var(--text-md)] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
             onClick={() => setOpenSearch(true)}
           >
             <IconSearch />
             <span className="min-w-0 flex-1 truncate text-left">{dict.searchPlaceholder}</span>
-            <Kbd className="border-line bg-bg text-fg-muted gap-0.5 rounded-(--r-6) font-mono text-(--text-xs)">
+            <Kbd className="border-line bg-bg text-fg-muted gap-0.5 rounded-(--r-6) font-mono text-[length:var(--text-xs)]">
               âŒ˜ K
             </Kbd>
           </button>
@@ -110,7 +110,9 @@ export function Nav({ dict, lang }: NavProps) {
                   <a href={GH_URL} target="_blank" rel="noopener noreferrer">
                     <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
                     {stars !== null && (
-                      <span className="font-mono text-(--text-sm) tabular-nums">{stars}</span>
+                      <span className="font-mono text-[length:var(--text-sm)] tabular-nums">
+                        {stars}
+                      </span>
                     )}
                   </a>
                 </Button>
@@ -136,7 +138,7 @@ export function Nav({ dict, lang }: NavProps) {
               <ToggleGroupItem
                 key={l}
                 value={l}
-                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted h-6 rounded-(--r-6) px-2 font-mono tracking-[0.04em] text-(--text-sm)"
+                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted h-6 rounded-(--r-6) px-2 font-mono text-[length:var(--text-sm)] tracking-[0.04em]"
               >
                 {l.toUpperCase()}
               </ToggleGroupItem>

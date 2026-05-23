@@ -20,8 +20,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-[42px] px-5 leading-none tracking-[0]",
-        sm: "h-[34px] px-3.5 text-(--text-base) leading-none tracking-[0]",
-        nav: "h-8 px-3.5 text-(--text-base) leading-none tracking-[0]",
+        sm: "h-[34px] px-3.5 text-[length:var(--text-base)] leading-none tracking-[0]",
+        nav: "h-8 px-3.5 text-[length:var(--text-base)] leading-none tracking-[0]",
         lg: "h-11 px-8",
         icon: "size-8",
       },

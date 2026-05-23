@@ -61,7 +61,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
     listContent =
       searchLinks.length > 0 ? (
         <section>
-          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 font-semibold tracking-wider text-(--text-xs) uppercase">
+          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[length:var(--text-xs)] font-semibold tracking-wider uppercase">
             {t.suggestions}
           </p>
           {searchLinks.map(([label, href, Icon]) => (
@@ -150,9 +150,9 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
           ).map(([key, label]) => (
             <span
               key={key}
-              className="text-fd-muted-foreground flex items-center gap-1.5 text-(--text-sm)"
+              className="text-fd-muted-foreground flex items-center gap-1.5 text-[length:var(--text-sm)]"
             >
-              <Kbd className="border-fd-border bg-fd-background font-mono text-(--text-xs)">
+              <Kbd className="border-fd-border bg-fd-background font-mono text-[length:var(--text-xs)]">
                 {key}
               </Kbd>
               {label}

@@ -4,7 +4,7 @@ import type { Maturity } from "@/lib/maturity"
 import { FeaturedGuideStats } from "@/components/home/FeaturedGuideStats"
 
 const ctaClass =
-  "group inline-flex h-[34px] items-center gap-2 rounded-[var(--r-8)] border border-transparent bg-ob-accent px-3.5 text-(--text-base) font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-[var(--d-fast)] ease-[var(--ease)] hover:brightness-[1.06] [&_svg]:size-3.5"
+  "group inline-flex h-[34px] items-center gap-2 rounded-[var(--r-8)] border border-transparent bg-ob-accent px-3.5 text-[length:var(--text-base)] font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-[var(--d-fast)] ease-[var(--ease)] hover:brightness-[1.06] [&_svg]:size-3.5"
 
 type FeaturedGuideDynamic = {
   readonly kicker: string
@@ -29,13 +29,13 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
   return (
     <div className="border-line bg-bg-card mt-7 grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-(--r-12) border max-[980px]:grid-cols-1">
       <div className="border-line flex flex-col justify-center gap-3.5 border-r px-9 py-10 max-[980px]:border-r-0 max-[980px]:border-b max-[520px]:px-6">
-        <span className="text-ob-accent font-mono tracking-[0.08em] text-(--text-sm) uppercase">
+        <span className="text-ob-accent font-mono text-[length:var(--text-sm)] tracking-[0.08em] uppercase">
           {guide.kicker}
         </span>
-        <h3 className="m-0 leading-[1.15] font-medium tracking-normal text-(--text-4xl)">
+        <h3 className="m-0 text-[length:var(--text-4xl)] leading-[1.15] font-medium tracking-normal">
           {guide.title}
         </h3>
-        <p className="text-fg-2 m-0 max-w-[42ch] leading-[1.55] text-(--text-lg)">
+        <p className="text-fg-2 m-0 max-w-[42ch] text-[length:var(--text-lg)] leading-[1.55]">
           {guide.summary}
         </p>
         <FeaturedGuideStats
@@ -55,11 +55,11 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
       </div>
 
       <article
-        className="text-fg-2 after:to-bg-card relative flex flex-col justify-center px-10 py-9 leading-[1.65] text-(--text-lg) after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-[''] max-[520px]:px-6"
+        className="text-fg-2 after:to-bg-card relative flex flex-col justify-center px-10 py-9 text-[length:var(--text-lg)] leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-[''] max-[520px]:px-6"
         aria-label={dict.previewAria}
       >
         {guide.firstHeading && (
-          <h4 className="text-fg m-0 mb-3.5 leading-tight font-medium tracking-normal text-(--text-3xl)">
+          <h4 className="text-fg m-0 mb-3.5 text-[length:var(--text-3xl)] leading-tight font-medium tracking-normal">
             <span className="text-fg-faint mr-1.5 font-normal">#</span>
             {guide.firstHeading}
           </h4>
