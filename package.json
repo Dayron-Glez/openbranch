@@ -2,6 +2,7 @@
   "name": "openbranch",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "bun@1.3.13",
   "scripts": {
     "build": "next build",
     "dev": "next dev",

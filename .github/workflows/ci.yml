@@ -17,21 +17,23 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Lint
         run: |
           echo "::add-matcher::.github/problem-matchers/eslint.json"
-          npm run lint
+          bun run lint
 
       - name: Check formatting
-        run: npm run format:check
+        run: bun run format:check
 
       - name: Type check
-        run: npm run types:check
+        run: bun run types:check
 
       - name: Build
-        run: npm run build
+        run: bun run build
