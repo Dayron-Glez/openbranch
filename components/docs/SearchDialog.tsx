@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation"
 import { getSearchLinks } from "@/lib/i18n.ui"
 import { Kbd } from "@/components/ui/kbd"
 
-function ResultIcon({ type }: { type: "page" | "heading" | "text" }) {
+function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
   if (type === "page") return <IconFileText />
   if (type === "heading") return <IconHash />
   return <IconAlignLeft />
