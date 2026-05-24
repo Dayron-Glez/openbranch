@@ -55,7 +55,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-300 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
+      <div className="mx-auto flex max-w-350 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
@@ -68,7 +68,7 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-4">
           <button
             className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}

@@ -70,7 +70,7 @@ export function FeaturedGuideStats({
             {authors.slice(0, 3).map((author, i) => (
               <Avatar
                 key={author}
-                className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-[22px] border outline-2`}
+                className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-5.5 border outline-2`}
               >
                 <AvatarFallback className="text-ob-accent bg-transparent font-mono text-[9px] font-medium">
                   {getInitials(author)}
