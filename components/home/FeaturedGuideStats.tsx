@@ -72,22 +72,20 @@ export function FeaturedGuideStats({
                 key={author}
                 className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-[22px] border outline-2`}
               >
-                <AvatarFallback className="text-ob-accent bg-transparent font-mono text-[length:var(--text-2xs)] font-medium">
+                <AvatarFallback className="text-ob-accent bg-transparent font-mono text-[9px] font-medium">
                   {getInitials(author)}
                 </AvatarFallback>
               </Avatar>
             ))}
           </span>
-          <span className="text-fg-2 text-[length:var(--text-md)] leading-none">
-            {authorsDisplay}
-          </span>
+          <span className="text-fg-2 text-[12px] leading-none">{authorsDisplay}</span>
         </span>
       )}
 
       {authors.length > 0 && (
         <span
           data-stat=""
-          className="text-fg-faint inline-flex items-center text-[length:var(--text-xs)]"
+          className="text-fg-faint inline-flex items-center text-[10px]"
           aria-hidden
         >
           Â·

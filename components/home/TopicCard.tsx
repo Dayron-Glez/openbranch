@@ -28,10 +28,8 @@ export function TopicCard({
         {icon}
       </span>
       <h3 className="m-0 text-lg font-medium tracking-[0]">{title}</h3>
-      <p className="text-fg-muted m-0 max-w-[36ch] text-[length:var(--text-base-lg)] leading-[1.55]">
-        {description}
-      </p>
-      <div className="text-fg-muted mt-2.5 flex items-center gap-3 font-mono text-[length:var(--text-sm)] tracking-[0.04em]">
+      <p className="text-fg-muted m-0 max-w-[36ch] text-[13.5px] leading-[1.55]">{description}</p>
+      <div className="text-fg-muted mt-2.5 flex items-center gap-3 font-mono text-[11px] tracking-[0.04em]">
         <span className="border-line bg-bg-elev text-fg-2 rounded-[var(--r-6)] border px-[7px] py-0.5">
           {count}
         </span>

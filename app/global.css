@@ -89,22 +89,6 @@
     --d-fast: 120ms;
     --d-base: 180ms;
     --d-slow: 260ms;
-    /* Typography scale */
-    --text-2xs: 9px;
-    --text-xs: 10.5px;
-    --text-sm: 11px;
-    --text-md: 12.5px;
-    --text-base: 13px;
-    --text-base-lg: 13.5px;
-    --text-lg: 14.5px;
-    --text-xl: 15.5px;
-    --text-2xl: 17px;
-    --text-3xl: 20px;
-    --text-4xl: 28px;
-    --text-5xl: 32px;
-    --text-6xl: 38px;
-    --text-7xl: 42px;
-    --text-hero: 48px;
   }
 
   .dark {

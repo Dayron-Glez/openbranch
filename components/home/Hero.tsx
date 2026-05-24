@@ -68,7 +68,7 @@ export function Hero({ dict, lang }: HeroProps) {
           </button>
         </div>
 
-        <h1 className="mx-auto mb-6 text-[length:var(--text-hero)] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[length:var(--text-6xl)] max-[520px]:text-[length:var(--text-5xl)]">
+        <h1 className="mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
           {titleWords.map((word, i) => (
             <span
               key={`${word}-${i}`}
@@ -122,11 +122,11 @@ export function Hero({ dict, lang }: HeroProps) {
             key={label}
             className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
           >
-            <div className="text-[length:var(--text-4xl)] font-medium tracking-normal">
+            <div className="text-[28px] font-medium tracking-normal">
               {n}
               {unit && <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>}
             </div>
-            <div className="text-fg-muted mt-1 font-mono text-[length:var(--text-sm)] tracking-[0.06em] uppercase">
+            <div className="text-fg-muted mt-1 font-mono text-[11px] tracking-[0.06em] uppercase">
               {label}
             </div>
           </div>

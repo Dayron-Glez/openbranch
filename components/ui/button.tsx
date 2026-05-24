@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--r-8)] text-sm font-medium transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-3.5 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--r-8)] text-[13px] font-medium transition-[background,border-color,color,filter] duration-[var(--d-fast)] ease-[var(--ease)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-3.5 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -20,8 +20,8 @@ const buttonVariants = cva(
       },
       size: {
         default: "h-[42px] px-5 leading-none tracking-[0]",
-        sm: "h-[34px] px-3.5 text-[length:var(--text-base)] leading-none tracking-[0]",
-        nav: "h-8 px-3.5 text-[length:var(--text-base)] leading-none tracking-[0]",
+        sm: "h-[34px] px-3.5 text-[13px] leading-none tracking-[0]",
+        nav: "h-8 px-3.5 text-[13px] leading-none tracking-[0]",
         lg: "h-11 px-8",
         icon: "size-8",
       },
