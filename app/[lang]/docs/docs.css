@@ -47,3 +47,22 @@ article.flex {
 h3#toc-title {
   color: var(--color-ob-accent);
 }
+
+/* ── Sidebar item text size ───────────────────────────────────────────────── */
+
+/*
+ * Fumadocs renders folder headers as <button> and leaf pages as <a> inside
+ * the sidebar tree. Both inherit a smaller default; bumping to 0.875rem (14px)
+ * aligns them with the rest of the docs UI text.
+ */
+/* Top-level folder headers and active page title */
+#nd-sidebar ul > li > button,
+#nd-sidebar ul > li > a {
+  font-size: 1rem; /* 16px */
+}
+
+/* Nested items (sub-pages inside an open folder) */
+#nd-sidebar ul ul a,
+#nd-sidebar ul ul button {
+  font-size: 0.9375rem; /* 15px */
+}
