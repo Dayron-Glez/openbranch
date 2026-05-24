@@ -17,38 +17,35 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_ACTION: ${{ github.event.action }}
           EVENT_ACTOR: ${{ github.actor }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          PR_MERGED: ${{ github.event.pull_request.merged }}
         run: |
           set -e
 
-          ACTION="$EVENT_ACTION"
-
           if [ "$EVENT_NAME" = "issues" ]; then
-            TITLE="$ISSUE_TITLE"
-            URL="$ISSUE_URL"
+            TITLE="${{ github.event.issue.title }}"
+            URL="${{ github.event.issue.html_url }}"
             TYPE="Issue"
             EMOJI="🐛"
+            ACTION="$EVENT_ACTION"
           else
-            TITLE="$PR_TITLE"
-            URL="$PR_URL"
+            TITLE="${{ github.event.pull_request.title }}"
+            URL="${{ github.event.pull_request.html_url }}"
 
-            if [ "$PR_MERGED" = "true" ]; then
+            if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
               TYPE="Pull Request Merged"
               EMOJI="🎉"
               ACTION="merged"
             else
               TYPE="Pull Request"
               EMOJI="🔁"
+              ACTION="$EVENT_ACTION"
             fi
           fi
 
           CONTENT="$EMOJI **$TYPE $ACTION** in OpenBranch | $TITLE | By: $EVENT_ACTOR | $URL"
 
+          PAYLOAD=$(jq -n --arg content "$CONTENT" '{content: $content}')
+
           curl -H "Content-Type: application/json" \
             -X POST \
-            -d "$(jq -n --arg content "$CONTENT" '{content: $content}')" \
+            -d "$PAYLOAD" \
             "$WEBHOOK_URL"
