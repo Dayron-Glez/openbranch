@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import React from "react"
 import { useDocsSearch } from "fumadocs-core/search/client"
@@ -61,7 +61,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
     listContent =
       searchLinks.length > 0 ? (
         <section>
-          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[length:var(--text-xs)] font-semibold tracking-wider uppercase">
+          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
             {t.suggestions}
           </p>
           {searchLinks.map(([label, href, Icon]) => (
@@ -109,7 +109,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
                 </span>
                 <span
                   className={contentClassName}
-                  /* fumadocs wraps highlights in <mark> â€” content is generated from our own docs */
+                  /* fumadocs wraps highlights in <mark> — content is generated from our own docs */
                   dangerouslySetInnerHTML={{ __html: item.content }}
                 />
               </Link>
@@ -134,7 +134,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
           <SearchDialogInput
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder={locale === "en" ? "Search documentationâ€¦" : "Buscar documentaciÃ³nâ€¦"}
+            placeholder={locale === "en" ? "Search documentation…" : "Buscar documentación…"}
           />
         </SearchDialogHeader>
 
@@ -143,18 +143,16 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
         <SearchDialogFooter className="border-fd-border flex items-center gap-4 border-t px-4 py-2">
           {(
             [
-              ["â†‘â†“", t.navigate],
-              ["â†µ", t.open],
+              ["↑↓", t.navigate],
+              ["↵", t.open],
               ["Esc", t.close],
             ] as const
           ).map(([key, label]) => (
             <span
               key={key}
-              className="text-fd-muted-foreground flex items-center gap-1.5 text-[length:var(--text-sm)]"
+              className="text-fd-muted-foreground flex items-center gap-1.5 text-[11px]"
             >
-              <Kbd className="border-fd-border bg-fd-background font-mono text-[length:var(--text-xs)]">
-                {key}
-              </Kbd>
+              <Kbd className="border-fd-border bg-fd-background font-mono text-[10px]">{key}</Kbd>
               {label}
             </span>
           ))}
