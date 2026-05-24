@@ -1,0 +1,71 @@
+name: Weekly Digest
+
+on:
+  schedule:
+    - cron: "0 17 * * FRI"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate weekly digest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          SINCE="$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%SZ)"
+          API="https://api.github.com/repos/$REPO"
+
+          github_api() {
+            curl --fail --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              "$1"
+          }
+
+          PRS_RAW="$(github_api "$API/pulls?state=closed&per_page=100")"
+          ISSUES_RAW="$(github_api "$API/issues?state=all&per_page=100")"
+
+          PRS="$(jq --arg since "$SINCE" '[.[] | select(.merged_at != null and .merged_at >= $since)] | length' <<<"$PRS_RAW")"
+
+          ISSUES_OPEN="$(jq '[.[] | select(.state == "open") and (.pull_request | not)] | length' <<<"$ISSUES_RAW")"
+
+          ISSUES_CLOSED="$(jq --arg since "$SINCE" '[.[] | select(.state == "closed" and (.pull_request | not) and .closed_at >= $since)] | length' <<<"$ISSUES_RAW")"
+
+          CONTRIBUTORS="$(jq -r --arg since "$SINCE" '
+            [.[] 
+              | select(.merged_at != null and .merged_at >= $since) 
+              | .user.login
+            ]
+            | group_by(.) 
+            | map({user: .[0], count: length}) 
+            | sort_by(-.count) 
+            | .[0:3] 
+            | map("• \(.user) (\(.count))") 
+            | join("\n")
+          ' <<<"$PRS_RAW")"
+
+          if [ -z "${CONTRIBUTORS:-}" ]; then
+            CONTRIBUTORS="No contributors yet"
+          fi
+
+          MESSAGE=$(
+            printf "🚀 Weekly Digest — OpenBranch\n\n📊 Activity\n🔁 PRs merged: %s\n🐛 Issues open: %s\n✅ Issues closed: %s\n\n🏆 Top Contributors\n%s\n\n🔗 https://github.com/%s" \
+            "$PRS" "$ISSUES_OPEN" "$ISSUES_CLOSED" "$CONTRIBUTORS" "$REPO"
+          )
+
+          PAYLOAD="$(jq -n --arg content "$MESSAGE" '{content: $content}')"
+
+          curl --fail --silent --show-error \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d "$PAYLOAD" \
+            "$WEBHOOK_URL"
