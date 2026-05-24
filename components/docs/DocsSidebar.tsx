@@ -6,7 +6,7 @@ import type { Item as PageTreeItem } from "fumadocs-core/page-tree"
 
 // Base classes — matches fumadocs itemVariants "link" variant
 const baseCls = [
-  "relative flex w-full flex-row items-center gap-2 rounded-lg p-2 text-start",
+  "relative flex w-full flex-row items-center gap-2 rounded-lg p-2 text-start text-base",
   "text-fd-muted-foreground transition-colors",
   "hover:bg-fd-accent/50 hover:text-fd-accent-foreground/80 hover:transition-none",
   "data-[active=true]:bg-fd-primary/10 data-[active=true]:text-fd-primary data-[active=true]:hover:transition-colors",
@@ -23,8 +23,7 @@ const highlightCls = [
   "data-[active=true]:before:inset-s-2.5",
 ].join(" ")
 
-// Matches fumadocs getItemOffset: depth 0 → 8px, depth 1 → 20px, depth 2 → 32px…
-function getItemOffset(depth: number): string {
+const getItemOffset = (depth: number): string => {
   return `calc(${2 + 3 * depth} * var(--spacing))`
 }
 

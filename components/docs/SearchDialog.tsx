@@ -11,16 +11,16 @@ import {
   SearchDialogOverlay,
 } from "fumadocs-ui/components/dialog/search"
 import type { SharedProps } from "fumadocs-ui/components/dialog/search"
-import { AlignLeft, FileText, Hash } from "lucide-react"
+import { IconAlignLeft, IconFileText, IconHash } from "@tabler/icons-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { getSearchLinks } from "@/lib/i18n.ui"
 import { Kbd } from "@/components/ui/kbd"
 
-function ResultIcon({ type }: { type: "page" | "heading" | "text" }) {
-  if (type === "page") return <FileText />
-  if (type === "heading") return <Hash />
-  return <AlignLeft />
+function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
+  if (type === "page") return <IconFileText />
+  if (type === "heading") return <IconHash />
+  return <IconAlignLeft />
 }
 
 const KBD_LABELS = {

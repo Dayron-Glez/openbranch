@@ -1,4 +1,4 @@
-import { IconFork, IconGlobe, IconLock } from "@/icons"
+﻿import { IconFork, IconGlobe, IconLock } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { Badge } from "@/components/ui/badge"
 

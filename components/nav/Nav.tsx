@@ -1,23 +1,21 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useSearchContext } from "fumadocs-ui/contexts/search"
-import { LogoMark } from "@/components/LogoMark"
+import { LogoMark } from "@/components/shared/LogoMark"
 import { IconSearch, IconStar, IconDiscord, IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { fetchGitHubStars } from "@/lib/github-stars"
+import { GH_REPO, GH_URL, DISCORD_URL } from "@/lib/constants"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Kbd } from "@/components/ui/kbd"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const LOCALES = ["es", "en"] as const
-const GH_REPO = "Dayron-Glez/openbranch"
-const GH_URL = "https://github.com/Dayron-Glez/openbranch"
-const DISCORD_URL = "https://discord.com/channels/1505714245092769864/1505714246082760835"
 
 type NavProps = {
   readonly dict: LandingDict["nav"]
@@ -57,7 +55,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-300 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
+      <div className="mx-auto flex max-w-350 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
@@ -70,7 +68,7 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-4">
           <button
             className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
@@ -122,7 +120,7 @@ export function Nav({ dict, lang }: NavProps) {
           </TooltipProvider>
 
           {/* Full-document navigation: switching locale changes <html lang>,
-              the i18n provider and the theme script — a hard context switch,
+              the i18n provider and the theme script â€” a hard context switch,
               not an in-app route change. */}
           <ToggleGroup
             type="single"

@@ -1,18 +1,12 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
-import { MaturityBadge } from "@/components/MaturityBadge"
+import { MaturityBadge } from "@/components/docs/MaturityBadge"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { formatRelativeDate } from "@/lib/section-stats"
 import type { Maturity } from "@/lib/maturity"
-
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
-  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
-}
 
 type FeaturedGuideStatsProps = {
   readonly maturity: Maturity
@@ -21,6 +15,12 @@ type FeaturedGuideStatsProps = {
   readonly updatedLabel: string
   readonly authors: string[]
   readonly authorsDisplay: string
+}
+
+const getInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts.at(-1)![0]).toUpperCase()
 }
 
 export function FeaturedGuideStats({
@@ -70,7 +70,7 @@ export function FeaturedGuideStats({
             {authors.slice(0, 3).map((author, i) => (
               <Avatar
                 key={author}
-                className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-[22px] border outline-2`}
+                className={`border-line bg-accent-soft outline-bg-card ${i === 0 ? "ml-0" : "-ml-2"} size-5.5 border outline-2`}
               >
                 <AvatarFallback className="text-ob-accent bg-transparent font-mono text-[9px] font-medium">
                   {getInitials(author)}
@@ -88,7 +88,7 @@ export function FeaturedGuideStats({
           className="text-fg-faint inline-flex items-center text-[10px]"
           aria-hidden
         >
-          ·
+          Â·
         </span>
       )}
 

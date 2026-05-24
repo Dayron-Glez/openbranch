@@ -1,7 +1,7 @@
 import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
-import { SuggestGuideButton } from "@/components/SuggestGuideButton"
-import { Clock } from "lucide-react"
+import { SuggestGuideButton } from "@/components/docs/SuggestGuideButton"
+import { IconClock } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import {
   DocsBody,
@@ -11,9 +11,9 @@ import {
   MarkdownCopyButton,
 } from "fumadocs-ui/layouts/docs/page"
 import { notFound } from "next/navigation"
-import { getMDXComponents } from "@/components/mdx"
-import { DocsScrollReveal } from "@/components/DocsScrollReveal"
-import { SectionCards } from "@/components/SectionCards"
+import { getMDXComponents } from "@/components/docs/mdx"
+import { DocsScrollReveal } from "@/components/docs/DocsScrollReveal"
+import { SectionCards } from "@/components/docs/SectionCards"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
@@ -53,7 +53,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
             variant="outline"
             className="bg-accent-soft text-ob-accent gap-1.5 border-transparent font-mono"
           >
-            <Clock className="size-3" />
+            <IconClock className="size-3" />
             {formatReadingTime(readingMinutes, lang)}
           </Badge>
         )}

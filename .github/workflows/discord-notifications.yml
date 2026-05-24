@@ -1,0 +1,59 @@
+name: Discord Notifications
+
+on:
+  issues:
+    types: [opened, closed]
+  pull_request:
+    types: [opened, closed, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Discord notification
+        env:
+          WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_ACTION: ${{ github.event.action }}
+          EVENT_ACTOR: ${{ github.actor }}
+
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+
+        run: |
+          set -e
+
+          if [ "$EVENT_NAME" = "issues" ]; then
+            TITLE="$ISSUE_TITLE"
+            URL="$ISSUE_URL"
+            TYPE="Issue"
+            EMOJI="🐛"
+            ACTION="$EVENT_ACTION"
+          else
+            TITLE="$PR_TITLE"
+            URL="$PR_URL"
+
+            if [ "$PR_MERGED" = "true" ]; then
+              TYPE="Pull Request Merged"
+              EMOJI="🎉"
+              ACTION="merged"
+            else
+              TYPE="Pull Request"
+              EMOJI="🔁"
+              ACTION="$EVENT_ACTION"
+            fi
+          fi
+
+          CONTENT="$EMOJI **$TYPE $ACTION** in OpenBranch | $TITLE | By: $EVENT_ACTOR | $URL"
+
+          PAYLOAD=$(jq -n --arg content "$CONTENT" '{content: $content}')
+
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d "$PAYLOAD" \
+            "$WEBHOOK_URL"

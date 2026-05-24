@@ -1,13 +1,13 @@
 import type { ReactNode } from "react"
-import { Nav } from "@/components/Nav"
-import { Hero } from "@/components/Hero"
-import { TopicCard } from "@/components/TopicCard"
-import { FeaturedGuide } from "@/components/FeaturedGuide"
-import { ValueProp } from "@/components/ValueProp"
-import { CommunityCTA } from "@/components/CommunityCTA"
-import { Footer } from "@/components/Footer"
-import { ScrollReveal } from "@/components/ScrollReveal"
-import { AmbientBackground } from "@/components/AmbientBackground"
+import { Nav } from "@/components/nav/Nav"
+import { Hero } from "@/components/home/Hero"
+import { TopicCard } from "@/components/home/TopicCard"
+import { FeaturedGuide } from "@/components/home/FeaturedGuide"
+import { ValueProp } from "@/components/home/ValueProp"
+import { CommunityCTA } from "@/components/home/CommunityCTA"
+import { Footer } from "@/components/shared/Footer"
+import { ScrollReveal } from "@/components/shared/ScrollReveal"
+import { AmbientBackground } from "@/components/home/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
 import { i18n } from "@/lib/i18n"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
@@ -78,7 +78,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
       <ScrollReveal />
       <AmbientBackground />
       <Nav dict={dict.nav} lang={lang} />
-      <main className="relative z-[1] mx-auto grid max-w-[1100px] gap-[100px] px-8 pb-[100px] max-[520px]:px-5">
+      <main className="relative z-1 mx-auto grid max-w-275 gap-25 px-8 pb-25 max-[520px]:px-5">
         <Hero dict={dict.hero} lang={lang} />
 
         <section className={sectionClass} id="topics">

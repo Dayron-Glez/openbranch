@@ -1,5 +1,5 @@
-import Link from "next/link"
-import { LogoMark } from "@/components/LogoMark"
+﻿import Link from "next/link"
+import { LogoMark } from "@/components/shared/LogoMark"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Separator } from "@/components/ui/separator"
@@ -18,14 +18,14 @@ export function Footer({ dict, lang }: FooterProps) {
   const homeHref = lang === "en" ? "/en" : "/"
   return (
     <footer
-      className="scroll-reveal border-line mx-auto max-w-[1200px] border-t px-8 pt-14 pb-9 max-[520px]:px-5"
+      className="scroll-reveal border-line mx-auto max-w-300 border-t px-8 pt-14 pb-9 max-[520px]:px-5"
       data-scroll-reveal
     >
       <div className="mb-14 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-12 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
         <div>
           <Link href={homeHref} className="text-fg flex items-center gap-2.5 no-underline">
             <LogoMark size={22} />
-            <span className="text-base tracking-[0]">
+            <span className="text-base tracking-normal">
               <span className="text-fg-2 font-light">open</span>
               <span className="font-semibold">branch</span>
             </span>

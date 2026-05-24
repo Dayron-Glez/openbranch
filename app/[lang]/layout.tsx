@@ -1,6 +1,6 @@
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
-import { I18nRootProvider } from "@/components/I18nRootProvider"
+import { I18nRootProvider } from "@/components/shared/I18nRootProvider"
 import { provider } from "@/lib/i18n.ui"
 import { i18n } from "@/lib/i18n"
 
