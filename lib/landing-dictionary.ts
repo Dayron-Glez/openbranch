@@ -1,10 +1,18 @@
 export type Lang = "es" | "en"
 
+export type HeroStatItem = {
+  readonly label: string
+  readonly value: string
+  readonly unit?: string
+  readonly subAccent?: string
+  readonly subText: string
+}
+
 export type HeroStatsLabels = {
-  readonly guides: string
-  readonly contributors: string
-  readonly stars: string
-  readonly locales: string
+  readonly license: HeroStatItem
+  readonly compatibility: HeroStatItem
+  readonly guides: HeroStatItem
+  readonly contributors: HeroStatItem
 }
 
 export type TopicItem = {
@@ -111,10 +119,25 @@ const es: LandingDict = {
     cta: "Leer el manual",
     replayAria: "Repetir la animación del logo de openbranch",
     stats: {
-      guides: "Guías y recetas",
-      contributors: "Contribuidores",
-      stars: "Estrellas en GitHub",
-      locales: "Idiomas traducidos",
+      license: { label: "Licencia", value: "MIT", subText: "libre y abierto, para siempre" },
+      compatibility: {
+        label: "Compatibilidad",
+        value: "Cualquier stack",
+        subText: "independiente del lenguaje",
+      },
+      guides: {
+        label: "Guías activas",
+        value: "",
+        unit: "+",
+        subAccent: "nuevas",
+        subText: " cada semana",
+      },
+      contributors: {
+        label: "Colaboradores",
+        value: "Open",
+        subAccent: "sé el #2",
+        subText: " · únete pronto →",
+      },
     },
   },
   sections: {
@@ -285,10 +308,25 @@ const en: LandingDict = {
     cta: "Read the handbook",
     replayAria: "Replay openbranch logo animation",
     stats: {
-      guides: "Guides & recipes",
-      contributors: "Contributors",
-      stars: "GitHub stars",
-      locales: "Languages translated",
+      license: { label: "License", value: "MIT", subText: "free & open, forever" },
+      compatibility: {
+        label: "Compatibility",
+        value: "Any stack",
+        subText: "language-agnostic",
+      },
+      guides: {
+        label: "Guides live",
+        value: "",
+        unit: "+",
+        subAccent: "new",
+        subText: " ones every week",
+      },
+      contributors: {
+        label: "Contributors",
+        value: "Open",
+        subAccent: "be #2",
+        subText: " · join early →",
+      },
     },
   },
   sections: {

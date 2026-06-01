@@ -16,10 +16,9 @@ type HeroProps = {
   readonly dict: LandingDict["hero"]
   readonly lang: string
   readonly guideCount: number
-  readonly localeCount: number
 }
 
-export function Hero({ dict, lang, guideCount, localeCount }: HeroProps) {
+export function Hero({ dict, lang, guideCount }: HeroProps) {
   const PHRASES = dict.phrases
   const [logoRun, setLogoRun] = useState(0)
   const [phraseIdx, setPhraseIdx] = useState(0)
@@ -118,7 +117,7 @@ export function Hero({ dict, lang, guideCount, localeCount }: HeroProps) {
         <HeroTerminal step={step} cmd1Chars={cmd1Chars} cmd2Chars={cmd2Chars} />
       </div>
 
-      <HeroStats labels={dict.stats} guideCount={guideCount} localeCount={localeCount} />
+      <HeroStats labels={dict.stats} guideCount={guideCount} />
     </section>
   )
 }

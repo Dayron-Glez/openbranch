@@ -1,54 +1,51 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { IconBulb, IconFork, IconStar, IconGlobe } from "@/icons"
+import { IconBulb, IconFork, IconGlobe, IconStar } from "@/icons"
 import type { HeroStatsLabels } from "@/lib/landing-dictionary"
-import { fetchGitHubStars, fetchGitHubContributors } from "@/lib/github-stars"
-import { GH_REPO } from "@/lib/constants"
 
 type HeroStatsProps = {
   readonly labels: HeroStatsLabels
   readonly guideCount: number
-  readonly localeCount: number
 }
 
-export function HeroStats({ labels, guideCount, localeCount }: HeroStatsProps) {
-  const [stars, setStars] = useState<string | null>(null)
-  const [contributors, setContributors] = useState<string | null>(null)
+const ICONS = {
+  license: <IconStar />,
+  compatibility: <IconGlobe />,
+  guides: <IconBulb />,
+  contributors: <IconFork />,
+} as const
 
-  useEffect(() => {
-    fetchGitHubStars(GH_REPO)
-      .then(setStars)
-      .catch(() => null)
-    fetchGitHubContributors(GH_REPO)
-      .then(setContributors)
-      .catch(() => null)
-  }, [])
-
-  const items = [
-    { icon: <IconBulb />, value: String(guideCount), unit: "+", label: labels.guides },
-    { icon: <IconFork />, value: contributors, unit: null, label: labels.contributors },
-    { icon: <IconStar />, value: stars, unit: null, label: labels.stars },
-    { icon: <IconGlobe />, value: String(localeCount), unit: null, label: labels.locales },
-  ] as const
+export function HeroStats({ labels, guideCount }: HeroStatsProps) {
+  const items = (["license", "compatibility", "guides", "contributors"] as const).map((key) => ({
+    key,
+    icon: ICONS[key],
+    ...labels[key],
+    value: key === "guides" ? String(guideCount) : labels[key].value,
+  }))
 
   return (
     <div className="mt-12 grid grid-cols-4 gap-3 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
-      {items.map(({ icon, value, unit, label }) => (
+      {items.map(({ key, icon, label, value, unit, subAccent, subText }) => (
         <div
-          key={label}
-          className="border-line bg-bg-card flex flex-col gap-4 rounded-(--r-12) border px-6 py-5"
+          key={key}
+          className="border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-4 rounded-(--r-12) border px-[22px] py-5 transition-colors"
         >
-          <span className="text-ob-accent [&_svg]:size-[18px]">{icon}</span>
-          <div>
-            <div className="text-[28px] leading-none font-medium tracking-normal">
-              {value ?? <span className="text-fg-muted text-[22px]">—</span>}
-              {unit && value && (
-                <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>
+          <div className="text-ob-accent flex items-center gap-2 [&_svg]:size-[15px]">
+            {icon}
+            <span className="text-fg-muted font-mono text-[10.5px] tracking-[0.07em] uppercase">
+              {label}
+            </span>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <div className="text-[27px] leading-[1.05] font-medium tracking-[-0.02em]">
+              {value}
+              {"unit" in labels[key] && unit && (
+                <span className="text-fg-muted ml-px text-lg font-normal">{unit}</span>
               )}
             </div>
-            <div className="text-fg-muted mt-2 font-mono text-[11px] tracking-[0.06em] uppercase">
-              {label}
+            <div className="text-fg-muted font-mono text-[11px]">
+              {subAccent && <span className="text-ob-accent">{subAccent}</span>}
+              {subText}
             </div>
           </div>
         </div>

@@ -52,9 +52,8 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
   const { lang } = await params
   const dict = getLandingDict(lang)
 
-  // Build-time stats — computed from the real content
+  // Guide count — computed at build time from real content
   const guideCount = source.getPages(lang).length
-  const localeCount = i18n.languages.length
 
   const pick = await getWeeklyPick(lang)
 
@@ -84,7 +83,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
       <AmbientBackground />
       <Nav dict={dict.nav} lang={lang} />
       <main className="relative z-1 mx-auto grid max-w-275 gap-25 px-8 pb-25 max-[520px]:px-5">
-        <Hero dict={dict.hero} lang={lang} guideCount={guideCount} localeCount={localeCount} />
+        <Hero dict={dict.hero} lang={lang} guideCount={guideCount} />
 
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>
