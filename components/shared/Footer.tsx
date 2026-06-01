@@ -59,29 +59,17 @@ export function Footer({ dict, lang }: FooterProps) {
       </div>
       <Separator className="border-line mb-6" />
       <div className="text-fg-muted flex items-center justify-between font-mono text-[11px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
-        <span>{dict.legal}</span>
-        <div className="flex gap-3">
-          <a
-            href="https://github.com/Dayron-Glez/openbranch"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-fg-muted hover:text-fg no-underline"
-          >
-            GitHub
-          </a>
-          <Link
-            href={localizedHref(lang, "/docs")}
-            className="text-fg-muted hover:text-fg no-underline"
-          >
-            {dict.rss}
-          </Link>
-          <Link
-            href={localizedHref(lang, "/docs")}
-            className="text-fg-muted hover:text-fg no-underline"
-          >
-            {dict.status}
-          </Link>
-        </div>
+        <span>
+          {dict.legal} · {new Date().getFullYear()}
+        </span>
+        <a
+          href="https://github.com/Dayron-Glez/openbranch"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-fg-muted hover:text-fg no-underline"
+        >
+          GitHub
+        </a>
       </div>
     </footer>
   )

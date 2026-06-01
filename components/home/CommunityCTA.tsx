@@ -1,13 +1,31 @@
-﻿import { IconPR, IconGithub, IconArrowRight } from "@/icons"
+"use client"
+
+import { useState, useEffect } from "react"
+import { IconPR, IconGithub, IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { fetchGitHubContributors, fetchGitHubContributorAvatars } from "@/lib/github-stars"
+import type { ContributorAvatar } from "@/lib/github-stars"
+import { GH_REPO, GH_URL } from "@/lib/constants"
 
 type CommunityCTAProps = {
   readonly dict: LandingDict["community"]
 }
 
 export function CommunityCTA({ dict }: CommunityCTAProps) {
+  const [count, setCount] = useState<string | null>(null)
+  const [avatars, setAvatars] = useState<ContributorAvatar[]>([])
+
+  useEffect(() => {
+    fetchGitHubContributors(GH_REPO)
+      .then(setCount)
+      .catch(() => null)
+    fetchGitHubContributorAvatars(GH_REPO, 8)
+      .then(setAvatars)
+      .catch(() => [])
+  }, [])
+
   return (
     <section className="scroll-reveal" data-scroll-reveal>
       <div
@@ -28,50 +46,44 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
         </p>
         <div className="relative flex flex-wrap justify-center gap-2.5">
           <Button asChild variant="accent" className="group no-underline">
-            <a
-              href="https://github.com/Dayron-Glez/openbranch"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={GH_URL} target="_blank" rel="noopener noreferrer">
               <IconPR />
               {dict.ctaPrimary}
               <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
             </a>
           </Button>
           <Button asChild variant="outline" className="no-underline">
-            <a
-              href="https://github.com/Dayron-Glez/openbranch"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={GH_URL} target="_blank" rel="noopener noreferrer">
               <IconGithub />
               {dict.ctaSecondary}
             </a>
           </Button>
         </div>
 
-        <div className="relative mt-10 flex flex-col items-center gap-3.5">
-          <span className="text-fg-muted font-mono text-[11px] tracking-[0.06em] uppercase">
-            {dict.contributors}
-          </span>
-          <div className="inline-flex">
-            {["AK", "JM", "SP", "RN", "TY", "DL", "MV", "CH"].map((initials, index) => (
-              <Avatar
-                key={initials}
-                className={`border-line-2 outline-bg-card size-8 border outline-2 ${index === 0 ? "ml-0" : "-ml-2"}`}
-              >
-                <AvatarFallback className="bg-bg-elev text-fg-2 font-mono text-[11px]">
-                  {initials}
-                </AvatarFallback>
-              </Avatar>
-            ))}
-            <Avatar className="outline-bg-card -ml-2 size-8 border border-transparent outline-2">
-              <AvatarFallback className="bg-accent-soft text-ob-accent font-mono text-[11px]">
-                +2.4k
-              </AvatarFallback>
-            </Avatar>
+        {(avatars.length > 0 || count !== null) && (
+          <div className="relative mt-10 flex flex-col items-center gap-3.5">
+            {count !== null && (
+              <span className="text-fg-muted font-mono text-[11px] tracking-[0.06em] uppercase">
+                {count} {dict.contributors}
+              </span>
+            )}
+            {avatars.length > 0 && (
+              <div className="inline-flex">
+                {avatars.map((contributor, index) => (
+                  <Avatar
+                    key={contributor.login}
+                    className={`border-line-2 outline-bg-card size-8 border outline-2 ${index === 0 ? "ml-0" : "-ml-2"}`}
+                  >
+                    <AvatarImage src={contributor.avatarUrl} alt={contributor.login} />
+                    <AvatarFallback className="bg-bg-elev text-fg-2 font-mono text-[11px]">
+                      {contributor.login.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </section>
   )
