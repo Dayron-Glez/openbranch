@@ -10,18 +10,24 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
 import { useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
 import { useHeroAnimation } from "@/lib/hooks/use-hero-animation"
+import { fetchGitHubStars, fetchGitHubContributors } from "@/lib/github-stars"
+import { GH_REPO } from "@/lib/constants"
 
 type HeroProps = {
   readonly dict: LandingDict["hero"]
   readonly lang: string
+  readonly guideCount: number
+  readonly localeCount: number
 }
 
-export function Hero({ dict, lang }: HeroProps) {
+export function Hero({ dict, lang, guideCount, localeCount }: HeroProps) {
   const PHRASES = dict.phrases
   const [logoRun, setLogoRun] = useState(0)
   const [phraseIdx, setPhraseIdx] = useState(0)
   const [displayed, setDisplayed] = useState("")
   const [phase, setPhase] = useState<"typing" | "waiting" | "deleting">("typing")
+  const [stars, setStars] = useState<string | null>(null)
+  const [contributors, setContributors] = useState<string | null>(null)
 
   const markRef = useRef<HTMLDivElement>(null)
   const wordRefs = useRef<HTMLSpanElement[]>([])
@@ -30,6 +36,15 @@ export function Hero({ dict, lang }: HeroProps) {
   const terminalRef = useRef<HTMLDivElement>(null)
 
   useHeroAnimation(markRef, wordRefs, copyRef, actionsRef, terminalRef)
+
+  useEffect(() => {
+    fetchGitHubStars(GH_REPO)
+      .then(setStars)
+      .catch(() => null)
+    fetchGitHubContributors(GH_REPO)
+      .then(setContributors)
+      .catch(() => null)
+  }, [])
 
   const titleWords = dict.titleLead.split(" ")
   const { step, cmd1Chars, cmd2Chars } = useTerminalAnimation()
@@ -117,14 +132,23 @@ export function Hero({ dict, lang }: HeroProps) {
       </div>
 
       <div className="border-line mt-12 grid grid-cols-4 border-y py-6 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
-        {dict.stats.map(({ n, unit, label }, i) => (
+        {(
+          [
+            { value: String(guideCount), unit: "+", label: dict.stats.guides },
+            { value: contributors, unit: null, label: dict.stats.contributors },
+            { value: stars, unit: null, label: dict.stats.stars },
+            { value: String(localeCount), unit: null, label: dict.stats.locales },
+          ] as const
+        ).map(({ value, unit, label }, i) => (
           <div
             key={label}
             className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
           >
             <div className="text-[28px] font-medium tracking-normal">
-              {n}
-              {unit && <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>}
+              {value ?? <span className="text-fg-muted text-[22px]">—</span>}
+              {unit && value && (
+                <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>
+              )}
             </div>
             <div className="text-fg-muted mt-1 font-mono text-[11px] tracking-[0.06em] uppercase">
               {label}

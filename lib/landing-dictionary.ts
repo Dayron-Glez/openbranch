@@ -1,9 +1,10 @@
 export type Lang = "es" | "en"
 
-export type StatItem = {
-  readonly n: string
-  readonly unit: string
-  readonly label: string
+export type HeroStatsLabels = {
+  readonly guides: string
+  readonly contributors: string
+  readonly stars: string
+  readonly locales: string
 }
 
 export type TopicItem = {
@@ -46,7 +47,7 @@ export type LandingDict = {
     readonly subtitle: string
     readonly cta: string
     readonly replayAria: string
-    readonly stats: ReadonlyArray<StatItem>
+    readonly stats: HeroStatsLabels
   }
   readonly sections: {
     readonly topicsEyebrow: string
@@ -109,12 +110,12 @@ const es: LandingDict = {
     subtitle: "Un manual comunitario sobre cómo los equipos reales entregan software.",
     cta: "Leer el manual",
     replayAria: "Repetir la animación del logo de openbranch",
-    stats: [
-      { n: "128", unit: "+", label: "Guías y recetas" },
-      { n: "2.400", unit: "", label: "Contribuidores" },
-      { n: "12,4", unit: "k", label: "Estrellas en GitHub" },
-      { n: "47", unit: "", label: "Idiomas traducidos" },
-    ],
+    stats: {
+      guides: "Guías y recetas",
+      contributors: "Contribuidores",
+      stars: "Estrellas en GitHub",
+      locales: "Idiomas traducidos",
+    },
   },
   sections: {
     topicsEyebrow: "Lo que encontrarás",
@@ -283,12 +284,12 @@ const en: LandingDict = {
     subtitle: "A community handbook on how real teams actually ship software.",
     cta: "Read the handbook",
     replayAria: "Replay openbranch logo animation",
-    stats: [
-      { n: "128", unit: "+", label: "Guides & recipes" },
-      { n: "2,400", unit: "", label: "Contributors" },
-      { n: "12.4", unit: "k", label: "GitHub stars" },
-      { n: "47", unit: "", label: "Languages translated" },
-    ],
+    stats: {
+      guides: "Guides & recipes",
+      contributors: "Contributors",
+      stars: "GitHub stars",
+      locales: "Languages translated",
+    },
   },
   sections: {
     topicsEyebrow: "What you'll find",
