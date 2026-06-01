@@ -10,6 +10,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal"
 import { AmbientBackground } from "@/components/home/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
 import { i18n } from "@/lib/i18n"
+import { source } from "@/lib/source"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
@@ -51,6 +52,9 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
   const { lang } = await params
   const dict = getLandingDict(lang)
 
+  // Guide count — computed at build time from real content
+  const guideCount = source.getPages(lang).length
+
   const pick = await getWeeklyPick(lang)
 
   const authorsDisplay = pick ? buildAuthorsDisplay(pick.authors, lang) : ""
@@ -79,7 +83,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
       <AmbientBackground />
       <Nav dict={dict.nav} lang={lang} />
       <main className="relative z-1 mx-auto grid max-w-275 gap-25 px-8 pb-25 max-[520px]:px-5">
-        <Hero dict={dict.hero} lang={lang} />
+        <Hero dict={dict.hero} lang={lang} guideCount={guideCount} />
 
         <section className={sectionClass} id="topics">
           <div className={`${sectionHeadClass} scroll-reveal`} data-scroll-reveal>

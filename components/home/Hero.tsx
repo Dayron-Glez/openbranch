@@ -10,19 +10,20 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
 import { useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
 import { useHeroAnimation } from "@/lib/hooks/use-hero-animation"
+import { HeroStats } from "@/components/home/HeroStats"
 
 type HeroProps = {
   readonly dict: LandingDict["hero"]
   readonly lang: string
+  readonly guideCount: number
 }
 
-export function Hero({ dict, lang }: HeroProps) {
+export function Hero({ dict, lang, guideCount }: HeroProps) {
   const PHRASES = dict.phrases
   const [logoRun, setLogoRun] = useState(0)
   const [phraseIdx, setPhraseIdx] = useState(0)
   const [displayed, setDisplayed] = useState("")
   const [phase, setPhase] = useState<"typing" | "waiting" | "deleting">("typing")
-
   const markRef = useRef<HTMLDivElement>(null)
   const wordRefs = useRef<HTMLSpanElement[]>([])
   const copyRef = useRef<HTMLParagraphElement>(null)
@@ -116,22 +117,7 @@ export function Hero({ dict, lang }: HeroProps) {
         <HeroTerminal step={step} cmd1Chars={cmd1Chars} cmd2Chars={cmd2Chars} />
       </div>
 
-      <div className="border-line mt-12 grid grid-cols-4 border-y py-6 max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
-        {dict.stats.map(({ n, unit, label }, i) => (
-          <div
-            key={label}
-            className={`border-line px-6 py-2 max-[980px]:py-4 ${i < 3 ? "border-r" : ""} ${i === 1 ? "max-[980px]:border-r-0" : ""} ${i < 2 ? "max-[980px]:border-b max-[980px]:pb-4" : ""} max-[520px]:border-r-0 max-[520px]:border-b max-[520px]:last:border-b-0`}
-          >
-            <div className="text-[28px] font-medium tracking-normal">
-              {n}
-              {unit && <span className="text-fg-muted ml-0.5 text-base font-normal">{unit}</span>}
-            </div>
-            <div className="text-fg-muted mt-1 font-mono text-[11px] tracking-[0.06em] uppercase">
-              {label}
-            </div>
-          </div>
-        ))}
-      </div>
+      <HeroStats labels={dict.stats} guideCount={guideCount} />
     </section>
   )
 }

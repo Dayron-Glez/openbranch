@@ -1,9 +1,18 @@
 export type Lang = "es" | "en"
 
-export type StatItem = {
-  readonly n: string
-  readonly unit: string
+export type HeroStatItem = {
   readonly label: string
+  readonly value: string
+  readonly unit?: string
+  readonly subAccent?: string
+  readonly subText: string
+}
+
+export type HeroStatsLabels = {
+  readonly license: HeroStatItem
+  readonly compatibility: HeroStatItem
+  readonly guides: HeroStatItem
+  readonly contributors: HeroStatItem
 }
 
 export type TopicItem = {
@@ -46,7 +55,7 @@ export type LandingDict = {
     readonly subtitle: string
     readonly cta: string
     readonly replayAria: string
-    readonly stats: ReadonlyArray<StatItem>
+    readonly stats: HeroStatsLabels
   }
   readonly sections: {
     readonly topicsEyebrow: string
@@ -109,12 +118,27 @@ const es: LandingDict = {
     subtitle: "Un manual comunitario sobre cómo los equipos reales entregan software.",
     cta: "Leer el manual",
     replayAria: "Repetir la animación del logo de openbranch",
-    stats: [
-      { n: "128", unit: "+", label: "Guías y recetas" },
-      { n: "2.400", unit: "", label: "Contribuidores" },
-      { n: "12,4", unit: "k", label: "Estrellas en GitHub" },
-      { n: "47", unit: "", label: "Idiomas traducidos" },
-    ],
+    stats: {
+      license: { label: "Licencia", value: "MIT", subText: "libre y abierto, para siempre" },
+      compatibility: {
+        label: "Compatibilidad",
+        value: "Cualquier stack",
+        subText: "independiente del lenguaje",
+      },
+      guides: {
+        label: "Guías activas",
+        value: "",
+        unit: "+",
+        subAccent: "nuevas",
+        subText: " cada semana",
+      },
+      contributors: {
+        label: "Colaboradores",
+        value: "Open",
+        subAccent: "sé el #2",
+        subText: " · únete pronto →",
+      },
+    },
   },
   sections: {
     topicsEyebrow: "Lo que encontrarás",
@@ -283,12 +307,27 @@ const en: LandingDict = {
     subtitle: "A community handbook on how real teams actually ship software.",
     cta: "Read the handbook",
     replayAria: "Replay openbranch logo animation",
-    stats: [
-      { n: "128", unit: "+", label: "Guides & recipes" },
-      { n: "2,400", unit: "", label: "Contributors" },
-      { n: "12.4", unit: "k", label: "GitHub stars" },
-      { n: "47", unit: "", label: "Languages translated" },
-    ],
+    stats: {
+      license: { label: "License", value: "MIT", subText: "free & open, forever" },
+      compatibility: {
+        label: "Compatibility",
+        value: "Any stack",
+        subText: "language-agnostic",
+      },
+      guides: {
+        label: "Guides live",
+        value: "",
+        unit: "+",
+        subAccent: "new",
+        subText: " ones every week",
+      },
+      contributors: {
+        label: "Contributors",
+        value: "Open",
+        subAccent: "be #2",
+        subText: " · join early →",
+      },
+    },
   },
   sections: {
     topicsEyebrow: "What you'll find",
