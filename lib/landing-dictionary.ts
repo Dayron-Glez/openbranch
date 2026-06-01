@@ -246,16 +246,7 @@ const es: LandingDict = {
       },
       {
         title: "Comunidad",
-        links: [
-          { label: "Contribuidores", href: `${GH}/graphs/contributors`, external: true },
-          { label: "Discusiones", href: `${GH}/discussions`, external: true },
-          { label: "Proceso RFC", href: `${GH}/discussions`, external: true },
-          {
-            label: "Código de conducta",
-            href: `${GH}/blob/main/CODE_OF_CONDUCT.md`,
-            external: true,
-          },
-        ],
+        links: [{ label: "Contribuidores", href: `${GH}/graphs/contributors`, external: true }],
       },
       {
         title: "Recursos",
@@ -427,12 +418,7 @@ const en: LandingDict = {
       },
       {
         title: "Community",
-        links: [
-          { label: "Contributors", href: `${GH}/graphs/contributors`, external: true },
-          { label: "Discussions", href: `${GH}/discussions`, external: true },
-          { label: "RFC process", href: `${GH}/discussions`, external: true },
-          { label: "Code of conduct", href: `${GH}/blob/main/CODE_OF_CONDUCT.md`, external: true },
-        ],
+        links: [{ label: "Contributors", href: `${GH}/graphs/contributors`, external: true }],
       },
       {
         title: "Resources",
