@@ -88,8 +88,6 @@ export type LandingDict = {
     readonly tagline: string
     readonly columns: ReadonlyArray<FooterColumn>
     readonly legal: string
-    readonly rss: string
-    readonly status: string
   }
 }
 
@@ -231,7 +229,7 @@ const es: LandingDict = {
     body: "¿Encontraste un patrón que funcionó? ¿No estás de acuerdo con una guía? Abre un pull request, cuenta tu historia o solo añade una frase - así como trabajamos es como crece la documentación.",
     ctaPrimary: "Abre tu primer PR",
     ctaSecondary: "Explora el repo",
-    contributors: "2.400+ contribuidores · últimos 30 días",
+    contributors: "contribuidores",
   },
   footer: {
     tagline:
@@ -242,45 +240,34 @@ const es: LandingDict = {
         links: [
           { label: "Ramas", href: "/docs/git", external: false },
           { label: "Pruebas", href: "/docs/testing", external: false },
-          { label: "Revisiones", href: "/docs/contributing", external: false },
-          { label: "Releases", href: "/docs/best-practices", external: false },
+          { label: "Revisiones", href: "/docs/pull-requests", external: false },
+          { label: "Releases", href: "/docs/releases", external: false },
         ],
       },
       {
         title: "Comunidad",
         links: [
           { label: "Contribuidores", href: `${GH}/graphs/contributors`, external: true },
-          { label: "Discusiones", href: `${GH}/discussions`, external: true },
-          { label: "Proceso RFC", href: `${GH}/discussions`, external: true },
           {
-            label: "Código de conducta",
-            href: `${GH}/blob/main/CODE_OF_CONDUCT.md`,
+            label: "Discord",
+            href: "https://discord.com/channels/1505714245092769864/1507974664511553608",
             external: true,
           },
         ],
       },
       {
         title: "Recursos",
-        links: [
-          { label: "Changelog", href: `${GH}/releases`, external: true },
-          { label: "Guía de estilo", href: "/docs", external: false },
-          { label: "Traducciones", href: "/docs", external: false },
-          { label: "Recursos de marca", href: "/docs", external: false },
-        ],
+        links: [{ label: "Changelog", href: `${GH}/releases`, external: true }],
       },
       {
         title: "Acerca de",
         links: [
-          { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
+          { label: "Maintainers", href: `${GH}/blob/main/CONTRIBUTING.md`, external: true },
           { label: "Licencia · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
-          { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
-          { label: "Press kit", href: "/docs", external: false },
         ],
       },
     ],
-    legal: "openbranch · v1.4 · construido por 2.400+ contribuidores",
-    rss: "RSS",
-    status: "Estado",
+    legal: "openbranch",
   },
 }
 
@@ -420,7 +407,7 @@ const en: LandingDict = {
     body: "Found a pattern that worked? Disagree with an existing guide? Open a pull request, write up your story, or just add a sentence - the way we work is the way the docs grow.",
     ctaPrimary: "Open your first PR",
     ctaSecondary: "Browse the repo",
-    contributors: "2,400+ contributors · last 30 days",
+    contributors: "contributors",
   },
   footer: {
     tagline:
@@ -431,41 +418,34 @@ const en: LandingDict = {
         links: [
           { label: "Branching", href: "/docs/git", external: false },
           { label: "Testing", href: "/docs/testing", external: false },
-          { label: "Reviews", href: "/docs/contributing", external: false },
-          { label: "Releases", href: "/docs/best-practices", external: false },
+          { label: "Reviews", href: "/docs/pull-requests", external: false },
+          { label: "Releases", href: "/docs/releases", external: false },
         ],
       },
       {
         title: "Community",
         links: [
           { label: "Contributors", href: `${GH}/graphs/contributors`, external: true },
-          { label: "Discussions", href: `${GH}/discussions`, external: true },
-          { label: "RFC process", href: `${GH}/discussions`, external: true },
-          { label: "Code of conduct", href: `${GH}/blob/main/CODE_OF_CONDUCT.md`, external: true },
+          {
+            label: "Discord",
+            href: "https://discord.com/channels/1505714245092769864/1507974664511553608",
+            external: true,
+          },
         ],
       },
       {
         title: "Resources",
-        links: [
-          { label: "Changelog", href: `${GH}/releases`, external: true },
-          { label: "Style guide", href: "/docs", external: false },
-          { label: "Translations", href: "/docs", external: false },
-          { label: "Brand assets", href: "/docs", external: false },
-        ],
+        links: [{ label: "Changelog", href: `${GH}/releases`, external: true }],
       },
       {
         title: "About",
         links: [
-          { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
+          { label: "Maintainers", href: `${GH}/blob/main/CONTRIBUTING.md`, external: true },
           { label: "License · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
-          { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
-          { label: "Press kit", href: "/docs", external: false },
         ],
       },
     ],
-    legal: "openbranch · v1.4 · built by 2,400+ contributors",
-    rss: "RSS",
-    status: "Status",
+    legal: "openbranch",
   },
 }
 

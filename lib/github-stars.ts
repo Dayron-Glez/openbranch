@@ -1,22 +1,27 @@
 const GH_STARS_CACHE_TTL = 60 * 60 * 1000
 
+export type ContributorAvatar = {
+  readonly login: string
+  readonly avatarUrl: string
+}
+
 function formatCount(count: number): string {
   if (count >= 1000) return `${(count / 1000).toFixed(1)}k`
   return String(count)
 }
 
-function getCached(key: string): string | null {
+function getCached<T = string>(key: string): T | null {
   try {
     const raw = sessionStorage.getItem(key)
     if (!raw) return null
-    const { value, ts } = JSON.parse(raw) as { value: string; ts: number }
+    const { value, ts } = JSON.parse(raw) as { value: T; ts: number }
     return Date.now() - ts < GH_STARS_CACHE_TTL ? value : null
   } catch {
     return null
   }
 }
 
-function setCached(key: string, value: string): void {
+function setCached<T = string>(key: string, value: T): void {
   try {
     sessionStorage.setItem(key, JSON.stringify({ value, ts: Date.now() }))
   } catch {
@@ -40,6 +45,31 @@ export async function fetchGitHubStars(repo: string): Promise<string | null> {
     return value
   } catch {
     return null
+  }
+}
+
+export async function fetchGitHubContributorAvatars(
+  repo: string,
+  limit = 8
+): Promise<ContributorAvatar[]> {
+  const key = `gh_avatars_${repo}`
+  const cached = getCached<ContributorAvatar[]>(key)
+  if (cached) return cached
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${repo}/contributors?per_page=${limit}&anon=0`,
+      { headers: { Accept: "application/vnd.github+json" } }
+    )
+    if (!res.ok) return []
+    const data = (await res.json()) as { login: string; avatar_url: string }[]
+    const value: ContributorAvatar[] = data
+      .slice(0, limit)
+      .map(({ login, avatar_url }) => ({ login, avatarUrl: avatar_url }))
+    setCached(key, value)
+    return value
+  } catch {
+    return []
   }
 }
 
