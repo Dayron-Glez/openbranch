@@ -10,18 +10,7 @@ function formatCount(count: number): string {
   return String(count)
 }
 
-function getCached(key: string): string | null {
-  try {
-    const raw = sessionStorage.getItem(key)
-    if (!raw) return null
-    const { value, ts } = JSON.parse(raw) as { value: string; ts: number }
-    return Date.now() - ts < GH_STARS_CACHE_TTL ? value : null
-  } catch {
-    return null
-  }
-}
-
-function getCachedJson<T>(key: string): T | null {
+function getCached<T = string>(key: string): T | null {
   try {
     const raw = sessionStorage.getItem(key)
     if (!raw) return null
@@ -32,15 +21,7 @@ function getCachedJson<T>(key: string): T | null {
   }
 }
 
-function setCached(key: string, value: string): void {
-  try {
-    sessionStorage.setItem(key, JSON.stringify({ value, ts: Date.now() }))
-  } catch {
-    // quota exceeded or storage unavailable
-  }
-}
-
-function setCachedJson<T>(key: string, value: T): void {
+function setCached<T = string>(key: string, value: T): void {
   try {
     sessionStorage.setItem(key, JSON.stringify({ value, ts: Date.now() }))
   } catch {
@@ -72,7 +53,7 @@ export async function fetchGitHubContributorAvatars(
   limit = 8
 ): Promise<ContributorAvatar[]> {
   const key = `gh_avatars_${repo}`
-  const cached = getCachedJson<ContributorAvatar[]>(key)
+  const cached = getCached<ContributorAvatar[]>(key)
   if (cached) return cached
 
   try {
@@ -85,7 +66,7 @@ export async function fetchGitHubContributorAvatars(
     const value: ContributorAvatar[] = data
       .slice(0, limit)
       .map(({ login, avatar_url }) => ({ login, avatarUrl: avatar_url }))
-    setCachedJson(key, value)
+    setCached(key, value)
     return value
   } catch {
     return []
