@@ -88,8 +88,6 @@ export type LandingDict = {
     readonly tagline: string
     readonly columns: ReadonlyArray<FooterColumn>
     readonly legal: string
-    readonly rss: string
-    readonly status: string
   }
 }
 
@@ -231,7 +229,7 @@ const es: LandingDict = {
     body: "¿Encontraste un patrón que funcionó? ¿No estás de acuerdo con una guía? Abre un pull request, cuenta tu historia o solo añade una frase - así como trabajamos es como crece la documentación.",
     ctaPrimary: "Abre tu primer PR",
     ctaSecondary: "Explora el repo",
-    contributors: "2.400+ contribuidores · últimos 30 días",
+    contributors: "contribuidores",
   },
   footer: {
     tagline:
@@ -242,8 +240,8 @@ const es: LandingDict = {
         links: [
           { label: "Ramas", href: "/docs/git", external: false },
           { label: "Pruebas", href: "/docs/testing", external: false },
-          { label: "Revisiones", href: "/docs/contributing", external: false },
-          { label: "Releases", href: "/docs/best-practices", external: false },
+          { label: "Revisiones", href: "/docs/pull-requests", external: false },
+          { label: "Releases", href: "/docs/releases", external: false },
         ],
       },
       {
@@ -261,12 +259,7 @@ const es: LandingDict = {
       },
       {
         title: "Recursos",
-        links: [
-          { label: "Changelog", href: `${GH}/releases`, external: true },
-          { label: "Guía de estilo", href: "/docs", external: false },
-          { label: "Traducciones", href: "/docs", external: false },
-          { label: "Recursos de marca", href: "/docs", external: false },
-        ],
+        links: [{ label: "Changelog", href: `${GH}/releases`, external: true }],
       },
       {
         title: "Acerca de",
@@ -274,13 +267,10 @@ const es: LandingDict = {
           { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
           { label: "Licencia · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
           { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
-          { label: "Press kit", href: "/docs", external: false },
         ],
       },
     ],
-    legal: "openbranch · v1.4 · construido por 2.400+ contribuidores",
-    rss: "RSS",
-    status: "Estado",
+    legal: "openbranch",
   },
 }
 
@@ -420,7 +410,7 @@ const en: LandingDict = {
     body: "Found a pattern that worked? Disagree with an existing guide? Open a pull request, write up your story, or just add a sentence - the way we work is the way the docs grow.",
     ctaPrimary: "Open your first PR",
     ctaSecondary: "Browse the repo",
-    contributors: "2,400+ contributors · last 30 days",
+    contributors: "contributors",
   },
   footer: {
     tagline:
@@ -431,8 +421,8 @@ const en: LandingDict = {
         links: [
           { label: "Branching", href: "/docs/git", external: false },
           { label: "Testing", href: "/docs/testing", external: false },
-          { label: "Reviews", href: "/docs/contributing", external: false },
-          { label: "Releases", href: "/docs/best-practices", external: false },
+          { label: "Reviews", href: "/docs/pull-requests", external: false },
+          { label: "Releases", href: "/docs/releases", external: false },
         ],
       },
       {
@@ -446,12 +436,7 @@ const en: LandingDict = {
       },
       {
         title: "Resources",
-        links: [
-          { label: "Changelog", href: `${GH}/releases`, external: true },
-          { label: "Style guide", href: "/docs", external: false },
-          { label: "Translations", href: "/docs", external: false },
-          { label: "Brand assets", href: "/docs", external: false },
-        ],
+        links: [{ label: "Changelog", href: `${GH}/releases`, external: true }],
       },
       {
         title: "About",
@@ -459,13 +444,10 @@ const en: LandingDict = {
           { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
           { label: "License · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
           { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
-          { label: "Press kit", href: "/docs", external: false },
         ],
       },
     ],
-    legal: "openbranch · v1.4 · built by 2,400+ contributors",
-    rss: "RSS",
-    status: "Status",
+    legal: "openbranch",
   },
 }
 
