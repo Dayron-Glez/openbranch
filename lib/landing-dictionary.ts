@@ -262,7 +262,7 @@ const es: LandingDict = {
       {
         title: "Acerca de",
         links: [
-          { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
+          { label: "Maintainers", href: `${GH}/blob/main/CONTRIBUTING.md`, external: true },
           { label: "Licencia · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
           { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
         ],
@@ -441,7 +441,7 @@ const en: LandingDict = {
       {
         title: "About",
         links: [
-          { label: "Maintainers", href: `${GH}/graphs/contributors`, external: true },
+          { label: "Maintainers", href: `${GH}/blob/main/CONTRIBUTING.md`, external: true },
           { label: "License · MIT", href: `${GH}/blob/main/LICENSE`, external: true },
           { label: "Sponsors", href: "https://github.com/sponsors/Dayron-Glez", external: true },
         ],
