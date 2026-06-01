@@ -246,7 +246,14 @@ const es: LandingDict = {
       },
       {
         title: "Comunidad",
-        links: [{ label: "Contribuidores", href: `${GH}/graphs/contributors`, external: true }],
+        links: [
+          { label: "Contribuidores", href: `${GH}/graphs/contributors`, external: true },
+          {
+            label: "Discord",
+            href: "https://discord.com/channels/1505714245092769864/1507974664511553608",
+            external: true,
+          },
+        ],
       },
       {
         title: "Recursos",
@@ -418,7 +425,14 @@ const en: LandingDict = {
       },
       {
         title: "Community",
-        links: [{ label: "Contributors", href: `${GH}/graphs/contributors`, external: true }],
+        links: [
+          { label: "Contributors", href: `${GH}/graphs/contributors`, external: true },
+          {
+            label: "Discord",
+            href: "https://discord.com/channels/1505714245092769864/1507974664511553608",
+            external: true,
+          },
+        ],
       },
       {
         title: "Resources",
