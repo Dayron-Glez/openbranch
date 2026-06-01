@@ -1,6 +1,7 @@
 import "./global.css"
 import "./animations.css"
 import type { Metadata } from "next"
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://openbranch.vercel.app"),
@@ -17,5 +18,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return children
+  return (
+    <>
+      {children}
+      <Analytics />
+    </>
+  )
 }
