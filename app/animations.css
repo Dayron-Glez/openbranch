@@ -128,9 +128,12 @@
 .scroll-reveal.is-visible .scroll-reveal-child,
 .scroll-reveal-stagger.is-visible > * {
   opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-  clip-path: inset(0 0);
+  /* Use none instead of zero-value equivalents — translateY(0), blur(0) and
+     inset(0 0) each create a stacking context that clips position:absolute
+     children (e.g. callout badge icons). none removes the context entirely. */
+  transform: none;
+  filter: none;
+  clip-path: none;
 }
 
 .scroll-reveal.is-visible .scroll-reveal-child,
