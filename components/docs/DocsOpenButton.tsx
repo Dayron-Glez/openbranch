@@ -6,12 +6,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "fumadocs-ui/components/
 import { ChevronDown, ExternalLinkIcon, TextIcon } from "lucide-react"
 
 interface Props {
-  pageUrl: string
-  markdownUrl?: string
-  githubUrl?: string
+  readonly pageUrl: string
+  readonly markdownUrl?: string
+  readonly githubUrl?: string
 }
 
-export function DocsOpenButton({ pageUrl, markdownUrl, githubUrl }: Props) {
+export function DocsOpenButton({ pageUrl, markdownUrl, githubUrl }: Readonly<Props>) {
   const q = `Read ${pageUrl}, I want to ask questions about it.`
 
   const items = [
