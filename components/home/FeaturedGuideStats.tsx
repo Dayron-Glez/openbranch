@@ -63,7 +63,10 @@ export function FeaturedGuideStats({
   const relativeDate = formatRelativeDate(lastModified, lang)
 
   return (
-    <div ref={ref} className="flex items-center gap-2">
+    <div
+      ref={ref}
+      className="flex flex-wrap items-center gap-2 max-[520px]:flex-col max-[520px]:items-start"
+    >
       {authors.length > 0 && (
         <span data-stat="" className="inline-flex items-center gap-2">
           <span className="inline-flex items-center">

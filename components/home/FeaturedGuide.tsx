@@ -53,7 +53,7 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
       </div>
 
       <article
-        className="text-fg-2 after:to-bg-card relative flex flex-col justify-center px-10 py-9 text-[14.5px] leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-[''] max-[520px]:px-6"
+        className="text-fg-2 after:to-bg-card relative flex flex-col justify-center px-10 py-9 text-[14.5px] leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-[''] max-[520px]:hidden"
         aria-label={dict.previewAria}
       >
         {guide.firstHeading && (
