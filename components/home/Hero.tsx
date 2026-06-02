@@ -83,7 +83,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
             </span>
           ))}
           <br />
-          <span className="text-ob-accent font-medium">
+          <span className="text-ob-accent inline-block w-full font-medium max-[520px]:min-h-[2.24em]">
             {displayed}
             <span
               aria-hidden
@@ -112,7 +112,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
 
       <div
         ref={terminalRef}
-        className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-['']"
+        className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-[''] max-[520px]:hidden"
       >
         <HeroTerminal step={step} cmd1Chars={cmd1Chars} cmd2Chars={cmd2Chars} />
       </div>
