@@ -2,7 +2,8 @@ import { docs } from "collections/server"
 import { loader } from "fumadocs-core/source"
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons"
 import { i18n } from "./i18n"
-import { docsContentRoute, docsImageRoute, docsRoute } from "./shared"
+import { docsContentRoute, docsImageRoute, docsRoute, gitConfig } from "./shared"
+import { GH_URL } from "./constants"
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
@@ -28,6 +29,10 @@ export function getPageMarkdownUrl(page: (typeof source)["$inferPage"]) {
     segments,
     url: `${docsContentRoute}/${segments.join("/")}`,
   }
+}
+
+export function getPageGitHubUrl(page: (typeof source)["$inferPage"]) {
+  return `${GH_URL}/blob/${gitConfig.branch}/content/docs/${page.path}`
 }
 
 export async function getLLMText(page: (typeof source)["$inferPage"]) {
