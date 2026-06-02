@@ -1,4 +1,5 @@
-import { getPageImage, getPageMarkdownUrl, source } from "@/lib/source"
+import { getPageImage, getPageGitHubUrl, getPageMarkdownUrl, source } from "@/lib/source"
+import { SITE_URL } from "@/lib/constants"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/components/docs/SuggestGuideButton"
 import { IconClock } from "@tabler/icons-react"
@@ -10,6 +11,7 @@ import {
   DocsTitle,
   MarkdownCopyButton,
 } from "fumadocs-ui/layouts/docs/page"
+import { DocsOpenButton } from "@/components/docs/DocsOpenButton"
 import { notFound } from "next/navigation"
 import { getMDXComponents } from "@/components/docs/mdx"
 import { DocsScrollReveal } from "@/components/docs/DocsScrollReveal"
@@ -25,6 +27,8 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
 
   const MdxContent = page.data.body
   const markdownUrl = getPageMarkdownUrl(page).url
+  const githubUrl = getPageGitHubUrl(page)
+  const pageUrl = `${SITE_URL}${page.url}`
   const isSectionPage = slug?.length === 1
 
   const tree = source.pageTree[lang]
@@ -61,6 +65,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <div className="flex flex-row items-center gap-2 border-b pb-6">
         <MarkdownCopyButton markdownUrl={markdownUrl} />
+        <DocsOpenButton pageUrl={pageUrl} markdownUrl={markdownUrl} githubUrl={githubUrl} />
         {isSectionPage && <SuggestGuideButton sectionName={page.data.title} />}
       </div>
       <DocsBody>
