@@ -1,6 +1,40 @@
 /* Left-align article within the docs main column instead of centering via mx-auto */
 article.flex {
   margin-left: 0;
+  /* Allow callout badge icons to overflow above their card boundary */
+  overflow: visible;
+}
+
+/* ── Code block copy button — mobile ─────────────────────────────────────── */
+
+/*
+ * On mobile, the copy button is re-positioned from absolute (top-right overlay)
+ * to a static top bar inside the code block, matching GitHub's mobile pattern.
+ * This prevents the button from overlapping long code lines that overflow.
+ */
+@media (max-width: 520px) {
+  figure.shiki > .absolute {
+    position: static;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.25rem 0.375rem;
+    border-bottom: 1px solid var(--color-fd-border);
+    backdrop-filter: none;
+    border-radius: 0;
+  }
+}
+
+/* ── Sidebar width ────────────────────────────────────────────────────────── */
+
+/*
+ * Override the sidebar width only on larger screens.
+ * On mobile Fumadocs collapses the sidebar automatically — setting this
+ * inline (via containerProps) would override that responsive behavior.
+ */
+@media (min-width: 768px) {
+  #nd-docs-layout {
+    --fd-sidebar-width: 268px;
+  }
 }
 
 /* ── Sidebar branding ─────────────────────────────────────────────────────── */
@@ -10,20 +44,52 @@ article.flex {
  * This colours the active item text, its background tint, and the left
  * indicator bar without touching any other fd-primary usages in the layout.
  */
+#nd-docs-layout,
 #nd-sidebar,
-#nd-toc {
+#nd-toc,
+[data-toc-popover],
+[data-toc-popover-content] {
   --color-fd-primary: var(--color-ob-accent);
 }
 
-/* ── Callout icon alignment ───────────────────────────────────────────────── */
+/* ── Callout redesign ─────────────────────────────────────────────────────── */
 
 /*
  * Fumadocs callout: flex row with [bar | icon | content].
- * The bar must stay full-height (align-items default stretch), so we
- * only nudge the icon SVG to center itself in the cross axis.
+ * Changes applied to all screen sizes:
+ *  1. Replace the internal w-0.5 bar with a coloured left border on the card.
+ *  2. Position the icon as a badge sticking out from the top-right corner.
+ *
+ * The scroll-reveal stacking context fix (transform/filter/clip-path: none
+ * instead of zero-value equivalents) in animations.css is what allows the
+ * badge to overflow without being clipped.
  */
+
+/* 1. Coloured left border — replaces the internal thin bar */
+.my-4.flex.rounded-xl.border {
+  position: relative;
+  overflow: visible;
+  border-left: 5px solid var(--callout-color);
+  /* Restore symmetric left padding now that the bar is gone */
+  padding-inline-start: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Hide the internal w-0.5 bar — replaced by the border above */
+.my-4.flex.rounded-xl.border > div[role="none"] {
+  display: none;
+}
+
+/* 2. Badge icon — superimposed at the top-right corner on all screen sizes */
 .my-4.flex.rounded-xl.border > svg {
-  align-self: center;
+  position: absolute;
+  top: -0.75rem;
+  right: 0.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-self: auto;
+  margin-top: 0;
+  z-index: 10;
 }
 
 /* ── Prose heading colours ────────────────────────────────────────────────── */
