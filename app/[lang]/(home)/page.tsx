@@ -99,7 +99,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
             </p>
           </div>
           <div
-            className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-1"
+            className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-2 max-[520px]:[grid-auto-rows:1fr]"
             data-scroll-reveal
           >
             {dict.topics.map((topic) => {

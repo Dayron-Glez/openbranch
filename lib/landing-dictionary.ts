@@ -240,8 +240,6 @@ const es: LandingDict = {
         links: [
           { label: "Ramas", href: "/docs/git", external: false },
           { label: "Pruebas", href: "/docs/testing", external: false },
-          { label: "Revisiones", href: "/docs/pull-requests", external: false },
-          { label: "Releases", href: "/docs/releases", external: false },
         ],
       },
       {

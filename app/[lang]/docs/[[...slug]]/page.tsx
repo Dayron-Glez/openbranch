@@ -50,12 +50,12 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       tableOfContentPopover={{ style: "clerk" }}
       footer={{ items: neighbours }}
     >
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-2">
         <DocsTitle className="leading-tight">{page.data.title}</DocsTitle>
         {!isSectionPage && (
           <Badge
             variant="outline"
-            className="bg-accent-soft text-ob-accent gap-1.5 border-transparent font-mono"
+            className="bg-accent-soft text-ob-accent w-fit gap-1.5 border-transparent font-mono"
           >
             <IconClock className="size-3" />
             {formatReadingTime(readingMinutes, lang)}
@@ -63,8 +63,11 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
         )}
       </div>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
-      <div className="flex flex-row items-center gap-2 border-b pb-6">
-        <MarkdownCopyButton markdownUrl={markdownUrl} />
+      <div className="flex flex-wrap items-center gap-2 border-b pb-6">
+        <MarkdownCopyButton
+          markdownUrl={markdownUrl}
+          className={isSectionPage ? "max-[520px]:hidden" : undefined}
+        />
         <DocsOpenButton pageUrl={pageUrl} markdownUrl={markdownUrl} githubUrl={githubUrl} />
         {isSectionPage && <SuggestGuideButton sectionName={page.data.title} />}
       </div>
