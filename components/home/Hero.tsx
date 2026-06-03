@@ -1,14 +1,14 @@
 ﻿"use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import Link from "next/link"
 import { LogoMark } from "@/components/shared/LogoMark"
 import { HeroTerminal } from "@/components/home/HeroTerminal"
+import { HeroPhrases } from "@/components/home/HeroPhrases"
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
-import { useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
 import { useHeroAnimation } from "@/lib/hooks/use-hero-animation"
 import { HeroStats } from "@/components/home/HeroStats"
 
@@ -19,11 +19,7 @@ type HeroProps = {
 }
 
 export function Hero({ dict, lang, guideCount }: HeroProps) {
-  const PHRASES = dict.phrases
   const [logoRun, setLogoRun] = useState(0)
-  const [phraseIdx, setPhraseIdx] = useState(0)
-  const [displayed, setDisplayed] = useState("")
-  const [phase, setPhase] = useState<"typing" | "waiting" | "deleting">("typing")
   const markRef = useRef<HTMLDivElement>(null)
   const wordRefs = useRef<HTMLSpanElement[]>([])
   const copyRef = useRef<HTMLParagraphElement>(null)
@@ -33,27 +29,6 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
   useHeroAnimation(markRef, wordRefs, copyRef, actionsRef, terminalRef)
 
   const titleWords = dict.titleLead.split(" ")
-  const { step, cmd1Chars, cmd2Chars } = useTerminalAnimation()
-
-  useEffect(() => {
-    const phrase = PHRASES[phraseIdx]
-    if (phase === "typing") {
-      if (displayed.length < phrase.length) {
-        const t = setTimeout(() => setDisplayed(phrase.slice(0, displayed.length + 1)), 65)
-        return () => clearTimeout(t)
-      }
-      const t = setTimeout(() => setPhase("deleting"), 3800)
-      return () => clearTimeout(t)
-    }
-    if (phase === "deleting") {
-      if (displayed.length > 0) {
-        const t = setTimeout(() => setDisplayed((d) => d.slice(0, -1)), 32)
-        return () => clearTimeout(t)
-      }
-      setPhraseIdx((i) => (i + 1) % PHRASES.length)
-      setPhase("typing")
-    }
-  }, [displayed, phase, phraseIdx, PHRASES])
 
   return (
     <section className="relative pt-18">
@@ -83,14 +58,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
             </span>
           ))}
           <br />
-          <span className="text-ob-accent inline-block w-full font-medium max-[520px]:min-h-[2.24em]">
-            {displayed}
-            <span
-              aria-hidden
-              className="bg-ob-accent ml-px inline-block w-0.5 translate-y-px animate-[ob-blink_1s_steps(1)_infinite] rounded-sm align-baseline"
-              style={{ height: "0.85em" }}
-            />
-          </span>
+          <HeroPhrases phrases={dict.phrases} />
         </h1>
 
         <p
@@ -114,7 +82,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
         ref={terminalRef}
         className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-[''] max-[520px]:hidden"
       >
-        <HeroTerminal step={step} cmd1Chars={cmd1Chars} cmd2Chars={cmd2Chars} />
+        <HeroTerminal />
       </div>
 
       <HeroStats labels={dict.stats} guideCount={guideCount} />
