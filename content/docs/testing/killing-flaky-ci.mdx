@@ -108,7 +108,9 @@ falla el real, es una dep externa.
 
 ## Paso 4 — La solución por categoría
 
-**Tiempo.** Reemplaza `setTimeout` con esperas deterministas — espera un nodo
+### Tiempo
+
+Reemplaza `setTimeout` con esperas deterministas — espera un nodo
 DOM específico, una línea de log específica, un evento específico. El polling
 con un presupuesto de retry está bien; "dormir 500ms y esperar" no lo está.
 
@@ -121,7 +123,9 @@ expect(screen.getByText("Cargado")).toBeVisible()
 await screen.findByText("Cargado", {}, { timeout: 5000 })
 ```
 
-**Estado compartido.** Cada test debe configurar y limpiar su propio estado.
+### Estado compartido
+
+Cada test debe configurar y limpiar su propio estado.
 Si la suite accede a una base de datos, dale a cada test su propio esquema o
 transacción.
 
@@ -134,16 +138,22 @@ afterEach(async () => {
 })
 ```
 
-**Deps externas.** Los tests no deben llamar a servicios reales. Usa un mock,
+### Deps externas
+
+Los tests no deben llamar a servicios reales. Usa un mock,
 un fake (implementación en memoria) o un contenedor hermético. Si necesitas
 probar la integración real, eso es un contract test — suite separada, cadencia
 separada, presupuesto de inestabilidad separado.
 
-**Orden de tests.** Ejecuta la suite con `--shuffle` (o el equivalente de tu
+### Orden de tests
+
+Ejecuta la suite con `--shuffle` (o el equivalente de tu
 runner) en CI. Los tests que dependen del orden fallan rápido. Luego arregla
 el estado compartido.
 
-**Fugas de recursos.** Rastrea los handles abiertos. La mayoría de runners
+### Fugas de recursos
+
+Rastrea los handles abiertos. La mayoría de runners
 puede imprimir "handles activos tras la suite" — conéctalo y falla la build si
 el número no es cero.
 

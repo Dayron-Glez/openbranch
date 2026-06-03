@@ -48,18 +48,22 @@ Si tu código vive en un registro público, en un CDN que alguien más fija, o
 dentro de un contrato del que depende un equipo externo — SemVer no es
 negociable y la disciplina importa más que el número.
 
-La disciplina:
+### Define "breaking" en un párrafo
 
-- **Ten una definición de "breaking" que quepa en un párrafo.** No es una
-  cuestión de gusto. Renombrar una función pública es breaking. Añadir un
-  parámetro requerido es breaking. Cambiar un tipo de retorno es breaking.
-  Añadir un parámetro opcional no lo es.
-- **Ejecuta un test downstream.** Mantén una pequeña app consumidora fijada a
-  tu major actual. Ejecuta su build contra tu `main`. Si se rompe, debes un
-  bump major.
-- **Depreca antes de eliminar.** Marca el nombre antiguo como `@deprecated`,
-  apunta al nuevo, despliega eso como minor. Elimínalo en el siguiente major.
-  Los consumidores que siguen las deprecaciones migran a su ritmo.
+No es una cuestión de gusto. Renombrar una función pública es breaking. Añadir
+un parámetro requerido es breaking. Cambiar un tipo de retorno es breaking.
+Añadir un parámetro opcional no lo es.
+
+### Ejecuta un test downstream
+
+Mantén una pequeña app consumidora fijada a tu major actual. Ejecuta su build
+contra tu `main`. Si se rompe, debes un bump major.
+
+### Depreca antes de eliminar
+
+Marca el nombre antiguo como `@deprecated`, apunta al nuevo, despliega eso como
+minor. Elimínalo en el siguiente major. Los consumidores que siguen las
+deprecaciones migran a su ritmo.
 
 ```typescript
 // En v2.4 (minor)
@@ -79,17 +83,23 @@ llamadas gRPC o colas de mensajes. El consumidor es otro proceso en ejecución
 — actualizado con un calendario diferente, posiblemente con varias versiones
 funcionando a la vez.
 
-Un servicio no necesita un número de versión. Necesita:
+Un servicio no necesita un número de versión. Necesita tres cosas:
 
-- **Un contrato de API vigente** — schema, OpenAPI, protobuf — registrado en
-  el repo y verificado en CI.
-- **Una ventana de deprecación progresiva.** Cuando el contrato cambia, la
-  forma antigua sigue funcionando durante un periodo publicado (90 días, dos
-  ciclos de release, lo que encaje). Ambas formas son válidas durante la
-  ventana.
-- **Tests de contrato en la frontera.** Cada consumidor ejecuta un test que
-  verifica que puede parsear lo que devuelve el servicio. El servicio ejecuta
-  un test que verifica que produce lo que espera cada consumidor.
+### Un contrato de API vigente
+
+Schema, OpenAPI, protobuf — registrado en el repo y verificado en CI.
+
+### Una ventana de deprecación progresiva
+
+Cuando el contrato cambia, la forma antigua sigue funcionando durante un
+periodo publicado (90 días, dos ciclos de release, lo que encaje). Ambas
+formas son válidas durante la ventana.
+
+### Tests de contrato en la frontera
+
+Cada consumidor ejecuta un test que verifica que puede parsear lo que devuelve
+el servicio. El servicio ejecuta un test que verifica que produce lo que espera
+cada consumidor.
 
 Si debes poner un número a un servicio, el número que importa es la **versión
 de API** — habitualmente en la ruta URL o una cabecera — y solo cambia cuando

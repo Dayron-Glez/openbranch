@@ -8,6 +8,7 @@ Thanks for taking the time. openbranch is built the same way it documents softwa
 - [Getting started](#getting-started)
 - [Writing and editing guides](#writing-and-editing-guides)
   - [Guide frontmatter](#guide-frontmatter)
+  - [Heading hierarchy](#heading-hierarchy)
   - [Authorship](#authorship)
 - [Code contributions](#code-contributions)
 - [Commit and PR conventions](#commit-and-pr-conventions)
@@ -73,6 +74,15 @@ authors:
 | `rfc`    | Proposed pattern, open for community feedback.      |
 | `stable` | Battle-tested, recommended for most teams.          |
 | `legacy` | Still accurate but superseded by a better approach. |
+
+### Heading hierarchy
+
+Structure each guide with a real `h2 › h3` hierarchy. The "On this page" table of contents renders a _stepped_ (indented) outline derived from your heading levels — so a subsection only shows up nested if it is a real `###` heading. Bold lead-ins (`**Like this.**`) and list items do not count and stay flat.
+
+- Use `##` for top-level sections.
+- Use `###` for subsections, where a section naturally breaks into parallel parts — steps, categories, options.
+- Don't force subheadings just to create steps. Flat prose is fine when a section doesn't subdivide.
+- Keep the Spanish and English versions structurally equivalent: the same headings at the same levels.
 
 ### Authorship
 

@@ -105,7 +105,9 @@ fails, it's an external dep.
 
 ## Step 4 — The fix per category
 
-**Timing.** Replace `setTimeout` with deterministic waiters — wait for a
+### Timing
+
+Replace `setTimeout` with deterministic waiters — wait for a
 specific DOM node, a specific log line, a specific event. Polling with a
 retry budget is okay; "sleep 500ms and hope" is not.
 
@@ -118,7 +120,9 @@ expect(screen.getByText("Loaded")).toBeVisible()
 await screen.findByText("Loaded", {}, { timeout: 5000 })
 ```
 
-**Shared state.** Each test must set up and tear down its own state. If the
+### Shared state
+
+Each test must set up and tear down its own state. If the
 suite hits a database, give each test its own schema or transaction.
 
 ```typescript
@@ -130,16 +134,22 @@ afterEach(async () => {
 })
 ```
 
-**External deps.** Tests should not hit real services. Use a mock, a fake
+### External deps
+
+Tests should not hit real services. Use a mock, a fake
 (in-memory implementation), or a hermetic container. If you need to test
 the real integration, that's a contract test — separate suite, separate
 cadence, separate budget for flakiness.
 
-**Test ordering.** Run the suite with `--shuffle` (or your runner's
+### Test ordering
+
+Run the suite with `--shuffle` (or your runner's
 equivalent) in CI. Tests that depend on order fail fast. Then fix the shared
 state.
 
-**Resource leaks.** Track open handles. Most runners can print "active
+### Resource leaks
+
+Track open handles. Most runners can print "active
 handles after suite" — wire it up, fail the build if the number is non-zero.
 
 ## Step 5 — Re-integration criteria

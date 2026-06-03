@@ -47,18 +47,22 @@ If your code lives on a public registry, on a CDN someone else pins to, or
 inside a contract that an outside team depends on — SemVer is non-negotiable
 and the discipline matters more than the number.
 
-The discipline:
+### Define "breaking" in one paragraph
 
-- **Have a definition of "breaking" that fits one paragraph.** It's not a
-  matter of taste. Renaming a public function is breaking. Adding a required
-  parameter is breaking. Changing a return type is breaking. Adding an
-  optional parameter is not.
-- **Run a downstream test.** Keep a small consuming app pinned to your
-  current major. Run its build against your `main`. If it breaks, you owe a
-  major bump.
-- **Deprecate before you remove.** Mark the old name `@deprecated`, point at
-  the new one, ship that as a minor. Remove it in the next major. Consumers
-  who follow the deprecations migrate at their pace.
+It's not a matter of taste. Renaming a public function is breaking. Adding a
+required parameter is breaking. Changing a return type is breaking. Adding an
+optional parameter is not.
+
+### Run a downstream test
+
+Keep a small consuming app pinned to your current major. Run its build against
+your `main`. If it breaks, you owe a major bump.
+
+### Deprecate before you remove
+
+Mark the old name `@deprecated`, point at the new one, ship that as a minor.
+Remove it in the next major. Consumers who follow the deprecations migrate at
+their pace.
 
 ```typescript
 // In v2.4 (minor)
@@ -78,16 +82,23 @@ gRPC calls, or message queues. The consumer is another running process —
 upgraded on a different schedule, possibly multiple versions of it running
 at once.
 
-A service does not need a version number. It needs:
+A service does not need a version number. It needs three things:
 
-- **A current API contract** — schema, OpenAPI, protobuf — checked into the
-  repo and verified in CI.
-- **A rolling deprecation window.** When the contract changes, the old shape
-  keeps working for a published period (90 days, two release cycles,
-  whatever fits). Both shapes are valid during the window.
-- **Contract tests at the boundary.** Each consumer runs a test that asserts
-  it can still parse what the service returns. The service runs a test
-  asserting it produces what each consumer expects.
+### A current API contract
+
+Schema, OpenAPI, protobuf — checked into the repo and verified in CI.
+
+### A rolling deprecation window
+
+When the contract changes, the old shape keeps working for a published period
+(90 days, two release cycles, whatever fits). Both shapes are valid during the
+window.
+
+### Contract tests at the boundary
+
+Each consumer runs a test that asserts it can still parse what the service
+returns. The service runs a test asserting it produces what each consumer
+expects.
 
 If you must put a number on a service, the number that matters is the **API
 version** — usually in the URL path or a header — and it changes only when
