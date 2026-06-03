@@ -115,7 +115,9 @@ directly on the diff — red marks on the exact lines.
 Getting this working on openbranch took three attempts, and the lesson is
 worth more than the result.
 
-**Attempt 1.** Use ESLint's `compact` formatter, which a problem matcher can
+### Attempt 1: the compact formatter
+
+Use ESLint's `compact` formatter, which a problem matcher can
 parse:
 
 ```
@@ -125,7 +127,9 @@ Install it manually with `npm install -D eslint-formatter-compact`
 
 ESLint 9 removed `compact` from core.
 
-**Attempt 2.** Fine, use `unix` instead:
+### Attempt 2: the unix formatter
+
+Fine, use `unix` instead:
 
 ```
 The unix formatter is no longer part of core ESLint.
@@ -135,11 +139,15 @@ Install it manually with `npm install -D eslint-formatter-unix`
 ESLint 9 removed almost every formatter from core. Only `stylish`, `json`,
 `junit`, `tap`, `checkstyle`, and `html` remain.
 
-**Attempt 3.** `eslint-formatter-github` emits native GitHub annotation
+### Attempt 3: eslint-formatter-github
+
+`eslint-formatter-github` emits native GitHub annotation
 commands and needs no matcher — but installing it pulled in **101 transitive
 packages** (`@octokit/*`) and a fistful of advisories, to format some text.
 
-**What shipped.** A problem matcher for the _default_ `stylish` formatter. Zero
+### What shipped
+
+A problem matcher for the _default_ `stylish` formatter. Zero
 new dependencies. `.github/problem-matchers/eslint.json`:
 
 ```json

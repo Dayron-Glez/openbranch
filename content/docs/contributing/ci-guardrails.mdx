@@ -121,7 +121,9 @@ el diff — marcas rojas en las líneas exactas.
 Conseguir que esto funcionara en openbranch costó tres intentos, y la lección
 vale más que el resultado.
 
-**Intento 1.** Usar el formatter `compact` de ESLint, que un problem matcher
+### Intento 1: el formatter compact
+
+Usar el formatter `compact` de ESLint, que un problem matcher
 puede parsear:
 
 ```
@@ -131,7 +133,9 @@ Install it manually with `npm install -D eslint-formatter-compact`
 
 ESLint 9 eliminó `compact` del core.
 
-**Intento 2.** Bien, usar `unix` en su lugar:
+### Intento 2: el formatter unix
+
+Bien, usar `unix` en su lugar:
 
 ```
 The unix formatter is no longer part of core ESLint.
@@ -141,12 +145,16 @@ Install it manually with `npm install -D eslint-formatter-unix`
 ESLint 9 eliminó casi todos los formatters del core. Solo quedan `stylish`,
 `json`, `junit`, `tap`, `checkstyle` y `html`.
 
-**Intento 3.** `eslint-formatter-github` emite los comandos de anotación
+### Intento 3: eslint-formatter-github
+
+`eslint-formatter-github` emite los comandos de anotación
 nativos de GitHub y no necesita matcher — pero instalarlo arrastró **101
 paquetes transitivos** (`@octokit/*`) y un puñado de advisories, para formatear
 un poco de texto.
 
-**Lo que se envió.** Un problem matcher para el formatter `stylish` _por
+### Lo que se envió
+
+Un problem matcher para el formatter `stylish` _por
 defecto_. Cero dependencias nuevas. `.github/problem-matchers/eslint.json`:
 
 ```json
