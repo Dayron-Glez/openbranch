@@ -20,37 +20,46 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
   let phase: "typing" | "waiting" | "deleting" = "typing"
   let holdUntilTime = 0
 
+  const typeNextChar = (currentTime: number) => {
+    visibleCharCount += 1
+    if (visibleCharCount < phrases[phraseIndex].length) return false
+    visibleCharCount = phrases[phraseIndex].length
+    phase = "waiting"
+    holdUntilTime = currentTime + HOLD_DURATION_MS
+    return true
+  }
+
+  const deleteNextChar = () => {
+    visibleCharCount -= 1
+    if (visibleCharCount > 0) return false
+    visibleCharCount = 0
+    phraseIndex = (phraseIndex + 1) % phrases.length
+    phase = "typing"
+    return true
+  }
+
+  const advanceWaiting = (currentTime: number) => {
+    if (currentTime < holdUntilTime) return
+    phase = "deleting"
+    elapsedSinceStepMs = 0
+  }
+
+  const advanceTypingOrDeleting = (currentTime: number) => {
+    elapsedSinceStepMs += currentTime - lastFrameTime
+    const stepIntervalMs = phase === "typing" ? TYPE_INTERVAL_MS : DELETE_INTERVAL_MS
+    while (elapsedSinceStepMs >= stepIntervalMs) {
+      elapsedSinceStepMs -= stepIntervalMs
+      const phaseChanged = phase === "typing" ? typeNextChar(currentTime) : deleteNextChar()
+      if (phaseChanged) break
+    }
+    textNode.textContent = phrases[phraseIndex].slice(0, visibleCharCount)
+  }
+
   const renderFrame = (currentTime: number) => {
     if (phase === "waiting") {
-      if (currentTime >= holdUntilTime) {
-        phase = "deleting"
-        elapsedSinceStepMs = 0
-      }
+      advanceWaiting(currentTime)
     } else {
-      elapsedSinceStepMs += currentTime - lastFrameTime
-      const stepIntervalMs = phase === "typing" ? TYPE_INTERVAL_MS : DELETE_INTERVAL_MS
-      const currentPhrase = phrases[phraseIndex]
-      while (elapsedSinceStepMs >= stepIntervalMs) {
-        elapsedSinceStepMs -= stepIntervalMs
-        if (phase === "typing") {
-          visibleCharCount += 1
-          if (visibleCharCount >= currentPhrase.length) {
-            visibleCharCount = currentPhrase.length
-            phase = "waiting"
-            holdUntilTime = currentTime + HOLD_DURATION_MS
-            break
-          }
-        } else {
-          visibleCharCount -= 1
-          if (visibleCharCount <= 0) {
-            visibleCharCount = 0
-            phraseIndex = (phraseIndex + 1) % phrases.length
-            phase = "typing"
-            break
-          }
-        }
-      }
-      textNode.textContent = phrases[phraseIndex].slice(0, visibleCharCount)
+      advanceTypingOrDeleting(currentTime)
     }
 
     lastFrameTime = currentTime
