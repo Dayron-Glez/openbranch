@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Terminal,
   TerminalLine,
@@ -8,15 +10,11 @@ import {
   BranchBlock,
   Cursor,
 } from "@/components/home/Terminal"
-import { CMD1, CMD2 } from "@/lib/hooks/use-terminal-animation"
+import { CMD1, CMD2, useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
 
-type HeroTerminalProps = {
-  readonly step: number
-  readonly cmd1Chars: number
-  readonly cmd2Chars: number
-}
+export function HeroTerminal() {
+  const { step, cmd1Chars, cmd2Chars } = useTerminalAnimation()
 
-export function HeroTerminal({ step, cmd1Chars, cmd2Chars }: HeroTerminalProps) {
   return (
     <Terminal>
       {step >= 0 && (
