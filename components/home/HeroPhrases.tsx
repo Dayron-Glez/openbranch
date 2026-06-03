@@ -1,15 +1,23 @@
 "use client"
 
+type HeroPhrasesProps = {
+  readonly phrases: readonly string[]
+}
+
+type Typewriter = {
+  readonly stop: () => void
+}
+
 const TYPE_INTERVAL_MS = 65
 const DELETE_INTERVAL_MS = 32
 const HOLD_DURATION_MS = 3800
 
-const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => {
-  if (phrases.length === 0) return { stop: () => {} }
+const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]): Typewriter => {
+  if (phrases.length === 0) return { stop: (): void => {} }
 
   if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     textNode.textContent = phrases[0]
-    return { stop: () => {} }
+    return { stop: (): void => {} }
   }
 
   let animationFrameId = 0
@@ -20,7 +28,7 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
   let phase: "typing" | "waiting" | "deleting" = "typing"
   let holdUntilTime = 0
 
-  const typeNextChar = (currentTime: number) => {
+  const typeNextChar = (currentTime: number): boolean => {
     visibleCharCount += 1
     if (visibleCharCount < phrases[phraseIndex].length) return false
     visibleCharCount = phrases[phraseIndex].length
@@ -29,7 +37,7 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
     return true
   }
 
-  const deleteNextChar = () => {
+  const deleteNextChar = (): boolean => {
     visibleCharCount -= 1
     if (visibleCharCount > 0) return false
     visibleCharCount = 0
@@ -38,13 +46,13 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
     return true
   }
 
-  const advanceWaiting = (currentTime: number) => {
+  const advanceWaiting = (currentTime: number): void => {
     if (currentTime < holdUntilTime) return
     phase = "deleting"
     elapsedSinceStepMs = 0
   }
 
-  const advanceTypingOrDeleting = (currentTime: number) => {
+  const advanceTypingOrDeleting = (currentTime: number): void => {
     elapsedSinceStepMs += currentTime - lastFrameTime
     const stepIntervalMs = phase === "typing" ? TYPE_INTERVAL_MS : DELETE_INTERVAL_MS
     while (elapsedSinceStepMs >= stepIntervalMs) {
@@ -55,7 +63,7 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
     textNode.textContent = phrases[phraseIndex].slice(0, visibleCharCount)
   }
 
-  const renderFrame = (currentTime: number) => {
+  const renderFrame = (currentTime: number): void => {
     if (phase === "waiting") {
       advanceWaiting(currentTime)
     } else {
@@ -68,24 +76,20 @@ const createTypewriter = (textNode: HTMLElement, phrases: readonly string[]) => 
 
   animationFrameId = requestAnimationFrame(renderFrame)
   return {
-    stop: () => cancelAnimationFrame(animationFrameId),
+    stop: (): void => cancelAnimationFrame(animationFrameId),
   }
 }
 
-type HeroPhrasesProps = {
-  readonly phrases: readonly string[]
-}
-
 export function HeroPhrases({ phrases }: HeroPhrasesProps) {
+  const mountTypewriter = (textNode: HTMLSpanElement | null): (() => void) | undefined => {
+    if (!textNode) return
+    const typewriter = createTypewriter(textNode, phrases)
+    return (): void => typewriter.stop()
+  }
+
   return (
     <span className="text-ob-accent inline-block w-full font-medium max-[520px]:min-h-[2.24em]">
-      <span
-        ref={(textNode) => {
-          if (!textNode) return
-          const typewriter = createTypewriter(textNode, phrases)
-          return () => typewriter.stop()
-        }}
-      />
+      <span ref={mountTypewriter} />
       <span
         aria-hidden
         className="bg-ob-accent ml-px inline-block w-0.5 translate-y-px animate-[ob-blink_1s_steps(1)_infinite] rounded-sm align-baseline"
