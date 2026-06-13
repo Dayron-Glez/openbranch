@@ -1,6 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import Markdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import type { Components } from "react-markdown"
 import {
   IconClipboard,
   IconCheck,
@@ -19,12 +22,112 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useDocsUI } from "@/components/docs/DocsUIProvider"
+import { cn } from "@/lib/utils"
 
 type CopyTemplateProps = {
   readonly title: string
   readonly content: string
   readonly defaultExpanded?: boolean
 }
+
+const remarkPlugins = [remarkGfm]
+
+const markdownComponents: Components = {
+  h1: ({ children }) => (
+    <h1 className="text-ob-accent mb-4 font-mono text-xs font-bold tracking-[0.08em] uppercase">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="text-ob-accent mt-5 mb-2 font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="text-fd-foreground mt-3 mb-1 text-xs font-medium">{children}</h3>
+  ),
+  p: ({ children }) => (
+    <p className="text-fd-muted-foreground mb-2 text-xs leading-relaxed">{children}</p>
+  ),
+  ul: ({ children, className }) => (
+    <ul
+      className={cn(
+        "mb-3 space-y-1",
+        className === "contains-task-list" ? "list-none pl-0" : "list-disc pl-4"
+      )}
+    >
+      {children}
+    </ul>
+  ),
+  ol: ({ children }) => <ol className="mb-3 list-decimal space-y-1 pl-4">{children}</ol>,
+  li: ({ children, className }) => (
+    <li
+      className={cn(
+        "text-fd-muted-foreground text-xs leading-relaxed",
+        className !== "task-list-item" && "marker:text-ob-accent"
+      )}
+    >
+      {children}
+    </li>
+  ),
+  input: ({ type, checked }) => {
+    if (type !== "checkbox") return null
+    return (
+      <input
+        type="checkbox"
+        checked={checked}
+        readOnly
+        className="accent-ob-accent mr-1.5 cursor-default"
+      />
+    )
+  },
+  hr: () => <hr className="border-ob-accent/15 my-4" />,
+  code: ({ children, className }) => {
+    const isBlock = Boolean(className?.includes("language-"))
+    if (isBlock) {
+      return <code className="text-fd-foreground font-mono text-xs">{children}</code>
+    }
+    return (
+      <code className="bg-ob-accent/10 text-ob-accent rounded px-1 py-0.5 font-mono text-[11px]">
+        {children}
+      </code>
+    )
+  },
+  pre: ({ children }) => (
+    <pre className="bg-fd-card border-ob-accent/10 mb-3 overflow-x-auto rounded border p-3 font-mono text-xs">
+      {children}
+    </pre>
+  ),
+  table: ({ children }) => (
+    <div className="mb-3 overflow-x-auto">
+      <table className="w-full border-collapse text-xs">{children}</table>
+    </div>
+  ),
+  tr: ({ children }) => <tr className="border-ob-accent/10 border-b">{children}</tr>,
+  th: ({ children }) => (
+    <th className="text-ob-accent pr-6 pb-2 text-left font-mono text-[10px] font-semibold tracking-[0.06em] uppercase">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="text-fd-muted-foreground py-1.5 pr-6 text-xs">{children}</td>
+  ),
+  strong: ({ children }) => (
+    <strong className="text-fd-foreground font-semibold">{children}</strong>
+  ),
+  em: ({ children }) => <em className="text-fd-muted-foreground italic">{children}</em>,
+  a: ({ children, href }) => (
+    <a href={href} className="text-ob-accent underline underline-offset-2">
+      {children}
+    </a>
+  ),
+}
+
+const MarkdownContent = ({ content }: { readonly content: string }) => (
+  <Markdown remarkPlugins={remarkPlugins} components={markdownComponents}>
+    {content}
+  </Markdown>
+)
 
 export const CopyTemplate = ({ title, content, defaultExpanded = false }: CopyTemplateProps) => {
   const [copied, setCopied] = useState<boolean>(false)
@@ -106,9 +209,9 @@ export const CopyTemplate = ({ title, content, defaultExpanded = false }: CopyTe
                 </div>
               </div>
               <ScrollArea className="flex-1">
-                <pre className="text-fd-foreground px-4 py-4 font-mono text-sm leading-relaxed">
-                  {content}
-                </pre>
+                <div className="px-4 py-4">
+                  <MarkdownContent content={content} />
+                </div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </DialogContent>
@@ -132,16 +235,16 @@ export const CopyTemplate = ({ title, content, defaultExpanded = false }: CopyTe
 
       {expanded ? (
         <ScrollArea className="bg-fd-card h-[70vh]">
-          <pre className="text-fd-foreground px-4 py-4 font-mono text-sm leading-relaxed">
-            {content}
-          </pre>
+          <div className="px-4 py-4">
+            <MarkdownContent content={content} />
+          </div>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       ) : (
         <div className="bg-fd-card relative">
-          <pre className="text-fd-foreground h-[5.5rem] overflow-hidden px-4 py-4 font-mono text-sm leading-relaxed">
-            {content}
-          </pre>
+          <div className="h-[5.5rem] overflow-hidden px-4 py-4">
+            <MarkdownContent content={content} />
+          </div>
           <div className="from-fd-card pointer-events-none absolute right-0 bottom-0 left-0 h-10 bg-gradient-to-t to-transparent" />
         </div>
       )}
