@@ -152,3 +152,45 @@ Stack these and the review experience changes:
 
 You did not get faster reviews by reviewing faster. You got faster reviews by
 making each one smaller, clearer, and more honest.
+
+<CopyTemplate
+  title="Take this with you — team code review agreement"
+  content={`## Size limits
+
+| Limit | Lines changed | What happens                                               |
+| ----- | ------------- | ---------------------------------------------------------- |
+| Soft  | 200           | Author considers splitting; reviewer can request it        |
+| Hard  | 600           | Author splits or includes justification in the description |
+
+Excludes: generated code, mass renames, dependency updates.
+
+## Comment labels
+
+| Label                     | When to use                           | Blocks merge? |
+| ------------------------- | ------------------------------------- | ------------- |
+| \`nit:\`                  | Style or minor consistency            | No            |
+| \`suggestion:\`           | Possible improvement — author decides | No            |
+| \`question:\`             | You need context or clarification     | No            |
+| \`praise:\`               | A decision worth calling out          | No            |
+| \`issue:\`                | Functional or technical problem       | Yes           |
+| \`issue (blocker):\`      | Must be resolved before merging       | Yes           |
+| \`issue (non-blocking):\` | Worth noting, doesn't block           | No            |
+
+## When to request changes
+
+**Request changes** if you would not want the PR merged as-is:
+
+- Correctness bug or wrong behavior
+- Data loss risk
+- Security problem
+- Public API changed without a deprecation path
+
+**Approve with comments** in every other case — nits, refactor suggestions, questions answered in thread.
+
+## Reviewer checklist
+
+- [ ] I understand what changes and why (read the description)
+- [ ] I can verify the change using the "how to verify" section
+- [ ] My blocking comments are labelled \`issue:\` or \`issue (blocker):\`
+- [ ] The PR is within size limits or has a justification`}
+      />
