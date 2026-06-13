@@ -1,6 +1,6 @@
 ---
 title: Killing flaky CI
-description: A systematic process — quantify, quarantine, root-cause, fix, re-integrate — that turns "the build is flaky" from a permanent state into a problem with a finish line.
+description: How to fix flaky tests in CI: quantify failure rate, quarantine without deleting, root-cause by category, and re-integrate with clear criteria.
 icon: FlaskConical
 maturity: rfc
 authors:
@@ -19,7 +19,7 @@ catching regressions and started catching opinions.
 The fix is not "rewrite the suite." It's a process that works on the suite
 you already have.
 
-## Flakiness is information
+## Why flaky tests in CI are worse than no tests at all
 
 A flaky test is telling you something. The information might be:
 
@@ -162,7 +162,7 @@ A test comes out of quarantine when:
 Both matter. The first proves the fix works. The second prevents the team
 from re-introducing the same pattern in another test next quarter.
 
-## The payoff
+## What a reliable CI pipeline looks like after fixing flaky tests
 
 A suite where:
 

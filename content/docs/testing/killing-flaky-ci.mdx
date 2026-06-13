@@ -1,6 +1,6 @@
 ---
 title: Acabar con el CI inestable
-description: Un proceso sistemático — cuantificar, poner en cuarentena, identificar la causa raíz, corregir, reintegrar — que convierte "la build es inestable" de un estado permanente en un problema con línea de llegada.
+description: Cómo arreglar tests inestables en CI: medir la tasa de fallo, poner en cuarentena sin eliminar, identificar la causa raíz y reintegrar con criterios claros.
 icon: FlaskConical
 maturity: rfc
 authors:
@@ -20,7 +20,7 @@ detectar opiniones.
 La solución no es "reescribir la suite". Es un proceso que funciona con la
 suite que ya tienes.
 
-## La inestabilidad es información
+## Por qué los tests inestables en CI son peores que no tener tests
 
 Un test inestable te está diciendo algo. La información podría ser:
 
@@ -167,7 +167,7 @@ Un test sale de cuarentena cuando:
 Ambos importan. El primero prueba que la solución funciona. El segundo evita
 que el equipo reintroduzca el mismo patrón en otro test el trimestre que viene.
 
-## El resultado
+## Cómo se ve un CI fiable después de eliminar los tests inestables
 
 Una suite donde:
 
