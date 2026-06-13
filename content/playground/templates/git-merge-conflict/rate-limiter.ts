@@ -4,8 +4,8 @@ interface RateLimiterOpts {
 }
 
 export class RateLimiter {
-  private opts: RateLimiterOpts;
-  private counts = new Map<string, { count: number; resetAt: number }>();
+  private readonly opts: RateLimiterOpts;
+  private readonly counts = new Map<string, { count: number; resetAt: number }>();
 
   constructor(opts: RateLimiterOpts) {
     this.opts = opts;
