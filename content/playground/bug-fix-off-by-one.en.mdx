@@ -1,0 +1,45 @@
+---
+title: "Fix the off-by-one in paginate()"
+description: "A pagination function silently drops the last item on every page. A failing test already tells you where to look — now find the bug and fix it."
+icon: Bug
+maturity: stable
+authors:
+  - Dayron Glez
+category: bug-fix
+difficulty: beginner
+estimated_minutes: 12
+validation: jest
+sandbox_template: bug-fix-off-by-one
+---
+
+A bug report came in: the `atlas/gateway` list endpoints are consistently missing the last item on every page. Five results requested, four returned. Ten requested, nine returned. Always one short.
+
+The function responsible is `paginate()` in `src/gateway/paginate.ts`. A failing test has already been written that reproduces the problem exactly. Your job is to read the test, understand what it expects, find the bug, and fix it.
+
+## The situation
+
+The test is already written and currently red:
+
+```typescript
+it("returns a full page including the last item", () => {
+  expect(paginate([1, 2, 3, 4, 5], 0, 3)).toEqual([1, 2, 3])
+})
+```
+
+With the current implementation it returns `[1, 2]`. One item short.
+
+The fix is a single character. The explanation of why it's wrong is the valuable part.
+
+## What you'll do
+
+1. Read the failing test to understand what `paginate()` is supposed to return.
+2. Read `paginate.ts` and find the line that's causing the off-by-one.
+3. Fix it — the test should be your only guide.
+4. Run the tests to confirm the fix is correct and nothing else broke.
+
+## Done when
+
+- The failing test passes.
+- The function returns the correct number of items for any valid `page` and `size` combination.
+
+Resist the urge to rewrite the function. The bug is one line. Fix only that.

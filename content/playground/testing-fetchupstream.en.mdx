@@ -1,0 +1,43 @@
+---
+title: "Write tests for fetchUpstream"
+description: "The timeout fix landed but nothing proves it. Write the tests that lock in the new behavior before it can quietly regress."
+icon: FlaskConical
+maturity: stable
+authors:
+  - Dayron Glez
+category: testing
+difficulty: moderate
+estimated_minutes: 18
+validation: jest
+sandbox_template: testing-fetchupstream
+---
+
+PR #214 was merged. `fetchUpstream` now returns `null` when a request times out instead of hanging — a real improvement. But there are zero tests covering it.
+
+That means the next person to touch this function has no safety net. A refactor, a well-intentioned cleanup, a merge that goes slightly wrong — any of these could silently undo the timeout behavior with no warning from CI.
+
+Your job is to write the tests that make this behavior explicit and permanent.
+
+## The situation
+
+`request.ts` is already implemented and working. `request.test.ts` exists but is empty. The function has three behaviors worth pinning down:
+
+- It returns a `Response` when the upstream answers normally.
+- It returns `null` — not throws — when the request times out.
+- It always clears the internal timer after the call, whether it succeeded or not.
+
+The third one is subtle. A timer that isn't cleared keeps the Node.js process alive longer than it should. It's the kind of thing that causes flaky tests in other files.
+
+## What you'll do
+
+1. Read `request.ts` to understand what the function does and when it returns `null`.
+2. Write three tests in `request.test.ts` covering the behaviors above.
+3. Run the tests and make sure all three pass.
+
+## Done when
+
+- The happy path test passes: a normal response is returned correctly.
+- The timeout test passes: the function returns `null` and does not throw.
+- The cleanup test passes: `clearTimeout` is called exactly once after every call.
+
+Mock `fetch` globally — don't make real network requests. For the timeout case, reject with a `DOMException` named `'AbortError'`, which is what `AbortController` raises when it aborts a signal.

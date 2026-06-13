@@ -1,0 +1,53 @@
+---
+title: "Document the gateway module"
+description: "fetchUpstream has no docs, no examples, and a non-obvious null return. Write the documentation that the next contributor needs before they can use it safely."
+icon: BookOpen
+maturity: stable
+authors:
+  - Dayron Glez
+category: documentation
+difficulty: beginner
+estimated_minutes: 15
+validation: checklist
+sandbox_template: docs-gateway-module
+---
+
+`fetchUpstream` is the entry point for every outbound request in `atlas/gateway`. It's been through a timeout fix, a return type change, and a code review — but it still has no documentation.
+
+A new contributor trying to use it has to read the full implementation to understand what it does, what it accepts, and — most importantly — why it sometimes returns `null` instead of a `Response`. That's a trap.
+
+Your job is to write a `GATEWAY.md` that makes this function safe to use without reading the source.
+
+## The situation
+
+The function signature after the recent changes:
+
+```typescript
+export async function fetchUpstream(url: string, opts: RequestOpts = {}): Promise<Response | null>
+```
+
+Where `RequestOpts` is:
+
+```typescript
+interface RequestOpts {
+  headers?: Record<string, string>
+  timeoutMs?: number // defaults to 5000
+}
+```
+
+The `null` return is the critical thing to document. Any caller that doesn't handle it will crash silently on timeout. This is exactly the class of bug the code review challenge was designed to catch.
+
+## What you'll do
+
+1. Read `request.ts` to understand the function's behavior end to end.
+2. Write `GATEWAY.md` covering: what the function does, its parameters with types and defaults, what it returns and when it returns `null`, and a usage example.
+3. Make sure the example is runnable — correct import, correct types.
+
+## Done when
+
+- Parameters are documented with their types and defaults.
+- The `null` return case is explicitly explained — not just listed, but explained.
+- A usage example is included that correctly handles the `null` case.
+- The example uses the correct import path.
+
+Good documentation doesn't just describe the happy path. It tells the reader what can go wrong and what to do about it.

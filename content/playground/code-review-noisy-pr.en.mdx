@@ -1,0 +1,42 @@
+---
+title: "Review a noisy pull request"
+description: "A 380-line PR bundles a real fix with unrelated churn and a breaking contract change. Review like a maintainer: keep what belongs, flag what doesn't."
+icon: GitPullRequest
+maturity: stable
+authors:
+  - Dayron Glez
+category: code-review
+difficulty: moderate
+estimated_minutes: 20
+validation: checklist
+sandbox_template: code-review-noisy-pr
+---
+
+A contributor opened PR #214 against `atlas/gateway`. The fix is real: it adds an `AbortController` so requests to a slow upstream no longer hang forever. But the diff is noisy.
+
+Buried inside it are three things that shouldn't ship as-is — and one of them silently changes a contract that every caller of this module depends on.
+
+## The situation
+
+The PR touches four files. The core fix in `request.ts` is correct. But mixed into the same diff are:
+
+- A debug `console.log` left in after testing
+- Unrelated cleanup in `retry.ts` that has nothing to do with the timeout fix
+- A change to the function's return type from `Promise<Response>` to `Promise<Response | null>` — which breaks any caller that doesn't null-check the result
+
+A maintainer's job is not to reject everything imperfect. It's to protect the codebase while keeping the contributor moving. That means approving the fix, flagging what's wrong, and being specific enough that the author knows exactly what to change.
+
+## What you'll do
+
+1. Read the diff across all four changed files.
+2. Leave at least one inline comment on a line that needs to change.
+3. Choose a review decision — approve, comment, or request changes — and justify it.
+4. Submit your review for validation.
+
+## Done when
+
+- You flagged the line that changes the public return type.
+- Your review decision is defensible given the state of the diff.
+- Every comment you left is specific and actionable — not just "this is wrong."
+
+This is a judgment challenge. There's no single correct set of comments. Validation checks that you caught the behavior-changing line and that your decision is consistent with what the diff actually contains.
