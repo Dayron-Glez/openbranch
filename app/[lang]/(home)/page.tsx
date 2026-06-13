@@ -26,6 +26,8 @@ const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   bulb: <IconBulb />,
 }
 
+export const revalidate = 604800 // re-render once a week so the weekly pick rotates
+
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
