@@ -1,0 +1,44 @@
+---
+title: "Resolve a three-way merge conflict"
+description: "Two branches both modified the same auth module. Reconcile all three conflicts without dropping either branch's intent — and figure out when neither side is the right answer."
+icon: GitMerge
+maturity: stable
+authors:
+  - Dayron Glez
+category: git
+difficulty: demanding
+estimated_minutes: 25
+validation: typecheck
+sandbox_template: git-merge-conflict
+---
+
+Two contributors worked on `auth/session.ts` at the same time without knowing it.
+
+`feat/rate-limiting` added a `RateLimiter` to prevent token abuse. `fix/session-expiry` changed the return type and added cleanup logic to delete expired sessions from the database. Both changes are correct. Both are necessary. Neither can be dropped.
+
+Now they need to be merged into `main`, and they conflict in three places.
+
+## The situation
+
+The three conflicts are not equal:
+
+**Conflict 1 — Import block.** `feat` adds a `RateLimiter` import; `fix` doesn't touch it. One side has content, the other doesn't.
+
+**Conflict 2 — Return type.** `feat` returns `Promise<boolean>`; `fix` returns `Promise<Session | null>`. These are semantically different — one tells callers yes/no, the other gives them the actual session object. Only one of these is the right long-term contract.
+
+**Conflict 3 — Function body.** This is the hard one. `feat` adds a rate-limit check before proceeding. `fix` adds expiry cleanup and changes the early-return value. A correct merge needs both — picking one side silently drops the other's logic.
+
+## What you'll do
+
+1. Read all three versions of the file: base, ours (`feat/rate-limiting`), and theirs (`fix/session-expiry`).
+2. Resolve each conflict — pick a side where one is clearly right, write a custom merge where neither side alone is sufficient.
+3. Validate: the merged file must type-check and neither branch's logic can be silently missing.
+
+## Done when
+
+- All 3 conflicts are marked as resolved.
+- The merged file type-checks without errors.
+- The rate-limiting logic from `feat` is present.
+- The expiry cleanup and updated return type from `fix` are present.
+
+For conflict 3, accepting either side wholesale will fail validation. Read both versions carefully before deciding what the merged body needs to contain.

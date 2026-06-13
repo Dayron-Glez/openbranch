@@ -4,3 +4,4 @@ node_modules
 public
 *.lock
 package-lock.json
+content/playground/templates
