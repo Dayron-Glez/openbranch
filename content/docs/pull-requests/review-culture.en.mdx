@@ -1,6 +1,6 @@
 ---
 title: Review culture
-description: Size limits that hold, templates that get filled in, and comment patterns that teach instead of shame — review culture that scales past one senior reading every diff.
+description: "Code review practices that don't stall PRs: size limits, Conventional Comments labels, and the calibration between request-changes and approve-with-comments."
 icon: GitPullRequest
 maturity: rfc
 authors:
@@ -37,7 +37,7 @@ Every one of those costs scales worse than linearly with PR size.
   approved without reading.
 </Callout>
 
-## Size caps: soft and hard
+## PR size limits: the soft cap and the hard cap
 
 Pick two numbers and publish them.
 
@@ -86,7 +86,7 @@ The "how to verify" field is the most undervalued part of any PR template.
 Reviewers who can verify a change in 30 seconds approve it. Reviewers who have
 to reverse-engineer the verification path do not.
 
-## Comment patterns: the ones that work, the ones that don't
+## Code review comment patterns: Conventional Comments in practice
 
 The difference between a comment that gets acted on and one that breeds
 resentment is rarely the substance. It's the framing.
@@ -141,7 +141,7 @@ approve-with-comments on everything stops being a meaningful signal. The
 calibration is: **request changes when you would be unhappy to see this merged
 as-is; approve with comments otherwise.**
 
-## The payoff
+## What a healthy code review culture looks like in practice
 
 Stack these and the review experience changes:
 
