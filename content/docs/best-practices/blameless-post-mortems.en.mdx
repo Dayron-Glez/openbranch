@@ -179,3 +179,47 @@ errors instead of two thousand.
 You did not prevent the failure. You designed a system that survived it
 faster than last time. The post-mortem that surfaced the lesson is the
 reason.
+
+<CopyTemplate
+  title="Take this with you — post-mortem template"
+  content={`## What happened
+
+**Service affected:** [name]
+**Duration:** [start] → [end] — [X] minutes
+**Impact:** [users/requests affected]
+**Severity:** SEV-[1/2/3]
+
+[2-3 sentence summary. No blame, no assumptions yet.]
+
+## Timeline
+
+| Time  | Event                                            |
+| ----- | ------------------------------------------------ |
+| 00:00 | First signal — alert, ticket, or external report |
+| 00:XX | Initial incorrect diagnosis and why              |
+| 00:XX | Root cause identified                            |
+| 00:XX | Mitigation applied                               |
+| 00:XX | Service restored                                 |
+
+## Contributing factors
+
+- [Condition that made the failure possible — not the cause, the context]
+- [Missing visibility, late alert, or incorrect assumption]
+- [Gap in process or documentation]
+
+## What went well
+
+- [Fast detection thanks to X]
+- [Effective communication during the incident]
+- [Tool or process that shortened resolution time]
+
+## Lessons and actions
+
+| Action                       | Owner | Due date   |
+| ---------------------------- | ----- | ---------- |
+| [Concrete technical change]  | @user | YYYY-MM-DD |
+| [Alert or runbook to create] | @user | YYYY-MM-DD |
+| [Process to document]        | @user | YYYY-MM-DD |
+
+**Tags:** configuration / external-dependency / deploy / data / network`}
+/>
