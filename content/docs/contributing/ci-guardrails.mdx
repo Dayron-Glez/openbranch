@@ -239,3 +239,79 @@ cero esfuerzo manual tuyo:
 
 No revisaste nada de eso. Gastaste tu atención en la parte que una máquina no
 puede chequear: si la contribución es _buena_.
+
+<CopyTemplate
+  title="Llévate esto — plantilla de PR"
+  content={`## 📋 Descripción
+
+Describe brevemente qué hace este PR y por qué es necesario.
+
+---
+
+## 🔗 Issue relacionado
+
+Closes #
+
+---
+
+## 📍 Área afectada
+
+- [ ] Feature / lógica de negocio
+- [ ] UI / layout
+- [ ] API / backend
+- [ ] Base de datos / migraciones
+- [ ] Config / infraestructura (CI, dependencias, build)
+- [ ] Documentación
+
+---
+
+## 🏷 Tipo de cambio
+
+- [ ] 🚀 Nueva funcionalidad
+- [ ] 🐛 Bug fix
+- [ ] 🎨 Estilo / UI
+- [ ] ♻️ Refactor
+- [ ] 📚 Docs / contenido
+- [ ] 🔧 Chore (config, dependencias, CI/CD)
+
+---
+
+## ✅ Checklist
+
+### General
+
+- [ ] Build sin errores
+- [ ] Sin errores de lint
+- [ ] Sin errores de tipos
+- [ ] Probado en local
+- [ ] No rompe funcionalidad existente
+
+### Si toca UI
+
+- [ ] Responsive en los breakpoints clave
+- [ ] Accesibilidad revisada (teclado, lector de pantalla, contraste)
+- [ ] prefers-reduced-motion respetado si hay animaciones
+
+### Si toca la base de datos
+
+- [ ] La migración es reversible
+- [ ] Probado contra datos reales
+
+### Si toca config / infraestructura
+
+- [ ] Sin secrets hardcodeados
+- [ ] Variables de entorno documentadas
+- [ ] Plan de rollback considerado
+
+---
+
+## 📸 Capturas / evidencia
+
+Capturas, grabaciones o salida de tests si aplica.
+
+---
+
+## 📝 Notas adicionales
+
+Cualquier contexto extra para el revisor.`}
+/>

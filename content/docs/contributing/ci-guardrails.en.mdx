@@ -229,3 +229,79 @@ manual effort from you:
 
 You reviewed none of that. You spent your attention on the part a machine
 can't check: whether the contribution is _good_.
+
+<CopyTemplate
+  title="Take this with you — PR template"
+  content={`## 📋 Description
+
+Briefly describe what this PR does and why it is needed.
+
+---
+
+## 🔗 Related issue
+
+Closes #
+
+---
+
+## 📍 Area affected
+
+- [ ] Feature / business logic
+- [ ] UI / layout
+- [ ] API / backend
+- [ ] Database / migrations
+- [ ] Config / infrastructure (CI, dependencies, build)
+- [ ] Documentation
+
+---
+
+## 🏷 Type of change
+
+- [ ] 🚀 New feature
+- [ ] 🐛 Bug fix
+- [ ] 🎨 Style / UI
+- [ ] ♻️ Refactor
+- [ ] 📚 Docs / content
+- [ ] 🔧 Chore (config, dependencies, CI/CD)
+
+---
+
+## ✅ Checklist
+
+### General
+
+- [ ] Builds without errors
+- [ ] No linting errors
+- [ ] No type errors
+- [ ] Tested locally
+- [ ] Does not break existing functionality
+
+### If it touches UI
+
+- [ ] Responsive across breakpoints
+- [ ] Accessibility checked (keyboard nav, screen reader, contrast)
+- [ ] prefers-reduced-motion respected if animations are involved
+
+### If it touches the database
+
+- [ ] Migration is reversible
+- [ ] Tested against real data
+
+### If it touches config / infrastructure
+
+- [ ] No secrets hardcoded
+- [ ] Environment variables documented
+- [ ] Rollback plan considered
+
+---
+
+## 📸 Screenshots / evidence
+
+Screenshots, recordings, or test output if applicable.
+
+---
+
+## 📝 Additional notes
+
+Any extra context for the reviewer.`}
+/>
