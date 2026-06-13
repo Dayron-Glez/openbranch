@@ -1,6 +1,6 @@
 ---
 title: Estrategias de ramas
-description: Un framework de decisión basado en el tamaño del equipo, la cadencia de entrega y el coste de equivocarse — con las señales de que has superado tu modelo actual.
+description: Trunk-based, release branches o GitFlow — elige según tu cadencia de entrega real, con las señales de que has superado el modelo actual.
 icon: GitBranch
 maturity: rfc
 authors:
@@ -17,7 +17,7 @@ Elegir una estrategia de ramas no es elegir una favorita. Es elegir qué
 problemas estás dispuesto a tener — porque cada modelo intercambia un conjunto
 de dolores por otro.
 
-## El modelo mental: ¿con qué frecuencia puedes enviar realmente?
+## ¿Con qué frecuencia puedes enviar realmente? La pregunta que elige tu modelo de ramas
 
 Olvida los diagramas. Cada modelo de ramas es una respuesta diferente a una
 sola pregunta: **¿con qué frecuencia puede un cambio en `main` llegar a un
@@ -60,7 +60,7 @@ frágil."** Si todavía no puedes permitirte la infraestructura de flags, las
 release branches no son una regresión — son una señal honesta de lo que
 soporta tu tooling.
 
-## Release branches: el punto intermedio
+## Release branches: el modelo entre trunk-based y GitFlow
 
 `main` acumula trabajo mergeado. Con una cadencia (cada sprint, cada viernes,
 cada mes), cortas una rama desde `main` — `release/2024-11` — la estabilizas
@@ -136,7 +136,7 @@ no por defecto.
 3. **No puedes explicar GitFlow a un nuevo miembro del equipo en 10 minutos.**
    El coste de onboarding es parte del coste del modelo.
 
-## El resultado
+## Elegir la estrategia de ramas de git correcta para tu equipo
 
 Elige con intención, no por herencia. Vuelve a elegir cuando cambie el tamaño
 del equipo, la cadencia de entrega o el tooling — no cuando alguien del equipo

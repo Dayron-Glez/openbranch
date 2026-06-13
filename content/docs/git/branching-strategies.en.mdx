@@ -1,6 +1,6 @@
 ---
 title: Branching strategies
-description: A decision framework based on team size, shipping cadence, and the cost of being wrong — with the warning signs you've outgrown your current model.
+description: Trunk-based, release branches, or GitFlow — choose based on your actual shipping cadence, with warning signs you've outgrown the model.
 icon: GitBranch
 maturity: rfc
 authors:
@@ -16,7 +16,7 @@ Picking a branching strategy is not picking a favourite. It's picking which
 problems you're willing to have — because every model trades one set of pains
 for another.
 
-## The mental model: how often can you actually ship?
+## How often can you ship? The question that picks your branching model
 
 Forget the diagrams. Every branching model is a different answer to one
 question: **how often can a change in `main` reach a real user?**
@@ -56,7 +56,7 @@ The honest version: **trunk-based without feature flags is just "fast and
 fragile."** If you can't afford the flag infrastructure yet, release branches
 are not a regression — they're an honest signal of what your tooling supports.
 
-## Release branches: the in-between
+## Release branches: the model between trunk-based and GitFlow
 
 `main` accumulates merged work. On a cadence (every sprint, every Friday, every
 month), you cut a branch from `main` — `release/2024-11` — stabilise it with
@@ -130,7 +130,7 @@ purpose, not by default.
 3. **You can't explain GitFlow to a new hire in 10 minutes.** Onboarding cost
    is part of the model's cost.
 
-## The payoff
+## Choosing the right git branching strategy for your team
 
 Pick on purpose, not by inheritance. Re-pick when the team size, the shipping
 cadence, or the tooling changes — not when somebody on the team finds a new
