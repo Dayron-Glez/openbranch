@@ -191,3 +191,56 @@ estoy diciendo y qué necesitan hacer?**
 
 La herramienta correcta para cada caso. Sin majors bumpeados que nadie notó;
 sin actualizaciones rotas que todos notaron.
+
+<CopyTemplate
+  title="Llévate esto — plantilla de changelog"
+  content={`## Plantilla de entrada
+
+Organiza cada versión por **quién se ve afectado**, no por tipo de commit.
+
+---
+
+## v0.0.0 — AAAA-MM-DD
+
+### Si llamas a \`[función eliminada o renombrada]\`
+
+[Acción requerida y cómo migrar. Un comando si es posible.]
+
+### Si importas desde \`[ruta eliminada o movida]\`
+
+[Nueva ruta. El re-export antiguo fue eliminado.]
+
+### Si usas \`[componente o API con firma cambiada]\`
+
+[Qué cambió en la firma — parámetro añadido, eliminado o reordenado.]
+
+### Si nada de lo anterior aplica
+
+Actualización segura. Lee el resto solo si quieres saber qué mejoró.
+
+---
+
+### Otros cambios
+
+- [Descripción breve (#número)]
+- [Descripción breve (#número)]
+
+---
+
+## Cuándo bumear cada número
+
+| Bump            | Cuándo                                                   | Ejemplo                           |
+| --------------- | -------------------------------------------------------- | --------------------------------- |
+| \`major\`       | Rompe al consumidor — eliminar, renombrar, cambiar firma | Eliminar \`getById\`              |
+| \`minor\`       | Nueva funcionalidad compatible hacia atrás               | Añadir \`findBySlug\`             |
+| \`patch\`       | Corrección de bug sin cambio de API                      | Fix del comportamiento de timeout |
+| \`pre-release\` | Cambio no estable — \`1.0.0-beta.1\`                     | Feature flag activo               |
+
+## Regla de deprecación
+
+Antes de eliminar un símbolo público:
+
+1. Márcalo como \`@deprecated\` con una nota de migración
+2. Mantenlo durante al menos **un minor release**
+3. Elimínalo en el siguiente major con una entrada en el changelog`}
+   />
