@@ -145,3 +145,67 @@ encuentre un nuevo post de blog.
 El modelo correcto es el cuyos costes puedes pagar este trimestre, con el
 tooling que realmente tienes. El modelo incorrecto es el que elegiste hace dos
 años y nunca revisaste.
+
+<CopyTemplate
+  title="Llévate esto — convenio de nomenclatura de ramas"
+  content={`## Formato
+
+| Parte           | Obligatoria | Descripción                               |
+| --------------- | ----------- | ----------------------------------------- |
+| \`tipo/\`       | Sí          | Prefijo del tipo de cambio                |
+| \`scope-\`      | No          | Módulo afectado (commits convencionales)  |
+| \`123-\`        | No          | Número de issue                           |
+| \`descripción\` | Sí          | Texto en kebab-case, máximo 50 caracteres |
+
+## Tipos de rama
+
+| Prefijo       | Uso                                                 |
+| ------------- | --------------------------------------------------- |
+| \`feat/\`     | Nueva funcionalidad                                 |
+| \`fix/\`      | Corrección de bug                                   |
+| \`hotfix/\`   | Corrección urgente desde main o una rama de release |
+| \`release/\`  | Corte de estabilización antes del release           |
+| \`chore/\`    | Configuración, CI, dependencias, tooling            |
+| \`docs/\`     | Documentación o contenido                           |
+| \`refactor/\` | Reestructuración sin cambio de comportamiento       |
+| \`test/\`     | Tests sin cambio en código de producción            |
+
+## Scope — commits convencionales
+
+El **scope** identifica el módulo afectado. Va entre paréntesis en el commit asociado a la rama: \`tipo(scope): descripción\`.
+
+| Rama                            | Commit correspondiente                  |
+| ------------------------------- | --------------------------------------- |
+| \`feat/auth-add-oauth\`         | \`feat(auth): add OAuth login\`         |
+| \`fix/api-null-response\`       | \`fix(api): handle null user response\` |
+| \`chore/ci-upgrade-node\`       | \`chore(ci): upgrade to Node 20\`       |
+| \`refactor/db-extract-queries\` | \`refactor(db): extract query layer\`   |
+
+El scope es opcional pero recomendado en proyectos con más de un área de responsabilidad clara.
+
+## Reglas
+
+- Solo minúsculas
+- Guiones como separador — no guiones bajos, no camelCase
+- Máximo 50 caracteres tras la barra
+- Sin nombres propios en la descripción
+- Sin puntos ni barras al final
+
+## Ramas de larga vida
+
+| Rama        | Uso                                               |
+| ----------- | ------------------------------------------------- |
+| \`main\`    | Siempre desplegable (todos los modelos)           |
+| \`develop\` | Solo GitFlow — acumula features antes del release |
+
+## Ejemplos válidos
+
+- \`feat/auth-add-oauth-login\`
+- \`fix/api-null-response-handler\`
+- \`hotfix/checkout-null-pointer\`
+- \`release/2024-11\`
+- \`chore/ci-update-node-20\`
+- \`docs/contributing-guide\`
+- \`refactor/db-extract-query-layer\`
+- \`test/auth-integration-coverage\``}
+  />

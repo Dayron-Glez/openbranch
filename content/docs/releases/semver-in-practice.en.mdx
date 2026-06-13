@@ -188,3 +188,56 @@ telling, and what do they need to do?**
 
 The right tool for each. No bumped majors that nobody noticed; no broken
 upgrades that everyone did.
+
+<CopyTemplate
+  title="Take this with you — changelog template"
+  content={`## Entry template
+
+Organise each release by **who is affected**, not by commit type.
+
+---
+
+## v0.0.0 — YYYY-MM-DD
+
+### If you call \`[removed or renamed function]\`
+
+[Required action and how to migrate. One command if possible.]
+
+### If you import from \`[removed or moved path]\`
+
+[New path. The old re-export was removed.]
+
+### If you use \`[component or API with changed signature]\`
+
+[What changed in the signature — parameter added, removed, or reordered.]
+
+### If none of the above apply
+
+Safe to upgrade. Read the rest only if you want to know what improved.
+
+---
+
+### Other changes
+
+- [Short description (#number)]
+- [Short description (#number)]
+
+---
+
+## When to bump each number
+
+| Bump            | When                                                   | Example               |
+| --------------- | ------------------------------------------------------ | --------------------- |
+| \`major\`       | Breaks the consumer — remove, rename, change signature | Remove \`getById\`    |
+| \`minor\`       | New functionality, backwards compatible                | Add \`findBySlug\`    |
+| \`patch\`       | Bug fix with no API change                             | Fix timeout behaviour |
+| \`pre-release\` | Unstable change — \`1.0.0-beta.1\`                     | Active feature flag   |
+
+## Deprecation rule
+
+Before removing a public symbol:
+
+1. Mark it as \`@deprecated\` with a migration note
+2. Keep it for at least **one minor release**
+3. Remove it in the next major with a changelog entry`}
+   />

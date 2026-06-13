@@ -173,3 +173,39 @@ A suite where:
 
 You did not rewrite your tests. You took the ones you had and made them
 honest.
+
+<CopyTemplate
+  title="Take this with you — flaky test register"
+  content={`## Register format
+
+| Test                                       | Failure rate | Category         | Owner | Quarantined since | SLA     | Status        |
+| ------------------------------------------ | ------------ | ---------------- | ----- | ----------------- | ------- | ------------- |
+| \`auth/login.spec.ts > token refresh\`     | 12 %         | Timing           | @user | 2024-11-03        | 2 weeks | Investigating |
+| \`api/orders.spec.ts > concurrent writes\` | 8 %          | External network | @user | 2024-11-10        | 1 week  | Blocked       |
+
+## Categories
+
+| Category             | Typical root cause                         |
+| -------------------- | ------------------------------------------ |
+| \`Timing\`           | \`setTimeout\`, animations, implicit waits |
+| \`Shared state\`     | Test data not isolated between tests       |
+| \`External network\` | Real HTTP calls to unstable services       |
+| \`Execution order\`  | Tests that depend on suite ordering        |
+| \`System resource\`  | Busy ports, permissions, disk space        |
+| \`Unknown\`          | Failed < 3 times, cause not yet identified |
+
+## Register rules
+
+- A test enters the register on its **first unexplained failure** in CI
+- The SLA starts from the quarantine date — not from when it was first detected
+- If the SLA expires without resolution, the test is deleted until it passes reliably
+- The owner is whoever detected it, not necessarily whoever fixes it
+
+## Statuses
+
+- **Investigating** — Root cause identified, fix in progress
+- **Blocked** — Requires external change or team decision
+- **Quarantined** — Excluded from blocking CI, still running
+- **Resolved** — Back in main pipeline, keep green for one week before closing the entry`}
+
+/>

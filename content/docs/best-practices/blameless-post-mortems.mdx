@@ -185,3 +185,47 @@ ven errores en lugar de dos mil.
 No preveniste el fallo. Diseñaste un sistema que lo sobrevivió más rápido
 que la última vez. El post-mortem que sacó la lección a la superficie es la
 razón.
+
+<CopyTemplate
+  title="Llévate esto — plantilla de post-mortem"
+  content={`## Qué ocurrió
+
+**Servicio afectado:** [nombre]
+**Duración:** [inicio] → [fin] — [X] minutos
+**Impacto:** [usuarios/peticiones afectadas]
+**Severidad:** SEV-[1/2/3]
+
+[Resumen en 2-3 frases. Sin culpas, sin suposiciones aún.]
+
+## Línea de tiempo
+
+| Hora  | Evento                                           |
+| ----- | ------------------------------------------------ |
+| 00:00 | Primera señal — alerta, ticket o reporte externo |
+| 00:XX | Diagnóstico incorrecto inicial y por qué         |
+| 00:XX | Causa raíz identificada                          |
+| 00:XX | Mitigación aplicada                              |
+| 00:XX | Servicio restaurado                              |
+
+## Factores contribuyentes
+
+- [Condición que hizo posible el fallo — no el causante, el contexto]
+- [Falta de visibilidad, alerta tardía o asunción incorrecta]
+- [Gap en el proceso o en la documentación]
+
+## Qué funcionó bien
+
+- [Detección rápida gracias a X]
+- [Comunicación efectiva durante el incidente]
+- [Herramienta o proceso que acortó el tiempo de resolución]
+
+## Lecciones y acciones
+
+| Acción                     | Responsable | Fecha límite |
+| -------------------------- | ----------- | ------------ |
+| [Cambio técnico concreto]  | @usuario    | AAAA-MM-DD   |
+| [Alerta o runbook a crear] | @usuario    | AAAA-MM-DD   |
+| [Proceso a documentar]     | @usuario    | AAAA-MM-DD   |
+
+**Etiquetas:** configuración / dependencia-externa / deploy / datos / red`}
+/>

@@ -155,3 +155,45 @@ Combina todo esto y la experiencia de revisión cambia:
 
 No conseguiste revisiones más rápidas revisando más rápido. Las conseguiste
 haciendo cada una más pequeña, más clara y más honesta.
+
+<CopyTemplate
+  title="Llévate esto — acuerdo de revisión de equipo"
+  content={`## Límites de tamaño
+
+| Límite | Líneas modificadas | Qué ocurre                                                |
+| ------ | ------------------ | --------------------------------------------------------- |
+| Suave  | 200                | El autor considera dividirlo; el revisor puede pedirlo    |
+| Duro   | 600                | El autor divide o incluye justificación en la descripción |
+
+Excluye: código generado, renombrados masivos, actualizaciones de dependencias.
+
+## Etiquetas de comentario
+
+| Etiqueta                  | Cuándo usarla                     | ¿Bloquea el merge? |
+| ------------------------- | --------------------------------- | ------------------ |
+| \`nit:\`                  | Estilo o consistencia menor       | No                 |
+| \`suggestion:\`           | Mejora posible — el autor decide  | No                 |
+| \`question:\`             | Necesitas contexto o aclaración   | No                 |
+| \`praise:\`               | Decisión que vale la pena señalar | No                 |
+| \`issue:\`                | Problema funcional o técnico      | Sí                 |
+| \`issue (blocker):\`      | Debe resolverse antes de mergear  | Sí                 |
+| \`issue (non-blocking):\` | A tener en cuenta, sin bloquear   | No                 |
+
+## Cuándo solicitar cambios
+
+**Solicita cambios** si no querrías ver el PR mergeado tal como está:
+
+- Bug de corrección o comportamiento incorrecto
+- Riesgo de pérdida de datos
+- Problema de seguridad
+- API pública modificada sin ruta de deprecación
+
+**Aprueba con comentarios** en cualquier otro caso — nits, sugerencias de refactor, preguntas respondidas en el hilo.
+
+## Checklist del revisor
+
+- [ ] Entiendo qué cambia y por qué (leí la descripción)
+- [ ] Puedo verificar el cambio con la sección "cómo verificar"
+- [ ] Mis comentarios bloqueantes llevan \`issue:\` o \`issue (blocker):\`
+- [ ] El PR está dentro del límite de tamaño o tiene justificación`}
+      />

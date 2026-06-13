@@ -177,3 +177,39 @@ Una suite donde:
 - los nuevos tests inestables se detectan antes de convertirse en normales.
 
 No reescribiste tus tests. Tomaste los que tenías y los hiciste honestos.
+
+<CopyTemplate
+  title="Llévate esto — registro de tests inestables"
+  content={`## Formato del registro
+
+| Test                                       | Tasa de fallo | Categoría   | Responsable | En cuarentena desde | SLA       | Estado           |
+| ------------------------------------------ | ------------- | ----------- | ----------- | ------------------- | --------- | ---------------- |
+| \`auth/login.spec.ts > token refresh\`     | 12 %          | Timing      | @usuario    | 2024-11-03          | 2 semanas | En investigación |
+| \`api/orders.spec.ts > concurrent writes\` | 8 %           | Red externa | @usuario    | 2024-11-10          | 1 semana  | Bloqueado        |
+
+## Categorías
+
+| Categoría               | Causa raíz típica                               |
+| ----------------------- | ----------------------------------------------- |
+| \`Timing\`              | \`setTimeout\`, animaciones, esperas implícitas |
+| \`Estado compartido\`   | Datos de prueba no aislados entre tests         |
+| \`Red externa\`         | Llamadas HTTP reales a servicios inestables     |
+| \`Orden de ejecución\`  | Tests que dependen del orden de la suite        |
+| \`Recurso del sistema\` | Puertos ocupados, permisos, espacio en disco    |
+| \`Desconocida\`         | Fallo < 3 veces, causa no identificada aún      |
+
+## Reglas del registro
+
+- Un test entra al registro en su **primer fallo sin explicación** en CI
+- El SLA empieza desde la fecha de cuarentena — no desde que se detectó
+- Si el SLA expira sin resolución, el test se elimina hasta que pase de forma fiable
+- El responsable es quien lo detectó, no necesariamente quien lo corrige
+
+## Estados
+
+- **En investigación** — Causa identificada, fix en progreso
+- **Bloqueado** — Requiere cambio externo o decisión de equipo
+- **En cuarentena** — Excluido de CI bloqueante, sigue ejecutándose
+- **Resuelto** — Vuelve al pipeline principal, mantener en verde una semana antes de cerrar la entrada`}
+
+/>

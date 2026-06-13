@@ -1,9 +1,27 @@
 export const docsDictionary = {
   es: {
     suggestGuide: "Sugerir una guía",
+    copyTemplate: {
+      copy: "Copiar",
+      copied: "Copiado",
+      copyToClipboard: "Copiar al portapapeles",
+      fullScreen: "Pantalla completa",
+      expand: "Expandir",
+      collapse: "Contraer",
+      close: "Cerrar",
+    },
   },
   en: {
     suggestGuide: "Suggest a guide",
+    copyTemplate: {
+      copy: "Copy",
+      copied: "Copied",
+      copyToClipboard: "Copy to clipboard",
+      fullScreen: "Full screen",
+      expand: "Expand",
+      collapse: "Collapse",
+      close: "Close",
+    },
   },
 } as const
 
