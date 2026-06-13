@@ -63,7 +63,11 @@ export async function getWeeklyPick(lang: string, date = new Date()): Promise<We
   const cycle = Math.floor(week / guides.length)
   const position = week % guides.length
 
-  const page = seededShuffle(guides, cycle)[position]
+  const shuffled = seededShuffle(guides, cycle)
+  if (cycle > 0 && shuffled[0] === seededShuffle(guides, cycle - 1).at(-1)) {
+    ;[shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]]
+  }
+  const page = shuffled[position]
   const rawText = await page.data.getText("processed")
   const toc = page.data.toc as Array<{ title: string }>
   const meta = page.data as unknown as PageMeta
