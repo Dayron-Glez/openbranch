@@ -139,3 +139,67 @@ blog post.
 The right model is the one whose costs you can pay this quarter, with the
 tooling you actually have. The wrong model is the one you picked two years ago
 and never revisited.
+
+<CopyTemplate
+  title="Take this with you — branch naming convention"
+  content={`## Format
+
+| Part            | Required | Description                            |
+| --------------- | -------- | -------------------------------------- |
+| \`type/\`       | Yes      | Change type prefix                     |
+| \`scope-\`      | No       | Affected module (conventional commits) |
+| \`123-\`        | No       | Issue number                           |
+| \`description\` | Yes      | Text in kebab-case, max 50 characters  |
+
+## Branch Types
+
+| Prefix        | Purpose                                  |
+| ------------- | ---------------------------------------- |
+| \`feat/\`     | New functionality                        |
+| \`fix/\`      | Bug fix                                  |
+| \`hotfix/\`   | Urgent fix from main or a release branch |
+| \`release/\`  | Stabilisation cut before shipping        |
+| \`chore/\`    | Config, CI, dependencies, tooling        |
+| \`docs/\`     | Documentation or content                 |
+| \`refactor/\` | Restructuring without behaviour change   |
+| \`test/\`     | Tests with no production code change     |
+
+## Scope — conventional commits
+
+The **scope** identifies the affected module. It goes in parentheses on the commit associated with the branch: \`type(scope): description\`.
+
+| Branch                          | Corresponding commit                    |
+| ------------------------------- | --------------------------------------- |
+| \`feat/auth-add-oauth\`         | \`feat(auth): add OAuth login\`         |
+| \`fix/api-null-response\`       | \`fix(api): handle null user response\` |
+| \`chore/ci-upgrade-node\`       | \`chore(ci): upgrade to Node 20\`       |
+| \`refactor/db-extract-queries\` | \`refactor(db): extract query layer\`   |
+
+Scope is optional but recommended in projects with more than one clearly defined area of responsibility.
+
+## Rules
+
+- Lowercase only
+- Hyphens as separator — no underscores, no camelCase
+- Max 50 characters after the slash
+- No personal names in the description
+- No trailing dots or slashes
+
+## Long-Lived Branches
+
+| Branch      | Purpose                                            |
+| ----------- | -------------------------------------------------- |
+| \`main\`    | Always deployable (all models)                     |
+| \`develop\` | GitFlow only — accumulates features before release |
+
+## Valid Examples
+
+- \`feat/auth-add-oauth-login\`
+- \`fix/api-null-response-handler\`
+- \`hotfix/checkout-null-pointer\`
+- \`release/2024-11\`
+- \`chore/ci-update-node-20\`
+- \`docs/contributing-guide\`
+- \`refactor/db-extract-query-layer\`
+- \`test/auth-integration-coverage\``}
+  />
