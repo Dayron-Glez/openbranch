@@ -5,6 +5,22 @@ export type PlaygroundDict = {
     readonly title: string
     readonly description: string
   }
+  readonly detail: {
+    readonly back: string
+    readonly startChallenge: string
+    readonly sandboxNote: string
+    readonly metaCategory: string
+    readonly metaDifficulty: string
+    readonly metaTime: string
+    readonly metaValidation: string
+    readonly youllPractice: string
+    readonly recommendedFirst: string
+    readonly authTitle: string
+    readonly authBody: string
+    readonly authGithub: string
+    readonly authPrivacyStrong: string
+    readonly authPrivacyRest: string
+  }
   readonly hub: {
     readonly eyebrow: string
     readonly heading: string
@@ -141,6 +157,32 @@ const translations = {
     en: "Completed a challenge in every category",
   },
   "time.minutes": { es: "min", en: "min" },
+  "detail.back": { es: "Volver al playground", en: "Back to all challenges" },
+  "detail.startChallenge": { es: "Empezar reto", en: "Start challenge" },
+  "detail.sandboxNote": {
+    es: "Crea un sandbox privado · nada es público",
+    en: "Forks a sandbox repo · nothing is public",
+  },
+  "detail.metaCategory": { es: "Categoría", en: "Category" },
+  "detail.metaDifficulty": { es: "Dificultad", en: "Difficulty" },
+  "detail.metaTime": { es: "Tiempo estimado", en: "Estimated time" },
+  "detail.metaValidation": { es: "Validación", en: "Validation" },
+  "detail.youllPractice": { es: "Practicarás", en: "You'll practice" },
+  "detail.recommendedFirst": { es: "Recomendado primero", en: "Recommended first" },
+  "detail.authTitle": { es: "Inicia sesión para empezar", en: "Sign in to start" },
+  "detail.authBody": {
+    es: "Los retos corren en un sandbox privado — tu progreso se guarda y nada se publica nunca.",
+    en: "Challenges run in a private sandbox — your progress is saved, and nothing is ever posted publicly.",
+  },
+  "detail.authGithub": { es: "Continuar con GitHub", en: "Continue with GitHub" },
+  "detail.authPrivacyStrong": {
+    es: "No se solicita acceso al repositorio",
+    en: "No repository access requested",
+  },
+  "detail.authPrivacyRest": {
+    es: "— solo identidad. Leemos tu nombre de usuario para asociar tu progreso. Eso es todo.",
+    en: "— identity only. We read your username to associate your progress. That's all.",
+  },
 } satisfies Record<string, LocalizedEntry>
 
 export const getPlaygroundDict = (lang: string): PlaygroundDict => {
@@ -222,6 +264,22 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
     },
     time: {
       minutes: tx("time.minutes"),
+    },
+    detail: {
+      back: tx("detail.back"),
+      startChallenge: tx("detail.startChallenge"),
+      sandboxNote: tx("detail.sandboxNote"),
+      metaCategory: tx("detail.metaCategory"),
+      metaDifficulty: tx("detail.metaDifficulty"),
+      metaTime: tx("detail.metaTime"),
+      metaValidation: tx("detail.metaValidation"),
+      youllPractice: tx("detail.youllPractice"),
+      recommendedFirst: tx("detail.recommendedFirst"),
+      authTitle: tx("detail.authTitle"),
+      authBody: tx("detail.authBody"),
+      authGithub: tx("detail.authGithub"),
+      authPrivacyStrong: tx("detail.authPrivacyStrong"),
+      authPrivacyRest: tx("detail.authPrivacyRest"),
     },
   }
 }
