@@ -20,6 +20,26 @@ export const docs = defineDocs({
   },
 })
 
+export const playground = defineDocs({
+  dir: "content/playground",
+  docs: {
+    files: ["*.md", "*.mdx"],
+    schema: pageSchema.extend({
+      icon: z.string().optional(),
+      maturity: z.enum(["draft", "stable"]).default("draft"),
+      authors: z.array(z.string()).optional(),
+      category: z.enum(["code-review", "bug-fix", "testing", "git", "documentation"]),
+      difficulty: z.enum(["beginner", "moderate", "demanding"]),
+      estimated_minutes: z.number(),
+      validation: z.enum(["checklist", "jest", "typecheck"]),
+      sandbox_template: z.string(),
+    }),
+  },
+  meta: {
+    schema: metaSchema,
+  },
+})
+
 export default defineConfig({
   plugins: [lastModified()],
   mdxOptions: {
