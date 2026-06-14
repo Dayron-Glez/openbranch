@@ -10,9 +10,16 @@ export {
   IconLock,
   IconHeart,
   IconGlobe,
+  IconClock,
+  IconBug,
+  IconBook,
+  IconRocket,
+  IconFlame,
+  IconAward,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,
+  IconGitMerge,
   IconGitFork as IconFork,
   // Brands
   IconBrandGithub as IconGithub,
