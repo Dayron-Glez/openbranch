@@ -68,6 +68,17 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
+        <Link
+          href={localizedHref(lang, "/playground")}
+          className={`font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[640px]:hidden ${
+            pathname.includes("/playground")
+              ? "text-fg font-medium"
+              : "text-fg-muted hover:text-fg-2"
+          }`}
+        >
+          Playground
+        </Link>
+
         <div className="ml-auto flex items-center gap-4 max-[520px]:gap-2">
           <button
             className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
