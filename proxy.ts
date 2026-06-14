@@ -57,7 +57,11 @@ export default async function proxy(
     }
   }
 
-  return withSessionCookies(i18nMiddleware(request, event))
+  const i18nResult = await Promise.resolve(i18nMiddleware(request, event))
+  if (i18nResult instanceof NextResponse) {
+    return withSessionCookies(i18nResult)
+  }
+  return withSessionCookies(supabaseResponse)
 }
 
 export const config = {
