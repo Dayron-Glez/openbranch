@@ -42,113 +42,106 @@ export type PlaygroundDict = {
   }
 }
 
-const es: PlaygroundDict = {
-  meta: {
-    title: "Playground · openbranch",
-    description:
-      "Practica flujos de trabajo open source en un entorno aislado. Sin ramas reales, sin PRs, sin consecuencias.",
+type LocalizedEntry = { readonly es: string; readonly en: string }
+
+const translations = {
+  "meta.title": { es: "Playground · openbranch", en: "Playground · openbranch" },
+  "meta.description": {
+    es: "Practica flujos de trabajo open source en un entorno aislado. Sin ramas reales, sin PRs, sin consecuencias.",
+    en: "Practice open source workflows in an isolated sandbox. No real branches, no PRs, no consequences.",
   },
-  hub: {
-    eyebrow: "aprende haciendo",
-    heading: "Practica como si fuera",
-    headingAccent: "producción — sin el riesgo.",
-    intro:
-      "Cada reto es un sandbox aislado. Corriges bugs reales, revisas PRs reales y escribes tests reales. Nada sale del playground.",
-    startCta: "Empezar reto",
-    continueCta: "Continuar",
-    filterAll: "Todos",
+  "hub.eyebrow": { es: "aprende haciendo", en: "learn by doing" },
+  "hub.heading": { es: "Practica como si fuera", en: "Practice like it's" },
+  "hub.headingAccent": { es: "producción — sin el riesgo.", en: "production — without the risk." },
+  "hub.intro": {
+    es: "Cada reto es un sandbox aislado. Corriges bugs reales, revisas PRs reales y escribes tests reales. Nada sale del playground.",
+    en: "Every challenge is an isolated sandbox. You fix real bugs, review real PRs, and write real tests. Nothing leaves the playground.",
   },
-  difficulty: {
-    beginner: "principiante",
-    moderate: "moderado",
-    demanding: "exigente",
+  "hub.startCta": { es: "Empezar reto", en: "Start challenge" },
+  "hub.continueCta": { es: "Continuar", en: "Continue" },
+  "hub.filterAll": { es: "Todos", en: "All" },
+  "difficulty.beginner": { es: "principiante", en: "beginner" },
+  "difficulty.moderate": { es: "moderado", en: "moderate" },
+  "difficulty.demanding": { es: "exigente", en: "demanding" },
+  "category.code-review": { es: "Code Review", en: "Code Review" },
+  "category.bug-fix": { es: "Bug Fix", en: "Bug Fix" },
+  "category.testing": { es: "Testing", en: "Testing" },
+  "category.git": { es: "Git", en: "Git" },
+  "category.documentation": { es: "Documentación", en: "Documentation" },
+  "status.notStarted": { es: "Sin empezar", en: "Not started" },
+  "status.inProgress": { es: "En progreso", en: "In progress" },
+  "status.completed": { es: "Completado", en: "Completed" },
+  "badges.heading": { es: "Tus badges", en: "Your badges" },
+  "badges.code-reviewer.name": { es: "Code Reviewer", en: "Code Reviewer" },
+  "badges.code-reviewer.description": {
+    es: "Completaste un reto de revisión de código",
+    en: "Completed a code review challenge",
   },
-  category: {
-    "code-review": "Code Review",
-    "bug-fix": "Bug Fix",
-    testing: "Testing",
-    git: "Git",
-    documentation: "Documentación",
+  "badges.bug-hunter.name": { es: "Bug Hunter", en: "Bug Hunter" },
+  "badges.bug-hunter.description": {
+    es: "Encontraste y corregiste un bug real",
+    en: "Found and fixed a real bug",
   },
-  status: {
-    notStarted: "Sin empezar",
-    inProgress: "En progreso",
-    completed: "Completado",
+  "badges.test-writer.name": { es: "Test Writer", en: "Test Writer" },
+  "badges.test-writer.description": {
+    es: "Escribiste tests que protegen el comportamiento",
+    en: "Wrote tests that lock in behavior",
   },
-  badges: {
-    heading: "Tus badges",
-    "code-reviewer": {
-      name: "Code Reviewer",
-      description: "Completaste un reto de revisión de código",
+  "time.minutes": { es: "min", en: "min" },
+} satisfies Record<string, LocalizedEntry>
+
+export const getPlaygroundDict = (lang: string): PlaygroundDict => {
+  const locale: Lang = lang === "en" ? "en" : "es"
+  const tx = (key: keyof typeof translations): string => translations[key][locale]
+
+  return {
+    meta: {
+      title: tx("meta.title"),
+      description: tx("meta.description"),
     },
-    "bug-hunter": {
-      name: "Bug Hunter",
-      description: "Encontraste y corregiste un bug real",
+    hub: {
+      eyebrow: tx("hub.eyebrow"),
+      heading: tx("hub.heading"),
+      headingAccent: tx("hub.headingAccent"),
+      intro: tx("hub.intro"),
+      startCta: tx("hub.startCta"),
+      continueCta: tx("hub.continueCta"),
+      filterAll: tx("hub.filterAll"),
     },
-    "test-writer": {
-      name: "Test Writer",
-      description: "Escribiste tests que protegen el comportamiento",
+    difficulty: {
+      beginner: tx("difficulty.beginner"),
+      moderate: tx("difficulty.moderate"),
+      demanding: tx("difficulty.demanding"),
     },
-  },
-  time: {
-    minutes: "min",
-  },
+    category: {
+      "code-review": tx("category.code-review"),
+      "bug-fix": tx("category.bug-fix"),
+      testing: tx("category.testing"),
+      git: tx("category.git"),
+      documentation: tx("category.documentation"),
+    },
+    status: {
+      notStarted: tx("status.notStarted"),
+      inProgress: tx("status.inProgress"),
+      completed: tx("status.completed"),
+    },
+    badges: {
+      heading: tx("badges.heading"),
+      "code-reviewer": {
+        name: tx("badges.code-reviewer.name"),
+        description: tx("badges.code-reviewer.description"),
+      },
+      "bug-hunter": {
+        name: tx("badges.bug-hunter.name"),
+        description: tx("badges.bug-hunter.description"),
+      },
+      "test-writer": {
+        name: tx("badges.test-writer.name"),
+        description: tx("badges.test-writer.description"),
+      },
+    },
+    time: {
+      minutes: tx("time.minutes"),
+    },
+  }
 }
-
-const en: PlaygroundDict = {
-  meta: {
-    title: "Playground · openbranch",
-    description:
-      "Practice open source workflows in an isolated sandbox. No real branches, no PRs, no consequences.",
-  },
-  hub: {
-    eyebrow: "learn by doing",
-    heading: "Practice like it's",
-    headingAccent: "production — without the risk.",
-    intro:
-      "Every challenge is an isolated sandbox. You fix real bugs, review real PRs, and write real tests. Nothing leaves the playground.",
-    startCta: "Start challenge",
-    continueCta: "Continue",
-    filterAll: "All",
-  },
-  difficulty: {
-    beginner: "beginner",
-    moderate: "moderate",
-    demanding: "demanding",
-  },
-  category: {
-    "code-review": "Code Review",
-    "bug-fix": "Bug Fix",
-    testing: "Testing",
-    git: "Git",
-    documentation: "Documentation",
-  },
-  status: {
-    notStarted: "Not started",
-    inProgress: "In progress",
-    completed: "Completed",
-  },
-  badges: {
-    heading: "Your badges",
-    "code-reviewer": {
-      name: "Code Reviewer",
-      description: "Completed a code review challenge",
-    },
-    "bug-hunter": {
-      name: "Bug Hunter",
-      description: "Found and fixed a real bug",
-    },
-    "test-writer": {
-      name: "Test Writer",
-      description: "Wrote tests that lock in behavior",
-    },
-  },
-  time: {
-    minutes: "min",
-  },
-}
-
-const DICTS: Record<Lang, PlaygroundDict> = { es, en }
-
-export const getPlaygroundDict = (lang: string): PlaygroundDict =>
-  lang === "en" ? DICTS.en : DICTS.es
