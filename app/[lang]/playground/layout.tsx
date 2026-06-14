@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlaygroundTransition } from "@/components/playground/PlaygroundTransition"
+import "./playground.css"
 
 export default function PlaygroundLayout({ children }: { readonly children: ReactNode }) {
   return (

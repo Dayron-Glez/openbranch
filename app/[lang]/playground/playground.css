@@ -1,0 +1,146 @@
+/* ============================================================
+   Playground — challenge detail prose + left column scroll + dialog
+   ============================================================ */
+
+/* --- Dialog animations ------------------------------------------ */
+/* scale + opacity — sin tocar el translate del posicionamiento */
+@keyframes pg-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pg-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pg-dialog-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes pg-dialog-out {
+  from {
+    opacity: 1;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.pg-dialog-overlay[data-state="open"] {
+  animation: pg-overlay-in 180ms ease forwards;
+}
+.pg-dialog-overlay[data-state="closed"] {
+  animation: pg-overlay-out 160ms ease forwards;
+}
+.pg-dialog-content[data-state="open"] {
+  animation: pg-dialog-in 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-dialog-content[data-state="closed"] {
+  animation: pg-dialog-out 180ms ease forwards;
+}
+
+.pg-left-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-2) transparent;
+}
+.pg-left-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.pg-left-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.pg-left-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-line-2);
+  border-radius: 999px;
+}
+.pg-left-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-faint);
+}
+
+.pg-prose h2 {
+  font-size: 13px;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-fg-muted);
+  font-weight: 500;
+  margin: 2rem 0 0.75rem;
+}
+
+.pg-prose h2:first-child {
+  margin-top: 0;
+}
+
+.pg-prose p {
+  color: var(--color-fg-2);
+  font-size: 15px;
+  line-height: 1.55;
+  margin: 0 0 0.75rem;
+}
+
+.pg-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--color-bg-elev);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  padding: 1px 6px;
+  color: var(--color-fg);
+}
+
+.pg-prose ol,
+.pg-prose ul {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  counter-reset: s;
+}
+
+.pg-prose ol li,
+.pg-prose ul li {
+  display: flex;
+  gap: 12px;
+  color: var(--color-fg-2);
+  font-size: 15px;
+  line-height: 1.5;
+  counter-increment: s;
+}
+
+.pg-prose ol li::before,
+.pg-prose ul li::before {
+  content: counter(s);
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--color-bg-elev);
+  border: 1px solid var(--color-line-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-fg-muted);
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
