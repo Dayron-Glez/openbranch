@@ -13,6 +13,14 @@ export type PlaygroundDict = {
     readonly startCta: string
     readonly continueCta: string
     readonly filterAll: string
+    readonly sort: {
+      readonly label: string
+      readonly recommended: string
+      readonly difficulty: string
+      readonly duration: string
+      readonly sortAsc: string
+      readonly sortDesc: string
+    }
   }
   readonly startingLine: {
     readonly eyebrow: string
@@ -70,6 +78,12 @@ const translations = {
   "hub.startCta": { es: "Empezar reto", en: "Start challenge" },
   "hub.continueCta": { es: "Continuar", en: "Continue" },
   "hub.filterAll": { es: "Todos", en: "All" },
+  "hub.sort.label": { es: "Ordenar:", en: "Sort:" },
+  "hub.sort.recommended": { es: "Recomendados", en: "Recommended" },
+  "hub.sort.difficulty": { es: "Dificultad", en: "Difficulty" },
+  "hub.sort.duration": { es: "Duración", en: "Duration" },
+  "hub.sort.sortAsc": { es: "Ordenar ascendente", en: "Sort ascending" },
+  "hub.sort.sortDesc": { es: "Ordenar descendente", en: "Sort descending" },
   "startingLine.eyebrow": { es: "línea de salida", en: "starting line" },
   "startingLine.heading": {
     es: "Tu primera rama empieza aquí.",
@@ -83,8 +97,8 @@ const translations = {
   "difficulty.beginner": { es: "principiante", en: "beginner" },
   "difficulty.moderate": { es: "moderado", en: "moderate" },
   "difficulty.demanding": { es: "exigente", en: "demanding" },
-  "category.code-review": { es: "Code Review", en: "Code Review" },
-  "category.bug-fix": { es: "Bug Fix", en: "Bug Fix" },
+  "category.code-review": { es: "Revisión de código", en: "Code Review" },
+  "category.bug-fix": { es: "Corrección de bugs", en: "Bug Fix" },
   "category.testing": { es: "Testing", en: "Testing" },
   "category.git": { es: "Git", en: "Git" },
   "category.documentation": { es: "Documentación", en: "Documentation" },
@@ -146,6 +160,14 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       startCta: tx("hub.startCta"),
       continueCta: tx("hub.continueCta"),
       filterAll: tx("hub.filterAll"),
+      sort: {
+        label: tx("hub.sort.label"),
+        recommended: tx("hub.sort.recommended"),
+        difficulty: tx("hub.sort.difficulty"),
+        duration: tx("hub.sort.duration"),
+        sortAsc: tx("hub.sort.sortAsc"),
+        sortDesc: tx("hub.sort.sortDesc"),
+      },
     },
     startingLine: {
       eyebrow: tx("startingLine.eyebrow"),

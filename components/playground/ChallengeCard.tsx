@@ -54,6 +54,7 @@ export const ChallengeCard = ({
   return (
     <Link
       href={href}
+      data-challenge-card
       className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-[var(--r-12)] border p-5 text-inherit no-underline transition-[background,border-color] duration-[var(--d-base)] ease-[var(--ease)]"
     >
       <div className="flex items-center justify-between">
