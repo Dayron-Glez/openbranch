@@ -1,0 +1,43 @@
+---
+title: "Escribe tests para fetchUpstream"
+description: "El fix del timeout llegó pero nada lo prueba. Escribe los tests que consolidan el nuevo comportamiento antes de que pueda regresar silenciosamente."
+icon: FlaskConical
+maturity: stable
+authors:
+  - Dayron Glez
+category: testing
+difficulty: moderate
+estimated_minutes: 18
+validation: jest
+sandbox_template: testing-fetchupstream
+---
+
+El PR #214 fue mergeado. `fetchUpstream` ahora devuelve `null` cuando una petición supera el timeout en lugar de quedarse colgada — una mejora real. Pero no hay ningún test que lo cubra.
+
+Eso significa que la próxima persona que toque esta función no tiene red de seguridad. Un refactor, una limpieza bien intencionada, un merge que salga un poco mal — cualquiera de estos podría deshacer silenciosamente el comportamiento del timeout sin ninguna advertencia del CI.
+
+Tu trabajo es escribir los tests que hacen explícito y permanente este comportamiento.
+
+## La situación
+
+`request.ts` ya está implementado y funciona. `request.test.ts` existe pero está vacío. La función tiene tres comportamientos que vale la pena fijar:
+
+- Devuelve una `Response` cuando el upstream responde normalmente.
+- Devuelve `null` — no lanza — cuando la petición supera el timeout.
+- Siempre limpia el timer interno después de la llamada, tanto si tuvo éxito como si no.
+
+El tercero es sutil. Un timer que no se limpia mantiene vivo el proceso de Node.js más tiempo del necesario. Es el tipo de cosa que causa tests intermitentes en otros archivos.
+
+## Lo que harás
+
+1. Leer `request.ts` para entender qué hace la función y cuándo devuelve `null`.
+2. Escribir tres tests en `request.test.ts` cubriendo los comportamientos anteriores.
+3. Ejecutar los tests y asegurarte de que los tres pasan.
+
+## Cuándo está listo
+
+- El test del happy path pasa: una respuesta normal se devuelve correctamente.
+- El test del timeout pasa: la función devuelve `null` y no lanza.
+- El test de limpieza pasa: `clearTimeout` se llama exactamente una vez después de cada llamada.
+
+Mockea `fetch` globalmente — no hagas peticiones de red reales. Para el caso de timeout, rechaza con un `DOMException` llamado `'AbortError'`, que es lo que lanza `AbortController` cuando aborta una señal.

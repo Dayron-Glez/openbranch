@@ -1,0 +1,44 @@
+---
+title: "Resuelve un conflicto de merge en tres vías"
+description: "Dos ramas modificaron el mismo módulo de autenticación. Reconcilia los tres conflictos sin perder la intención de ninguna rama — y descubre cuándo ningún lado es la respuesta correcta."
+icon: GitMerge
+maturity: stable
+authors:
+  - Dayron Glez
+category: git
+difficulty: demanding
+estimated_minutes: 25
+validation: typecheck
+sandbox_template: git-merge-conflict
+---
+
+Dos contribuidores trabajaron en `auth/session.ts` al mismo tiempo sin saberlo.
+
+`feat/rate-limiting` añadió un `RateLimiter` para prevenir el abuso de tokens. `fix/session-expiry` cambió el tipo de retorno y añadió lógica de limpieza para eliminar sesiones expiradas de la base de datos. Ambos cambios son correctos. Ambos son necesarios. Ninguno puede descartarse.
+
+Ahora hay que hacer merge de ambos a `main`, y hay conflictos en tres lugares.
+
+## La situación
+
+Los tres conflictos no son iguales:
+
+**Conflicto 1 — Bloque de imports.** `feat` añade un import de `RateLimiter`; `fix` no lo toca. Un lado tiene contenido, el otro no.
+
+**Conflicto 2 — Tipo de retorno.** `feat` devuelve `Promise<boolean>`; `fix` devuelve `Promise<Session | null>`. Son semánticamente distintos — uno le dice a quien llama sí/no, el otro le da el objeto de sesión real. Solo uno de estos es el contrato correcto a largo plazo.
+
+**Conflicto 3 — Cuerpo de la función.** Este es el difícil. `feat` añade una comprobación de rate-limit antes de continuar. `fix` añade limpieza de expiradas y cambia el valor del early return. Un merge correcto necesita ambos — elegir un solo lado silenciosamente descarta la lógica del otro.
+
+## Lo que harás
+
+1. Leer las tres versiones del archivo: base, la nuestra (`feat/rate-limiting`) y la de ellos (`fix/session-expiry`).
+2. Resolver cada conflicto — elige un lado donde uno sea claramente correcto, escribe un merge personalizado donde ningún lado por sí solo sea suficiente.
+3. Validar: el archivo mezclado debe pasar el typecheck y ninguna lógica de ninguna rama puede faltar silenciosamente.
+
+## Cuándo está listo
+
+- Los 3 conflictos están marcados como resueltos.
+- El archivo mezclado pasa el typecheck sin errores.
+- La lógica de rate-limiting de `feat` está presente.
+- La limpieza de expiradas y el tipo de retorno actualizado de `fix` están presentes.
+
+Para el conflicto 3, aceptar cualquier lado en su totalidad fallará la validación. Lee ambas versiones cuidadosamente antes de decidir qué necesita contener el cuerpo mezclado.

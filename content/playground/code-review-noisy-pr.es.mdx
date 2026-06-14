@@ -1,0 +1,42 @@
+---
+title: "Revisa un pull request ruidoso"
+description: "Un PR de 380 líneas mezcla un fix real con cambios no relacionados y un breaking change. Revisa como un maintainer: conserva lo que pertenece, señala lo que no."
+icon: GitPullRequest
+maturity: stable
+authors:
+  - Dayron Glez
+category: code-review
+difficulty: moderate
+estimated_minutes: 20
+validation: checklist
+sandbox_template: code-review-noisy-pr
+---
+
+Un contribuidor abrió el PR #214 contra `atlas/gateway`. El fix es real: añade un `AbortController` para que las peticiones a un upstream lento no se queden colgadas para siempre. Pero el diff es ruidoso.
+
+Enterrados dentro hay tres cosas que no deberían salir tal como están — y una de ellas cambia silenciosamente un contrato del que dependen todos los que llaman a este módulo.
+
+## La situación
+
+El PR toca cuatro archivos. El fix principal en `request.ts` es correcto. Pero mezclados en el mismo diff hay:
+
+- Un `console.log` de depuración que quedó después de las pruebas
+- Limpieza no relacionada en `retry.ts` que no tiene nada que ver con el fix del timeout
+- Un cambio en el tipo de retorno de `Promise<Response>` a `Promise<Response | null>` — lo que rompe cualquier código que llame a esta función sin manejar el null
+
+El trabajo de un maintainer no es rechazar todo lo que no sea perfecto. Es proteger la base de código mientras mantiene al contribuidor en marcha. Eso significa aprobar el fix, señalar lo que está mal y ser lo suficientemente específico para que el autor sepa exactamente qué cambiar.
+
+## Lo que harás
+
+1. Leer el diff en los cuatro archivos modificados.
+2. Dejar al menos un comentario inline en una línea que necesite cambiar.
+3. Elegir una decisión de revisión — aprobar, comentar o solicitar cambios — y justificarla.
+4. Enviar tu revisión para validación.
+
+## Cuándo está listo
+
+- Señalaste la línea que cambia el tipo de retorno público.
+- Tu decisión de revisión es defendible dado el estado del diff.
+- Cada comentario que dejaste es específico y accionable — no solo "esto está mal."
+
+Este es un reto de criterio. No hay un conjunto único de comentarios correcto. La validación comprueba que identificaste la línea que cambia el comportamiento y que tu decisión es coherente con lo que el diff realmente contiene.
