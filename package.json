@@ -30,6 +30,8 @@
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.108.1",
     "@tabler/icons-react": "^3.44.0",
     "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
