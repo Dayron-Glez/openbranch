@@ -10,6 +10,24 @@ difficulty: moderate
 estimated_minutes: 20
 validation: checklist
 sandbox_template: code-review-noisy-pr
+skills:
+  - Leer diffs
+  - Comentarios inline
+  - Aprobar / solicitar cambios
+  - Disciplina de scope
+  - Conciencia de API
+recommended_first: "Deja comentarios de revisión accionables"
+pr_preview:
+  number: 214
+  status: Open
+  title: "fix: request timeout on slow upstreams"
+  branch: fix/upstream-timeout
+  base: main
+  files: 4
+  additions: 86
+  deletions: 42
+  comments: 0
+  check_warning: "1 check needs attention"
 ---
 
 Un contribuidor abrió el PR #214 contra `atlas/gateway`. El fix es real: añade un `AbortController` para que las peticiones a un upstream lento no se queden colgadas para siempre. Pero el diff es ruidoso.

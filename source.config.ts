@@ -33,6 +33,22 @@ export const playground = defineDocs({
       estimated_minutes: z.number(),
       validation: z.enum(["checklist", "jest", "typecheck"]),
       sandbox_template: z.string(),
+      skills: z.array(z.string()).optional(),
+      recommended_first: z.string().optional(),
+      pr_preview: z
+        .object({
+          number: z.number(),
+          status: z.string().default("Open"),
+          title: z.string(),
+          branch: z.string(),
+          base: z.string().default("main"),
+          files: z.number(),
+          additions: z.number(),
+          deletions: z.number(),
+          comments: z.number().default(0),
+          check_warning: z.string().optional(),
+        })
+        .optional(),
     }),
   },
   meta: {
