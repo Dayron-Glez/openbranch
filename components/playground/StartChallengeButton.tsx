@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
+import { startChallengeSession } from "@/app/actions/playground"
 
 const PlayIcon = (): React.ReactElement => (
   <svg
@@ -61,6 +62,9 @@ type StartChallengeButtonProps = {
   readonly dict: StartChallengeButtonDict
   readonly isAuthenticated: boolean
   readonly challengePath: string
+  readonly activePath: string
+  readonly slug: string
+  readonly lang: string
   readonly authUser: AuthUser | null
 }
 
@@ -68,6 +72,9 @@ export const StartChallengeButton = ({
   dict,
   isAuthenticated,
   challengePath,
+  activePath,
+  slug,
+  lang,
   authUser,
 }: StartChallengeButtonProps): React.ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
@@ -94,7 +101,14 @@ export const StartChallengeButton = ({
   if (isAuthenticated) {
     return (
       <div className="flex flex-col gap-3">
-        <Button className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0">
+        <Button
+          onClick={async () => {
+            setLoading(true)
+            await startChallengeSession(slug, lang, activePath)
+          }}
+          disabled={loading}
+          className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+        >
           <PlayIcon />
           {dict.startChallenge}
         </Button>

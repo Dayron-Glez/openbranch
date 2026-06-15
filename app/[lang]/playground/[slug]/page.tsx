@@ -92,6 +92,7 @@ export default async function ChallengePage({
   const MdxContent = page.data.body
   const playgroundHref = localizedHref(lang, "/playground")
   const challengePath = localizedHref(lang, `/playground/${slug}`)
+  const activePath = localizedHref(lang, `/playground/${slug}/active`)
 
   const supabase = await createClient()
   const {
@@ -206,6 +207,9 @@ export default async function ChallengePage({
                   dict={dict.detail}
                   isAuthenticated={isAuthenticated}
                   challengePath={challengePath}
+                  activePath={activePath}
+                  slug={slug}
+                  lang={lang}
                   authUser={authUser}
                 />
 

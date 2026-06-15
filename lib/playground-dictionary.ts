@@ -1,6 +1,9 @@
 import type { Lang } from "./landing-dictionary"
 
 export type PlaygroundDict = {
+  readonly active: {
+    readonly comingSoon: string
+  }
   readonly meta: {
     readonly title: string
     readonly description: string
@@ -162,6 +165,10 @@ const translations = {
     en: "Completed a challenge in every category",
   },
   "time.minutes": { es: "min", en: "min" },
+  "active.comingSoon": {
+    es: "La vista activa del reto está en camino. Tu sesión está guardada y empezará aquí.",
+    en: "The active challenge view is on its way. Your session is saved and will start here.",
+  },
   "detail.back": { es: "Volver al playground", en: "Back to all challenges" },
   "detail.startChallenge": { es: "Empezar reto", en: "Start challenge" },
   "detail.sandboxNote": {
@@ -203,6 +210,9 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
   const tx = (key: keyof typeof translations): string => translations[key][locale]
 
   return {
+    active: {
+      comingSoon: tx("active.comingSoon"),
+    },
     meta: {
       title: tx("meta.title"),
       description: tx("meta.description"),
