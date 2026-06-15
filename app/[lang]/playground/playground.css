@@ -107,6 +107,29 @@
   color: var(--color-fg);
 }
 
+/* fenced code blocks — Fumadocs renders with class .shiki on the figure */
+.pg-prose .shiki {
+  margin: 1.25rem 0 !important;
+  background: var(--color-bg-card) !important;
+  border-color: var(--color-line) !important;
+}
+
+.pg-prose .shiki pre {
+  background: transparent !important;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+.pg-prose pre code {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: inherit;
+}
+
 .pg-prose ol,
 .pg-prose ul {
   list-style: none;
