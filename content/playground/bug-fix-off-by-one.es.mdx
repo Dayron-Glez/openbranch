@@ -1,0 +1,50 @@
+---
+title: "Corrige el off-by-one en paginate()"
+description: "Una función de paginación pierde silenciosamente el último ítem en cada página. Un test fallando ya te dice dónde mirar — encuentra el bug y corrígelo."
+icon: Bug
+maturity: stable
+authors:
+  - Dayron Glez
+category: bug-fix
+difficulty: beginner
+estimated_minutes: 12
+validation: jest
+sandbox_template: bug-fix-off-by-one
+skills:
+  - Errores de límite
+  - Depurar con tests
+  - Análisis de casos límite
+  - Aritmética de índices
+---
+
+Llegó un bug report: los endpoints de lista de `atlas/gateway` pierden consistentemente el último ítem en cada página. Cinco resultados pedidos, cuatro devueltos. Diez pedidos, nueve devueltos. Siempre uno de menos.
+
+La función responsable es `paginate()` en `src/gateway/paginate.ts`. Ya hay un test fallando que reproduce el problema exactamente. Tu trabajo es leer el test, entender qué espera, encontrar el bug y corregirlo.
+
+## La situación
+
+El test ya está escrito y actualmente está en rojo:
+
+```typescript
+it("returns a full page including the last item", () => {
+  expect(paginate([1, 2, 3, 4, 5], 0, 3)).toEqual([1, 2, 3])
+})
+```
+
+Con la implementación actual devuelve `[1, 2]`. Un ítem de menos.
+
+El fix es un solo carácter. La explicación de por qué está mal es la parte valiosa.
+
+## Lo que harás
+
+1. Leer el test fallando para entender qué se supone que devuelve `paginate()`.
+2. Leer `paginate.ts` y encontrar la línea que está causando el off-by-one.
+3. Corregirla — el test debe ser tu única guía.
+4. Ejecutar los tests para confirmar que el fix es correcto y que nada más se rompió.
+
+## Cuándo está listo
+
+- El test fallando pasa.
+- La función devuelve el número correcto de ítems para cualquier combinación válida de `page` y `size`.
+
+Resiste el impulso de reescribir la función. El bug es una línea. Corrige solo eso.

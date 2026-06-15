@@ -1,0 +1,58 @@
+---
+title: "Documenta el módulo gateway"
+description: "fetchUpstream no tiene docs, ni ejemplos, ni documenta su null return no obvio. Escribe la documentación que el próximo contribuidor necesita para usarlo con seguridad."
+icon: BookOpen
+maturity: stable
+authors:
+  - Dayron Glez
+category: documentation
+difficulty: beginner
+estimated_minutes: 15
+validation: checklist
+sandbox_template: docs-gateway-module
+skills:
+  - Escritura técnica
+  - Documentación de API
+  - Ejemplos de código
+  - Documentar null safety
+---
+
+`fetchUpstream` es el punto de entrada de cada petición saliente en `atlas/gateway`. Ha pasado por un fix de timeout, un cambio de tipo de retorno y una revisión de código — pero todavía no tiene documentación.
+
+Un nuevo contribuidor que intente usarla tiene que leer toda la implementación para entender qué hace, qué acepta y — lo más importante — por qué a veces devuelve `null` en lugar de una `Response`. Eso es una trampa.
+
+Tu trabajo es escribir un `GATEWAY.md` que haga seguro usar esta función sin leer el código fuente.
+
+## La situación
+
+La firma de la función después de los cambios recientes:
+
+```typescript
+export async function fetchUpstream(url: string, opts: RequestOpts = {}): Promise<Response | null>
+```
+
+Donde `RequestOpts` es:
+
+```typescript
+interface RequestOpts {
+  headers?: Record<string, string>
+  timeoutMs?: number // por defecto 5000
+}
+```
+
+El retorno `null` es lo crítico a documentar. Cualquier código que llame a esta función sin manejarlo fallará silenciosamente en timeout. Esta es exactamente la clase de bug que el reto de code review fue diseñado para detectar.
+
+## Lo que harás
+
+1. Leer `request.ts` para entender el comportamiento de la función de principio a fin.
+2. Escribir `GATEWAY.md` cubriendo: qué hace la función, sus parámetros con tipos y valores por defecto, qué devuelve y cuándo devuelve `null`, y un ejemplo de uso.
+3. Asegurarte de que el ejemplo es ejecutable — import correcto, tipos correctos.
+
+## Cuándo está listo
+
+- Los parámetros están documentados con sus tipos y valores por defecto.
+- El caso de retorno `null` está explicado explícitamente — no solo listado, sino explicado.
+- Se incluye un ejemplo de uso que maneja correctamente el caso `null`.
+- El ejemplo usa la ruta de import correcta.
+
+Una buena documentación no solo describe el happy path. Le dice al lector qué puede salir mal y qué hacer al respecto.

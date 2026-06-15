@@ -1,0 +1,87 @@
+import type { ReactNode } from "react"
+import Link from "next/link"
+import { IconClock } from "@/icons"
+
+type ChallengeDifficultyKey = "beginner" | "moderate" | "demanding"
+
+type ChallengeCardProps = {
+  readonly href: string
+  readonly title: string
+  readonly description: string
+  readonly difficulty: ChallengeDifficultyKey
+  readonly estimatedMinutes: number
+  readonly icon: ReactNode
+  readonly difficultyLabel: string
+  readonly statusLabel: string
+  readonly minutesLabel: string
+}
+
+const difficultyLevel: Record<ChallengeDifficultyKey, 1 | 2 | 3> = {
+  beginner: 1,
+  moderate: 2,
+  demanding: 3,
+}
+
+type DifficultyBarsProps = {
+  readonly level: 1 | 2 | 3
+}
+
+const DifficultyBars = ({ level }: DifficultyBarsProps) => (
+  <span className="flex items-end gap-[3px]">
+    <span
+      className={`bg-ob-accent h-2 w-[3px] rounded-[1px] ${level >= 1 ? "opacity-100" : "opacity-20"}`}
+    />
+    <span
+      className={`bg-ob-accent h-2.5 w-[3px] rounded-[1px] ${level >= 2 ? "opacity-100" : "opacity-20"}`}
+    />
+    <span
+      className={`bg-ob-accent h-3 w-[3px] rounded-[1px] ${level >= 3 ? "opacity-100" : "opacity-20"}`}
+    />
+  </span>
+)
+
+export const ChallengeCard = ({
+  href,
+  title,
+  description,
+  difficulty,
+  estimatedMinutes,
+  icon,
+  difficultyLabel,
+  statusLabel,
+  minutesLabel,
+}: ChallengeCardProps) => {
+  return (
+    <Link
+      href={href}
+      data-challenge-card
+      className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-[var(--r-12)] border p-5 text-inherit no-underline transition-[background,border-color] duration-[var(--d-base)] ease-[var(--ease)]"
+    >
+      <div className="flex items-center justify-between">
+        <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-[var(--r-8)] border [&_svg]:size-[17px]">
+          {icon}
+        </span>
+        <span className="text-fg-muted flex items-center gap-1.5 font-mono text-[11.5px]">
+          <span className="border-fg-faint size-1.5 rounded-full border-[1.5px]" />
+          {statusLabel}
+        </span>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <h3 className="m-0 text-[15px] leading-snug font-medium tracking-[0]">{title}</h3>
+        <p className="text-fg-muted m-0 line-clamp-2 text-[13px] leading-[1.55]">{description}</p>
+      </div>
+      <div className="text-fg-muted mt-auto flex items-center justify-between font-mono text-[11px] tracking-[0.04em]">
+        <span className="flex items-center gap-2">
+          <DifficultyBars level={difficultyLevel[difficulty]} />
+          <span>{difficultyLabel}</span>
+        </span>
+        <span className="flex items-center gap-1">
+          <IconClock className="size-3 shrink-0" />
+          <span>
+            {estimatedMinutes} {minutesLabel}
+          </span>
+        </span>
+      </div>
+    </Link>
+  )
+}
