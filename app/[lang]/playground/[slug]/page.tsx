@@ -100,7 +100,7 @@ export default async function ChallengePage({
   return (
     <main
       data-pg-main
-      className="relative z-1 flex h-dvh flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
+      className="relative z-1 flex h-[calc(100dvh-48px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
       <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
         {/* breadcrumb */}
