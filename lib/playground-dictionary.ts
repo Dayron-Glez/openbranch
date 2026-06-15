@@ -20,6 +20,11 @@ export type PlaygroundDict = {
     readonly authGithub: string
     readonly authPrivacyStrong: string
     readonly authPrivacyRest: string
+    readonly signOut: string
+    readonly signOutTitle: string
+    readonly signOutBody: string
+    readonly signOutConfirm: string
+    readonly signOutCancel: string
   }
   readonly hub: {
     readonly eyebrow: string
@@ -183,6 +188,14 @@ const translations = {
     es: "— solo identidad. Leemos tu nombre de usuario para asociar tu progreso. Eso es todo.",
     en: "— identity only. We read your username to associate your progress. That's all.",
   },
+  "detail.signOut": { es: "Cerrar sesión", en: "Sign out" },
+  "detail.signOutTitle": { es: "¿Cerrar sesión?", en: "Sign out?" },
+  "detail.signOutBody": {
+    es: "Tu progreso está guardado. Puedes volver a iniciar sesión en cualquier momento.",
+    en: "Your progress is saved. You can sign back in at any time.",
+  },
+  "detail.signOutConfirm": { es: "Cerrar sesión", en: "Sign out" },
+  "detail.signOutCancel": { es: "Cancelar", en: "Cancel" },
 } satisfies Record<string, LocalizedEntry>
 
 export const getPlaygroundDict = (lang: string): PlaygroundDict => {
@@ -280,6 +293,11 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       authGithub: tx("detail.authGithub"),
       authPrivacyStrong: tx("detail.authPrivacyStrong"),
       authPrivacyRest: tx("detail.authPrivacyRest"),
+      signOut: tx("detail.signOut"),
+      signOutTitle: tx("detail.signOutTitle"),
+      signOutBody: tx("detail.signOutBody"),
+      signOutConfirm: tx("detail.signOutConfirm"),
+      signOutCancel: tx("detail.signOutCancel"),
     },
   }
 }

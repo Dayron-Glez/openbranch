@@ -98,6 +98,13 @@ export default async function ChallengePage({
     data: { user },
   } = await supabase.auth.getUser()
   const isAuthenticated = user !== null
+  const authUser =
+    user !== null
+      ? {
+          username: (user.user_metadata?.user_name as string | undefined) ?? null,
+          avatarUrl: (user.user_metadata?.avatar_url as string | undefined) ?? null,
+        }
+      : null
 
   const categoryLabel = dict.category[page.data.category]
   const difficultyLabel = dict.difficulty[page.data.difficulty]
@@ -199,6 +206,7 @@ export default async function ChallengePage({
                   dict={dict.detail}
                   isAuthenticated={isAuthenticated}
                   challengePath={challengePath}
+                  authUser={authUser}
                 />
 
                 <p className="text-fg-muted mt-2.5 mb-4 text-center font-mono text-[11px]">

@@ -1,8 +1,10 @@
 "use client"
 
 import type React from "react"
+import Image from "next/image"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 
@@ -43,20 +45,33 @@ type StartChallengeButtonDict = {
   readonly authGithub: string
   readonly authPrivacyStrong: string
   readonly authPrivacyRest: string
+  readonly signOut: string
+  readonly signOutTitle: string
+  readonly signOutBody: string
+  readonly signOutConfirm: string
+  readonly signOutCancel: string
+}
+
+type AuthUser = {
+  readonly username: string | null
+  readonly avatarUrl: string | null
 }
 
 type StartChallengeButtonProps = {
   readonly dict: StartChallengeButtonDict
   readonly isAuthenticated: boolean
   readonly challengePath: string
+  readonly authUser: AuthUser | null
 }
 
 export const StartChallengeButton = ({
   dict,
   isAuthenticated,
   challengePath,
+  authUser,
 }: StartChallengeButtonProps): React.ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
+  const [signOutOpen, setSignOutOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleGitHubSignIn = async (): Promise<void> => {
@@ -70,12 +85,72 @@ export const StartChallengeButton = ({
     })
   }
 
+  const handleSignOut = async (): Promise<void> => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    window.location.reload()
+  }
+
   if (isAuthenticated) {
     return (
-      <Button className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0">
-        <PlayIcon />
-        {dict.startChallenge}
-      </Button>
+      <div className="flex flex-col gap-3">
+        <Button className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0">
+          <PlayIcon />
+          {dict.startChallenge}
+        </Button>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            {authUser?.avatarUrl !== null && authUser?.avatarUrl !== undefined ? (
+              <Image
+                src={authUser.avatarUrl}
+                alt={authUser.username ?? "avatar"}
+                width={20}
+                height={20}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="bg-bg-elev border-line size-5 rounded-full border" />
+            )}
+            <span className="text-fg-2 min-w-0 truncate font-mono text-[11.5px]">
+              {authUser?.username !== null && authUser?.username !== undefined
+                ? `@${authUser.username}`
+                : "GitHub"}
+            </span>
+          </div>
+          <button
+            onClick={() => setSignOutOpen(true)}
+            className="text-fg-muted hover:text-fg-2 shrink-0 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+          >
+            {dict.signOut}
+          </button>
+        </div>
+
+        <ConfirmDialog
+          open={signOutOpen}
+          onOpenChange={setSignOutOpen}
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              className="text-fg-2 size-9"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          }
+          title={dict.signOutTitle}
+          description={dict.signOutBody}
+          confirmLabel={dict.signOutConfirm}
+          cancelLabel={dict.signOutCancel}
+          onConfirm={handleSignOut}
+        />
+      </div>
     )
   }
 
