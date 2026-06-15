@@ -10,6 +10,7 @@ import { getMDXComponents } from "@/components/docs/mdx"
 import { StartChallengeButton } from "@/components/playground/StartChallengeButton"
 import { PrPreviewCard } from "@/components/playground/PrPreviewCard"
 import { IconPR, IconBug, IconGitMerge, IconFlask, IconBook, IconBranch } from "@/icons"
+import { createClient } from "@/lib/supabase/server"
 
 const CHALLENGE_ICONS: Record<string, ReactNode> = {
   GitPullRequest: <IconPR />,
@@ -90,6 +91,13 @@ export default async function ChallengePage({
   const dict = getPlaygroundDict(lang)
   const MdxContent = page.data.body
   const playgroundHref = localizedHref(lang, "/playground")
+  const challengePath = localizedHref(lang, `/playground/${slug}`)
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const isAuthenticated = user !== null
 
   const categoryLabel = dict.category[page.data.category]
   const difficultyLabel = dict.difficulty[page.data.difficulty]
@@ -187,7 +195,11 @@ export default async function ChallengePage({
             <div className="flex flex-col gap-4 pb-10">
               {/* card 1: CTA + meta */}
               <div className="bg-bg-card border-line rounded-[var(--r-12)] border p-[18px]">
-                <StartChallengeButton dict={dict.detail} />
+                <StartChallengeButton
+                  dict={dict.detail}
+                  isAuthenticated={isAuthenticated}
+                  challengePath={challengePath}
+                />
 
                 <p className="text-fg-muted mt-2.5 mb-4 text-center font-mono text-[11px]">
                   {dict.detail.sandboxNote}

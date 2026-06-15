@@ -1,8 +1,40 @@
 "use client"
 
-import React, { useState } from "react"
+import type React from "react"
+import { useState } from "react"
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/client"
+
+const PlayIcon = (): React.ReactElement => (
+  <svg
+    viewBox="0 0 24 24"
+    className="size-[14px] shrink-0"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M7 5l11 7-11 7z" />
+  </svg>
+)
+
+const GitHubIcon = (): React.ReactElement => (
+  <svg
+    viewBox="0 0 24 24"
+    className="size-[17px] shrink-0"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3a9 9 0 0 0-3 17.5v-2c-3 .5-3.5-1.5-3.5-1.5-.5-1-1-1.5-1-1.5-1-.5 0-.5 0-.5 1 0 1.5 1 1.5 1 1 1.5 2.5 1 3 1 0-1 .5-1.5 1-1.5-2-.5-3.5-1-3.5-4.5 0-1 .5-2 1-2.5 0-.5-.5-1.5 0-2.5 0 0 1 0 2.5 1a8 8 0 0 1 4 0c1.5-1 2.5-1 2.5-1 .5 1 0 2 0 2.5.5.5 1 1.5 1 2.5 0 3.5-1.5 4-3.5 4.5.5.5 1 1 1 2v3" />
+  </svg>
+)
 
 type StartChallengeButtonDict = {
   readonly startChallenge: string
@@ -15,10 +47,37 @@ type StartChallengeButtonDict = {
 
 type StartChallengeButtonProps = {
   readonly dict: StartChallengeButtonDict
+  readonly isAuthenticated: boolean
+  readonly challengePath: string
 }
 
-export const StartChallengeButton = ({ dict }: StartChallengeButtonProps): React.ReactElement => {
+export const StartChallengeButton = ({
+  dict,
+  isAuthenticated,
+  challengePath,
+}: StartChallengeButtonProps): React.ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const handleGitHubSignIn = async (): Promise<void> => {
+    setLoading(true)
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback?next=${encodeURIComponent(challengePath)}`,
+      },
+    })
+  }
+
+  if (isAuthenticated) {
+    return (
+      <Button className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0">
+        <PlayIcon />
+        {dict.startChallenge}
+      </Button>
+    )
+  }
 
   return (
     <>
@@ -26,18 +85,7 @@ export const StartChallengeButton = ({ dict }: StartChallengeButtonProps): React
         onClick={() => setOpen(true)}
         className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="size-[14px] shrink-0"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M7 5l11 7-11 7z" />
-        </svg>
+        <PlayIcon />
         {dict.startChallenge}
       </Button>
 
@@ -75,19 +123,12 @@ export const StartChallengeButton = ({ dict }: StartChallengeButtonProps): React
               {dict.authBody}
             </DialogDescription>
 
-            <Button className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-[var(--r-8)] text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0">
-              <svg
-                viewBox="0 0 24 24"
-                className="size-[17px] shrink-0"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M12 3a9 9 0 0 0-3 17.5v-2c-3 .5-3.5-1.5-3.5-1.5-.5-1-1-1.5-1-1.5-1-.5 0-.5 0-.5 1 0 1.5 1 1.5 1 1 1.5 2.5 1 3 1 0-1 .5-1.5 1-1.5-2-.5-3.5-1-3.5-4.5 0-1 .5-2 1-2.5 0-.5-.5-1.5 0-2.5 0 0 1 0 2.5 1a8 8 0 0 1 4 0c1.5-1 2.5-1 2.5-1 .5 1 0 2 0 2.5.5.5 1 1.5 1 2.5 0 3.5-1.5 4-3.5 4.5.5.5 1 1 1 2v3" />
-              </svg>
+            <Button
+              onClick={handleGitHubSignIn}
+              disabled={loading}
+              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-[var(--r-8)] text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+            >
+              <GitHubIcon />
               {dict.authGithub}
             </Button>
 
