@@ -149,7 +149,7 @@ export default async function PlaygroundPage({
 
       {startingChallenge !== undefined && (
         <StartingLine
-          href={localizedHref(lang, startingChallenge.url)}
+          href={startingChallenge.url}
           challengeTitle={startingChallenge.data.title}
           challengeIcon={getChallengeIcon(startingChallenge.data.icon)}
           challengeCategoryLabel={dict.category[startingChallenge.data.category]}
@@ -177,7 +177,7 @@ export default async function PlaygroundPage({
           {filteredChallenges.map((challenge) => (
             <ChallengeCard
               key={challenge.url}
-              href={localizedHref(lang, challenge.url)}
+              href={challenge.url}
               title={challenge.data.title}
               description={challenge.data.description ?? ""}
               difficulty={challenge.data.difficulty}
@@ -203,7 +203,7 @@ export default async function PlaygroundPage({
                   {categoryChallenges.map((challenge) => (
                     <ChallengeCard
                       key={challenge.url}
-                      href={localizedHref(lang, challenge.url)}
+                      href={challenge.url}
                       title={challenge.data.title}
                       description={challenge.data.description ?? ""}
                       difficulty={challenge.data.difficulty}
