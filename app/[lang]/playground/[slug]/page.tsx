@@ -196,12 +196,24 @@ export default async function ChallengePage({
             <div className="pg-prose">
               <MdxContent components={getMDXComponents()} />
             </div>
+
+            {/* recommended first */}
+            {page.data.recommended_first !== undefined && (
+              <div className="mt-6">
+                <p className="text-fg-muted mb-2 font-mono text-[11px] tracking-[0.08em] uppercase">
+                  {dict.detail.recommendedFirst}
+                </p>
+                <div className="flex items-center gap-2.5">
+                  <CheckIcon />
+                  <span className="text-fg-2 text-[13.5px]">{page.data.recommended_first}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ── sidebar ── */}
           <aside className="max-[900px]:order-first">
-            <div className="flex flex-col gap-4 pb-10">
-              {/* card 1: CTA + meta */}
+            <div className="flex flex-col gap-4">
               <div className="bg-bg-card border-line rounded-[var(--r-12)] border p-[18px]">
                 <StartChallengeButton
                   dict={dict.detail}
@@ -283,7 +295,7 @@ export default async function ChallengePage({
                 </div>
               </div>
 
-              {/* card 2: You'll practice */}
+              {/* card: You'll practice */}
               {skills.length > 0 && (
                 <div className="bg-bg-card border-line rounded-[var(--r-12)] border px-[18px] py-4">
                   <p className="text-fg-muted mb-3 font-mono text-[11px] tracking-[0.08em] uppercase">
@@ -296,19 +308,6 @@ export default async function ChallengePage({
                         <span className="text-fg-2 text-[13.5px]">{skill}</span>
                       </div>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {/* card 3: Recommended first */}
-              {page.data.recommended_first !== undefined && (
-                <div className="bg-bg-card border-line rounded-[var(--r-12)] border px-[18px] py-4">
-                  <p className="text-fg-muted mb-1 font-mono text-[11px] tracking-[0.08em] uppercase">
-                    {dict.detail.recommendedFirst}
-                  </p>
-                  <div className="flex items-center gap-3 py-2">
-                    <CheckIcon />
-                    <span className="text-fg-2 text-[13.5px]">{page.data.recommended_first}</span>
                   </div>
                 </div>
               )}
