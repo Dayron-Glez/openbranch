@@ -2,20 +2,39 @@ import type { Lang } from "./landing-dictionary"
 
 export type PlaygroundDict = {
   readonly active: {
-    readonly checklistHeading: string
-    readonly progress: string
-    readonly submitButton: string
-    readonly submitHint: string
     readonly exitLabel: string
+    readonly submitButton: string
+    readonly decisionLabel: string
+    readonly decisionApprove: string
+    readonly decisionComment: string
+    readonly decisionRequestChanges: string
+    readonly commentSingular: string
+    readonly commentPlural: string
+    readonly noComments: string
+    readonly addComment: string
+    readonly cancelComment: string
+    readonly deleteComment: string
+    readonly commentPlaceholder: string
+    readonly submitRequirements: string
   }
   readonly result: {
-    readonly eyebrow: string
     readonly heading: string
+    readonly headingAccent: string
     readonly body: string
-    readonly badgeEarnedLabel: string
-    readonly nextChallengeLabel: string
+    readonly statCompleted: string
+    readonly statTimeTaken: string
+    readonly statChallengeBranch: string
+    readonly trackSuffix: string
+    readonly nextChallengeCta: string
     readonly backToHub: string
     readonly practiceAgain: string
+    readonly badgeEarnedLabel: string
+    readonly detailedScoringHeading: string
+    readonly detailedScoringBody: string
+    readonly keepGoing: string
+    readonly allChallenges: string
+    readonly buildsOnThis: string
+    readonly newTrack: string
   }
   readonly meta: {
     readonly title: string
@@ -180,24 +199,52 @@ const translations = {
     en: "Completed a challenge in every category",
   },
   "time.minutes": { es: "min", en: "min" },
-  "active.checklistHeading": { es: "Lista de revisión", en: "Review checklist" },
-  "active.progress": { es: "{checked} de {total} revisados", en: "{checked} of {total} checked" },
-  "active.submitButton": { es: "Enviar revisión", en: "Submit review" },
-  "active.submitHint": {
-    es: "Marca todos los elementos para enviar",
-    en: "Check all items to submit",
-  },
   "active.exitLabel": { es: "Salir del reto", en: "Exit challenge" },
-  "result.eyebrow": { es: "reto completado", en: "challenge complete" },
-  "result.heading": { es: "Buen trabajo.", en: "Nice work." },
-  "result.body": {
-    es: "Identificaste lo que importaba y dejaste el diff mejor de como lo encontraste.",
-    en: "You caught what mattered and left the diff better than you found it.",
+  "active.submitButton": { es: "Enviar revisión", en: "Submit review" },
+  "active.decisionLabel": { es: "Decisión de revisión", en: "Review decision" },
+  "active.decisionApprove": { es: "Aprobar", en: "Approve" },
+  "active.decisionComment": { es: "Comentar", en: "Comment" },
+  "active.decisionRequestChanges": { es: "Solicitar cambios", en: "Request changes" },
+  "active.commentSingular": { es: "comentario", en: "comment" },
+  "active.commentPlural": { es: "comentarios", en: "comments" },
+  "active.noComments": { es: "Sin comentarios aún", en: "No comments yet" },
+  "active.addComment": { es: "Añadir", en: "Add comment" },
+  "active.cancelComment": { es: "Cancelar", en: "Cancel" },
+  "active.deleteComment": { es: "Eliminar", en: "Delete" },
+  "active.commentPlaceholder": {
+    es: "Escribe un comentario específico y accionable...",
+    en: "Write a specific, actionable comment...",
   },
-  "result.badgeEarnedLabel": { es: "Badge ganado", en: "Badge earned" },
-  "result.nextChallengeLabel": { es: "Siguiente reto", en: "Next challenge" },
-  "result.backToHub": { es: "Volver al playground", en: "Back to playground" },
+  "active.submitRequirements": {
+    es: "Añade al menos un comentario y selecciona una decisión",
+    en: "Add at least one comment and select a decision",
+  },
+  "result.heading": { es: "Reto", en: "Challenge" },
+  "result.headingAccent": { es: "completado.", en: "complete." },
+  "result.body": {
+    es: "Revisaste el diff y enviaste tu decisión. La rama se fusiona — o se bloquea. De cualquier forma, tomaste la llamada.",
+    en: "You reviewed the diff and submitted a decision. The branch is merged — or blocked. Either way, you shipped a call.",
+  },
+  "result.statCompleted": { es: "Completado", en: "Completed" },
+  "result.statTimeTaken": { es: "tiempo", en: "time taken" },
+  "result.statChallengeBranch": { es: "rama del reto", en: "challenge branch" },
+  "result.trackSuffix": { es: "track", en: "track" },
+  "result.nextChallengeCta": { es: "Siguiente reto", en: "Next challenge" },
+  "result.backToHub": { es: "Volver al playground", en: "Back to hub" },
   "result.practiceAgain": { es: "Practicar de nuevo", en: "Practice again" },
+  "result.badgeEarnedLabel": { es: "Badge ganado", en: "Badge earned" },
+  "result.detailedScoringHeading": {
+    es: "Puntuación detallada próximamente",
+    en: "Detailed scoring coming soon",
+  },
+  "result.detailedScoringBody": {
+    es: "Estamos construyendo un sistema de evaluación automática que te dirá exactamente qué detectaste, qué te faltó y por qué importa. Por ahora, el mérito es tuyo — lo terminaste.",
+    en: "We're building an automated grader that will tell you exactly what you caught, what you missed, and why it matters. For now, the rep is yours — you finished it.",
+  },
+  "result.keepGoing": { es: "Sigue adelante", en: "Keep going" },
+  "result.allChallenges": { es: "Todos los retos", en: "All challenges" },
+  "result.buildsOnThis": { es: "Continúa este", en: "Builds on this" },
+  "result.newTrack": { es: "Nuevo track", en: "New track" },
   "detail.back": { es: "Volver al playground", en: "Back to all challenges" },
   "detail.startChallenge": { es: "Empezar reto", en: "Start challenge" },
   "detail.sandboxNote": {
@@ -242,20 +289,39 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
 
   return {
     active: {
-      checklistHeading: tx("active.checklistHeading"),
-      progress: tx("active.progress"),
-      submitButton: tx("active.submitButton"),
-      submitHint: tx("active.submitHint"),
       exitLabel: tx("active.exitLabel"),
+      submitButton: tx("active.submitButton"),
+      decisionLabel: tx("active.decisionLabel"),
+      decisionApprove: tx("active.decisionApprove"),
+      decisionComment: tx("active.decisionComment"),
+      decisionRequestChanges: tx("active.decisionRequestChanges"),
+      commentSingular: tx("active.commentSingular"),
+      commentPlural: tx("active.commentPlural"),
+      noComments: tx("active.noComments"),
+      addComment: tx("active.addComment"),
+      cancelComment: tx("active.cancelComment"),
+      deleteComment: tx("active.deleteComment"),
+      commentPlaceholder: tx("active.commentPlaceholder"),
+      submitRequirements: tx("active.submitRequirements"),
     },
     result: {
-      eyebrow: tx("result.eyebrow"),
       heading: tx("result.heading"),
+      headingAccent: tx("result.headingAccent"),
       body: tx("result.body"),
-      badgeEarnedLabel: tx("result.badgeEarnedLabel"),
-      nextChallengeLabel: tx("result.nextChallengeLabel"),
+      statCompleted: tx("result.statCompleted"),
+      statTimeTaken: tx("result.statTimeTaken"),
+      statChallengeBranch: tx("result.statChallengeBranch"),
+      trackSuffix: tx("result.trackSuffix"),
+      nextChallengeCta: tx("result.nextChallengeCta"),
       backToHub: tx("result.backToHub"),
       practiceAgain: tx("result.practiceAgain"),
+      badgeEarnedLabel: tx("result.badgeEarnedLabel"),
+      detailedScoringHeading: tx("result.detailedScoringHeading"),
+      detailedScoringBody: tx("result.detailedScoringBody"),
+      keepGoing: tx("result.keepGoing"),
+      allChallenges: tx("result.allChallenges"),
+      buildsOnThis: tx("result.buildsOnThis"),
+      newTrack: tx("result.newTrack"),
     },
     meta: {
       title: tx("meta.title"),
