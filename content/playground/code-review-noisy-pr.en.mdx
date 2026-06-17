@@ -28,6 +28,13 @@ pr_preview:
   deletions: 42
   comments: 0
   check_warning: "1 check needs attention"
+checklist:
+  - id: "return-type"
+    text: "Flag the line that changes the public return type"
+  - id: "review-decision"
+    text: "Your review decision is defensible given the state of the diff"
+  - id: "actionable-comments"
+    text: "Every comment you left is specific and actionable"
 ---
 
 A contributor opened PR #214 against `atlas/gateway`. The fix is real: it adds an `AbortController` so requests to a slow upstream no longer hang forever. But the diff is noisy.

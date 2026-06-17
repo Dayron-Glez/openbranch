@@ -49,6 +49,7 @@ export const playground = defineDocs({
           check_warning: z.string().optional(),
         })
         .optional(),
+      checklist: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
     }),
   },
   meta: {

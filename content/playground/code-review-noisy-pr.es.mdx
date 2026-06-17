@@ -28,6 +28,13 @@ pr_preview:
   deletions: 42
   comments: 0
   check_warning: "1 check needs attention"
+checklist:
+  - id: "return-type"
+    text: "Señala la línea que cambia el tipo de retorno público"
+  - id: "review-decision"
+    text: "Tu decisión de revisión es defendible dado el estado del diff"
+  - id: "actionable-comments"
+    text: "Cada comentario que dejaste es específico y accionable"
 ---
 
 Un contribuidor abrió el PR #214 contra `atlas/gateway`. El fix es real: añade un `AbortController` para que las peticiones a un upstream lento no se queden colgadas para siempre. Pero el diff es ruidoso.
