@@ -8,25 +8,14 @@ import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
 import { ConfettiEffect } from "@/components/playground/ConfettiEffect"
-import { IconPR, IconBug, IconGitMerge, IconFlask, IconBook, IconBranch } from "@/icons"
+import { DiffBars } from "@/components/playground/DiffBars"
+import { getChallengeIcon } from "@/lib/playground/challenge-icons"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
 }
 
 const DIFFICULTY_ORDER: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
-const DIFFICULTY_LEVEL: Record<string, number> = { beginner: 1, moderate: 2, demanding: 3 }
-
-const CHALLENGE_ICONS: Record<string, ReactNode> = {
-  GitPullRequest: <IconPR />,
-  Bug: <IconBug />,
-  GitMerge: <IconGitMerge />,
-  FlaskConical: <IconFlask />,
-  BookOpen: <IconBook />,
-}
-
-const getChallengeIcon = (iconName: string | undefined): ReactNode =>
-  (iconName !== undefined && CHALLENGE_ICONS[iconName]) || <IconBranch />
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
@@ -173,22 +162,6 @@ const ChartIcon = (): ReactNode => (
     <rect x="10" y="7" width="4" height="14" rx="0.5" />
     <rect x="17" y="3" width="4" height="18" rx="0.5" />
   </svg>
-)
-
-/* ── difficulty bars ── */
-type DiffBarsProps = { readonly level: number }
-const DiffBars = ({ level }: DiffBarsProps): ReactNode => (
-  <span className="inline-flex h-3 items-end gap-[3px]">
-    <i
-      className={`block h-[5px] w-[3px] rounded-[1px] not-italic ${level >= 1 ? "bg-ob-accent" : "bg-fg-faint"}`}
-    />
-    <i
-      className={`block h-2 w-[3px] rounded-[1px] not-italic ${level >= 2 ? "bg-ob-accent" : "bg-fg-faint"}`}
-    />
-    <i
-      className={`block h-3 w-[3px] rounded-[1px] not-italic ${level >= 3 ? "bg-ob-accent" : "bg-fg-faint"}`}
-    />
-  </span>
 )
 
 /* ── openbranch logo mark (SVG inline) ── */
@@ -452,9 +425,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-ob-accent flex items-center gap-2 font-mono text-[12px]">
-                        <DiffBars
-                          level={DIFFICULTY_LEVEL[buildsOnChallenge.data.difficulty] ?? 1}
-                        />
+                        <DiffBars difficulty={buildsOnChallenge.data.difficulty} />
                         {dict.difficulty[buildsOnChallenge.data.difficulty]}
                       </span>
                       <span className="text-fg-muted flex items-center gap-1 font-mono text-[12px]">
@@ -487,9 +458,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-ob-accent flex items-center gap-2 font-mono text-[12px]">
-                        <DiffBars
-                          level={DIFFICULTY_LEVEL[newTrackChallenge.data.difficulty] ?? 1}
-                        />
+                        <DiffBars difficulty={newTrackChallenge.data.difficulty} />
                         {dict.difficulty[newTrackChallenge.data.difficulty]}
                       </span>
                       <span className="text-fg-muted flex items-center gap-1 font-mono text-[12px]">

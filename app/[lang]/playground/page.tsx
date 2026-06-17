@@ -10,18 +10,8 @@ import { StartingLine } from "@/components/playground/StartingLine"
 import { BadgesSection } from "@/components/playground/BadgesSection"
 import { FilterBar } from "@/components/playground/FilterBar"
 import { PlaygroundGridTransition } from "@/components/playground/PlaygroundGridTransition"
-import { IconPR, IconBug, IconGitMerge, IconFlask, IconBook, IconBranch } from "@/icons"
-
-const CHALLENGE_ICONS: Record<string, ReactNode> = {
-  GitPullRequest: <IconPR />,
-  Bug: <IconBug />,
-  GitMerge: <IconGitMerge />,
-  FlaskConical: <IconFlask />,
-  BookOpen: <IconBook />,
-}
-
-const getChallengeIcon = (iconName: string | undefined): ReactNode =>
-  (iconName !== undefined && CHALLENGE_ICONS[iconName]) || <IconBranch />
+import { IconPR, IconBug, IconFlask, IconBook, IconBranch } from "@/icons"
+import { getChallengeIcon } from "@/lib/playground/challenge-icons"
 
 const CATEGORY_ORDER = ["code-review", "bug-fix", "testing", "git", "documentation"] as const
 
