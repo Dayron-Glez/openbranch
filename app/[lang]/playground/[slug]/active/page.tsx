@@ -87,7 +87,7 @@ export default async function ActiveChallengePage({
           <path d="M3 9h18M9 21V9" />
         </svg>
         <p className="text-fg-muted max-w-[42ch] text-center font-mono text-[12px] leading-[1.7]">
-          {dict.active.comingSoon}
+          {dict.status.inProgress}
         </p>
       </div>
     </main>

@@ -2,7 +2,20 @@ import type { Lang } from "./landing-dictionary"
 
 export type PlaygroundDict = {
   readonly active: {
-    readonly comingSoon: string
+    readonly checklistHeading: string
+    readonly progress: string
+    readonly submitButton: string
+    readonly submitHint: string
+    readonly exitLabel: string
+  }
+  readonly result: {
+    readonly eyebrow: string
+    readonly heading: string
+    readonly body: string
+    readonly badgeEarnedLabel: string
+    readonly nextChallengeLabel: string
+    readonly backToHub: string
+    readonly practiceAgain: string
   }
   readonly meta: {
     readonly title: string
@@ -28,6 +41,8 @@ export type PlaygroundDict = {
     readonly signOutBody: string
     readonly signOutConfirm: string
     readonly signOutCancel: string
+    readonly practiceAgain: string
+    readonly continueChallenge: string
   }
   readonly hub: {
     readonly eyebrow: string
@@ -165,10 +180,24 @@ const translations = {
     en: "Completed a challenge in every category",
   },
   "time.minutes": { es: "min", en: "min" },
-  "active.comingSoon": {
-    es: "La vista activa del reto está en camino. Tu sesión está guardada y empezará aquí.",
-    en: "The active challenge view is on its way. Your session is saved and will start here.",
+  "active.checklistHeading": { es: "Lista de revisión", en: "Review checklist" },
+  "active.progress": { es: "{checked} de {total} revisados", en: "{checked} of {total} checked" },
+  "active.submitButton": { es: "Enviar revisión", en: "Submit review" },
+  "active.submitHint": {
+    es: "Marca todos los elementos para enviar",
+    en: "Check all items to submit",
   },
+  "active.exitLabel": { es: "Salir del reto", en: "Exit challenge" },
+  "result.eyebrow": { es: "reto completado", en: "challenge complete" },
+  "result.heading": { es: "Buen trabajo.", en: "Nice work." },
+  "result.body": {
+    es: "Identificaste lo que importaba y dejaste el diff mejor de como lo encontraste.",
+    en: "You caught what mattered and left the diff better than you found it.",
+  },
+  "result.badgeEarnedLabel": { es: "Badge ganado", en: "Badge earned" },
+  "result.nextChallengeLabel": { es: "Siguiente reto", en: "Next challenge" },
+  "result.backToHub": { es: "Volver al playground", en: "Back to playground" },
+  "result.practiceAgain": { es: "Practicar de nuevo", en: "Practice again" },
   "detail.back": { es: "Volver al playground", en: "Back to all challenges" },
   "detail.startChallenge": { es: "Empezar reto", en: "Start challenge" },
   "detail.sandboxNote": {
@@ -203,6 +232,8 @@ const translations = {
   },
   "detail.signOutConfirm": { es: "Cerrar sesión", en: "Sign out" },
   "detail.signOutCancel": { es: "Cancelar", en: "Cancel" },
+  "detail.practiceAgain": { es: "Practicar de nuevo", en: "Practice again" },
+  "detail.continueChallenge": { es: "Continuar reto", en: "Continue challenge" },
 } satisfies Record<string, LocalizedEntry>
 
 export const getPlaygroundDict = (lang: string): PlaygroundDict => {
@@ -211,7 +242,20 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
 
   return {
     active: {
-      comingSoon: tx("active.comingSoon"),
+      checklistHeading: tx("active.checklistHeading"),
+      progress: tx("active.progress"),
+      submitButton: tx("active.submitButton"),
+      submitHint: tx("active.submitHint"),
+      exitLabel: tx("active.exitLabel"),
+    },
+    result: {
+      eyebrow: tx("result.eyebrow"),
+      heading: tx("result.heading"),
+      body: tx("result.body"),
+      badgeEarnedLabel: tx("result.badgeEarnedLabel"),
+      nextChallengeLabel: tx("result.nextChallengeLabel"),
+      backToHub: tx("result.backToHub"),
+      practiceAgain: tx("result.practiceAgain"),
     },
     meta: {
       title: tx("meta.title"),
@@ -308,6 +352,8 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       signOutBody: tx("detail.signOutBody"),
       signOutConfirm: tx("detail.signOutConfirm"),
       signOutCancel: tx("detail.signOutCancel"),
+      practiceAgain: tx("detail.practiceAgain"),
+      continueChallenge: tx("detail.continueChallenge"),
     },
   }
 }
