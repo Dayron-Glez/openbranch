@@ -2,6 +2,7 @@
 
 import type React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
@@ -41,6 +42,8 @@ const GitHubIcon = (): React.ReactElement => (
 
 type StartChallengeButtonDict = {
   readonly startChallenge: string
+  readonly practiceAgain: string
+  readonly continueChallenge: string
   readonly authTitle: string
   readonly authBody: string
   readonly authGithub: string
@@ -53,6 +56,8 @@ type StartChallengeButtonDict = {
   readonly signOutCancel: string
 }
 
+type SessionStatus = "in_progress" | "completed" | null
+
 type AuthUser = {
   readonly username: string | null
   readonly avatarUrl: string | null
@@ -61,6 +66,7 @@ type AuthUser = {
 type StartChallengeButtonProps = {
   readonly dict: StartChallengeButtonDict
   readonly isAuthenticated: boolean
+  readonly sessionStatus: SessionStatus
   readonly challengePath: string
   readonly activePath: string
   readonly slug: string
@@ -71,6 +77,7 @@ type StartChallengeButtonProps = {
 export const StartChallengeButton = ({
   dict,
   isAuthenticated,
+  sessionStatus,
   challengePath,
   activePath,
   slug,
@@ -99,19 +106,36 @@ export const StartChallengeButton = ({
   }
 
   if (isAuthenticated) {
+    const ctaLabel =
+      sessionStatus === "in_progress"
+        ? dict.continueChallenge
+        : sessionStatus === "completed"
+          ? dict.practiceAgain
+          : dict.startChallenge
+
     return (
       <div className="flex flex-col gap-3">
-        <Button
-          onClick={async () => {
-            setLoading(true)
-            await startChallengeSession(slug, lang, activePath)
-          }}
-          disabled={loading}
-          className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
-        >
-          <PlayIcon />
-          {dict.startChallenge}
-        </Button>
+        {sessionStatus === "in_progress" ? (
+          <Link
+            href={activePath}
+            className="bg-ob-accent text-accent-ink inline-flex h-[42px] w-full items-center justify-center gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105"
+          >
+            <PlayIcon />
+            {ctaLabel}
+          </Link>
+        ) : (
+          <Button
+            onClick={async () => {
+              setLoading(true)
+              await startChallengeSession(slug, lang, activePath)
+            }}
+            disabled={loading}
+            className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+          >
+            <PlayIcon />
+            {ctaLabel}
+          </Button>
+        )}
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             {authUser?.avatarUrl !== null && authUser?.avatarUrl !== undefined ? (

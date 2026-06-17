@@ -107,6 +107,23 @@ export default async function ChallengePage({
         }
       : null
 
+  let sessionStatus: "in_progress" | "completed" | null = null
+  if (user !== null) {
+    const { data: sessions } = await supabase
+      .from("challenge_sessions")
+      .select("status")
+      .eq("user_id", user.id)
+      .eq("challenge_slug", slug)
+      .eq("lang", lang)
+      .in("status", ["in_progress", "completed"])
+    const statuses = (sessions ?? []).map((s) => s.status as string)
+    sessionStatus = statuses.includes("in_progress")
+      ? "in_progress"
+      : statuses.includes("completed")
+        ? "completed"
+        : null
+  }
+
   const categoryLabel = dict.category[page.data.category]
   const difficultyLabel = dict.difficulty[page.data.difficulty]
   const difficultyLevel = DIFFICULTY_LEVEL[page.data.difficulty] ?? 1
@@ -157,10 +174,22 @@ export default async function ChallengePage({
                 {icon}
                 {categoryLabel}
               </span>
-              <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
-                <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
-                {dict.status.notStarted}
-              </span>
+              {sessionStatus === "in_progress" ? (
+                <span className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-400">
+                  <span className="size-[6px] rounded-full bg-amber-400" />
+                  {dict.status.inProgress}
+                </span>
+              ) : sessionStatus === "completed" ? (
+                <span className="text-ob-accent inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+                  <span className="bg-ob-accent size-[6px] rounded-full" />
+                  {dict.status.completed}
+                </span>
+              ) : (
+                <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+                  <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
+                  {dict.status.notStarted}
+                </span>
+              )}
             </div>
 
             {/* title */}
@@ -218,6 +247,7 @@ export default async function ChallengePage({
                 <StartChallengeButton
                   dict={dict.detail}
                   isAuthenticated={isAuthenticated}
+                  sessionStatus={sessionStatus}
                   challengePath={challengePath}
                   activePath={activePath}
                   slug={slug}
