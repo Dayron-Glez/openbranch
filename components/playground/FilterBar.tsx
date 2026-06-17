@@ -70,11 +70,11 @@ export const FilterBar = ({
   }
 
   const handleValueChange = (val: string): void => {
-    router.push(buildUrl(val === "all" ? undefined : val, activeSort))
+    router.push(buildUrl(val === "all" ? undefined : val, activeSort), { scroll: false })
   }
 
   const handleSortChange = (sort: string): void => {
-    router.push(buildUrl(active, sort))
+    router.push(buildUrl(active, sort), { scroll: false })
   }
 
   const currentSort = (SORT_KEYS as ReadonlyArray<string>).includes(activeSort)
