@@ -220,7 +220,7 @@ const translations = {
     en: "Add at least one comment and select a decision",
   },
   "result.heading": { es: "Reto", en: "Challenge" },
-  "result.headingAccent": { es: "completado.", en: "complete." },
+  "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
     es: "Revisaste el diff y enviaste tu decisión. La rama se fusiona — o se bloquea. De cualquier forma, tomaste la llamada.",
     en: "You reviewed the diff and submitted a decision. The branch is merged — or blocked. Either way, you shipped a call.",

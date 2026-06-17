@@ -324,7 +324,14 @@ export default async function ResultPage({ params }: ResultPageProps) {
           {/* heading */}
           <h1 className="text-fg mx-auto mb-4 max-w-[520px] text-[52px] leading-[1.08] font-semibold tracking-[-0.03em] max-[640px]:text-[38px]">
             {dict.result.heading}{" "}
-            <span className="text-ob-accent">{dict.result.headingAccent}</span>
+            <span
+              className="inline-block bg-clip-text text-transparent"
+              style={{
+                backgroundImage: "linear-gradient(135deg, #5EE39A 0%, #3ACC82 45%, #22C55E 100%)",
+              }}
+            >
+              {dict.result.headingAccent}
+            </span>
           </h1>
 
           {/* body */}
