@@ -55,10 +55,8 @@ export const ReviewPanel = ({
     return "border-line-2 bg-bg-elev text-fg"
   }
 
-  const commentsText =
-    commentsCount === 0
-      ? dict.noComments
-      : `${commentsCount} ${commentsCount === 1 ? dict.commentSingular : dict.commentPlural}`
+  const countLabel = commentsCount === 1 ? dict.commentSingular : dict.commentPlural
+  const commentsText = commentsCount === 0 ? dict.noComments : `${commentsCount} ${countLabel}`
 
   return (
     <div className="flex flex-col gap-5">
