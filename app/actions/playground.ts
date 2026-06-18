@@ -3,7 +3,12 @@
 import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { localizedHref } from "@/lib/landing-dictionary"
-import type { InlineComment, ReviewDecision, ReviewSnapshot } from "@/lib/playground/review-types"
+import type {
+  InlineComment,
+  ReviewDecision,
+  ReviewSnapshot,
+  BugFixSnapshot,
+} from "@/lib/playground/review-types"
 
 export const startChallengeSession = async (
   slug: string,
@@ -102,6 +107,60 @@ export const completeChallenge = async (slug: string, lang: string): Promise<voi
 
     if ((completedReviews?.length ?? 0) >= 1) {
       await supabase.from("user_badges").insert({ user_id: user.id, badge: "review-corps" })
+    }
+  }
+
+  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+}
+
+export const saveBugFixState = async (slug: string, lang: string, code: string): Promise<void> => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user === null) return
+
+  await supabase
+    .from("challenge_sessions")
+    .update({ snapshot: { code } satisfies BugFixSnapshot })
+    .eq("user_id", user.id)
+    .eq("challenge_slug", slug)
+    .eq("lang", lang)
+    .eq("status", "in_progress")
+}
+
+export const completeBugFixChallenge = async (slug: string, lang: string): Promise<void> => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user === null) return
+
+  await supabase
+    .from("challenge_sessions")
+    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .eq("user_id", user.id)
+    .eq("challenge_slug", slug)
+    .eq("lang", lang)
+    .eq("status", "in_progress")
+
+  const { data: existingBadge } = await supabase
+    .from("user_badges")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("badge", "debug-master")
+    .maybeSingle()
+
+  if (existingBadge === null) {
+    const { data: completedBugFixes } = await supabase
+      .from("challenge_sessions")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("status", "completed")
+      .like("challenge_slug", "bug-fix-%")
+
+    if ((completedBugFixes?.length ?? 0) >= 1) {
+      await supabase.from("user_badges").insert({ user_id: user.id, badge: "debug-master" })
     }
   }
 
