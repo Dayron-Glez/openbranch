@@ -18,6 +18,18 @@ export type PlaygroundDict = {
     readonly submitRequirements: string
     readonly revealHint: string
     readonly hintsLabel: string
+    readonly viewSolution: string
+    readonly backToEdit: string
+    readonly testsLabel: string
+    readonly running: string
+    readonly passing: string
+    readonly waitingForEditor: string
+    readonly syntaxError: string
+    readonly fixSyntax: string
+    readonly editToStart: string
+    readonly allTestsPassing: string
+    readonly fixTypeErrors: string
+    readonly submitting: string
   }
   readonly result: {
     readonly heading: string
@@ -223,6 +235,30 @@ const translations = {
   },
   "active.revealHint": { es: "Mostrar pista", en: "Reveal hint" },
   "active.hintsLabel": { es: "Pistas", en: "Hints" },
+  "active.viewSolution": { es: "Ver solución", en: "View solution" },
+  "active.backToEdit": { es: "← Volver a editar", en: "← Back to editing" },
+  "active.testsLabel": { es: "Tests", en: "Tests" },
+  "active.running": { es: "ejecutando…", en: "running…" },
+  "active.passing": { es: "pasando", en: "passing" },
+  "active.waitingForEditor": { es: "esperando al editor", en: "waiting for editor" },
+  "active.syntaxError": { es: "Error de sintaxis", en: "Syntax error" },
+  "active.fixSyntax": {
+    es: "Corrige la sintaxis para ejecutar los tests.",
+    en: "Fix the syntax to run tests.",
+  },
+  "active.editToStart": {
+    es: "Edita el código para empezar a ejecutar los tests.",
+    en: "Edit the code above to start running tests.",
+  },
+  "active.allTestsPassing": {
+    es: "¡Todos los tests pasan — listo para enviar!",
+    en: "All tests passing — ready to submit!",
+  },
+  "active.fixTypeErrors": {
+    es: "Corrige los errores de TypeScript antes de enviar.",
+    en: "Fix TypeScript errors before submitting.",
+  },
+  "active.submitting": { es: "Enviando…", en: "Submitting…" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -309,6 +345,18 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       submitRequirements: tx("active.submitRequirements"),
       revealHint: tx("active.revealHint"),
       hintsLabel: tx("active.hintsLabel"),
+      viewSolution: tx("active.viewSolution"),
+      backToEdit: tx("active.backToEdit"),
+      testsLabel: tx("active.testsLabel"),
+      running: tx("active.running"),
+      passing: tx("active.passing"),
+      waitingForEditor: tx("active.waitingForEditor"),
+      syntaxError: tx("active.syntaxError"),
+      fixSyntax: tx("active.fixSyntax"),
+      editToStart: tx("active.editToStart"),
+      allTestsPassing: tx("active.allTestsPassing"),
+      fixTypeErrors: tx("active.fixTypeErrors"),
+      submitting: tx("active.submitting"),
     },
     result: {
       heading: tx("result.heading"),
