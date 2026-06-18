@@ -133,7 +133,11 @@ export const ActiveChallengeView = ({
         <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10 max-[900px]:grid-cols-1">
           {/* ── left column: diff viewer ── */}
           <div className="min-w-0 min-[901px]:overflow-y-auto min-[901px]:pb-10">
-            {diffFiles !== null ? (
+            {diffFiles === null ? (
+              <div className="border-line bg-bg-elev flex h-full min-h-[200px] items-center justify-center rounded-[var(--r-12)] border border-dashed">
+                <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
+              </div>
+            ) : (
               <DiffViewer
                 files={diffFiles}
                 comments={comments}
@@ -146,10 +150,6 @@ export const ActiveChallengeView = ({
                   commentPlaceholder: dict.active.commentPlaceholder,
                 }}
               />
-            ) : (
-              <div className="border-line bg-bg-elev flex h-full min-h-[200px] items-center justify-center rounded-[var(--r-12)] border border-dashed">
-                <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
-              </div>
             )}
           </div>
 

@@ -6,7 +6,7 @@ import confetti from "canvas-confetti"
 export const ConfettiEffect = (): null => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      void confetti({
+      confetti({
         particleCount: 120,
         spread: 80,
         origin: { x: 0.5, y: 0.2 },
@@ -14,7 +14,7 @@ export const ConfettiEffect = (): null => {
         gravity: 1.1,
         scalar: 0.85,
         drift: 0,
-      })
+      }).catch(() => null)
     }, 350)
     return () => clearTimeout(timer)
   }, [])

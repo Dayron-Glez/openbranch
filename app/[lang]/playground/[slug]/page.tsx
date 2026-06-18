@@ -130,6 +130,30 @@ export default async function ChallengePage({
   const icon = getChallengeIcon(page.data.icon)
   const skills = page.data.skills ?? []
 
+  let sessionStatusBadge: React.ReactNode
+  if (sessionStatus === "in_progress") {
+    sessionStatusBadge = (
+      <span className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-400">
+        <span className="size-[6px] rounded-full bg-amber-400" />
+        {dict.status.inProgress}
+      </span>
+    )
+  } else if (sessionStatus === "completed") {
+    sessionStatusBadge = (
+      <span className="text-ob-accent inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+        <span className="bg-ob-accent size-[6px] rounded-full" />
+        {dict.status.completed}
+      </span>
+    )
+  } else {
+    sessionStatusBadge = (
+      <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+        <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
+        {dict.status.notStarted}
+      </span>
+    )
+  }
+
   return (
     <main
       data-pg-main
@@ -174,22 +198,7 @@ export default async function ChallengePage({
                 {icon}
                 {categoryLabel}
               </span>
-              {sessionStatus === "in_progress" ? (
-                <span className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-400">
-                  <span className="size-[6px] rounded-full bg-amber-400" />
-                  {dict.status.inProgress}
-                </span>
-              ) : sessionStatus === "completed" ? (
-                <span className="text-ob-accent inline-flex items-center gap-1.5 font-mono text-[11.5px]">
-                  <span className="bg-ob-accent size-[6px] rounded-full" />
-                  {dict.status.completed}
-                </span>
-              ) : (
-                <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
-                  <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
-                  {dict.status.notStarted}
-                </span>
-              )}
+              {sessionStatusBadge}
             </div>
 
             {/* title */}

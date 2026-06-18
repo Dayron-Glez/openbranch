@@ -101,9 +101,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
         </section>
       )
     }
-  } else if (docs.length === 0) {
-    docsContent = null
-  } else {
+  } else if (docs.length > 0) {
     docsContent = (
       <ul>
         {docs.map((item) => {

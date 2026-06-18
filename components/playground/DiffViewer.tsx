@@ -90,13 +90,8 @@ export const DiffViewer = ({
 
   const handleToggleForm = useCallback(
     (key: string): void => {
-      if (openFormKey === key) {
-        setOpenFormKey(null)
-        setInputText("")
-      } else {
-        setOpenFormKey(key)
-        setInputText("")
-      }
+      setOpenFormKey(openFormKey === key ? null : key)
+      setInputText("")
     },
     [openFormKey]
   )
