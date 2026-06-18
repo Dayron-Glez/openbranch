@@ -101,56 +101,58 @@ const DiffView = ({ original, solution }: DiffViewProps): React.ReactElement => 
   const lines = computeLineDiff(original, solution)
   return (
     <div
-      className="h-full overflow-y-auto"
+      className="h-full"
       style={{
         backgroundColor: "#0D0F15",
         fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
       }}
     >
-      <div className="py-4">
-        {lines.map((line, idx) => (
-          <div
-            key={idx}
-            className={`flex items-center pr-6 ${
-              line.type === "added"
-                ? "bg-green-500/[0.08]"
-                : line.type === "removed"
-                  ? "bg-red-500/[0.08]"
-                  : ""
-            }`}
-          >
-            <span
-              className="w-12 shrink-0 pr-4 text-right text-[13px] leading-[22px] select-none"
-              style={{ color: "#2D3144" }}
-            >
-              {line.num ?? ""}
-            </span>
-            <span
-              className={`w-4 shrink-0 text-[13px] leading-[22px] select-none ${
+      <ScrollArea className="h-full">
+        <div className="py-4 pr-3">
+          {lines.map((line, idx) => (
+            <div
+              key={idx}
+              className={`flex items-center pr-3 ${
                 line.type === "added"
-                  ? "text-green-400"
+                  ? "bg-green-500/[0.08]"
                   : line.type === "removed"
-                    ? "text-red-400"
-                    : "text-transparent"
-              }`}
-            >
-              {line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
-            </span>
-            <span
-              className={`flex-1 text-[13px] leading-[22px] whitespace-pre ${
-                line.type === "added"
-                  ? "text-green-300"
-                  : line.type === "removed"
-                    ? "text-red-300/80"
+                    ? "bg-red-500/[0.08]"
                     : ""
               }`}
-              style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
             >
-              {line.content}
-            </span>
-          </div>
-        ))}
-      </div>
+              <span
+                className="w-12 shrink-0 pr-4 text-right text-[13px] leading-[22px] select-none"
+                style={{ color: "#2D3144" }}
+              >
+                {line.num ?? ""}
+              </span>
+              <span
+                className={`w-4 shrink-0 text-[13px] leading-[22px] select-none ${
+                  line.type === "added"
+                    ? "text-green-400"
+                    : line.type === "removed"
+                      ? "text-red-400"
+                      : "text-transparent"
+                }`}
+              >
+                {line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
+              </span>
+              <span
+                className={`flex-1 text-[13px] leading-[22px] whitespace-pre ${
+                  line.type === "added"
+                    ? "text-green-300"
+                    : line.type === "removed"
+                      ? "text-red-300/80"
+                      : ""
+                }`}
+                style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
+              >
+                {line.content}
+              </span>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   )
 }
@@ -602,7 +604,7 @@ export const BugFixChallengeView = ({
                 )}
               </div>
 
-              <div className="flex-1">
+              <div className="min-h-0 flex-1">
                 {showSolution ? (
                   <DiffView original={originalCode} solution={template.solutionCode} />
                 ) : (
