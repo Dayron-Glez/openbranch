@@ -22,7 +22,6 @@
     "*.{js,mjs,json,md,mdx,css}": "prettier --write"
   },
   "dependencies": {
-    "@codesandbox/sandpack-react": "^2.20.0",
     "@monaco-editor/react": "^4.7.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.16",
@@ -50,6 +49,7 @@
     "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
+    "sucrase": "^3.35.1",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

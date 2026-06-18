@@ -1,9 +1,11 @@
-import type { SandpackChallengeTemplate } from "./sandpack-templates/bug-fix-off-by-one"
-import { bugFixOffByOneSandpack } from "./sandpack-templates/bug-fix-off-by-one"
+import type { BugFixTemplate } from "./sandpack-templates/bug-fix-off-by-one"
+import { bugFixOffByOne } from "./sandpack-templates/bug-fix-off-by-one"
+import { bugFixEventEmitter } from "./sandpack-templates/bug-fix-event-emitter"
 
-const SANDPACK_REGISTRY: Record<string, SandpackChallengeTemplate> = {
-  "bug-fix-off-by-one": bugFixOffByOneSandpack,
+const BUG_FIX_REGISTRY: Record<string, BugFixTemplate> = {
+  "bug-fix-off-by-one": bugFixOffByOne,
+  "bug-fix-event-emitter": bugFixEventEmitter,
 }
 
-export const getSandpackTemplateBySlug = (slug: string): SandpackChallengeTemplate | null =>
-  SANDPACK_REGISTRY[slug] ?? null
+export const getSandpackTemplateBySlug = (slug: string): BugFixTemplate | null =>
+  BUG_FIX_REGISTRY[slug] ?? null

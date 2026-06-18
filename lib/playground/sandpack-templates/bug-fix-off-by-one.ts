@@ -1,5 +1,3 @@
-import type { SandpackFiles } from "@codesandbox/sandpack-react"
-
 const PAGINATE_CODE = `export const paginate = <T>(items: T[], page: number, size: number): T[] => {
   const start = page * size
   const end = start + size - 1
@@ -22,52 +20,46 @@ describe("paginate", () => {
   })
 })`
 
-const PACKAGE_JSON = `{
-  "name": "bug-fix-off-by-one",
-  "private": true,
-  "scripts": { "test": "jest" },
-  "devDependencies": {
-    "@types/jest": "^29.5.12",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.4",
-    "typescript": "^5.4.5"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  }
+const SOLUTION_CODE = `export const paginate = <T>(items: T[], page: number, size: number): T[] => {
+  const start = page * size
+  const end = start + size
+  return items.slice(start, end)
 }`
 
-const TSCONFIG_JSON = `{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "outDir": "dist"
-  },
-  "include": ["src"]
-}`
-
-export type SandpackChallengeTemplate = {
-  readonly files: SandpackFiles
-  readonly editableFile: string
-  readonly bugLine?: number
-  readonly hints: readonly string[]
+export type BugFixTemplateFile = {
+  readonly code: string
+  readonly readOnly?: boolean
 }
 
-export const bugFixOffByOneSandpack: SandpackChallengeTemplate = {
+export type BugFixTemplate = {
+  readonly files: Record<string, BugFixTemplateFile>
+  readonly editableFile: string
+  readonly testFile: string
+  readonly solutionCode: string
+  readonly bugLine?: number
+  readonly hints: readonly string[]
+  readonly hintsByLang?: Partial<Record<string, readonly string[]>>
+}
+
+export const bugFixOffByOne: BugFixTemplate = {
   files: {
-    "src/paginate.ts": { code: PAGINATE_CODE, active: true },
+    "src/paginate.ts": { code: PAGINATE_CODE },
     "src/paginate.test.ts": { code: TEST_CODE, readOnly: true },
-    "/package.json": { code: PACKAGE_JSON, hidden: true },
-    "/tsconfig.json": { code: TSCONFIG_JSON, hidden: true },
   },
   editableFile: "src/paginate.ts",
+  testFile: "src/paginate.test.ts",
+  solutionCode: SOLUTION_CODE,
   bugLine: 3,
   hints: [
     "Look at how JavaScript's `slice(start, end)` handles its end index.",
     "The end index in `slice()` is exclusive — the element at that index is not included in the result.",
     "You're subtracting 1 from the end. What happens if you remove that subtraction?",
   ],
+  hintsByLang: {
+    es: [
+      "Mira cómo `slice(start, end)` de JavaScript maneja su índice final.",
+      "El índice final en `slice()` es exclusivo — el elemento en ese índice no se incluye en el resultado.",
+      "Estás restando 1 al final. ¿Qué pasa si eliminas esa resta?",
+    ],
+  },
 }
