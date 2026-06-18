@@ -228,12 +228,7 @@ export default async function PlaygroundPage({
                   {categoryChallenges.map((challenge) => {
                     const slug = challenge.url.split("/").pop() ?? ""
                     const status = slugToStatus.get(slug) ?? null
-                    const statusLabel =
-                      status === "completed"
-                        ? dict.status.completed
-                        : status === "in_progress"
-                          ? dict.status.inProgress
-                          : dict.status.notStarted
+                    const statusLabel = getStatusLabel(status)
                     return (
                       <ChallengeCard
                         key={challenge.url}
