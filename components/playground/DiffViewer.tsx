@@ -63,6 +63,21 @@ const TrashIcon = (): React.ReactElement => (
   </svg>
 )
 
+const BG_CLASS: Partial<Record<DiffLineType, string>> = {
+  added: "bg-ob-accent/[0.07]",
+  removed: "bg-danger/[0.07]",
+}
+
+const PREFIX_COLOR_CLASS: Partial<Record<DiffLineType, string>> = {
+  added: "text-ob-accent",
+  removed: "text-danger",
+}
+
+const PREFIX_CHAR: Partial<Record<DiffLineType, string>> = {
+  added: "+",
+  removed: "-",
+}
+
 export const DiffViewer = ({
   files,
   comments,
@@ -137,21 +152,9 @@ export const DiffViewer = ({
                 )
               }
 
-              const bgClass =
-                line.type === "added"
-                  ? "bg-ob-accent/[0.07]"
-                  : line.type === "removed"
-                    ? "bg-danger/[0.07]"
-                    : ""
-
-              const prefixColorClass =
-                line.type === "added"
-                  ? "text-ob-accent"
-                  : line.type === "removed"
-                    ? "text-danger"
-                    : "text-fg-faint"
-
-              const prefix = line.type === "added" ? "+" : line.type === "removed" ? "-" : " "
+              const bgClass = BG_CLASS[line.type] ?? ""
+              const prefixColorClass = PREFIX_COLOR_CLASS[line.type] ?? "text-fg-faint"
+              const prefix = PREFIX_CHAR[line.type] ?? " "
 
               return (
                 <div key={lineKey}>

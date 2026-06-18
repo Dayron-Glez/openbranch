@@ -116,12 +116,12 @@ export default async function ChallengePage({
       .eq("challenge_slug", slug)
       .eq("lang", lang)
       .in("status", ["in_progress", "completed"])
-    const statuses = (sessions ?? []).map((s) => s.status as string)
-    sessionStatus = statuses.includes("in_progress")
-      ? "in_progress"
-      : statuses.includes("completed")
-        ? "completed"
-        : null
+    const statuses = new Set((sessions ?? []).map((s) => s.status as string))
+    if (statuses.has("in_progress")) {
+      sessionStatus = "in_progress"
+    } else if (statuses.has("completed")) {
+      sessionStatus = "completed"
+    }
   }
 
   const categoryLabel = dict.category[page.data.category]

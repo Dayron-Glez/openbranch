@@ -81,12 +81,12 @@ export const FilterBar = ({
     ? (activeSort as SortKey)
     : "recommended"
 
-  const activeField =
-    currentSort === "recommended"
-      ? "recommended"
-      : currentSort.startsWith("difficulty")
-        ? "difficulty"
-        : "duration"
+  const getActiveField = (): "recommended" | "difficulty" | "duration" => {
+    if (currentSort === "recommended") return "recommended"
+    if (currentSort.startsWith("difficulty")) return "difficulty"
+    return "duration"
+  }
+  const activeField = getActiveField()
 
   const activeDir: "asc" | "desc" = currentSort.endsWith("-desc") ? "desc" : "asc"
 

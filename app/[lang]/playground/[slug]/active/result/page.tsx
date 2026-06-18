@@ -216,19 +216,19 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
   /* elapsed time */
   const startedAt =
-    completedSession.started_at !== null ? new Date(completedSession.started_at as string) : null
+    completedSession.started_at === null ? null : new Date(completedSession.started_at as string)
   const completedAt =
-    completedSession.completed_at !== null
-      ? new Date(completedSession.completed_at as string)
-      : null
+    completedSession.completed_at === null
+      ? null
+      : new Date(completedSession.completed_at as string)
   const elapsedSeconds =
-    startedAt !== null && completedAt !== null
-      ? Math.max(0, Math.floor((completedAt.getTime() - startedAt.getTime()) / 1000))
-      : null
+    startedAt === null || completedAt === null
+      ? null
+      : Math.max(0, Math.floor((completedAt.getTime() - startedAt.getTime()) / 1000))
   const elapsedDisplay =
-    elapsedSeconds !== null
-      ? `${Math.floor(elapsedSeconds / 60)}:${String(elapsedSeconds % 60).padStart(2, "0")}`
-      : null
+    elapsedSeconds === null
+      ? null
+      : `${Math.floor(elapsedSeconds / 60)}:${String(elapsedSeconds % 60).padStart(2, "0")}`
 
   /* badge */
   const { data: badge } = await supabase
