@@ -63,6 +63,32 @@ const TrashIcon = (): React.ReactElement => (
   </svg>
 )
 
+type DiffCommentItemProps = {
+  readonly comment: InlineComment
+  readonly onDelete: (id: string) => void
+  readonly deleteLabel: string
+}
+
+const DiffCommentItem = ({
+  comment,
+  onDelete,
+  deleteLabel,
+}: DiffCommentItemProps): React.ReactElement => (
+  <div className="border-line border-ob-accent/40 bg-ob-accent/[0.04] group/comment flex items-start gap-3 border-l-2 px-4 py-2.5">
+    <p className="text-fg-2 flex-1 font-mono text-[12px] leading-[1.6] whitespace-pre-wrap">
+      {comment.content}
+    </p>
+    <button
+      onClick={() => onDelete(comment.id)}
+      className="text-fg-faint hover:text-danger mt-0.5 shrink-0 opacity-0 transition-all group-hover/comment:opacity-100"
+      aria-label={deleteLabel}
+      type="button"
+    >
+      <TrashIcon />
+    </button>
+  </div>
+)
+
 const BG_CLASS: Partial<Record<DiffLineType, string>> = {
   added: "bg-ob-accent/[0.07]",
   removed: "bg-danger/[0.07]",
@@ -177,22 +203,12 @@ export const DiffViewer = ({
 
                   {/* existing comments for this line */}
                   {lineComments.map((comment) => (
-                    <div
+                    <DiffCommentItem
                       key={comment.id}
-                      className="border-line border-ob-accent/40 bg-ob-accent/[0.04] group/comment flex items-start gap-3 border-l-2 px-4 py-2.5"
-                    >
-                      <p className="text-fg-2 flex-1 font-mono text-[12px] leading-[1.6] whitespace-pre-wrap">
-                        {comment.content}
-                      </p>
-                      <button
-                        onClick={() => onDeleteComment(comment.id)}
-                        className="text-fg-faint hover:text-danger mt-0.5 shrink-0 opacity-0 transition-all group-hover/comment:opacity-100"
-                        aria-label={dict.deleteComment}
-                        type="button"
-                      >
-                        <TrashIcon />
-                      </button>
-                    </div>
+                      comment={comment}
+                      onDelete={onDeleteComment}
+                      deleteLabel={dict.deleteComment}
+                    />
                   ))}
 
                   {/* comment form */}
