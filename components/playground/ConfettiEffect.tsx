@@ -14,7 +14,7 @@ export const ConfettiEffect = (): null => {
         gravity: 1.1,
         scalar: 0.85,
         drift: 0,
-      }).catch(() => null)
+      })?.catch(() => null)
     }, 350)
     return () => clearTimeout(timer)
   }, [])
