@@ -11,6 +11,7 @@ import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { BugFixTemplate } from "@/lib/playground/sandpack-templates/bug-fix-off-by-one"
 import { HintPanel } from "@/components/playground/HintPanel"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
 
 const AUTOSAVE_DELAY_MS = 800
 const AUTORUN_DELAY_MS = 1500
@@ -507,33 +508,12 @@ export const BugFixChallengeView = ({
       className="relative z-1 flex h-full flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
       <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
-        {/* breadcrumb */}
-        <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
-          <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
-            <li>
-              <Link href={playgroundPath} className="hover:text-fg-2 transition-colors">
-                Playground
-              </Link>
-            </li>
-            <li className="text-fg-faint" aria-hidden="true">
-              /
-            </li>
-            <li>
-              <Link href={challengePath} className="hover:text-fg-2 transition-colors">
-                {title}
-              </Link>
-            </li>
-            <li className="text-fg-faint" aria-hidden="true">
-              /
-            </li>
-            <li>
-              <span className="inline-flex items-center gap-1.5 text-amber-400">
-                <span className="size-[6px] rounded-full bg-amber-400" />
-                {dict.status.inProgress}
-              </span>
-            </li>
-          </ol>
-        </nav>
+        <PlaygroundBreadcrumb
+          playgroundPath={playgroundPath}
+          challengePath={challengePath}
+          title={title}
+          inProgressLabel={dict.status.inProgress}
+        />
 
         {/* two-column layout */}
         <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] grid-rows-1 gap-10 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none">

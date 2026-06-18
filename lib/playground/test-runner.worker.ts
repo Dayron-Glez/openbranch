@@ -30,8 +30,8 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
     !Array.isArray(a) &&
     !Array.isArray(b)
   ) {
-    const keysA = Object.keys(a as object).sort()
-    const keysB = Object.keys(b as object).sort()
+    const keysA = Object.keys(a as object).sort((x, y) => x.localeCompare(y))
+    const keysB = Object.keys(b as object).sort((x, y) => x.localeCompare(y))
     if (keysA.join(",") !== keysB.join(",")) return false
     return keysA.every((k) =>
       deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k])
