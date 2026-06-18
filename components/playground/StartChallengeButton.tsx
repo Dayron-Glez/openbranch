@@ -106,12 +106,12 @@ export const StartChallengeButton = ({
   }
 
   if (isAuthenticated) {
-    const ctaLabel =
-      sessionStatus === "in_progress"
-        ? dict.continueChallenge
-        : sessionStatus === "completed"
-          ? dict.practiceAgain
-          : dict.startChallenge
+    const getCtaLabel = (): string => {
+      if (sessionStatus === "in_progress") return dict.continueChallenge
+      if (sessionStatus === "completed") return dict.practiceAgain
+      return dict.startChallenge
+    }
+    const ctaLabel = getCtaLabel()
 
     return (
       <div className="flex flex-col gap-3">
