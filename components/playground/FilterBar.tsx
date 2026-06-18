@@ -70,23 +70,23 @@ export const FilterBar = ({
   }
 
   const handleValueChange = (val: string): void => {
-    router.push(buildUrl(val === "all" ? undefined : val, activeSort))
+    router.push(buildUrl(val === "all" ? undefined : val, activeSort), { scroll: false })
   }
 
   const handleSortChange = (sort: string): void => {
-    router.push(buildUrl(active, sort))
+    router.push(buildUrl(active, sort), { scroll: false })
   }
 
   const currentSort = (SORT_KEYS as ReadonlyArray<string>).includes(activeSort)
     ? (activeSort as SortKey)
     : "recommended"
 
-  const activeField =
-    currentSort === "recommended"
-      ? "recommended"
-      : currentSort.startsWith("difficulty")
-        ? "difficulty"
-        : "duration"
+  const getActiveField = (): "recommended" | "difficulty" | "duration" => {
+    if (currentSort === "recommended") return "recommended"
+    if (currentSort.startsWith("difficulty")) return "difficulty"
+    return "duration"
+  }
+  const activeField = getActiveField()
 
   const activeDir: "asc" | "desc" = currentSort.endsWith("-desc") ? "desc" : "asc"
 

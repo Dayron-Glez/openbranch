@@ -10,18 +10,8 @@ import { StartingLine } from "@/components/playground/StartingLine"
 import { BadgesSection } from "@/components/playground/BadgesSection"
 import { FilterBar } from "@/components/playground/FilterBar"
 import { PlaygroundGridTransition } from "@/components/playground/PlaygroundGridTransition"
-import { IconPR, IconBug, IconGitMerge, IconFlask, IconBook, IconBranch } from "@/icons"
-
-const CHALLENGE_ICONS: Record<string, ReactNode> = {
-  GitPullRequest: <IconPR />,
-  Bug: <IconBug />,
-  GitMerge: <IconGitMerge />,
-  FlaskConical: <IconFlask />,
-  BookOpen: <IconBook />,
-}
-
-const getChallengeIcon = (iconName: string | undefined): ReactNode =>
-  (iconName !== undefined && CHALLENGE_ICONS[iconName]) || <IconBranch />
+import { IconPR, IconBug, IconFlask, IconBook, IconBranch } from "@/icons"
+import { getChallengeIcon } from "@/lib/playground/challenge-icons"
 
 const CATEGORY_ORDER = ["code-review", "bug-fix", "testing", "git", "documentation"] as const
 
@@ -149,7 +139,7 @@ export default async function PlaygroundPage({
 
       {startingChallenge !== undefined && (
         <StartingLine
-          href={localizedHref(lang, startingChallenge.url)}
+          href={startingChallenge.url}
           challengeTitle={startingChallenge.data.title}
           challengeIcon={getChallengeIcon(startingChallenge.data.icon)}
           challengeCategoryLabel={dict.category[startingChallenge.data.category]}
@@ -177,7 +167,7 @@ export default async function PlaygroundPage({
           {filteredChallenges.map((challenge) => (
             <ChallengeCard
               key={challenge.url}
-              href={localizedHref(lang, challenge.url)}
+              href={challenge.url}
               title={challenge.data.title}
               description={challenge.data.description ?? ""}
               difficulty={challenge.data.difficulty}
@@ -203,7 +193,7 @@ export default async function PlaygroundPage({
                   {categoryChallenges.map((challenge) => (
                     <ChallengeCard
                       key={challenge.url}
-                      href={localizedHref(lang, challenge.url)}
+                      href={challenge.url}
                       title={challenge.data.title}
                       description={challenge.data.description ?? ""}
                       difficulty={challenge.data.difficulty}

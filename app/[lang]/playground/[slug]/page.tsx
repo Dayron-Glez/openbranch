@@ -107,11 +107,52 @@ export default async function ChallengePage({
         }
       : null
 
+  let sessionStatus: "in_progress" | "completed" | null = null
+  if (user !== null) {
+    const { data: sessions } = await supabase
+      .from("challenge_sessions")
+      .select("status")
+      .eq("user_id", user.id)
+      .eq("challenge_slug", slug)
+      .eq("lang", lang)
+      .in("status", ["in_progress", "completed"])
+    const statuses = new Set((sessions ?? []).map((s) => s.status as string))
+    if (statuses.has("in_progress")) {
+      sessionStatus = "in_progress"
+    } else if (statuses.has("completed")) {
+      sessionStatus = "completed"
+    }
+  }
+
   const categoryLabel = dict.category[page.data.category]
   const difficultyLabel = dict.difficulty[page.data.difficulty]
   const difficultyLevel = DIFFICULTY_LEVEL[page.data.difficulty] ?? 1
   const icon = getChallengeIcon(page.data.icon)
   const skills = page.data.skills ?? []
+
+  let sessionStatusBadge: React.ReactNode
+  if (sessionStatus === "in_progress") {
+    sessionStatusBadge = (
+      <span className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-400">
+        <span className="size-[6px] rounded-full bg-amber-400" />
+        {dict.status.inProgress}
+      </span>
+    )
+  } else if (sessionStatus === "completed") {
+    sessionStatusBadge = (
+      <span className="text-ob-accent inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+        <span className="bg-ob-accent size-[6px] rounded-full" />
+        {dict.status.completed}
+      </span>
+    )
+  } else {
+    sessionStatusBadge = (
+      <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+        <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
+        {dict.status.notStarted}
+      </span>
+    )
+  }
 
   return (
     <main
@@ -157,10 +198,7 @@ export default async function ChallengePage({
                 {icon}
                 {categoryLabel}
               </span>
-              <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
-                <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
-                {dict.status.notStarted}
-              </span>
+              {sessionStatusBadge}
             </div>
 
             {/* title */}
@@ -196,16 +234,29 @@ export default async function ChallengePage({
             <div className="pg-prose">
               <MdxContent components={getMDXComponents()} />
             </div>
+
+            {/* recommended first */}
+            {page.data.recommended_first !== undefined && (
+              <div className="mt-6">
+                <p className="text-fg-muted mb-2 font-mono text-[11px] tracking-[0.08em] uppercase">
+                  {dict.detail.recommendedFirst}
+                </p>
+                <div className="flex items-center gap-2.5">
+                  <CheckIcon />
+                  <span className="text-fg-2 text-[13.5px]">{page.data.recommended_first}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* ── sidebar ── */}
           <aside className="max-[900px]:order-first">
-            <div className="flex flex-col gap-4 pb-10">
-              {/* card 1: CTA + meta */}
+            <div className="flex flex-col gap-4">
               <div className="bg-bg-card border-line rounded-[var(--r-12)] border p-[18px]">
                 <StartChallengeButton
                   dict={dict.detail}
                   isAuthenticated={isAuthenticated}
+                  sessionStatus={sessionStatus}
                   challengePath={challengePath}
                   activePath={activePath}
                   slug={slug}
@@ -283,7 +334,7 @@ export default async function ChallengePage({
                 </div>
               </div>
 
-              {/* card 2: You'll practice */}
+              {/* card: You'll practice */}
               {skills.length > 0 && (
                 <div className="bg-bg-card border-line rounded-[var(--r-12)] border px-[18px] py-4">
                   <p className="text-fg-muted mb-3 font-mono text-[11px] tracking-[0.08em] uppercase">
@@ -296,19 +347,6 @@ export default async function ChallengePage({
                         <span className="text-fg-2 text-[13.5px]">{skill}</span>
                       </div>
                     ))}
-                  </div>
-                </div>
-              )}
-
-              {/* card 3: Recommended first */}
-              {page.data.recommended_first !== undefined && (
-                <div className="bg-bg-card border-line rounded-[var(--r-12)] border px-[18px] py-4">
-                  <p className="text-fg-muted mb-1 font-mono text-[11px] tracking-[0.08em] uppercase">
-                    {dict.detail.recommendedFirst}
-                  </p>
-                  <div className="flex items-center gap-3 py-2">
-                    <CheckIcon />
-                    <span className="text-fg-2 text-[13.5px]">{page.data.recommended_first}</span>
                   </div>
                 </div>
               )}
