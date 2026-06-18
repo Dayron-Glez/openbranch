@@ -16,6 +16,8 @@ export type PlaygroundDict = {
     readonly deleteComment: string
     readonly commentPlaceholder: string
     readonly submitRequirements: string
+    readonly revealHint: string
+    readonly hintsLabel: string
   }
   readonly result: {
     readonly heading: string
@@ -219,6 +221,8 @@ const translations = {
     es: "Añade al menos un comentario y selecciona una decisión",
     en: "Add at least one comment and select a decision",
   },
+  "active.revealHint": { es: "Mostrar pista", en: "Reveal hint" },
+  "active.hintsLabel": { es: "Pistas", en: "Hints" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -303,6 +307,8 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       deleteComment: tx("active.deleteComment"),
       commentPlaceholder: tx("active.commentPlaceholder"),
       submitRequirements: tx("active.submitRequirements"),
+      revealHint: tx("active.revealHint"),
+      hintsLabel: tx("active.hintsLabel"),
     },
     result: {
       heading: tx("result.heading"),
