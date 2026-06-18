@@ -34,7 +34,10 @@ export const HintPanel = ({
       {revealed > 0 && (
         <div className="flex flex-col gap-2">
           {hints.slice(0, revealed).map((hint, i) => (
-            <div key={i} className="border-line bg-bg-elev rounded-[var(--r-8)] border px-3 py-2.5">
+            <div
+              key={hint}
+              className="border-line bg-bg-elev rounded-[var(--r-8)] border px-3 py-2.5"
+            >
               <p className="text-fg-2 font-mono text-[12px] leading-[1.6]">
                 <span className="text-fg-faint mr-2">{i + 1}.</span>
                 {hint}

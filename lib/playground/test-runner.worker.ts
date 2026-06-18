@@ -30,8 +30,8 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
     !Array.isArray(a) &&
     !Array.isArray(b)
   ) {
-    const keysA = Object.keys(a as object).sort((x, y) => x.localeCompare(y))
-    const keysB = Object.keys(b as object).sort((x, y) => x.localeCompare(y))
+    const keysA = Object.keys(a).sort((x, y) => x.localeCompare(y))
+    const keysB = Object.keys(b).sort((x, y) => x.localeCompare(y))
     if (keysA.join(",") !== keysB.join(",")) return false
     return keysA.every((k) =>
       deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k])
@@ -42,10 +42,10 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
 
 // Injected into the sandbox alongside transpiled user code and test code.
 // __deepEqual is passed in from the outer scope to avoid re-declaring it here.
-const HARNESS = `
+const HARNESS = String.raw`
 var __tests__ = [];
 var __fail = function(expected, received) {
-  var err = new Error('Expected ' + JSON.stringify(expected) + '\\nReceived ' + JSON.stringify(received));
+  var err = new Error('Expected ' + JSON.stringify(expected) + '\nReceived ' + JSON.stringify(received));
   err.__expected = JSON.stringify(expected);
   err.__received = JSON.stringify(received);
   throw err;
@@ -91,7 +91,7 @@ type WorkerScope = {
   __obDeepEqual?: typeof deepEqual
   __obTests?: Array<{ name: string; fn: () => void }>
 }
-const workerScope = self as unknown as WorkerScope
+const workerScope = globalThis as unknown as WorkerScope
 
 const executeTests = (userCode: string, testCode: string): readonly TestResult[] => {
   const userJS = stripModuleSyntax(transpileTS(userCode))
@@ -132,22 +132,22 @@ const executeTests = (userCode: string, testCode: string): readonly TestResult[]
         name: t.name,
         status: "fail",
         error: {
-          expected: String(err["__expected"] ?? ""),
-          received: String(err["__received"] ?? ""),
+          expected: typeof err["__expected"] === "string" ? err["__expected"] : "",
+          received: typeof err["__received"] === "string" ? err["__received"] : "",
         },
       }
     }
   })
 }
 
-self.onmessage = (event: MessageEvent<RunMessage>): void => {
+globalThis.onmessage = (event: MessageEvent<RunMessage>): void => {
   if (event.data.type !== "run") return
   try {
     const results = executeTests(event.data.userCode, event.data.testCode)
     const msg: ResultMessage = { type: "result", results }
-    self.postMessage(msg)
+    globalThis.postMessage(msg)
   } catch (e) {
     const msg: ResultMessage = { type: "error", message: String(e) }
-    self.postMessage(msg)
+    globalThis.postMessage(msg)
   }
 }

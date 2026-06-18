@@ -55,6 +55,14 @@ export const ChallengeCard = ({
   minutesLabel,
   sessionStatus,
 }: ChallengeCardProps) => {
+  let statusTextClass = "text-fg-muted"
+  if (sessionStatus === "completed") statusTextClass = "text-ob-accent"
+  else if (sessionStatus === "in_progress") statusTextClass = "text-amber-400"
+
+  let statusDotClass = "border-fg-faint border-[1.5px]"
+  if (sessionStatus === "completed") statusDotClass = "bg-ob-accent"
+  else if (sessionStatus === "in_progress") statusDotClass = "bg-amber-400"
+
   return (
     <Link
       href={href}
@@ -65,24 +73,8 @@ export const ChallengeCard = ({
         <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-[var(--r-8)] border [&_svg]:size-[17px]">
           {icon}
         </span>
-        <span
-          className={`flex items-center gap-1.5 font-mono text-[11.5px] ${
-            sessionStatus === "completed"
-              ? "text-ob-accent"
-              : sessionStatus === "in_progress"
-                ? "text-amber-400"
-                : "text-fg-muted"
-          }`}
-        >
-          <span
-            className={`size-1.5 rounded-full ${
-              sessionStatus === "completed"
-                ? "bg-ob-accent"
-                : sessionStatus === "in_progress"
-                  ? "bg-amber-400"
-                  : "border-fg-faint border-[1.5px]"
-            }`}
-          />
+        <span className={`flex items-center gap-1.5 font-mono text-[11.5px] ${statusTextClass}`}>
+          <span className={`size-1.5 rounded-full ${statusDotClass}`} />
           {statusLabel}
         </span>
       </div>

@@ -56,6 +56,7 @@ type DiffLine = {
   readonly type: "unchanged" | "added" | "removed"
   readonly content: string
   readonly num: number | null
+  readonly id: number
 }
 
 const computeLineDiff = (original: string, solution: string): readonly DiffLine[] => {
@@ -87,15 +88,58 @@ const computeLineDiff = (original: string, solution: string): readonly DiffLine[
     }
   }
   let solutionLine = 0
+  let lineId = 0
   return raw.map((line) => {
     if (line.type !== "removed") solutionLine++
-    return { ...line, num: line.type !== "removed" ? solutionLine : null }
+    return { ...line, num: line.type === "removed" ? null : solutionLine, id: lineId++ }
   })
 }
 
 type DiffViewProps = {
   readonly original: string
   readonly solution: string
+}
+
+type DiffRowProps = {
+  readonly line: DiffLine
+}
+
+const DiffRow = ({ line }: DiffRowProps): React.ReactElement => {
+  let rowBg = ""
+  if (line.type === "added") rowBg = "bg-green-500/[0.08]"
+  else if (line.type === "removed") rowBg = "bg-red-500/[0.08]"
+
+  let markerClass = "text-transparent"
+  if (line.type === "added") markerClass = "text-green-400"
+  else if (line.type === "removed") markerClass = "text-red-400"
+
+  let markerChar = " "
+  if (line.type === "added") markerChar = "+"
+  else if (line.type === "removed") markerChar = "-"
+
+  let contentClass = ""
+  if (line.type === "added") contentClass = "text-green-300"
+  else if (line.type === "removed") contentClass = "text-red-300/80"
+
+  return (
+    <div className={`flex items-center pr-3 ${rowBg}`}>
+      <span
+        className="w-12 shrink-0 pr-4 text-right text-[13px] leading-[22px] select-none"
+        style={{ color: "#2D3144" }}
+      >
+        {line.num ?? ""}
+      </span>
+      <span className={`w-4 shrink-0 text-[13px] leading-[22px] select-none ${markerClass}`}>
+        {markerChar}
+      </span>
+      <span
+        className={`flex-1 text-[13px] leading-[22px] whitespace-pre ${contentClass}`}
+        style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
+      >
+        {line.content}
+      </span>
+    </div>
+  )
 }
 
 const DiffView = ({ original, solution }: DiffViewProps): React.ReactElement => {
@@ -110,47 +154,8 @@ const DiffView = ({ original, solution }: DiffViewProps): React.ReactElement => 
     >
       <ScrollArea className="h-full">
         <div className="py-4 pr-3">
-          {lines.map((line, idx) => (
-            <div
-              key={idx}
-              className={`flex items-center pr-3 ${
-                line.type === "added"
-                  ? "bg-green-500/[0.08]"
-                  : line.type === "removed"
-                    ? "bg-red-500/[0.08]"
-                    : ""
-              }`}
-            >
-              <span
-                className="w-12 shrink-0 pr-4 text-right text-[13px] leading-[22px] select-none"
-                style={{ color: "#2D3144" }}
-              >
-                {line.num ?? ""}
-              </span>
-              <span
-                className={`w-4 shrink-0 text-[13px] leading-[22px] select-none ${
-                  line.type === "added"
-                    ? "text-green-400"
-                    : line.type === "removed"
-                      ? "text-red-400"
-                      : "text-transparent"
-                }`}
-              >
-                {line.type === "added" ? "+" : line.type === "removed" ? "-" : " "}
-              </span>
-              <span
-                className={`flex-1 text-[13px] leading-[22px] whitespace-pre ${
-                  line.type === "added"
-                    ? "text-green-300"
-                    : line.type === "removed"
-                      ? "text-red-300/80"
-                      : ""
-                }`}
-                style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
-              >
-                {line.content}
-              </span>
-            </div>
+          {lines.map((line) => (
+            <DiffRow key={line.id} line={line} />
           ))}
         </div>
       </ScrollArea>
@@ -211,34 +216,38 @@ type TestCardProps = {
 }
 
 const TestCard = ({ test, index }: TestCardProps): React.ReactElement => {
-  const statusDot =
-    test.status === "pass" ? (
+  let statusDot: React.ReactElement
+  if (test.status === "pass") {
+    statusDot = (
       <span className="text-ob-accent mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-full bg-green-500/10 font-mono text-[11px]">
         ✓
       </span>
-    ) : test.status === "fail" ? (
+    )
+  } else if (test.status === "fail") {
+    statusDot = (
       <span className="text-danger mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-full bg-red-500/10 font-mono text-[11px]">
         ✕
       </span>
-    ) : test.status === "running" ? (
+    )
+  } else if (test.status === "running") {
+    statusDot = (
       <span className="border-fg-faint mt-0.5 size-[18px] shrink-0 animate-spin rounded-full border-2 border-t-transparent" />
-    ) : (
+    )
+  } else {
+    statusDot = (
       <span className="border-fg-faint mt-0.5 size-[18px] shrink-0 rounded-full border-2" />
     )
+  }
+
+  let nameClass = "text-fg-muted"
+  if (test.status === "pass") nameClass = "text-fg-2"
+  else if (test.status === "fail") nameClass = "text-fg"
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-start gap-2.5">
         {statusDot}
-        <span
-          className={`font-mono text-[11.5px] leading-[1.5] ${
-            test.status === "pass"
-              ? "text-fg-2"
-              : test.status === "fail"
-                ? "text-fg"
-                : "text-fg-muted"
-          }`}
-        >
+        <span className={`font-mono text-[11.5px] leading-[1.5] ${nameClass}`}>
           {index + 1}. {test.name}
         </span>
       </div>
@@ -268,6 +277,81 @@ type BugFixChallengeViewProps = {
   readonly challengePath: string
   readonly dict: PlaygroundDict
 }
+
+const updateEditorMarkers = (
+  editor: Monaco.editor.IStandaloneCodeEditor | null,
+  monaco: typeof Monaco | null,
+  bugLine: number | undefined,
+  status: "pass" | "fail"
+): void => {
+  if (editor === null || monaco === null || bugLine === undefined) return
+  const model = editor.getModel()
+  if (model === null) return
+  monaco.editor.setModelMarkers(
+    model,
+    "bug-hint",
+    status === "fail"
+      ? [
+          {
+            startLineNumber: bugLine,
+            endLineNumber: bugLine,
+            startColumn: 1,
+            endColumn: 1000,
+            message: "Tests are failing — this line may be the cause",
+            severity: monaco.MarkerSeverity.Warning,
+          },
+        ]
+      : []
+  )
+}
+
+const clearEditorMarkers = (
+  editor: Monaco.editor.IStandaloneCodeEditor | null,
+  monaco: typeof Monaco | null
+): void => {
+  if (editor === null || monaco === null) return
+  const model = editor.getModel()
+  if (model !== null) monaco.editor.setModelMarkers(model, "bug-hint", [])
+}
+
+const createWorkerMessageHandler =
+  (
+    editorRef: React.MutableRefObject<Monaco.editor.IStandaloneCodeEditor | null>,
+    monacoRef: React.MutableRefObject<typeof Monaco | null>,
+    showSolutionRef: React.MutableRefObject<boolean>,
+    bugLine: number | undefined,
+    setTestState: React.Dispatch<React.SetStateAction<TestRunState>>
+  ) =>
+  (event: MessageEvent<WorkerResultMessage>): void => {
+    const msg = event.data
+    if (msg.type === "error") {
+      setTestState((prev) => ({
+        ...prev,
+        status: "fail" as const,
+        tests: prev.tests.map((t) => ({ ...t, status: "idle" as const })),
+        compileError: msg.message,
+      }))
+      clearEditorMarkers(editorRef.current, monacoRef.current)
+      return
+    }
+    if (showSolutionRef.current) return
+    const results: TestResult[] = msg.results.map((r) => ({
+      name: r.name,
+      status: r.status,
+      error: r.error,
+    }))
+    const passCount = results.filter((r) => r.status === "pass").length
+    const nextStatus =
+      passCount === results.length && results.length > 0 ? ("pass" as const) : ("fail" as const)
+    updateEditorMarkers(editorRef.current, monacoRef.current, bugLine, nextStatus)
+    setTestState({
+      status: nextStatus,
+      tests: results,
+      passCount,
+      totalCount: results.length,
+      compileError: null,
+    })
+  }
 
 export const BugFixChallengeView = ({
   title,
@@ -302,66 +386,13 @@ export const BugFixChallengeView = ({
     const worker = new Worker(
       new URL("../../lib/playground/test-runner.worker.ts", import.meta.url)
     )
-
-    worker.onmessage = (event: MessageEvent<WorkerResultMessage>): void => {
-      const msg = event.data
-
-      if (msg.type === "error") {
-        setTestState((prev) => ({
-          ...prev,
-          status: "fail",
-          tests: prev.tests.map((t) => ({ ...t, status: "idle" as const })),
-          compileError: msg.message,
-        }))
-        const errEditor = editorRef.current
-        const errMonaco = monacoRef.current
-        if (errEditor !== null && errMonaco !== null) {
-          const errModel = errEditor.getModel()
-          if (errModel !== null) errMonaco.editor.setModelMarkers(errModel, "bug-hint", [])
-        }
-        return
-      }
-
-      const results: TestResult[] = msg.results.map((r) => ({
-        name: r.name,
-        status: r.status,
-        error: r.error,
-      }))
-      const passCount = results.filter((r) => r.status === "pass").length
-      const allPassed = passCount === results.length && results.length > 0
-      const nextStatus = allPassed ? ("pass" as const) : ("fail" as const)
-
-      const editor = editorRef.current
-      const monaco = monacoRef.current
-      if (editor !== null && monaco !== null && template.bugLine !== undefined) {
-        const model = editor.getModel()
-        if (model !== null) {
-          if (nextStatus === "fail") {
-            monaco.editor.setModelMarkers(model, "bug-hint", [
-              {
-                startLineNumber: template.bugLine,
-                endLineNumber: template.bugLine,
-                startColumn: 1,
-                endColumn: 1000,
-                message: "Tests are failing — this line may be the cause",
-                severity: monaco.MarkerSeverity.Warning,
-              },
-            ])
-          } else {
-            monaco.editor.setModelMarkers(model, "bug-hint", [])
-          }
-        }
-      }
-
-      setTestState({
-        status: nextStatus,
-        tests: results,
-        passCount,
-        totalCount: results.length,
-        compileError: null,
-      })
-    }
-
+    worker.onmessage = createWorkerMessageHandler(
+      editorRef,
+      monacoRef,
+      showSolutionRef,
+      template.bugLine,
+      setTestState
+    )
     workerRef.current = worker
     return () => worker.terminate()
   }, [template.bugLine])
@@ -434,7 +465,10 @@ export const BugFixChallengeView = ({
         runTests(editor.getValue())
       })
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF, () => {
-        void editor.getAction("editor.action.formatDocument")?.run()
+        editor
+          .getAction("editor.action.formatDocument")
+          ?.run()
+          ?.catch(() => undefined)
       })
       if (autoRunTimeoutRef.current !== null) clearTimeout(autoRunTimeoutRef.current)
       runTests(editor.getValue())
@@ -479,7 +513,10 @@ export const BugFixChallengeView = ({
       setCode(trimmed)
       scheduleAutoSave(trimmed)
     } catch {
-      void editor.getAction("editor.action.formatDocument")?.run()
+      editor
+        .getAction("editor.action.formatDocument")
+        ?.run()
+        ?.catch(() => undefined)
     } finally {
       setIsFormatting(false)
     }
@@ -496,6 +533,10 @@ export const BugFixChallengeView = ({
 
   const allTestsPassing = testState.status === "pass"
   const canSubmit = allTestsPassing && !hasTypeErrors
+
+  let countClass = "text-fg-muted"
+  if (allTestsPassing) countClass = "text-ob-accent"
+  else if (testState.status === "fail") countClass = "text-danger"
 
   const passLabel =
     testState.totalCount > 0
@@ -542,12 +583,10 @@ export const BugFixChallengeView = ({
                   {showSolution && (
                     <div className="flex items-center gap-3">
                       <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-green-400">
-                        <span className="size-1.5 rounded-full bg-green-400" />
-                        added
+                        <span className="size-1.5 rounded-full bg-green-400" /> added
                       </span>
                       <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-red-400">
-                        <span className="size-1.5 rounded-full bg-red-400" />
-                        removed
+                        <span className="size-1.5 rounded-full bg-red-400" /> removed
                       </span>
                     </div>
                   )}
@@ -564,7 +603,9 @@ export const BugFixChallengeView = ({
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => void handleFormat()}
+                      onClick={() => {
+                        handleFormat().catch(() => undefined)
+                      }}
                       disabled={isFormatting}
                       className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease) disabled:opacity-40"
                     >
@@ -658,13 +699,7 @@ export const BugFixChallengeView = ({
                       {dict.active.testsLabel}
                     </p>
                     <span
-                      className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${
-                        allTestsPassing
-                          ? "text-ob-accent"
-                          : testState.status === "fail"
-                            ? "text-danger"
-                            : "text-fg-muted"
-                      }`}
+                      className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
                     >
                       {testState.status === "running" ? (
                         <span className="flex items-center gap-1.5">
@@ -677,7 +712,7 @@ export const BugFixChallengeView = ({
                     </span>
                   </div>
 
-                  {testState.compileError !== null ? (
+                  {testState.compileError !== null && (
                     <div className="rounded-[var(--r-8)] border border-red-500/20 bg-red-500/[0.03] p-3">
                       <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
                         {dict.active.syntaxError}
@@ -686,11 +721,13 @@ export const BugFixChallengeView = ({
                         {dict.active.fixSyntax}
                       </p>
                     </div>
-                  ) : testState.tests.length === 0 ? (
+                  )}
+                  {testState.compileError === null && testState.tests.length === 0 && (
                     <p className="text-fg-muted font-mono text-[11.5px]">
                       {dict.active.editToStart}
                     </p>
-                  ) : (
+                  )}
+                  {testState.compileError === null && testState.tests.length > 0 && (
                     <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-[var(--r-8)] border p-3">
                       {testState.tests.map((test, i) => (
                         <TestCard key={test.name} test={test} index={i} />

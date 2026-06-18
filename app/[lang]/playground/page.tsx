@@ -146,6 +146,12 @@ export default async function PlaygroundPage({
   const showFlatGrid =
     activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
 
+  const getStatusLabel = (s: SessionStatus | null): string => {
+    if (s === "completed") return dict.status.completed
+    if (s === "in_progress") return dict.status.inProgress
+    return dict.status.notStarted
+  }
+
   return (
     <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
       <Suspense fallback={null}>
@@ -190,12 +196,7 @@ export default async function PlaygroundPage({
           {filteredChallenges.map((challenge) => {
             const slug = challenge.url.split("/").pop() ?? ""
             const status = slugToStatus.get(slug) ?? null
-            const statusLabel =
-              status === "completed"
-                ? dict.status.completed
-                : status === "in_progress"
-                  ? dict.status.inProgress
-                  : dict.status.notStarted
+            const statusLabel = getStatusLabel(status)
             return (
               <ChallengeCard
                 key={challenge.url}
