@@ -84,16 +84,43 @@ const stripModuleSyntax = (code: string): string => {
 const transpileTS = (tsCode: string): string =>
   transform(tsCode, { transforms: ["typescript"], disableESTransforms: true }).code
 
+// importScripts is available in Web Workers but not in lib.dom.d.ts.
+// This type covers only the fields we use to avoid any/unknown leakage.
+type WorkerScope = {
+  importScripts: (url: string) => void
+  __obDeepEqual?: typeof deepEqual
+  __obTests?: Array<{ name: string; fn: () => void }>
+}
+const workerScope = self as unknown as WorkerScope
+
 const executeTests = (userCode: string, testCode: string): readonly TestResult[] => {
   const userJS = stripModuleSyntax(transpileTS(userCode))
   const testJS = stripModuleSyntax(transpileTS(testCode))
-  const sandbox = `${HARNESS}\n${userJS}\n${testJS}\nreturn __tests__;`
 
-  // new Function runs user-submitted challenge code inside a Web Worker
-  // (isolated thread, no DOM access, no credentials). The input is always
-  // authored by this project — never arbitrary user-supplied strings.
-  const getTests = new Function("__deepEqual", sandbox) // NOSONAR
-  const tests = getTests(deepEqual) as Array<{ name: string; fn: () => void }>
+  // Load challenge code via importScripts + a blob URL instead of new Function.
+  // importScripts is synchronous, so __obTests is set before we read it below.
+  // The blob scope wraps everything in an IIFE that receives __deepEqual from
+  // self.__obDeepEqual, keeping the expect/toBe closures wired correctly.
+  workerScope.__obDeepEqual = deepEqual
+  const scriptContent = [
+    "(function(__deepEqual){",
+    HARNESS,
+    userJS,
+    testJS,
+    "self.__obTests=__tests__;",
+    "})(self.__obDeepEqual);",
+  ].join("\n")
+
+  const blobUrl = URL.createObjectURL(new Blob([scriptContent], { type: "text/javascript" }))
+  try {
+    workerScope.importScripts(blobUrl)
+  } finally {
+    URL.revokeObjectURL(blobUrl)
+  }
+
+  const tests = workerScope.__obTests ?? []
+  delete workerScope.__obTests
+  delete workerScope.__obDeepEqual
 
   return tests.map((t): TestResult => {
     try {
