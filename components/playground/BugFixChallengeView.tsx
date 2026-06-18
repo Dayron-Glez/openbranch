@@ -413,14 +413,17 @@ export const BugFixChallengeView = ({
         hasInitializedRef.current = true
       }
 
-      const markerDisposable = monaco.editor.onDidChangeMarkers((resources) => {
+      const markerDisposable = monaco.editor.onDidChangeMarkers((resources: Monaco.Uri[]) => {
         if (showSolutionRef.current) return
         const model = editor.getModel()
         if (model === null) return
-        if (!resources.some((r) => r.toString() === model.uri.toString())) return
+        if (!resources.some((r: Monaco.Uri) => r.toString() === model.uri.toString())) return
         const markers = monaco.editor.getModelMarkers({ resource: model.uri })
         setHasTypeErrors(
-          markers.some((m) => m.severity === monaco.MarkerSeverity.Error && m.owner !== "bug-hint")
+          markers.some(
+            (m: Monaco.editor.IMarker) =>
+              m.severity === monaco.MarkerSeverity.Error && m.owner !== "bug-hint"
+          )
         )
       })
       editor.onDidDispose(() => markerDisposable.dispose())

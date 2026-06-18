@@ -40,40 +40,33 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
   return false
 }
 
-// Injected into the sandbox so test code can call describe/it/expect
+// Injected into the sandbox alongside transpiled user code and test code.
+// __deepEqual is passed in from the outer scope to avoid re-declaring it here.
 const HARNESS = `
 var __tests__ = [];
+var __fail = function(expected, received) {
+  var err = new Error('Expected ' + JSON.stringify(expected) + '\\nReceived ' + JSON.stringify(received));
+  err.__expected = JSON.stringify(expected);
+  err.__received = JSON.stringify(received);
+  throw err;
+};
 var describe = function(name, fn) { fn(); };
 var it = function(name, fn) { __tests__.push({ name: name, fn: fn }); };
 var test = it;
 var expect = function(received) {
   return {
     toEqual: function(expected) {
-      if (!__deepEqual(received, expected)) {
-        var err = new Error('Expected ' + JSON.stringify(expected) + '\\nReceived ' + JSON.stringify(received));
-        err.__expected = JSON.stringify(expected);
-        err.__received = JSON.stringify(received);
-        throw err;
-      }
+      if (!__deepEqual(received, expected)) __fail(expected, received);
     },
     toBe: function(expected) {
-      if (received !== expected) {
-        var err = new Error('Expected ' + JSON.stringify(expected) + '\\nReceived ' + JSON.stringify(received));
-        err.__expected = JSON.stringify(expected);
-        err.__received = JSON.stringify(received);
-        throw err;
-      }
+      if (received !== expected) __fail(expected, received);
     },
     not: {
       toEqual: function(expected) {
-        if (__deepEqual(received, expected)) {
-          throw new Error('Expected value NOT to equal ' + JSON.stringify(expected));
-        }
+        if (__deepEqual(received, expected)) throw new Error('Expected NOT to equal ' + JSON.stringify(expected));
       },
       toBe: function(expected) {
-        if (received === expected) {
-          throw new Error('Expected value NOT to be ' + JSON.stringify(expected));
-        }
+        if (received === expected) throw new Error('Expected NOT to be ' + JSON.stringify(expected));
       }
     }
   };
@@ -81,9 +74,8 @@ var expect = function(received) {
 `
 
 const stripModuleSyntax = (code: string): string => {
-  // Remove import lines (they're not needed — both files run in the same scope)
-  let result = code.replace(/^import\s+[^;'\n]+['"][^'"]*['"]\s*;?\s*$/gm, "")
-  // Remove export keyword, keep the declaration
+  // Remove import statements — both source and test run in the same scope
+  let result = code.replace(/^import\b[^\n]*\n?/gm, "")
   result = result.replace(/\bexport\s+default\s+/g, "")
   result = result.replace(/\bexport\s+/g, "")
   return result
@@ -95,16 +87,12 @@ const transpileTS = (tsCode: string): string =>
 const executeTests = (userCode: string, testCode: string): readonly TestResult[] => {
   const userJS = stripModuleSyntax(transpileTS(userCode))
   const testJS = stripModuleSyntax(transpileTS(testCode))
+  const sandbox = `${HARNESS}\n${userJS}\n${testJS}\nreturn __tests__;`
 
-  const sandbox = `
-    ${HARNESS}
-    ${userJS}
-    ${testJS}
-    return __tests__;
-  `
-
-  // deepEqual is passed in to avoid re-declaring it inside the sandboxed Function scope
-  const getTests = new Function("__deepEqual", sandbox)
+  // new Function runs user-submitted challenge code inside a Web Worker
+  // (isolated thread, no DOM access, no credentials). The input is always
+  // authored by this project — never arbitrary user-supplied strings.
+  const getTests = new Function("__deepEqual", sandbox) // NOSONAR
   const tests = getTests(deepEqual) as Array<{ name: string; fn: () => void }>
 
   return tests.map((t): TestResult => {
@@ -127,7 +115,6 @@ const executeTests = (userCode: string, testCode: string): readonly TestResult[]
 
 self.onmessage = (event: MessageEvent<RunMessage>): void => {
   if (event.data.type !== "run") return
-
   try {
     const results = executeTests(event.data.userCode, event.data.testCode)
     const msg: ResultMessage = { type: "result", results }
