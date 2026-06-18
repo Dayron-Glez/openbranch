@@ -5,6 +5,7 @@ import type { ReviewDecision } from "@/lib/playground/review-types"
 
 type ReviewPanelDict = {
   readonly submitButton: string
+  readonly submitting: string
   readonly decisionLabel: string
   readonly decisionApprove: string
   readonly decisionComment: string
@@ -95,9 +96,16 @@ export const ReviewPanel = ({
           type="button"
           onClick={onSubmit}
           disabled={!canSubmit || isPending}
-          className="bg-ob-accent text-accent-ink h-10 w-full rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
+          className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
         >
-          {dict.submitButton}
+          {isPending ? (
+            <>
+              <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              {dict.submitting}
+            </>
+          ) : (
+            dict.submitButton
+          )}
         </button>
         {!canSubmit && (
           <p className="text-fg-muted mt-2 text-center font-mono text-[11px] leading-[1.5]">

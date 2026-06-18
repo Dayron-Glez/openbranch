@@ -191,6 +191,7 @@ export const ActiveChallengeView = ({
                 isPending={isPending}
                 dict={{
                   submitButton: dict.active.submitButton,
+                  submitting: dict.active.submitting,
                   decisionLabel: dict.active.decisionLabel,
                   decisionApprove: dict.active.decisionApprove,
                   decisionComment: dict.active.decisionComment,
