@@ -82,13 +82,16 @@ export const completeChallenge = async (slug: string, lang: string): Promise<voi
   const snapshot = session?.snapshot as ReviewSnapshot | null
   if ((snapshot?.comments?.length ?? 0) === 0 || snapshot?.decision == null) return
 
-  await supabase
+  const { data: completedSession } = await supabase
     .from("challenge_sessions")
     .update({ status: "completed", completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
     .eq("lang", lang)
     .eq("status", "in_progress")
+    .select("id")
+
+  if ((completedSession?.length ?? 0) === 0) return
 
   const { data: existingBadge } = await supabase
     .from("user_badges")
@@ -136,13 +139,16 @@ export const completeBugFixChallenge = async (slug: string, lang: string): Promi
   } = await supabase.auth.getUser()
   if (user === null) return
 
-  await supabase
+  const { data: completedBugSession } = await supabase
     .from("challenge_sessions")
     .update({ status: "completed", completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
     .eq("lang", lang)
     .eq("status", "in_progress")
+    .select("id")
+
+  if ((completedBugSession?.length ?? 0) === 0) return
 
   const { data: existingBadge } = await supabase
     .from("user_badges")
