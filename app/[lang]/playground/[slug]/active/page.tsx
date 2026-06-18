@@ -6,8 +6,10 @@ import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
 import { getDiffBySlug } from "@/lib/playground/diff-registry"
+import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
 import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
-import type { ReviewSnapshot } from "@/lib/playground/review-types"
+import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
+import type { ReviewSnapshot, BugFixSnapshot } from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
@@ -56,14 +58,34 @@ export default async function ActiveChallengePage({
     redirect(localizedHref(lang, `/playground/${slug}`))
   }
 
+  const dict = getPlaygroundDict(lang)
+  const playgroundPath = localizedHref(lang, "/playground")
+  const challengePath = localizedHref(lang, `/playground/${slug}`)
+  const category = page.data.category as string
+
+  if (category === "bug-fix") {
+    const template = getSandpackTemplateBySlug(slug)
+    if (template === null) notFound()
+    const bugFixSnapshot = session.snapshot as BugFixSnapshot | null
+    return (
+      <BugFixChallengeView
+        title={page.data.title}
+        template={template}
+        initialCode={bugFixSnapshot?.code ?? null}
+        slug={slug}
+        lang={lang}
+        playgroundPath={playgroundPath}
+        challengePath={challengePath}
+        dict={dict}
+      />
+    )
+  }
+
+  // default: code-review
   const snapshot = session.snapshot as ReviewSnapshot | null
   const initialComments = snapshot?.comments ?? []
   const initialDecision = snapshot?.decision ?? null
-
-  const dict = getPlaygroundDict(lang)
   const diffFiles = getDiffBySlug(slug)
-  const playgroundPath = localizedHref(lang, "/playground")
-  const challengePath = localizedHref(lang, `/playground/${slug}`)
 
   return (
     <ActiveChallengeView
