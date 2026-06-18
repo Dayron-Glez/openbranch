@@ -1,0 +1,46 @@
+---
+title: "Fix the broken EventEmitter"
+description: "Listeners keep firing after off() is called. A real-time dashboard is receiving phantom updates from events it explicitly unsubscribed from — find out why and fix it."
+icon: Bug
+maturity: stable
+authors:
+  - Dayron Glez
+category: bug-fix
+difficulty: moderate
+estimated_minutes: 20
+validation: jest
+sandbox_template: bug-fix-event-emitter
+skills:
+  - Closures
+  - Reference equality
+  - Event-driven architecture
+  - TypeScript generics
+---
+
+A bug report arrived from the analytics team: dashboard components keep receiving real-time updates even after calling `off()` to unsubscribe from a feed. The `EventEmitter` that drives the live data pipeline is the suspect.
+
+The code compiles. TypeScript is happy. But two of the three tests are red — and the failure only shows up when you try to unsubscribe.
+
+## The situation
+
+```typescript
+const handler = (v: number) => display(v)
+
+emitter.on<number>("price-update", handler)
+emitter.emit("price-update", 42) // ✓ handler called
+
+emitter.off<number>("price-update", handler)
+emitter.emit("price-update", 99) // ✗ handler still called — why?
+```
+
+## What you'll practice
+
+- How JavaScript compares function references with `===`
+- Why wrapping a function creates a new identity, even if the behavior is the same
+- The pattern used by every major event system (DOM, Node.js, RxJS) to make `off()` work
+
+## Done when
+
+- All three tests pass
+- `off()` correctly removes only the specified listener
+- Other listeners registered on the same event remain active
