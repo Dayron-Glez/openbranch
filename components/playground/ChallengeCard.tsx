@@ -4,6 +4,8 @@ import { IconClock } from "@/icons"
 
 type ChallengeDifficultyKey = "beginner" | "moderate" | "demanding"
 
+type SessionStatus = "in_progress" | "completed" | null
+
 type ChallengeCardProps = {
   readonly href: string
   readonly title: string
@@ -14,6 +16,7 @@ type ChallengeCardProps = {
   readonly difficultyLabel: string
   readonly statusLabel: string
   readonly minutesLabel: string
+  readonly sessionStatus?: SessionStatus
 }
 
 const difficultyLevel: Record<ChallengeDifficultyKey, 1 | 2 | 3> = {
@@ -50,6 +53,7 @@ export const ChallengeCard = ({
   difficultyLabel,
   statusLabel,
   minutesLabel,
+  sessionStatus,
 }: ChallengeCardProps) => {
   return (
     <Link
@@ -61,8 +65,24 @@ export const ChallengeCard = ({
         <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-[var(--r-8)] border [&_svg]:size-[17px]">
           {icon}
         </span>
-        <span className="text-fg-muted flex items-center gap-1.5 font-mono text-[11.5px]">
-          <span className="border-fg-faint size-1.5 rounded-full border-[1.5px]" />
+        <span
+          className={`flex items-center gap-1.5 font-mono text-[11.5px] ${
+            sessionStatus === "completed"
+              ? "text-ob-accent"
+              : sessionStatus === "in_progress"
+                ? "text-amber-400"
+                : "text-fg-muted"
+          }`}
+        >
+          <span
+            className={`size-1.5 rounded-full ${
+              sessionStatus === "completed"
+                ? "bg-ob-accent"
+                : sessionStatus === "in_progress"
+                  ? "bg-amber-400"
+                  : "border-fg-faint border-[1.5px]"
+            }`}
+          />
           {statusLabel}
         </span>
       </div>
