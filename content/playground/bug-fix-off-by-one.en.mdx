@@ -1,50 +1,45 @@
 ---
-title: "Fix the off-by-one in paginate()"
-description: "A pagination function silently drops the last item on every page. A failing test already tells you where to look — now find the bug and fix it."
+title: "The load-more button that never stops"
+description: "A paginated feed keeps showing 'Load more' even on the last page — triggering an extra empty fetch on every visit. The data is correct, but the metadata lies."
 icon: Bug
 maturity: stable
 authors:
   - Dayron Glez
 category: bug-fix
 difficulty: beginner
-estimated_minutes: 12
+estimated_minutes: 15
 validation: jest
 sandbox_template: bug-fix-off-by-one
 skills:
   - Off-by-one errors
+  - Pagination logic
+  - Zero-based indexing
   - Debugging with tests
-  - Edge case analysis
-  - Index arithmetic
 ---
 
-A bug report came in: the `atlas/gateway` list endpoints are consistently missing the last item on every page. Five results requested, four returned. Ten requested, nine returned. Always one short.
+A bug report landed from the frontend team: the feed component is firing an extra API call on every visit. Users on the last page of results still see a "Load more" button — clicking it returns an empty array and a brief flash of a loading spinner. Not a crash, but bad enough to file a ticket.
 
-The function responsible is `paginate()` in `src/gateway/paginate.ts`. A failing test has already been written that reproduces the problem exactly. Your job is to read the test, understand what it expects, find the bug, and fix it.
+The culprit is `paginate()` in `src/paginate.ts`. It returns a `PaginationResult` object with `data`, navigation flags, and page metadata. Three of its four tests pass — only one is red, and it points straight at the bug.
 
 ## The situation
 
-The test is already written and currently red:
+The function looks reasonable at a glance. It clamps the page to valid bounds, slices the right items, and populates the result. But one of the returned fields is always slightly off — and that one field is what the UI reads to decide whether to render the "Load more" button.
+
+Three tests pass. One fails:
 
 ```typescript
-it("returns a full page including the last item", () => {
-  expect(paginate([1, 2, 3, 4, 5], 0, 3)).toEqual([1, 2, 3])
+it("hasNext is false on the last page", () => {
+  const result = paginate(ITEMS, 3, 3) // last page of 4
+  expect(result.hasNext).toBe(false)
 })
 ```
 
-With the current implementation it returns `[1, 2]`. One item short.
-
-The fix is a single character. The explanation of why it's wrong is the valuable part.
-
 ## What you'll do
 
-1. Read the failing test to understand what `paginate()` is supposed to return.
-2. Read `paginate.ts` and find the line that's causing the off-by-one.
-3. Fix it — the test should be your only guide.
-4. Run the tests to confirm the fix is correct and nothing else broke.
+1. Run the tests and read the failure output — it tells you what `hasNext` returns vs. what it should.
+2. Trace through the logic for the last page: what is `safePage`? What is `totalPages`? What does the current condition evaluate to?
+3. Fix the condition so `hasNext` is `false` on the last page and `true` on every other page.
 
 ## Done when
 
-- The failing test passes.
-- The function returns the correct number of items for any valid `page` and `size` combination.
-
-Resist the urge to rewrite the function. The bug is one line. Fix only that.
+All four tests pass. The fix is a single expression — no restructuring needed.

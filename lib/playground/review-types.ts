@@ -11,3 +11,7 @@ export type ReviewSnapshot = {
   readonly comments: InlineComment[]
   readonly decision: ReviewDecision
 }
+
+export type BugFixSnapshot = {
+  readonly code: string
+}

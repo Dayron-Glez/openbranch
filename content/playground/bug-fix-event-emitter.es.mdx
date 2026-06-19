@@ -1,0 +1,46 @@
+---
+title: "Arregla el EventEmitter roto"
+description: "Los listeners siguen disparando después de llamar off(). Un dashboard en tiempo real recibe actualizaciones fantasma de eventos a los que explícitamente se desuscribió — encuentra el motivo y corrígelo."
+icon: Bug
+maturity: stable
+authors:
+  - Dayron Glez
+category: bug-fix
+difficulty: moderate
+estimated_minutes: 20
+validation: jest
+sandbox_template: bug-fix-event-emitter
+skills:
+  - Closures
+  - Igualdad de referencias
+  - Arquitectura orientada a eventos
+  - Genéricos de TypeScript
+---
+
+Llegó un reporte del equipo de analítica: los componentes del dashboard siguen recibiendo actualizaciones en tiempo real incluso después de llamar `off()` para desuscribirse de un feed. El `EventEmitter` que maneja el pipeline de datos en vivo es el sospechoso.
+
+El código compila. TypeScript está conforme. Pero dos de los tres tests están en rojo — y el fallo solo aparece cuando intentas desuscribirte.
+
+## La situación
+
+```typescript
+const handler = (v: number) => display(v)
+
+emitter.on<number>("price-update", handler)
+emitter.emit("price-update", 42) // ✓ handler llamado
+
+emitter.off<number>("price-update", handler)
+emitter.emit("price-update", 99) // ✗ handler sigue llamándose — ¿por qué?
+```
+
+## Lo que vas a practicar
+
+- Cómo JavaScript compara referencias de funciones con `===`
+- Por qué envolver una función crea una nueva identidad, aunque el comportamiento sea el mismo
+- El patrón que usan todos los sistemas de eventos (DOM, Node.js, RxJS) para que `off()` funcione
+
+## Listo cuando
+
+- Los tres tests pasan
+- `off()` elimina correctamente solo el listener especificado
+- Otros listeners registrados en el mismo evento siguen activos

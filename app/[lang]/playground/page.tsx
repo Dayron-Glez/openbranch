@@ -5,6 +5,7 @@ import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
+import { createClient } from "@/lib/supabase/server"
 import { ChallengeCard } from "@/components/playground/ChallengeCard"
 import { StartingLine } from "@/components/playground/StartingLine"
 import { BadgesSection } from "@/components/playground/BadgesSection"
@@ -106,6 +107,28 @@ export default async function PlaygroundPage({
   const basePath = localizedHref(lang, "/playground")
   const startingLineBody = dict.startingLine.body.replace("{count}", String(challenges.length))
 
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  type SessionStatus = "in_progress" | "completed"
+  const slugToStatus = new Map<string, SessionStatus>()
+  if (user !== null) {
+    const { data: sessions } = await supabase
+      .from("challenge_sessions")
+      .select("challenge_slug, status")
+      .eq("user_id", user.id)
+      .eq("lang", lang)
+      .in("status", ["in_progress", "completed"])
+    for (const s of sessions ?? []) {
+      const slug = s.challenge_slug as string
+      const status = s.status as SessionStatus
+      const current = slugToStatus.get(slug)
+      if (current !== "completed") slugToStatus.set(slug, status)
+    }
+  }
+
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
     label: dict.category[cat],
@@ -122,6 +145,12 @@ export default async function PlaygroundPage({
 
   const showFlatGrid =
     activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
+
+  const getStatusLabel = (s: SessionStatus | null): string => {
+    if (s === "completed") return dict.status.completed
+    if (s === "in_progress") return dict.status.inProgress
+    return dict.status.notStarted
+  }
 
   return (
     <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
@@ -164,20 +193,26 @@ export default async function PlaygroundPage({
 
       {showFlatGrid ? (
         <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
-          {filteredChallenges.map((challenge) => (
-            <ChallengeCard
-              key={challenge.url}
-              href={challenge.url}
-              title={challenge.data.title}
-              description={challenge.data.description ?? ""}
-              difficulty={challenge.data.difficulty}
-              estimatedMinutes={challenge.data.estimated_minutes}
-              icon={getChallengeIcon(challenge.data.icon)}
-              difficultyLabel={dict.difficulty[challenge.data.difficulty]}
-              statusLabel={dict.status.notStarted}
-              minutesLabel={dict.time.minutes}
-            />
-          ))}
+          {filteredChallenges.map((challenge) => {
+            const slug = challenge.url.split("/").pop() ?? ""
+            const status = slugToStatus.get(slug) ?? null
+            const statusLabel = getStatusLabel(status)
+            return (
+              <ChallengeCard
+                key={challenge.url}
+                href={challenge.url}
+                title={challenge.data.title}
+                description={challenge.data.description ?? ""}
+                difficulty={challenge.data.difficulty}
+                estimatedMinutes={challenge.data.estimated_minutes}
+                icon={getChallengeIcon(challenge.data.icon)}
+                difficultyLabel={dict.difficulty[challenge.data.difficulty]}
+                statusLabel={statusLabel}
+                sessionStatus={status}
+                minutesLabel={dict.time.minutes}
+              />
+            )
+          })}
         </div>
       ) : (
         <div className="flex flex-col gap-10">
@@ -190,20 +225,26 @@ export default async function PlaygroundPage({
                   {dict.category[cat]}
                 </div>
                 <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
-                  {categoryChallenges.map((challenge) => (
-                    <ChallengeCard
-                      key={challenge.url}
-                      href={challenge.url}
-                      title={challenge.data.title}
-                      description={challenge.data.description ?? ""}
-                      difficulty={challenge.data.difficulty}
-                      estimatedMinutes={challenge.data.estimated_minutes}
-                      icon={getChallengeIcon(challenge.data.icon)}
-                      difficultyLabel={dict.difficulty[challenge.data.difficulty]}
-                      statusLabel={dict.status.notStarted}
-                      minutesLabel={dict.time.minutes}
-                    />
-                  ))}
+                  {categoryChallenges.map((challenge) => {
+                    const slug = challenge.url.split("/").pop() ?? ""
+                    const status = slugToStatus.get(slug) ?? null
+                    const statusLabel = getStatusLabel(status)
+                    return (
+                      <ChallengeCard
+                        key={challenge.url}
+                        href={challenge.url}
+                        title={challenge.data.title}
+                        description={challenge.data.description ?? ""}
+                        difficulty={challenge.data.difficulty}
+                        estimatedMinutes={challenge.data.estimated_minutes}
+                        icon={getChallengeIcon(challenge.data.icon)}
+                        difficultyLabel={dict.difficulty[challenge.data.difficulty]}
+                        statusLabel={statusLabel}
+                        sessionStatus={status}
+                        minutesLabel={dict.time.minutes}
+                      />
+                    )
+                  })}
                 </div>
               </div>
             )
