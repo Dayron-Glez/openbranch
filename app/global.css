@@ -118,25 +118,24 @@
     color: var(--color-fg);
     scrollbar-gutter: stable;
     scrollbar-width: thin;
-    scrollbar-color: var(--color-fg-faint) transparent;
+    scrollbar-color: var(--color-border) transparent;
   }
 
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
     background: transparent;
+    border-left: 1px solid transparent;
   }
 
   ::-webkit-scrollbar-thumb {
     border-radius: 9999px;
-    background: var(--color-fg-faint);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-fg-muted);
+    background-color: var(--color-border);
+    border: 1px solid transparent;
+    background-clip: content-box;
   }
 
   html > body[data-scroll-locked] {
