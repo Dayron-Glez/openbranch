@@ -1,4 +1,21 @@
+import type * as Monaco from "monaco-editor"
 import type { BeforeMount } from "@monaco-editor/react"
+
+// Shared editor construction options for the playground code editors.
+export const EDITOR_OPTIONS: Monaco.editor.IStandaloneEditorConstructionOptions = {
+  minimap: { enabled: false },
+  fontSize: 13,
+  lineHeight: 22,
+  fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
+  fontLigatures: true,
+  scrollBeyondLastLine: false,
+  padding: { top: 16, bottom: 16 },
+  renderLineHighlight: "line",
+  overviewRulerBorder: false,
+  hideCursorInOverviewRuler: true,
+  scrollbar: { verticalScrollbarSize: 4, horizontalScrollbarSize: 4 },
+  contextmenu: false,
+}
 
 // Shared Monaco setup for the playground code editors (bug-fix, testing):
 // strict TS compiler options + the openbranch "ob-dark" theme.
