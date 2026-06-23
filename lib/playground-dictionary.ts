@@ -30,6 +30,13 @@ export type PlaygroundDict = {
     readonly allTestsPassing: string
     readonly fixTypeErrors: string
     readonly submitting: string
+    readonly regressionsLabel: string
+    readonly caught: string
+    readonly writeTestsToStart: string
+    readonly allRegressionsCaught: string
+    readonly needMoreTests: string
+    readonly submitTests: string
+    readonly readOnlyLabel: string
   }
   readonly result: {
     readonly heading: string
@@ -259,6 +266,22 @@ const translations = {
     en: "Fix TypeScript errors before submitting.",
   },
   "active.submitting": { es: "Enviando…", en: "Submitting…" },
+  "active.regressionsLabel": { es: "Regresiones", en: "Regressions" },
+  "active.caught": { es: "atrapadas", en: "caught" },
+  "active.writeTestsToStart": {
+    es: "Escribe tests para empezar a validar.",
+    en: "Write tests to start validating.",
+  },
+  "active.allRegressionsCaught": {
+    es: "¡Todas las regresiones atrapadas — listo para enviar!",
+    en: "All regressions caught — ready to submit!",
+  },
+  "active.needMoreTests": {
+    es: "Tus tests pasan, pero no atrapan todas las regresiones. Cubre más casos.",
+    en: "Your tests pass, but they don't catch every regression. Cover more cases.",
+  },
+  "active.submitTests": { es: "Enviar tests", en: "Submit tests" },
+  "active.readOnlyLabel": { es: "solo lectura", en: "read-only" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -357,6 +380,13 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       allTestsPassing: tx("active.allTestsPassing"),
       fixTypeErrors: tx("active.fixTypeErrors"),
       submitting: tx("active.submitting"),
+      regressionsLabel: tx("active.regressionsLabel"),
+      caught: tx("active.caught"),
+      writeTestsToStart: tx("active.writeTestsToStart"),
+      allRegressionsCaught: tx("active.allRegressionsCaught"),
+      needMoreTests: tx("active.needMoreTests"),
+      submitTests: tx("active.submitTests"),
+      readOnlyLabel: tx("active.readOnlyLabel"),
     },
     result: {
       heading: tx("result.heading"),
