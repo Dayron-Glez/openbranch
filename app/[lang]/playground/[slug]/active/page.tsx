@@ -7,9 +7,11 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
 import { getDiffBySlug } from "@/lib/playground/diff-registry"
 import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
+import { getTestingTemplateBySlug } from "@/lib/playground/testing-registry"
 import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
 import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
-import type { ReviewSnapshot, BugFixSnapshot } from "@/lib/playground/review-types"
+import { TestingChallengeView } from "@/components/playground/testing/TestingChallengeView"
+import type { ReviewSnapshot, BugFixSnapshot, TestingSnapshot } from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
@@ -72,6 +74,24 @@ export default async function ActiveChallengePage({
         title={page.data.title}
         template={template}
         initialCode={bugFixSnapshot?.code ?? null}
+        slug={slug}
+        lang={lang}
+        playgroundPath={playgroundPath}
+        challengePath={challengePath}
+        dict={dict}
+      />
+    )
+  }
+
+  if (category === "testing") {
+    const template = getTestingTemplateBySlug(slug)
+    if (template === null) notFound()
+    const testingSnapshot = session.snapshot as TestingSnapshot | null
+    return (
+      <TestingChallengeView
+        title={page.data.title}
+        template={template}
+        initialTestCode={testingSnapshot?.testCode ?? null}
         slug={slug}
         lang={lang}
         playgroundPath={playgroundPath}
