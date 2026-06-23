@@ -2,7 +2,7 @@
 
 import type React from "react"
 import type * as Monaco from "monaco-editor"
-import type { OnMount, BeforeMount } from "@monaco-editor/react"
+import type { OnMount } from "@monaco-editor/react"
 import { useState, useCallback, useRef, useTransition, useEffect } from "react"
 import Link from "next/link"
 import Editor from "@monaco-editor/react"
@@ -12,26 +12,13 @@ import type { BugFixTemplate } from "@/lib/playground/sandpack-templates/bug-fix
 import { HintPanel } from "@/components/playground/HintPanel"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { configureMonaco } from "@/components/playground/monacoTheme"
+import { DiffView } from "@/components/playground/DiffView"
+import { TestCard, INITIAL_TEST_STATE } from "@/components/playground/TestCard"
+import type { TestResult, TestRunState } from "@/components/playground/TestCard"
 
 const AUTOSAVE_DELAY_MS = 800
 const AUTORUN_DELAY_MS = 1500
-
-type TestResult = {
-  readonly name: string
-  readonly status: "idle" | "running" | "pass" | "fail"
-  readonly error?: {
-    readonly expected: string
-    readonly received: string
-  }
-}
-
-type TestRunState = {
-  readonly status: "idle" | "running" | "pass" | "fail"
-  readonly tests: readonly TestResult[]
-  readonly passCount: number
-  readonly totalCount: number
-  readonly compileError: string | null
-}
 
 type WorkerResultMessage =
   | {
@@ -43,229 +30,6 @@ type WorkerResultMessage =
       }>
     }
   | { readonly type: "error"; readonly message: string }
-
-const INITIAL_TEST_STATE: TestRunState = {
-  status: "idle",
-  tests: [],
-  passCount: 0,
-  totalCount: 0,
-  compileError: null,
-}
-
-type DiffLine = {
-  readonly type: "unchanged" | "added" | "removed"
-  readonly content: string
-  readonly num: number | null
-  readonly id: number
-}
-
-const computeLineDiff = (original: string, solution: string): readonly DiffLine[] => {
-  const a = original.split("\n")
-  const b = solution.split("\n")
-  const m = a.length
-  const n = b.length
-  const dp: number[][] = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
-  for (let i = 1; i <= m; i++) {
-    for (let j = 1; j <= n; j++) {
-      if (a[i - 1] === b[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1
-      else dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1])
-    }
-  }
-  const raw: Array<{ type: "unchanged" | "added" | "removed"; content: string }> = []
-  let i = m
-  let j = n
-  while (i > 0 || j > 0) {
-    if (i > 0 && j > 0 && a[i - 1] === b[j - 1]) {
-      raw.unshift({ type: "unchanged", content: a[i - 1] })
-      i--
-      j--
-    } else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
-      raw.unshift({ type: "added", content: b[j - 1] })
-      j--
-    } else {
-      raw.unshift({ type: "removed", content: a[i - 1] })
-      i--
-    }
-  }
-  let solutionLine = 0
-  let lineId = 0
-  return raw.map((line) => {
-    if (line.type !== "removed") solutionLine++
-    return { ...line, num: line.type === "removed" ? null : solutionLine, id: lineId++ }
-  })
-}
-
-type DiffViewProps = {
-  readonly original: string
-  readonly solution: string
-}
-
-type DiffRowProps = {
-  readonly line: DiffLine
-}
-
-const DiffRow = ({ line }: DiffRowProps): React.ReactElement => {
-  let rowBg = ""
-  if (line.type === "added") rowBg = "bg-green-500/[0.08]"
-  else if (line.type === "removed") rowBg = "bg-red-500/[0.08]"
-
-  let markerClass = "text-transparent"
-  if (line.type === "added") markerClass = "text-green-400"
-  else if (line.type === "removed") markerClass = "text-red-400"
-
-  let markerChar = " "
-  if (line.type === "added") markerChar = "+"
-  else if (line.type === "removed") markerChar = "-"
-
-  let contentClass = ""
-  if (line.type === "added") contentClass = "text-green-300"
-  else if (line.type === "removed") contentClass = "text-red-300/80"
-
-  return (
-    <div className={`flex items-center pr-3 ${rowBg}`}>
-      <span
-        className="w-12 shrink-0 pr-4 text-right text-[13px] leading-[22px] select-none"
-        style={{ color: "#2D3144" }}
-      >
-        {line.num ?? ""}
-      </span>
-      <span className={`w-4 shrink-0 text-[13px] leading-[22px] select-none ${markerClass}`}>
-        {markerChar}
-      </span>
-      <span
-        className={`flex-1 text-[13px] leading-[22px] whitespace-pre ${contentClass}`}
-        style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
-      >
-        {line.content}
-      </span>
-    </div>
-  )
-}
-
-const DiffView = ({ original, solution }: DiffViewProps): React.ReactElement => {
-  const lines = computeLineDiff(original, solution)
-  return (
-    <div
-      className="h-full"
-      style={{
-        backgroundColor: "#0D0F15",
-        fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
-      }}
-    >
-      <ScrollArea className="h-full">
-        <div className="py-4 pr-3">
-          {lines.map((line) => (
-            <DiffRow key={line.id} line={line} />
-          ))}
-        </div>
-      </ScrollArea>
-    </div>
-  )
-}
-
-const configureMonaco: BeforeMount = (monaco) => {
-  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    target: monaco.languages.typescript.ScriptTarget.ES2020,
-    strict: true,
-    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-    esModuleInterop: true,
-    allowSyntheticDefaultImports: true,
-    noUnusedLocals: true,
-    noUnusedParameters: false,
-    forceConsistentCasingInFileNames: true,
-  })
-  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    noSemanticValidation: false,
-    noSyntaxValidation: false,
-  })
-
-  monaco.editor.defineTheme("ob-dark", {
-    base: "vs-dark",
-    inherit: true,
-    rules: [
-      { token: "keyword", foreground: "A78BFA" },
-      { token: "string", foreground: "FCD34D" },
-      { token: "number", foreground: "60A5FA" },
-      { token: "comment", foreground: "4B5563", fontStyle: "italic" },
-      { token: "type", foreground: "5EE39A" },
-      { token: "class", foreground: "5EE39A" },
-      { token: "interface", foreground: "5EE39A" },
-    ],
-    colors: {
-      "editor.background": "#0D0F15",
-      "editor.foreground": "#ECEEF1",
-      "editor.lineHighlightBackground": "#141720",
-      "editorLineNumber.foreground": "#2D3144",
-      "editorLineNumber.activeForeground": "#5C637A",
-      "editor.selectionBackground": "#1E3A5F80",
-      "editorCursor.foreground": "#5EE39A",
-      "editor.inactiveSelectionBackground": "#1E3A5F40",
-      "editorWidget.background": "#0D0F15",
-      "editorSuggestWidget.background": "#141720",
-      "editorSuggestWidget.border": "#1E2235",
-      "editorSuggestWidget.selectedBackground": "#1E2235",
-      "editorHoverWidget.background": "#0D0F15",
-      "editorHoverWidget.border": "#1E2235",
-    },
-  })
-}
-
-type TestCardProps = {
-  readonly test: TestResult
-  readonly index: number
-}
-
-const TestCard = ({ test, index }: TestCardProps): React.ReactElement => {
-  let statusDot: React.ReactElement
-  if (test.status === "pass") {
-    statusDot = (
-      <span className="text-ob-accent mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-full bg-green-500/10 font-mono text-[11px]">
-        ✓
-      </span>
-    )
-  } else if (test.status === "fail") {
-    statusDot = (
-      <span className="text-danger mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-full bg-red-500/10 font-mono text-[11px]">
-        ✕
-      </span>
-    )
-  } else if (test.status === "running") {
-    statusDot = (
-      <span className="border-fg-faint mt-0.5 size-[18px] shrink-0 animate-spin rounded-full border-2 border-t-transparent" />
-    )
-  } else {
-    statusDot = (
-      <span className="border-fg-faint mt-0.5 size-[18px] shrink-0 rounded-full border-2" />
-    )
-  }
-
-  let nameClass = "text-fg-muted"
-  if (test.status === "pass") nameClass = "text-fg-2"
-  else if (test.status === "fail") nameClass = "text-fg"
-
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-start gap-2.5">
-        {statusDot}
-        <span className={`font-mono text-[11.5px] leading-[1.5] ${nameClass}`}>
-          {index + 1}. {test.name}
-        </span>
-      </div>
-      {test.status === "fail" && test.error !== undefined && (
-        <div className="border-line ml-[26px] rounded-[var(--r-8)] border bg-red-500/[0.04] px-3 py-2">
-          <div className="mb-1 flex gap-3 font-mono text-[11px]">
-            <span className="text-fg-muted w-16 shrink-0 tracking-wide uppercase">Expected</span>
-            <span className="text-ob-accent truncate">{test.error.expected}</span>
-          </div>
-          <div className="flex gap-3 font-mono text-[11px]">
-            <span className="text-fg-muted w-16 shrink-0 tracking-wide uppercase">Received</span>
-            <span className="text-danger truncate">{test.error.received}</span>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
 
 type BugFixChallengeViewProps = {
   readonly title: string
@@ -316,9 +80,9 @@ const clearEditorMarkers = (
 
 const createWorkerMessageHandler =
   (
-    editorRef: React.MutableRefObject<Monaco.editor.IStandaloneCodeEditor | null>,
-    monacoRef: React.MutableRefObject<typeof Monaco | null>,
-    showSolutionRef: React.MutableRefObject<boolean>,
+    editorRef: React.RefObject<Monaco.editor.IStandaloneCodeEditor | null>,
+    monacoRef: React.RefObject<typeof Monaco | null>,
+    showSolutionRef: React.RefObject<boolean>,
     bugLine: number | undefined,
     setTestState: React.Dispatch<React.SetStateAction<TestRunState>>
   ) =>
