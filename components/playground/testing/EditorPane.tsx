@@ -17,6 +17,7 @@ type EditorPaneProps = {
   readonly onSelectTab: (tab: "test" | "source") => void
   readonly onFormat: () => void
   readonly onToggleSolution: () => void
+  readonly onRun: () => void
   readonly onEditorChange: (value: string | undefined) => void
   readonly onEditorMount: OnMount
 }
@@ -31,6 +32,7 @@ export const EditorPane = ({
   onSelectTab,
   onFormat,
   onToggleSolution,
+  onRun,
   onEditorChange,
   onEditorMount,
 }: EditorPaneProps): React.ReactElement => {
@@ -52,6 +54,7 @@ export const EditorPane = ({
           onSelectTab={onSelectTab}
           onFormat={onFormat}
           onToggleSolution={onToggleSolution}
+          onRun={onRun}
         />
 
         <div className="min-h-0 flex-1">

@@ -7,7 +7,6 @@ import type { TestingTemplate } from "@/lib/playground/sandpack-templates/testin
 import { formatTypeScript } from "@/components/playground/formatTypeScript"
 
 const AUTOSAVE_DELAY_MS = 800
-const AUTORUN_DELAY_MS = 1500
 
 type UseTestingEditorArgs = {
   readonly template: TestingTemplate
@@ -45,7 +44,6 @@ export const useTestingEditor = ({
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
   const testCodeRef = useRef<string>(starter)
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const autoRunTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hasInitializedRef = useRef<boolean>(false)
 
   const scheduleAutoSave = useCallback(
@@ -71,10 +69,8 @@ export const useTestingEditor = ({
     (value: string | undefined): void => {
       if (value === undefined || showSolutionRef.current) return
       applyCode(value)
-      if (autoRunTimeoutRef.current !== null) clearTimeout(autoRunTimeoutRef.current)
-      autoRunTimeoutRef.current = setTimeout(() => runTests(value), AUTORUN_DELAY_MS)
     },
-    [applyCode, runTests, showSolutionRef]
+    [applyCode, showSolutionRef]
   )
 
   const handleEditorMount: OnMount = useCallback(
@@ -94,11 +90,8 @@ export const useTestingEditor = ({
       }
 
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
-        if (autoRunTimeoutRef.current !== null) clearTimeout(autoRunTimeoutRef.current)
         runTests(testCodeRef.current)
       })
-
-      runTests(testCodeRef.current)
     },
     [template, starter, runTests]
   )

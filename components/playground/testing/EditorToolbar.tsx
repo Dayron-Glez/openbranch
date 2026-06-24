@@ -13,6 +13,7 @@ type EditorToolbarProps = {
   readonly onSelectTab: (tab: "test" | "source") => void
   readonly onFormat: () => void
   readonly onToggleSolution: () => void
+  readonly onRun: () => void
 }
 
 const tabClass = (active: boolean): string =>
@@ -33,8 +34,10 @@ export const EditorToolbar = ({
   onSelectTab,
   onFormat,
   onToggleSolution,
+  onRun,
 }: EditorToolbarProps): React.ReactElement => {
   const onSourceTab = activeTab === "source"
+  const showActions = !showSolution && !onSourceTab
 
   return (
     <div
@@ -61,36 +64,43 @@ export const EditorToolbar = ({
           <button
             type="button"
             onClick={() => onSelectTab("source")}
-            className={`flex items-center gap-1.5 ${tabClass(onSourceTab)}`}
+            className={`flex items-center gap-2 ${tabClass(onSourceTab)}`}
           >
             {sourceFile}
-            <span className="text-fg-faint text-[10px]">{dict.active.readOnlyLabel}</span>
+            <span className="text-fg-muted text-[10px] leading-none tracking-wide">
+              {dict.active.readOnlyLabel}
+            </span>
           </button>
         </div>
       )}
 
-      {showSolution ? (
+      {showSolution && (
         <button type="button" onClick={onToggleSolution} className={actionClass}>
           {dict.active.backToEdit}
         </button>
-      ) : (
+      )}
+
+      {showActions && (
         <div className="flex items-center gap-3">
-          {!onSourceTab && (
-            <button
-              type="button"
-              onClick={onFormat}
-              disabled={isFormatting}
-              className={`${actionClass} disabled:opacity-40`}
-            >
-              {isFormatting ? "formatting…" : "format"}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={onFormat}
+            disabled={isFormatting}
+            className={`${actionClass} disabled:opacity-40`}
+          >
+            {isFormatting ? "formatting…" : "format"}
+          </button>
           <button type="button" onClick={onToggleSolution} className={actionClass}>
             {dict.active.viewSolution}
           </button>
-          <kbd className="border-line bg-bg-card text-fg-muted rounded px-1.5 py-0.5 font-mono text-[10px]">
-            {isMac() ? "⌘↵ run" : "Ctrl+↵ run"}
-          </kbd>
+          <button
+            type="button"
+            onClick={onRun}
+            className="border-line bg-bg-card hover:border-line-2 text-fg-2 flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+          >
+            {dict.active.run}
+            <span className="text-fg-faint">{isMac() ? "⌘↵" : "Ctrl↵"}</span>
+          </button>
         </div>
       )}
     </div>

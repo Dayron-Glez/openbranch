@@ -37,6 +37,7 @@ export type PlaygroundDict = {
     readonly needMoreTests: string
     readonly submitTests: string
     readonly readOnlyLabel: string
+    readonly run: string
   }
   readonly result: {
     readonly heading: string
@@ -282,6 +283,7 @@ const translations = {
   },
   "active.submitTests": { es: "Enviar tests", en: "Submit tests" },
   "active.readOnlyLabel": { es: "solo lectura", en: "read-only" },
+  "active.run": { es: "Ejecutar", en: "Run" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -387,6 +389,7 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       needMoreTests: tx("active.needMoreTests"),
       submitTests: tx("active.submitTests"),
       readOnlyLabel: tx("active.readOnlyLabel"),
+      run: tx("active.run"),
     },
     result: {
       heading: tx("result.heading"),

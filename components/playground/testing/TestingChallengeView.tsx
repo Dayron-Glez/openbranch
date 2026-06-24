@@ -112,6 +112,7 @@ export const TestingChallengeView = ({
               editor.handleFormat().catch(() => undefined)
             }}
             onToggleSolution={handleToggleSolution}
+            onRun={() => runTests(editor.testCodeRef.current)}
             onEditorChange={editor.handleEditorChange}
             onEditorMount={editor.handleEditorMount}
           />
