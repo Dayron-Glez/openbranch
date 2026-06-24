@@ -4,7 +4,7 @@ import Editor from "@monaco-editor/react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { TestingTemplate } from "@/lib/playground/sandpack-templates/testing-fetchupstream"
 import { DiffView } from "@/components/playground/DiffView"
-import { configureMonaco, EDITOR_OPTIONS } from "@/components/playground/monacoTheme"
+import { configureTestingMonaco, EDITOR_OPTIONS } from "@/components/playground/monacoTheme"
 import { EditorToolbar } from "./EditorToolbar"
 
 type EditorPaneProps = {
@@ -35,9 +35,6 @@ export const EditorPane = ({
   onEditorMount,
 }: EditorPaneProps): React.ReactElement => {
   const onSourceTab = activeTab === "source"
-  const activeFile = onSourceTab ? template.sourceFile : template.editableFile
-  const activeValue = onSourceTab ? template.correctSource : testCode
-
   return (
     <div className="min-w-0 min-[901px]:pb-10">
       <div
@@ -58,19 +55,36 @@ export const EditorPane = ({
         />
 
         <div className="min-h-0 flex-1">
-          {showSolution ? (
+          {showSolution && (
             <DiffView original={template.starterTests} solution={template.referenceTests} />
-          ) : (
+          )}
+          {/* Two separate editor instances keep the test and source models fully
+              isolated — a single editor that swaps path/value lets edits/format
+              leak between the two files. */}
+          {!showSolution && onSourceTab && (
             <Editor
+              key="source"
               height="100%"
               language="typescript"
               theme="ob-dark"
-              path={`file:///${activeFile}`}
-              value={activeValue}
+              path={`file:///${template.sourceFile}`}
+              value={template.correctSource}
+              beforeMount={configureTestingMonaco}
+              options={{ ...EDITOR_OPTIONS, readOnly: true }}
+            />
+          )}
+          {!showSolution && !onSourceTab && (
+            <Editor
+              key="test"
+              height="100%"
+              language="typescript"
+              theme="ob-dark"
+              path={`file:///${template.editableFile}`}
+              value={testCode}
               onChange={onEditorChange}
               onMount={onEditorMount}
-              beforeMount={configureMonaco}
-              options={{ ...EDITOR_OPTIONS, readOnly: onSourceTab }}
+              beforeMount={configureTestingMonaco}
+              options={{ ...EDITOR_OPTIONS, readOnly: false }}
             />
           )}
         </div>

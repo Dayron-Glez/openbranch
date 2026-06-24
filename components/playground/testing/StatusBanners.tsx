@@ -5,7 +5,6 @@ type StatusBannersProps = {
   readonly canSubmit: boolean
   readonly baselineAllPass: boolean
   readonly hasRun: boolean
-  readonly hasTypeErrors: boolean
   readonly dict: PlaygroundDict
 }
 
@@ -16,10 +15,9 @@ export const StatusBanners = ({
   canSubmit,
   baselineAllPass,
   hasRun,
-  hasTypeErrors,
   dict,
 }: StatusBannersProps): React.ReactElement => {
-  const showNeedMore = !canSubmit && baselineAllPass && hasRun && !hasTypeErrors
+  const showNeedMore = !canSubmit && baselineAllPass && hasRun
 
   return (
     <>
@@ -31,11 +29,6 @@ export const StatusBanners = ({
       {showNeedMore && (
         <div className={warnClass}>
           <p className="font-mono text-[12px] text-amber-400">{dict.active.needMoreTests}</p>
-        </div>
-      )}
-      {hasTypeErrors && (
-        <div className={warnClass}>
-          <p className="font-mono text-[12px] text-amber-400">{dict.active.fixTypeErrors}</p>
         </div>
       )}
     </>

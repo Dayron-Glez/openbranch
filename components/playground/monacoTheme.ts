@@ -65,3 +65,37 @@ export const configureMonaco: BeforeMount = (monaco) => {
     },
   })
 }
+
+// Ambient jest globals so the test editor recognises describe/it/expect/jest
+// (provided at runtime by the worker harness, unknown to Monaco otherwise).
+const JEST_GLOBALS_DTS = `
+declare function describe(name: string, fn: () => void): void
+declare function it(name: string, fn: () => void | Promise<void>): void
+declare function test(name: string, fn: () => void | Promise<void>): void
+declare function expect(received: unknown): any
+declare const jest: {
+  fn(impl?: (...args: any[]) => any): any
+  spyOn(target: any, key: any): any
+}
+declare const global: typeof globalThis
+`
+
+// Testing editor setup: shared config plus jest ambient types and relaxed
+// unused-symbol diagnostics (a test file may import helpers it uses later).
+export const configureTestingMonaco: BeforeMount = (monaco) => {
+  configureMonaco(monaco)
+  // Sync every model to the TS worker so the test file's `./request` import
+  // resolves against the pre-created source model (not just the active one).
+  monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
+  monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    JEST_GLOBALS_DTS,
+    "ts:openbranch-jest-globals.d.ts"
+  )
+  monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    noSemanticValidation: false,
+    noSyntaxValidation: false,
+    // 6133/6196: unused symbols while editing; 2307: the worker resolves the
+    // ./source import at runtime even when Monaco's model sync misses it.
+    diagnosticCodesToIgnore: [6133, 6196, 2307],
+  })
+}

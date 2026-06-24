@@ -68,10 +68,7 @@ export const TestingChallengeView = ({
   const handleToggleSolution = useCallback((): void => {
     setShowSolution((prev) => {
       const next = !prev
-      if (!next) {
-        editor.setHasTypeErrors(false)
-        runTests(editor.testCodeRef.current)
-      }
+      if (!next) runTests(editor.testCodeRef.current)
       return next
     })
   }, [editor, runTests])
@@ -86,8 +83,7 @@ export const TestingChallengeView = ({
   const killedCount = mutations.filter((mutation) => mutation.killed).length
   const allMutantsKilled = mutations.length > 0 && killedCount === mutations.length
   const enoughTests = testState.totalCount >= template.minTests
-  const canSubmit =
-    testState.status === "pass" && enoughTests && allMutantsKilled && !editor.hasTypeErrors
+  const canSubmit = testState.status === "pass" && enoughTests && allMutantsKilled
   const activeHints = template.hintsByLang?.[lang] ?? template.hints
 
   return (
@@ -129,7 +125,6 @@ export const TestingChallengeView = ({
             killedCount={killedCount}
             allMutantsKilled={allMutantsKilled}
             canSubmit={canSubmit}
-            hasTypeErrors={editor.hasTypeErrors}
             isPending={isPending}
             dict={dict}
             onSubmit={handleSubmit}

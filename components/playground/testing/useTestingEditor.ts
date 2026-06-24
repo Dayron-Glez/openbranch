@@ -21,17 +21,14 @@ type UseTestingEditorArgs = {
 type TestingEditor = {
   readonly testCode: string
   readonly testCodeRef: React.RefObject<string>
-  readonly editorRef: React.RefObject<Monaco.editor.IStandaloneCodeEditor | null>
-  readonly hasTypeErrors: boolean
   readonly isFormatting: boolean
-  readonly setHasTypeErrors: (value: boolean) => void
   readonly handleEditorChange: (value: string | undefined) => void
   readonly handleEditorMount: OnMount
   readonly handleFormat: () => Promise<void>
 }
 
 // Owns the editable test file: its value, autosave + autorun debounce,
-// Monaco mount wiring (source model, markers, shortcuts) and formatting.
+// Monaco mount wiring (source model, shortcuts) and formatting.
 export const useTestingEditor = ({
   template,
   slug,
@@ -43,7 +40,6 @@ export const useTestingEditor = ({
   const starter = initialTestCode ?? template.starterTests
 
   const [testCode, setTestCode] = useState<string>(starter)
-  const [hasTypeErrors, setHasTypeErrors] = useState<boolean>(false)
   const [isFormatting, setIsFormatting] = useState<boolean>(false)
 
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
@@ -97,19 +93,6 @@ export const useTestingEditor = ({
         hasInitializedRef.current = true
       }
 
-      const testUri = monaco.Uri.parse(`file:///${template.editableFile}`)
-      const markerDisposable = monaco.editor.onDidChangeMarkers((resources: Monaco.Uri[]) => {
-        if (showSolutionRef.current) return
-        if (!resources.some((resource) => resource.toString() === testUri.toString())) return
-        const markers = monaco.editor.getModelMarkers({ resource: testUri })
-        setHasTypeErrors(
-          markers.some(
-            (marker: Monaco.editor.IMarker) => marker.severity === monaco.MarkerSeverity.Error
-          )
-        )
-      })
-      editor.onDidDispose(() => markerDisposable.dispose())
-
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
         if (autoRunTimeoutRef.current !== null) clearTimeout(autoRunTimeoutRef.current)
         runTests(testCodeRef.current)
@@ -117,7 +100,7 @@ export const useTestingEditor = ({
 
       runTests(testCodeRef.current)
     },
-    [template, starter, runTests, showSolutionRef]
+    [template, starter, runTests]
   )
 
   const handleFormat = useCallback(async (): Promise<void> => {
@@ -141,10 +124,7 @@ export const useTestingEditor = ({
   return {
     testCode,
     testCodeRef,
-    editorRef,
-    hasTypeErrors,
     isFormatting,
-    setHasTypeErrors,
     handleEditorChange,
     handleEditorMount,
     handleFormat,

@@ -18,7 +18,6 @@ type TestingSidebarProps = {
   readonly killedCount: number
   readonly allMutantsKilled: boolean
   readonly canSubmit: boolean
-  readonly hasTypeErrors: boolean
   readonly isPending: boolean
   readonly dict: PlaygroundDict
   readonly onSubmit: () => void
@@ -33,7 +32,6 @@ export const TestingSidebar = ({
   killedCount,
   allMutantsKilled,
   canSubmit,
-  hasTypeErrors,
   isPending,
   dict,
   onSubmit,
@@ -86,7 +84,6 @@ export const TestingSidebar = ({
             canSubmit={canSubmit}
             baselineAllPass={baselineAllPass}
             hasRun={hasRun}
-            hasTypeErrors={hasTypeErrors}
             dict={dict}
           />
 
