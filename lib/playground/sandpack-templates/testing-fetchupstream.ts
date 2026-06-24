@@ -21,7 +21,13 @@ const SOURCE_CODE = `export const fetchUpstream = async (
 // Starter stub shown in the editable test file.
 const STARTER_TESTS = `import { fetchUpstream } from "./request"
 
-// Mock \`fetch\` globally — never make real network calls.
+// This suite runs on Jest. \`fetch\` is mocked, so no real network request is
+// made — the URL you pass is arbitrary (e.g. "https://x") and never requested.
+//
+// Jest cheatsheet for this challenge:
+//   global.fetch = jest.fn().mockResolvedValue(fakeResponse)  // upstream replies
+//   global.fetch = jest.fn().mockRejectedValue(error)         // request fails
+//   const spy = jest.spyOn(global, "clearTimeout")            // track timer cleanup
 // For the timeout case, reject with: new DOMException("Aborted", "AbortError")
 
 describe("fetchUpstream", () => {
@@ -33,6 +39,7 @@ describe("fetchUpstream", () => {
 // Reference solution revealed by "view solution".
 const REFERENCE_TESTS = `import { fetchUpstream } from "./request"
 
+// The URL is arbitrary — fetch is mocked, so it is never actually requested.
 describe("fetchUpstream", () => {
   it("returns the response when the upstream replies normally", async () => {
     const response = { ok: true, status: 200 }
