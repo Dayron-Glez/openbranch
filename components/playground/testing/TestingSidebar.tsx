@@ -72,12 +72,11 @@ export const TestingSidebar = ({
 
           <TestsPanel testState={testState} hasRun={hasRun} dict={dict} />
 
-          {mutations.length > 0 && (
+          {!isRunning && mutations.length > 0 && (
             <RegressionsPanel
               mutations={mutations}
               killedCount={killedCount}
               allMutantsKilled={allMutantsKilled}
-              running={isRunning}
               dict={dict}
             />
           )}

@@ -27,7 +27,6 @@ type RegressionsPanelProps = {
   readonly mutations: readonly MutationResult[]
   readonly killedCount: number
   readonly allMutantsKilled: boolean
-  readonly running: boolean
   readonly dict: PlaygroundDict
 }
 
@@ -35,7 +34,6 @@ export const RegressionsPanel = ({
   mutations,
   killedCount,
   allMutantsKilled,
-  running,
   dict,
 }: RegressionsPanelProps): React.ReactElement => (
   <div className="flex flex-col gap-3">
@@ -51,13 +49,11 @@ export const RegressionsPanel = ({
         {killedCount}/{mutations.length} {dict.active.caught}
       </span>
     </div>
-    <div
-      className={`border-line bg-bg-elev flex flex-col gap-2.5 rounded-(--r-8) border p-3 transition-opacity duration-200 ${
-        running ? "animate-pulse opacity-50" : ""
-      }`}
-    >
-      {mutations.map((mutation) => (
-        <MutationRow key={mutation.id} mutation={mutation} />
+    <div className="border-line bg-bg-elev flex flex-col gap-2.5 rounded-(--r-8) border p-3">
+      {mutations.map((mutation, index) => (
+        <div key={mutation.id} className="ob-rise" style={{ animationDelay: `${index * 70}ms` }}>
+          <MutationRow mutation={mutation} />
+        </div>
       ))}
     </div>
   </div>

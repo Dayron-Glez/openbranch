@@ -8,8 +8,9 @@ type StatusBannersProps = {
   readonly dict: PlaygroundDict
 }
 
-const successClass = "border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5"
-const warnClass = "rounded-(--r-8) border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5"
+const successClass = "ob-rise border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5"
+const warnClass =
+  "ob-rise rounded-(--r-8) border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5"
 
 export const StatusBanners = ({
   canSubmit,
