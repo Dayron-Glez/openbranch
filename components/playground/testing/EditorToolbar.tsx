@@ -64,10 +64,10 @@ export const EditorToolbar = ({
           <button
             type="button"
             onClick={() => onSelectTab("source")}
-            className={`flex items-center gap-2 ${tabClass(onSourceTab)}`}
+            className={`flex items-baseline gap-2 ${tabClass(onSourceTab)}`}
           >
-            {sourceFile}
-            <span className="text-fg-muted text-[10px] leading-none tracking-wide">
+            <span>{sourceFile}</span>
+            <span className="text-fg-muted text-[10px] tracking-wide">
               {dict.active.readOnlyLabel}
             </span>
           </button>
