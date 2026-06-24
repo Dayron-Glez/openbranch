@@ -11,6 +11,7 @@ type TestsPanelProps = {
 
 export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.ReactElement => {
   const baselineAllPass = testState.status === "pass"
+  const isRunning = testState.status === "running"
 
   let countClass = "text-fg-muted"
   if (baselineAllPass) countClass = "text-ob-accent"
@@ -51,11 +52,21 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
           </p>
         </div>
       )}
-      {testState.compileError === null && !hasRun && (
+      {testState.compileError === null && isRunning && testState.tests.length === 0 && (
+        <div className="border-line bg-bg-elev flex items-center gap-2.5 rounded-(--r-8) border p-3">
+          <span className="border-fg-faint size-3.5 animate-spin rounded-full border-2 border-t-transparent" />
+          <span className="text-fg-muted font-mono text-[11.5px]">{dict.active.running}</span>
+        </div>
+      )}
+      {testState.compileError === null && !isRunning && !hasRun && (
         <p className="text-fg-muted font-mono text-[11.5px]">{dict.active.writeTestsToStart}</p>
       )}
       {testState.compileError === null && testState.tests.length > 0 && (
-        <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3">
+        <div
+          className={`border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3 transition-opacity duration-200 ${
+            isRunning ? "animate-pulse opacity-50" : ""
+          }`}
+        >
           {testState.tests.map((test, index) => (
             <TestCard key={test.name} test={test} index={index} />
           ))}

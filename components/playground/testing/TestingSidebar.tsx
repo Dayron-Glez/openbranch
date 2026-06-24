@@ -38,6 +38,7 @@ export const TestingSidebar = ({
 }: TestingSidebarProps): React.ReactElement => {
   const hasRun = testState.tests.length > 0 || mutations.length > 0
   const baselineAllPass = testState.status === "pass"
+  const isRunning = testState.status === "running"
 
   return (
     <aside className="max-[900px]:order-first">
@@ -76,6 +77,7 @@ export const TestingSidebar = ({
               mutations={mutations}
               killedCount={killedCount}
               allMutantsKilled={allMutantsKilled}
+              running={isRunning}
               dict={dict}
             />
           )}
