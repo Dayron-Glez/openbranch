@@ -22,6 +22,7 @@ type RunMessage = {
   readonly type: "run"
   readonly userCode: string
   readonly testCode: string
+  readonly extraModules?: readonly string[]
 }
 
 type RunTestingMessage = {
@@ -186,8 +187,10 @@ const MOCKABLE_GLOBALS = ["fetch", "setTimeout", "clearTimeout", "setInterval", 
 
 const loadTests = (
   sourceCode: string,
-  testCode: string
+  testCode: string,
+  extraModules?: readonly string[]
 ): Array<{ name: string; fn: () => unknown }> => {
+  const extraJS = (extraModules ?? []).map((m) => stripModuleSyntax(transpileTS(m))).join("\n")
   const sourceJS = stripModuleSyntax(transpileTS(sourceCode))
   const testJS = stripModuleSyntax(transpileTS(testCode))
 
@@ -199,6 +202,7 @@ const loadTests = (
   const scriptContent = [
     "(function(__deepEqual){",
     HARNESS,
+    extraJS,
     sourceJS,
     testJS,
     "self.__obTests=__tests__;",
@@ -232,9 +236,10 @@ const toFailure = (name: string, e: unknown): TestResult => {
 
 const executeTests = async (
   sourceCode: string,
-  testCode: string
+  testCode: string,
+  extraModules?: readonly string[]
 ): Promise<readonly TestResult[]> => {
-  const tests = loadTests(sourceCode, testCode)
+  const tests = loadTests(sourceCode, testCode, extraModules)
 
   const scope = globalThis as unknown as Record<string, unknown>
   const snapshot: Record<string, unknown> = {}
@@ -277,7 +282,7 @@ globalThis.onmessage = async (event: MessageEvent<IncomingMessage>): Promise<voi
   const data = event.data
   try {
     if (data.type === "run") {
-      const results = await executeTests(data.userCode, data.testCode)
+      const results = await executeTests(data.userCode, data.testCode, data.extraModules)
       const msg: ResultMessage = { type: "result", results }
       globalThis.postMessage(msg)
     } else if (data.type === "run-testing") {
