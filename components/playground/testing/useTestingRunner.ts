@@ -8,6 +8,42 @@ import type { LocalizedMutant, MutationResult, WorkerTestingMessage } from "./ty
 // floor so the loading animation is perceptible instead of flashing.
 const MIN_RUNNING_MS = 500
 
+type ApplyResultArgs = {
+  readonly msg: WorkerTestingMessage
+  readonly setTestState: React.Dispatch<React.SetStateAction<TestRunState>>
+  readonly setMutations: React.Dispatch<React.SetStateAction<readonly MutationResult[]>>
+}
+
+// Extracted to keep onmessage nesting under Sonar's 4-level cap (S2004).
+const applyTestingResult = ({ msg, setTestState, setMutations }: ApplyResultArgs): void => {
+  if (msg.type === "error") {
+    setTestState((prev) => ({
+      ...prev,
+      status: "fail" as const,
+      tests: [],
+      compileError: msg.message,
+    }))
+    setMutations([])
+    return
+  }
+  if (msg.type !== "testing-result") return
+  const results: TestResult[] = msg.baseline.map((result) => ({
+    name: result.name,
+    status: result.status,
+    error: result.error,
+  }))
+  const passCount = results.filter((result) => result.status === "pass").length
+  const allPass = passCount === results.length && results.length > 0
+  setTestState({
+    status: allPass ? "pass" : "fail",
+    tests: results,
+    passCount,
+    totalCount: results.length,
+    compileError: null,
+  })
+  setMutations(msg.mutations)
+}
+
 type UseTestingRunnerArgs = {
   readonly correctSource: string
   readonly mutants: readonly LocalizedMutant[]
@@ -40,38 +76,10 @@ export const useTestingRunner = ({
       const msg = event.data
       if (msg.type !== "error" && msg.type !== "testing-result") return
       if (showSolutionRef.current) return
-
-      const apply = (): void => {
-        if (msg.type === "error") {
-          setTestState((prev) => ({
-            ...prev,
-            status: "fail" as const,
-            tests: [],
-            compileError: msg.message,
-          }))
-          setMutations([])
-          return
-        }
-        const results: TestResult[] = msg.baseline.map((result) => ({
-          name: result.name,
-          status: result.status,
-          error: result.error,
-        }))
-        const passCount = results.filter((result) => result.status === "pass").length
-        const allPass = passCount === results.length && results.length > 0
-        setTestState({
-          status: allPass ? "pass" : "fail",
-          tests: results,
-          passCount,
-          totalCount: results.length,
-          compileError: null,
-        })
-        setMutations(msg.mutations)
-      }
-
+      const args = { msg, setTestState, setMutations }
       const remaining = MIN_RUNNING_MS - (Date.now() - runStartRef.current)
-      if (remaining > 0) setTimeout(apply, remaining)
-      else apply()
+      if (remaining > 0) setTimeout(() => applyTestingResult(args), remaining)
+      else applyTestingResult(args)
     }
     workerRef.current = worker
     return () => worker.terminate()
