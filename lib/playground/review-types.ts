@@ -15,3 +15,7 @@ export type ReviewSnapshot = {
 export type BugFixSnapshot = {
   readonly code: string
 }
+
+export type TestingSnapshot = {
+  readonly testCode: string
+}

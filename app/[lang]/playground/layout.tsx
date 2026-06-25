@@ -1,5 +1,4 @@
 import type { ReactNode } from "react"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlaygroundTransition } from "@/components/playground/PlaygroundTransition"
 import { PlaygroundNav } from "@/components/playground/PlaygroundNav"
 import { createClient } from "@/lib/supabase/server"
@@ -36,9 +35,7 @@ export default async function PlaygroundLayout({
     <div className="bg-bg text-fg flex h-dvh flex-col overflow-hidden">
       <PlaygroundTransition />
       <PlaygroundNav lang={lang} avatarUrl={avatarUrl} username={username} />
-      <ScrollArea className="flex-1" type="scroll">
-        {children}
-      </ScrollArea>
+      <div className="flex-1 overflow-y-auto">{children}</div>
     </div>
   )
 }
