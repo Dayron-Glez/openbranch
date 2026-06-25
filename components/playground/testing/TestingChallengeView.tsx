@@ -13,14 +13,14 @@ import { EditorPane } from "./EditorPane"
 import { TestingSidebar } from "./TestingSidebar"
 
 type TestingChallengeViewProps = {
-  readonly title: string
-  readonly template: TestingTemplate
-  readonly initialTestCode: string | null
-  readonly slug: string
-  readonly lang: string
-  readonly playgroundPath: string
-  readonly challengePath: string
-  readonly dict: PlaygroundDict
+  title: string
+  template: TestingTemplate
+  initialTestCode: string | null
+  slug: string
+  lang: string
+  playgroundPath: string
+  challengePath: string
+  dict: PlaygroundDict
 }
 
 export const TestingChallengeView = ({
@@ -32,7 +32,7 @@ export const TestingChallengeView = ({
   playgroundPath,
   challengePath,
   dict,
-}: TestingChallengeViewProps): React.ReactElement => {
+}: Readonly<TestingChallengeViewProps>): React.ReactElement => {
   const [showSolution, setShowSolution] = useState<boolean>(false)
   const [activeTab, setActiveTab] = useState<"test" | "source">("test")
   const [isPending, startTransition] = useTransition()
@@ -91,7 +91,7 @@ export const TestingChallengeView = ({
       data-pg-main
       className="relative z-1 flex h-full flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
-      <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
+      <div className="mx-auto flex min-h-0 w-full max-w-330 flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
         <PlaygroundBreadcrumb
           playgroundPath={playgroundPath}
           challengePath={challengePath}
