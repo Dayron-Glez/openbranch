@@ -18,6 +18,7 @@ type GitSidebarProps = {
   isPending: boolean
   dict: PlaygroundDict
   onSubmit: () => void
+  onReset: () => void
 }
 
 export const GitSidebar = ({
@@ -34,6 +35,7 @@ export const GitSidebar = ({
   isPending,
   dict,
   onSubmit,
+  onReset,
 }: Readonly<GitSidebarProps>) => {
   const showClean = canSubmit
 
@@ -97,6 +99,14 @@ export const GitSidebar = ({
             ) : (
               dict.active.submitMerge
             )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-fg-muted hover:text-fg-2 font-mono text-[12px] transition-colors"
+          >
+            {dict.active.resetCode}
           </button>
 
           <div className="border-line border-t" />

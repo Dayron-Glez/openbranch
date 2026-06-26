@@ -49,6 +49,7 @@ export type PlaygroundDict = {
     readonly tabTheirs: string
     readonly tabMerged: string
     readonly submitMerge: string
+    readonly resetCode: string
   }
   readonly result: {
     readonly heading: string
@@ -312,6 +313,7 @@ const translations = {
   "active.tabTheirs": { es: "theirs", en: "theirs" },
   "active.tabMerged": { es: "merged", en: "merged" },
   "active.submitMerge": { es: "Enviar merge", en: "Submit merge" },
+  "active.resetCode": { es: "Resetear código", en: "Reset code" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -429,6 +431,7 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       tabTheirs: tx("active.tabTheirs"),
       tabMerged: tx("active.tabMerged"),
       submitMerge: tx("active.submitMerge"),
+      resetCode: tx("active.resetCode"),
     },
     result: {
       heading: tx("result.heading"),
