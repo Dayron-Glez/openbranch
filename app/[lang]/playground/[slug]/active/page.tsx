@@ -18,6 +18,7 @@ import type {
   BugFixSnapshot,
   TestingSnapshot,
   GitSnapshot,
+  GitBlockResolution,
 } from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
@@ -116,7 +117,7 @@ export default async function ActiveChallengePage({
       <GitChallengeView
         title={page.data.title}
         template={template}
-        initialCode={gitSnapshot?.code ?? null}
+        initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
         slug={slug}
         lang={lang}
         playgroundPath={playgroundPath}
