@@ -1,0 +1,35 @@
+/* Conflict zone highlights for the Monaco merge editor (GitKraken style).
+   These class names are referenced from decoration options, so they must be
+   plain global classes (not CSS-module scoped). No textual git markers are
+   ever inserted into the document — conflicts are shown purely as colored
+   zones with an accent bar on the left and a divider between the two sides. */
+
+/* "Local / ours" side -- sky blue */
+.merge-zone--left {
+  background-color: rgba(56, 189, 248, 0.1);
+  box-shadow: inset 3px 0 0 rgba(56, 189, 248, 0.85);
+}
+
+/* "Remote / theirs" side -- amber */
+.merge-zone--right {
+  background-color: rgba(245, 158, 11, 0.1);
+  box-shadow: inset 3px 0 0 rgba(245, 158, 11, 0.9);
+}
+
+/* Common ancestor -- slate */
+.merge-zone--base {
+  background-color: rgba(148, 163, 184, 0.12);
+  box-shadow: inset 3px 0 0 rgba(148, 163, 184, 0.7);
+}
+
+/* A resolved conflict block -- emerald accent */
+.merge-zone--resolved {
+  background-color: rgba(16, 185, 129, 0.07);
+  box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.85);
+}
+
+/* Thin dashed divider drawn on the first line of the remote half so the two
+   conflicting sides read as distinct regions without any marker text. */
+.merge-divider {
+  border-top: 1px dashed rgba(148, 163, 184, 0.45);
+}
