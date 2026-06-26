@@ -10,6 +10,7 @@ import type {
   BugFixSnapshot,
   TestingSnapshot,
   GitSnapshot,
+  GitBlockResolution,
 } from "@/lib/playground/review-types"
 
 export const startChallengeSession = async (
@@ -236,7 +237,12 @@ export const completeTestingChallenge = async (slug: string, lang: string): Prom
   redirect(localizedHref(lang, `/playground/${slug}/active/result`))
 }
 
-export const saveGitState = async (slug: string, lang: string, code: string): Promise<void> => {
+export const saveGitState = async (
+  slug: string,
+  lang: string,
+  code: string,
+  resolutions: readonly GitBlockResolution[]
+): Promise<void> => {
   const supabase = await createClient()
   const {
     data: { user },
@@ -245,7 +251,7 @@ export const saveGitState = async (slug: string, lang: string, code: string): Pr
 
   await supabase
     .from("challenge_sessions")
-    .update({ snapshot: { code } satisfies GitSnapshot })
+    .update({ snapshot: { code, resolutions } satisfies GitSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
     .eq("lang", lang)
