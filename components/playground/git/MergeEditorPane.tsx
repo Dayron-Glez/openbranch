@@ -1,61 +1,58 @@
+"use client"
+
+import type React from "react"
 import type { OnMount } from "@monaco-editor/react"
-import Editor from "@monaco-editor/react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { GitTemplate } from "@/lib/playground/git-templates/git-merge-conflict"
+import type { GitBlockResolution } from "@/lib/playground/review-types"
 import { DiffView } from "@/components/playground/DiffView"
-import { configureMonaco, EDITOR_OPTIONS } from "@/components/playground/monacoTheme"
+import { configureMonaco } from "@/components/playground/monacoTheme"
 import { MergeEditorToolbar } from "./MergeEditorToolbar"
-import type { MergeTab } from "./MergeEditorToolbar"
+import { ThreeWayMergeEditor, type ThreeWayMergeEditorHandle } from "./ThreeWayMergeEditor"
 
 type MergeEditorPaneProps = {
   template: GitTemplate
-  code: string
-  activeTab: MergeTab
   showSolution: boolean
   isFormatting: boolean
   dict: PlaygroundDict
-  onSelectTab: (tab: MergeTab) => void
+  mergeEditorRef: React.Ref<ThreeWayMergeEditorHandle>
+  initialResolutions?: readonly GitBlockResolution[]
   onFormat: () => void
   onToggleSolution: () => void
   onRun: () => void
-  onEditorChange: (value: string | undefined) => void
-  onEditorMount: OnMount
+  onEditorChange: (result: string, remaining: number) => void
+  onBlocksChange: (resolutions: readonly GitBlockResolution[]) => void
+  onCenterMount: OnMount
 }
-
-const READ_ONLY_OPTIONS = { ...EDITOR_OPTIONS, readOnly: true }
 
 export const MergeEditorPane = ({
   template,
-  code,
-  activeTab,
   showSolution,
   isFormatting,
   dict,
-  onSelectTab,
+  mergeEditorRef,
+  initialResolutions,
   onFormat,
   onToggleSolution,
   onRun,
   onEditorChange,
-  onEditorMount,
+  onBlocksChange,
+  onCenterMount,
 }: Readonly<MergeEditorPaneProps>) => {
   const conflictedStarter = template.files[template.editableFile]?.code ?? ""
 
   return (
-    <div className="min-w-0 min-[901px]:pb-10">
+    <div className="h-full">
       <div
         className={`flex h-full min-h-[400px] flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
           showSolution ? "border-amber-500/40" : "border-line"
         }`}
       >
         <MergeEditorToolbar
-          activeTab={activeTab}
           showSolution={showSolution}
           isFormatting={isFormatting}
-          oursLabel={template.oursLabel}
-          theirsLabel={template.theirsLabel}
           editableFile={template.editableFile}
           dict={dict}
-          onSelectTab={onSelectTab}
           onFormat={onFormat}
           onToggleSolution={onToggleSolution}
           onRun={onRun}
@@ -66,52 +63,24 @@ export const MergeEditorPane = ({
             <DiffView original={conflictedStarter} solution={template.solutionCode} />
           )}
 
-          {/* Each tab is its own keyed editor instance to prevent model leakage. */}
-          {!showSolution && activeTab === "merged" && (
-            <Editor
-              key="merged"
-              height="100%"
+          {!showSolution && (
+            <ThreeWayMergeEditor
+              ref={mergeEditorRef}
+              base={template.versions.base}
+              left={template.versions.ours}
+              right={template.versions.theirs}
+              conflictedCode={conflictedStarter}
               language="typescript"
-              theme="ob-dark"
-              path={`file:///${template.editableFile}`}
-              value={code}
+              leftTitle={template.oursLabel}
+              resultTitle={template.editableFile}
+              rightTitle={template.theirsLabel}
+              centerPath={`file:///${template.editableFile}`}
+              initialResolutions={initialResolutions}
+              onBlocksChange={onBlocksChange}
               onChange={onEditorChange}
-              onMount={onEditorMount}
-              beforeMount={configureMonaco}
-              options={{ ...EDITOR_OPTIONS, readOnly: false }}
-            />
-          )}
-          {!showSolution && activeTab === "base" && (
-            <Editor
-              key="base"
-              height="100%"
-              language="typescript"
-              theme="ob-dark"
-              value={template.versions.base}
-              beforeMount={configureMonaco}
-              options={READ_ONLY_OPTIONS}
-            />
-          )}
-          {!showSolution && activeTab === "ours" && (
-            <Editor
-              key="ours"
-              height="100%"
-              language="typescript"
-              theme="ob-dark"
-              value={template.versions.ours}
-              beforeMount={configureMonaco}
-              options={READ_ONLY_OPTIONS}
-            />
-          )}
-          {!showSolution && activeTab === "theirs" && (
-            <Editor
-              key="theirs"
-              height="100%"
-              language="typescript"
-              theme="ob-dark"
-              value={template.versions.theirs}
-              beforeMount={configureMonaco}
-              options={READ_ONLY_OPTIONS}
+              onBeforeMount={configureMonaco}
+              onCenterMount={onCenterMount}
+              className="h-full rounded-none border-0"
             />
           )}
         </div>
