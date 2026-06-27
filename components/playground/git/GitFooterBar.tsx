@@ -27,8 +27,10 @@ type GateChipProps = {
 }
 
 const GateChip = ({ label, value, passed, isError }: Readonly<GateChipProps>) => {
-  const dotColor = passed ? "bg-ob-accent" : isError ? "bg-red-400" : "bg-fg-faint"
-  const valueColor = passed ? "text-ob-accent" : isError ? "text-red-400" : "text-fg-muted"
+  const dotColorIfNotPassed = isError ? "bg-red-400" : "bg-fg-faint"
+  const dotColor = passed ? "bg-ob-accent" : dotColorIfNotPassed
+  const valueColorIfNotPassed = isError ? "text-red-400" : "text-fg-muted"
+  const valueColor = passed ? "text-ob-accent" : valueColorIfNotPassed
 
   return (
     <div className="flex items-center gap-1.5 font-mono text-[11.5px]">

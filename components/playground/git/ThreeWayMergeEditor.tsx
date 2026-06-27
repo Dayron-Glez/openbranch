@@ -117,8 +117,10 @@ const parseMarkers = (conflictedCode: string): Block[] => {
   const lines = conflictedCode.replaceAll("\r\n", "\n").split("\n")
   const blocks: Block[] = []
   const stableLines: string[] = []
-  let leftLines: string[] | null = null
-  let rightLines: string[] | null = null
+  type ParseState = "stable" | "left" | "right"
+  let state: ParseState = "stable"
+  let leftLines: string[] = []
+  let rightLines: string[] = []
   let id = 0
 
   for (const line of lines) {
@@ -127,23 +129,24 @@ const parseMarkers = (conflictedCode: string): Block[] => {
         blocks.push({ kind: "stable", lines: [...stableLines] })
         stableLines.length = 0
       }
+      state = "left"
       leftLines = []
-    } else if (line.startsWith("=======") && leftLines !== null) {
+    } else if (line.startsWith("=======") && state === "left") {
+      state = "right"
       rightLines = []
-    } else if (line.startsWith(">>>>>>>") && rightLines !== null) {
+    } else if (line.startsWith(">>>>>>>") && state === "right") {
       blocks.push({
         kind: "conflict",
         id: id++,
-        left: leftLines!,
+        left: leftLines,
         base: [],
         right: rightLines,
         resolution: null,
       })
-      leftLines = null
-      rightLines = null
-    } else if (rightLines !== null) {
+      state = "stable"
+    } else if (state === "right") {
       rightLines.push(line)
-    } else if (leftLines !== null) {
+    } else if (state === "left") {
       leftLines.push(line)
     } else {
       stableLines.push(line)
@@ -375,13 +378,13 @@ const PinButton = ({ pin, side, active, onToggle }: Readonly<PinButtonProps>) =>
       ? "border-sky-500/30 bg-[#1c1c26] text-sky-300 hover:border-sky-400/70 hover:bg-sky-500/20"
       : "border-amber-500/30 bg-[#1c1c26] text-amber-300 hover:border-amber-400/70 hover:bg-amber-500/20"
   const stateClass = active ? activeClass : inactiveClass
-  const icon = active ? (
-    <IconX className="size-3" />
-  ) : side === "left" ? (
-    <IconChevronRight className="size-3.5" />
-  ) : (
-    <IconChevronLeft className="size-3.5" />
-  )
+  const inactiveIcon =
+    side === "left" ? (
+      <IconChevronRight className="size-3.5" />
+    ) : (
+      <IconChevronLeft className="size-3.5" />
+    )
+  const icon = active ? <IconX className="size-3" /> : inactiveIcon
 
   return (
     <button
@@ -407,7 +410,7 @@ const GutterLane = ({ side, pins, onToggle, onMouseDown }: Readonly<GutterLanePr
 
   return (
     <div
-      role="separator"
+      role="button"
       aria-label={`Drag to resize ${side} pane`}
       tabIndex={0}
       className="relative w-7 shrink-0 cursor-col-resize border-x border-[#2a2a35] bg-[#13131a]"

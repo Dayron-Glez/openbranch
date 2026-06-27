@@ -160,8 +160,9 @@ const buildConflictRegion = (
   }
 }
 
-export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
-  const toHunk = (h: DiffIndex, ab: "a" | "b"): Hunk => ({
+const toHunk =
+  (ab: "a" | "b") =>
+  (h: DiffIndex): Hunk => ({
     ab,
     oStart: h.buffer1[0],
     oLength: h.buffer1[1],
@@ -169,10 +170,13 @@ export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeR
     abLength: h.buffer2[1],
   })
 
+const compareHunks = (x: Hunk, y: Hunk): number => x.oStart - y.oStart || x.ab.localeCompare(y.ab)
+
+export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
   const hunks: Hunk[] = [
-    ...diffIndices(o, a).map((h) => toHunk(h, "a")),
-    ...diffIndices(o, b).map((h) => toHunk(h, "b")),
-  ].sort((x, y) => x.oStart - y.oStart || x.ab.localeCompare(y.ab))
+    ...diffIndices(o, a).map(toHunk("a")),
+    ...diffIndices(o, b).map(toHunk("b")),
+  ].sort(compareHunks)
 
   const results: MergeRegion[] = []
   let currOffset = 0
