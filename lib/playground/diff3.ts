@@ -172,6 +172,19 @@ const toHunk =
 
 const compareHunks = (x: Hunk, y: Hunk): number => x.oStart - y.oStart || x.ab.localeCompare(y.ab)
 
+const appendStable = (
+  results: MergeRegion[],
+  o: string[],
+  currOffset: number,
+  endOffset: number
+): number => {
+  if (endOffset > currOffset) {
+    results.push({ stable: true, bufferContent: o.slice(currOffset, endOffset) })
+    return endOffset
+  }
+  return currOffset
+}
+
 export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
   const hunks: Hunk[] = [
     ...diffIndices(o, a).map(toHunk("a")),
@@ -181,19 +194,12 @@ export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeR
   const results: MergeRegion[] = []
   let currOffset = 0
 
-  const advanceTo = (endOffset: number): void => {
-    if (endOffset > currOffset) {
-      results.push({ stable: true, bufferContent: o.slice(currOffset, endOffset) })
-      currOffset = endOffset
-    }
-  }
-
   while (hunks.length) {
     const hunk = hunks.shift() as Hunk
     const regionStart = hunk.oStart
     let regionEnd = hunk.oStart + hunk.oLength
     const regionHunks: Hunk[] = [hunk]
-    advanceTo(regionStart)
+    currOffset = appendStable(results, o, currOffset, regionStart)
 
     while (hunks.length) {
       const nextHunk = hunks[0]
@@ -214,10 +220,10 @@ export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeR
       results.push(buildConflictRegion(a, o, b, regionHunks, regionStart, regionEnd))
     }
 
-    advanceTo(regionEnd)
+    currOffset = appendStable(results, o, currOffset, regionEnd)
   }
 
-  advanceTo(o.length)
+  appendStable(results, o, currOffset, o.length)
   return results
 }
 

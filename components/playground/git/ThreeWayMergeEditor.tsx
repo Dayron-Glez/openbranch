@@ -410,8 +410,11 @@ const GutterLane = ({ side, pins, onToggle, onMouseDown }: Readonly<GutterLanePr
 
   return (
     <div
-      role="button"
+      role="slider"
       aria-label={`Drag to resize ${side} pane`}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={50}
       tabIndex={0}
       className="relative w-7 shrink-0 cursor-col-resize border-x border-[#2a2a35] bg-[#13131a]"
       onMouseDown={onMouseDown}
