@@ -19,3 +19,13 @@ export type BugFixSnapshot = {
 export type TestingSnapshot = {
   readonly testCode: string
 }
+
+export type GitBlockResolution = {
+  readonly id: number
+  readonly resolution: "left" | "right" | "both-lr" | "both-rl" | "base" | null
+}
+
+export type GitSnapshot = {
+  readonly code: string
+  readonly resolutions?: readonly GitBlockResolution[]
+}

@@ -8,10 +8,18 @@ import { createClient } from "@/lib/supabase/server"
 import { getDiffBySlug } from "@/lib/playground/diff-registry"
 import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
 import { getTestingTemplateBySlug } from "@/lib/playground/testing-registry"
+import { getGitTemplateBySlug } from "@/lib/playground/git-registry"
 import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
 import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
 import { TestingChallengeView } from "@/components/playground/testing/TestingChallengeView"
-import type { ReviewSnapshot, BugFixSnapshot, TestingSnapshot } from "@/lib/playground/review-types"
+import { GitChallengeView } from "@/components/playground/git/GitChallengeView"
+import type {
+  ReviewSnapshot,
+  BugFixSnapshot,
+  TestingSnapshot,
+  GitSnapshot,
+  GitBlockResolution,
+} from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
@@ -92,6 +100,24 @@ export default async function ActiveChallengePage({
         title={page.data.title}
         template={template}
         initialTestCode={testingSnapshot?.testCode ?? null}
+        slug={slug}
+        lang={lang}
+        playgroundPath={playgroundPath}
+        challengePath={challengePath}
+        dict={dict}
+      />
+    )
+  }
+
+  if (category === "git") {
+    const template = getGitTemplateBySlug(slug)
+    if (template === null) notFound()
+    const gitSnapshot = session.snapshot as GitSnapshot | null
+    return (
+      <GitChallengeView
+        title={page.data.title}
+        template={template}
+        initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
         slug={slug}
         lang={lang}
         playgroundPath={playgroundPath}

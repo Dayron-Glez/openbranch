@@ -38,6 +38,22 @@ export type PlaygroundDict = {
     readonly submitTests: string
     readonly readOnlyLabel: string
     readonly run: string
+    readonly conflictsLabel: string
+    readonly conflictsResolved: string
+    readonly typeChecksLabel: string
+    readonly branchesPreservedLabel: string
+    readonly resolveToStart: string
+    readonly mergeClean: string
+    readonly tabBase: string
+    readonly tabOurs: string
+    readonly tabTheirs: string
+    readonly tabMerged: string
+    readonly submitMerge: string
+    readonly resetCode: string
+    readonly prevConflict: string
+    readonly nextConflict: string
+    readonly enterFullscreen: string
+    readonly exitFullscreen: string
   }
   readonly result: {
     readonly heading: string
@@ -284,6 +300,28 @@ const translations = {
   "active.submitTests": { es: "Enviar tests", en: "Submit tests" },
   "active.readOnlyLabel": { es: "solo lectura", en: "read-only" },
   "active.run": { es: "Ejecutar", en: "Run" },
+  "active.conflictsLabel": { es: "Conflictos resueltos", en: "Conflicts resolved" },
+  "active.conflictsResolved": { es: "{k}/{n}", en: "{k}/{n}" },
+  "active.typeChecksLabel": { es: "Type-checks", en: "Type-checks" },
+  "active.branchesPreservedLabel": { es: "Ambas ramas preservadas", en: "Both branches preserved" },
+  "active.resolveToStart": {
+    es: "Resuelve los conflictos para empezar a validar.",
+    en: "Resolve the conflicts to start validating.",
+  },
+  "active.mergeClean": {
+    es: "¡Merge correcto — listo para enviar!",
+    en: "Clean merge — ready to submit!",
+  },
+  "active.tabBase": { es: "base", en: "base" },
+  "active.tabOurs": { es: "ours", en: "ours" },
+  "active.tabTheirs": { es: "theirs", en: "theirs" },
+  "active.tabMerged": { es: "merged", en: "merged" },
+  "active.submitMerge": { es: "Enviar merge", en: "Submit merge" },
+  "active.resetCode": { es: "Resetear código", en: "Reset code" },
+  "active.prevConflict": { es: "Conflicto anterior", en: "Previous conflict" },
+  "active.nextConflict": { es: "Conflicto siguiente", en: "Next conflict" },
+  "active.enterFullscreen": { es: "Pantalla completa", en: "Enter fullscreen" },
+  "active.exitFullscreen": { es: "Salir de pantalla completa", en: "Exit fullscreen" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -390,6 +428,22 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       submitTests: tx("active.submitTests"),
       readOnlyLabel: tx("active.readOnlyLabel"),
       run: tx("active.run"),
+      conflictsLabel: tx("active.conflictsLabel"),
+      conflictsResolved: tx("active.conflictsResolved"),
+      typeChecksLabel: tx("active.typeChecksLabel"),
+      branchesPreservedLabel: tx("active.branchesPreservedLabel"),
+      resolveToStart: tx("active.resolveToStart"),
+      mergeClean: tx("active.mergeClean"),
+      tabBase: tx("active.tabBase"),
+      tabOurs: tx("active.tabOurs"),
+      tabTheirs: tx("active.tabTheirs"),
+      tabMerged: tx("active.tabMerged"),
+      submitMerge: tx("active.submitMerge"),
+      resetCode: tx("active.resetCode"),
+      prevConflict: tx("active.prevConflict"),
+      nextConflict: tx("active.nextConflict"),
+      enterFullscreen: tx("active.enterFullscreen"),
+      exitFullscreen: tx("active.exitFullscreen"),
     },
     result: {
       heading: tx("result.heading"),
