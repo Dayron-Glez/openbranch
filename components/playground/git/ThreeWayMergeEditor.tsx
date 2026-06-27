@@ -17,6 +17,7 @@ import type { OnMount } from "@monaco-editor/react"
 import { cn } from "@/lib/utils"
 import { changedLineRanges, diff3Merge } from "@/lib/playground/diff3"
 import type { GitBlockResolution } from "@/lib/playground/review-types"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import "./merge-editor.css"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -66,6 +67,13 @@ export type ThreeWayMergeEditorProps = {
    * conflict zones that don't match the algorithmic diff3 output.
    */
   conflictedCode?: string
+  /** Localizable labels for icon-only buttons. Falls back to English. */
+  labels?: {
+    readonly prevConflict?: string
+    readonly nextConflict?: string
+    readonly enterFullscreen?: string
+    readonly exitFullscreen?: string
+  }
 }
 
 type Block =
@@ -493,6 +501,7 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
       height,
       className,
       conflictedCode,
+      labels,
     },
     ref
   ) {
@@ -864,56 +873,84 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
             )}
           </div>
 
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => goToConflict(activeConflict - 1)}
-              disabled={total === 0}
-              className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 disabled:pointer-events-none disabled:opacity-40"
-              aria-label="Previous conflict"
-            >
-              <IconChevronUp className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => goToConflict(activeConflict + 1)}
-              disabled={total === 0}
-              className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 disabled:pointer-events-none disabled:opacity-40"
-              aria-label="Next conflict"
-            >
-              <IconChevronDown className="size-4" />
-            </button>
-            <div className="mx-1 h-5 w-px bg-[#2a2a35]" />
-            <button
-              type="button"
-              onClick={() => acceptAll("left")}
-              disabled={remaining === 0}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/10 disabled:pointer-events-none disabled:opacity-40"
-            >
-              <IconChevronRight className="size-3.5" /> All local
-            </button>
-            <button
-              type="button"
-              onClick={() => acceptAll("right")}
-              disabled={remaining === 0}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/10 disabled:pointer-events-none disabled:opacity-40"
-            >
-              All remote <IconChevronLeft className="size-3.5" />
-            </button>
-            <div className="mx-1 h-5 w-px bg-[#2a2a35]" />
-            <button
-              type="button"
-              onClick={toggleFullscreen}
-              className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100"
-              aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-            >
-              {isFullscreen ? (
-                <IconCompress className="size-4" />
-              ) : (
-                <IconExpand className="size-4" />
-              )}
-            </button>
-          </div>
+          <TooltipProvider delayDuration={400}>
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => goToConflict(activeConflict - 1)}
+                    disabled={total === 0}
+                    className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 disabled:pointer-events-none disabled:opacity-40"
+                    aria-label={labels?.prevConflict ?? "Previous conflict"}
+                  >
+                    <IconChevronUp className="size-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{labels?.prevConflict ?? "Previous conflict"}</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => goToConflict(activeConflict + 1)}
+                    disabled={total === 0}
+                    className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100 disabled:pointer-events-none disabled:opacity-40"
+                    aria-label={labels?.nextConflict ?? "Next conflict"}
+                  >
+                    <IconChevronDown className="size-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{labels?.nextConflict ?? "Next conflict"}</TooltipContent>
+              </Tooltip>
+
+              <div className="mx-1 h-5 w-px bg-[#2a2a35]" />
+              <button
+                type="button"
+                onClick={() => acceptAll("left")}
+                disabled={remaining === 0}
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/10 disabled:pointer-events-none disabled:opacity-40"
+              >
+                <IconChevronRight className="size-3.5" /> All local
+              </button>
+              <button
+                type="button"
+                onClick={() => acceptAll("right")}
+                disabled={remaining === 0}
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/10 disabled:pointer-events-none disabled:opacity-40"
+              >
+                All remote <IconChevronLeft className="size-3.5" />
+              </button>
+              <div className="mx-1 h-5 w-px bg-[#2a2a35]" />
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    className="inline-flex size-7 items-center justify-center rounded-md text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100"
+                    aria-label={
+                      isFullscreen
+                        ? (labels?.exitFullscreen ?? "Exit fullscreen")
+                        : (labels?.enterFullscreen ?? "Enter fullscreen")
+                    }
+                  >
+                    {isFullscreen ? (
+                      <IconCompress className="size-4" />
+                    ) : (
+                      <IconExpand className="size-4" />
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {isFullscreen
+                    ? (labels?.exitFullscreen ?? "Exit fullscreen")
+                    : (labels?.enterFullscreen ?? "Enter fullscreen")}
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
         </div>
 
         {/* ── Editors row ── */}

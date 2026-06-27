@@ -136,7 +136,6 @@ export const GitChallengeView = ({
             editor.handleFormat().catch(() => undefined)
           }}
           onToggleSolution={handleToggleSolution}
-          onRun={() => runHiddenTests(codeRef.current)}
           onEditorChange={handleEditorChange}
           onBlocksChange={handleBlocksChange}
           onCenterMount={editor.handleEditorMount}

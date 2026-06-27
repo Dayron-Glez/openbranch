@@ -20,7 +20,6 @@ type MergeEditorPaneProps = {
   initialResolutions?: readonly GitBlockResolution[]
   onFormat: () => void
   onToggleSolution: () => void
-  onRun: () => void
   onEditorChange: (result: string, remaining: number) => void
   onBlocksChange: (resolutions: readonly GitBlockResolution[]) => void
   onCenterMount: OnMount
@@ -35,7 +34,6 @@ export const MergeEditorPane = ({
   initialResolutions,
   onFormat,
   onToggleSolution,
-  onRun,
   onEditorChange,
   onBlocksChange,
   onCenterMount,
@@ -70,7 +68,6 @@ export const MergeEditorPane = ({
           dict={dict}
           onFormat={onFormat}
           onToggleSolution={onToggleSolution}
-          onRun={onRun}
         />
 
         <div className="min-h-0 flex-1">
@@ -95,6 +92,12 @@ export const MergeEditorPane = ({
               onChange={onEditorChange}
               onBeforeMount={handleBeforeMount}
               onCenterMount={onCenterMount}
+              labels={{
+                prevConflict: dict.active.prevConflict,
+                nextConflict: dict.active.nextConflict,
+                enterFullscreen: dict.active.enterFullscreen,
+                exitFullscreen: dict.active.exitFullscreen,
+              }}
               className="h-full rounded-none border-0"
             />
           )}

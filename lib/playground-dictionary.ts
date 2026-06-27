@@ -50,6 +50,10 @@ export type PlaygroundDict = {
     readonly tabMerged: string
     readonly submitMerge: string
     readonly resetCode: string
+    readonly prevConflict: string
+    readonly nextConflict: string
+    readonly enterFullscreen: string
+    readonly exitFullscreen: string
   }
   readonly result: {
     readonly heading: string
@@ -314,6 +318,10 @@ const translations = {
   "active.tabMerged": { es: "merged", en: "merged" },
   "active.submitMerge": { es: "Enviar merge", en: "Submit merge" },
   "active.resetCode": { es: "Resetear código", en: "Reset code" },
+  "active.prevConflict": { es: "Conflicto anterior", en: "Previous conflict" },
+  "active.nextConflict": { es: "Conflicto siguiente", en: "Next conflict" },
+  "active.enterFullscreen": { es: "Pantalla completa", en: "Enter fullscreen" },
+  "active.exitFullscreen": { es: "Salir de pantalla completa", en: "Exit fullscreen" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -432,6 +440,10 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       tabMerged: tx("active.tabMerged"),
       submitMerge: tx("active.submitMerge"),
       resetCode: tx("active.resetCode"),
+      prevConflict: tx("active.prevConflict"),
+      nextConflict: tx("active.nextConflict"),
+      enterFullscreen: tx("active.enterFullscreen"),
+      exitFullscreen: tx("active.exitFullscreen"),
     },
     result: {
       heading: tx("result.heading"),

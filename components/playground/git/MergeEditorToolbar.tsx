@@ -4,12 +4,12 @@ const isMac = (): boolean => typeof navigator !== "undefined" && navigator.platf
 
 type MergeEditorToolbarProps = {
   showSolution: boolean
-  isFormatting: boolean
+  isFormatting?: boolean
   editableFile: string
   dict: PlaygroundDict
-  onFormat: () => void
-  onToggleSolution: () => void
-  onRun: () => void
+  onFormat?: () => void
+  onToggleSolution?: () => void
+  onRun?: () => void
 }
 
 const actionClass =
@@ -24,6 +24,8 @@ export const MergeEditorToolbar = ({
   onToggleSolution,
   onRun,
 }: Readonly<MergeEditorToolbarProps>) => {
+  const hasActions = onFormat !== undefined || onToggleSolution !== undefined || onRun !== undefined
+
   return (
     <div
       className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
@@ -39,33 +41,41 @@ export const MergeEditorToolbar = ({
         )}
       </div>
 
-      {showSolution ? (
-        <button type="button" onClick={onToggleSolution} className={actionClass}>
-          {dict.active.backToEdit}
-        </button>
-      ) : (
-        <div className="flex shrink-0 items-center gap-3">
-          <button
-            type="button"
-            onClick={onFormat}
-            disabled={isFormatting}
-            className={`${actionClass} disabled:opacity-40`}
-          >
-            {isFormatting ? "formatting…" : "format"}
-          </button>
-          <button type="button" onClick={onToggleSolution} className={actionClass}>
-            {dict.active.viewSolution}
-          </button>
-          <button
-            type="button"
-            onClick={onRun}
-            className="border-line bg-bg-card hover:border-line-2 text-fg-2 flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
-          >
-            {dict.active.run}
-            <span className="text-fg-faint">{isMac() ? "⌘↵" : "Ctrl↵"}</span>
-          </button>
-        </div>
-      )}
+      {showSolution
+        ? onToggleSolution !== undefined && (
+            <button type="button" onClick={onToggleSolution} className={actionClass}>
+              {dict.active.backToEdit}
+            </button>
+          )
+        : hasActions && (
+            <div className="flex shrink-0 items-center gap-3">
+              {onFormat !== undefined && (
+                <button
+                  type="button"
+                  onClick={onFormat}
+                  disabled={isFormatting}
+                  className={`${actionClass} disabled:opacity-40`}
+                >
+                  {isFormatting ? "formatting…" : "format"}
+                </button>
+              )}
+              {onToggleSolution !== undefined && (
+                <button type="button" onClick={onToggleSolution} className={actionClass}>
+                  {dict.active.viewSolution}
+                </button>
+              )}
+              {onRun !== undefined && (
+                <button
+                  type="button"
+                  onClick={onRun}
+                  className="border-line bg-bg-card hover:border-line-2 text-fg-2 flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+                >
+                  {dict.active.run}
+                  <span className="text-fg-faint">{isMac() ? "⌘↵" : "Ctrl↵"}</span>
+                </button>
+              )}
+            </div>
+          )}
     </div>
   )
 }
