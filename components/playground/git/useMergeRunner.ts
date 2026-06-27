@@ -22,6 +22,21 @@ type UseMergeRunnerArgs = {
 
 const IDLE_STATE: MergeRunnerState = { status: "idle", results: [] }
 
+const applyWorkerResult = (
+  msg: WorkerResultMessage,
+  setRunnerState: (state: MergeRunnerState) => void
+): void => {
+  if (msg.type === "error") {
+    setRunnerState({ status: "done", results: [] })
+    return
+  }
+  const results: HiddenTestResult[] = msg.results.map((result) => ({
+    name: result.name,
+    passed: result.status === "pass",
+  }))
+  setRunnerState({ status: "done", results })
+}
+
 export const useMergeRunner = ({
   hiddenTests,
   extraModules,
@@ -38,21 +53,9 @@ export const useMergeRunner = ({
       const msg = event.data
       if (msg.type !== "result" && msg.type !== "error") return
 
-      const applyResult = (): void => {
-        if (msg.type === "error") {
-          setRunnerState({ status: "done", results: [] })
-          return
-        }
-        const results: HiddenTestResult[] = msg.results.map((result) => ({
-          name: result.name,
-          passed: result.status === "pass",
-        }))
-        setRunnerState({ status: "done", results })
-      }
-
       const remaining = MIN_RUNNING_MS - (Date.now() - runStartRef.current)
-      if (remaining > 0) setTimeout(applyResult, remaining)
-      else applyResult()
+      if (remaining > 0) setTimeout(() => applyWorkerResult(msg, setRunnerState), remaining)
+      else applyWorkerResult(msg, setRunnerState)
     }
     workerRef.current = worker
     return () => worker.terminate()

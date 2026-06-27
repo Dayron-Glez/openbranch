@@ -26,23 +26,18 @@ type GateChipProps = {
   isError?: boolean
 }
 
-const GateChip = ({ label, value, passed, isError }: Readonly<GateChipProps>) => (
-  <div className="flex items-center gap-1.5 font-mono text-[11.5px]">
-    <span
-      className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
-        passed ? "bg-ob-accent" : isError ? "bg-red-400" : "bg-fg-faint"
-      }`}
-    />
-    <span className="text-fg-muted">{label}</span>
-    <span
-      className={`font-medium tabular-nums transition-colors ${
-        passed ? "text-ob-accent" : isError ? "text-red-400" : "text-fg-muted"
-      }`}
-    >
-      {value}
-    </span>
-  </div>
-)
+const GateChip = ({ label, value, passed, isError }: Readonly<GateChipProps>) => {
+  const dotColor = passed ? "bg-ob-accent" : isError ? "bg-red-400" : "bg-fg-faint"
+  const valueColor = passed ? "text-ob-accent" : isError ? "text-red-400" : "text-fg-muted"
+
+  return (
+    <div className="flex items-center gap-1.5 font-mono text-[11.5px]">
+      <span className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${dotColor}`} />
+      <span className="text-fg-muted">{label}</span>
+      <span className={`font-medium tabular-nums transition-colors ${valueColor}`}>{value}</span>
+    </div>
+  )
+}
 
 export const GitFooterBar = ({
   hints,

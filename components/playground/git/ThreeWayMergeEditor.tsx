@@ -11,9 +11,8 @@ import {
   useState,
 } from "react"
 import type { CSSProperties, MouseEvent as ReactMouseEvent } from "react"
-import { Editor, type Monaco } from "@monaco-editor/react"
+import { Editor, type Monaco, type OnMount } from "@monaco-editor/react"
 import type { editor } from "monaco-editor"
-import type { OnMount } from "@monaco-editor/react"
 import { cn } from "@/lib/utils"
 import { changedLineRanges, diff3Merge } from "@/lib/playground/diff3"
 import type { GitBlockResolution } from "@/lib/playground/review-types"
@@ -115,7 +114,7 @@ const buildBlocks = (left: string, base: string, right: string): Block[] => {
  * necessarily correspond to the algorithmic diff3 output of the two branches.
  */
 const parseMarkers = (conflictedCode: string): Block[] => {
-  const lines = conflictedCode.replace(/\r\n/g, "\n").split("\n")
+  const lines = conflictedCode.replaceAll("\r\n", "\n").split("\n")
   const blocks: Block[] = []
   const stableLines: string[] = []
   let leftLines: string[] | null = null
@@ -357,56 +356,77 @@ type GutterLaneProps = {
   onMouseDown: (e: ReactMouseEvent<HTMLDivElement>) => void
 }
 
+type PinButtonProps = {
+  pin: LanePin
+  side: "left" | "right"
+  active: boolean
+  onToggle: (id: number, side: "left" | "right") => void
+}
+
+const PinButton = ({ pin, side, active, onToggle }: Readonly<PinButtonProps>) => {
+  const sideName = side === "left" ? "Local" : "Remote"
+  const actionLabel = active ? `Remove ${sideName} from result` : `Apply ${sideName} to result`
+  const activeClass =
+    side === "left"
+      ? "border-sky-400/60 bg-sky-500/25 text-sky-200"
+      : "border-amber-400/60 bg-amber-500/25 text-amber-200"
+  const inactiveClass =
+    side === "left"
+      ? "border-sky-500/30 bg-[#1c1c26] text-sky-300 hover:border-sky-400/70 hover:bg-sky-500/20"
+      : "border-amber-500/30 bg-[#1c1c26] text-amber-300 hover:border-amber-400/70 hover:bg-amber-500/20"
+  const stateClass = active ? activeClass : inactiveClass
+  const icon = active ? (
+    <IconX className="size-3" />
+  ) : side === "left" ? (
+    <IconChevronRight className="size-3.5" />
+  ) : (
+    <IconChevronLeft className="size-3.5" />
+  )
+
+  return (
+    <button
+      key={pin.id}
+      type="button"
+      onClick={() => onToggle(pin.id, side)}
+      style={{ top: pin.top }}
+      title={actionLabel}
+      aria-label={actionLabel}
+      className={cn(
+        "absolute left-1/2 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[5px] border text-[11px] shadow-sm transition-colors",
+        stateClass
+      )}
+    >
+      {icon}
+    </button>
+  )
+}
+
 const GutterLane = ({ side, pins, onToggle, onMouseDown }: Readonly<GutterLaneProps>) => {
   const isActive = (res: Resolution | null): boolean =>
     side === "left" ? leftActive(res) : rightActive(res)
 
   return (
     <div
+      role="separator"
+      aria-label={`Drag to resize ${side} pane`}
+      tabIndex={0}
       className="relative w-7 shrink-0 cursor-col-resize border-x border-[#2a2a35] bg-[#13131a]"
       onMouseDown={onMouseDown}
+      onKeyDown={(e) => {
+        if (e.key === "ArrowLeft" || e.key === "ArrowRight") e.preventDefault()
+      }}
     >
       <div className="h-8 border-b border-[#2a2a35] bg-[#1c1c26]" />
       <div className="absolute inset-x-0 top-8 bottom-0 overflow-hidden">
-        {pins.map((pin) => {
-          const active = isActive(pin.resolution)
-          return (
-            <button
-              key={pin.id}
-              type="button"
-              onClick={() => onToggle(pin.id, side)}
-              style={{ top: pin.top }}
-              title={
-                active
-                  ? `Remove ${side === "left" ? "Local" : "Remote"} from result`
-                  : `Apply ${side === "left" ? "Local" : "Remote"} to result`
-              }
-              aria-label={
-                active
-                  ? `Remove ${side === "left" ? "Local" : "Remote"} from result`
-                  : `Apply ${side === "left" ? "Local" : "Remote"} to result`
-              }
-              className={cn(
-                "absolute left-1/2 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[5px] border text-[11px] shadow-sm transition-colors",
-                active
-                  ? side === "left"
-                    ? "border-sky-400/60 bg-sky-500/25 text-sky-200"
-                    : "border-amber-400/60 bg-amber-500/25 text-amber-200"
-                  : side === "left"
-                    ? "border-sky-500/30 bg-[#1c1c26] text-sky-300 hover:border-sky-400/70 hover:bg-sky-500/20"
-                    : "border-amber-500/30 bg-[#1c1c26] text-amber-300 hover:border-amber-400/70 hover:bg-amber-500/20"
-              )}
-            >
-              {active ? (
-                <IconX className="size-3" />
-              ) : side === "left" ? (
-                <IconChevronRight className="size-3.5" />
-              ) : (
-                <IconChevronLeft className="size-3.5" />
-              )}
-            </button>
-          )
-        })}
+        {pins.map((pin) => (
+          <PinButton
+            key={pin.id}
+            pin={pin}
+            side={side}
+            active={isActive(pin.resolution)}
+            onToggle={onToggle}
+          />
+        ))}
       </div>
     </div>
   )
@@ -465,6 +485,26 @@ const Pane = ({
     </div>
   </div>
 )
+
+const buildRegionDecorations = (
+  regions: Region[],
+  monaco: Monaco
+): editor.IModelDeltaDecoration[] => {
+  const decorations: editor.IModelDeltaDecoration[] = []
+  for (const r of regions) {
+    if (r.resolution === null) {
+      if (r.leftRange)
+        decorations.push(zone(monaco, r.leftRange[0], r.leftRange[1], "merge-zone--left"))
+      if (r.rightRange) {
+        decorations.push(zone(monaco, r.rightRange[0], r.rightRange[1], "merge-zone--right"))
+        if (r.leftRange) decorations.push(lineClass(monaco, r.rightRange[0], "merge-divider"))
+      }
+    } else if (r.endLine >= r.startLine && r.resolution) {
+      decorations.push(zone(monaco, r.startLine, r.endLine, "merge-zone--resolved"))
+    }
+  }
+  return decorations
+}
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
@@ -675,24 +715,12 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
         paintingRef.current = false
       }
 
-      const decorations: editor.IModelDeltaDecoration[] = []
-      for (const r of regions) {
-        if (r.resolution === null) {
-          if (r.leftRange)
-            decorations.push(zone(monaco, r.leftRange[0], r.leftRange[1], "merge-zone--left"))
-          if (r.rightRange) {
-            decorations.push(zone(monaco, r.rightRange[0], r.rightRange[1], "merge-zone--right"))
-            if (r.leftRange) decorations.push(lineClass(monaco, r.rightRange[0], "merge-divider"))
-          }
-        } else if (r.endLine >= r.startLine && r.resolution) {
-          decorations.push(zone(monaco, r.startLine, r.endLine, "merge-zone--resolved"))
-        }
-      }
+      const decorations = buildRegionDecorations(regions, monaco)
 
-      if (!centerDecorationsRef.current) {
-        centerDecorationsRef.current = center.createDecorationsCollection(decorations)
-      } else {
+      if (centerDecorationsRef.current) {
         centerDecorationsRef.current.set(decorations)
+      } else {
+        centerDecorationsRef.current = center.createDecorationsCollection(decorations)
       }
 
       onChange?.(text, remaining)
@@ -821,7 +849,6 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
     )
 
     const lanePins = useMemo(() => {
-      void viewTick
       const center = centerEditorRef.current
       if (!center) return [] as LanePin[]
       const scrollTop = center.getScrollTop()
@@ -833,7 +860,7 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
       }))
     }, [regions, viewTick])
 
-    const editorsHeight = height !== undefined ? height : "100%"
+    const editorsHeight = height === undefined ? "100%" : height
 
     return (
       <div
@@ -957,7 +984,7 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
         <div
           ref={editorsRowRef}
           className={cn("flex", height === undefined && "min-h-0 flex-1")}
-          style={height !== undefined ? { height: editorsHeight } : undefined}
+          style={height === undefined ? undefined : { height: editorsHeight }}
         >
           <Pane
             title={leftTitle}

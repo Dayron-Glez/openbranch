@@ -13,40 +13,46 @@ type Candidate = {
   chain: Candidate | null
 }
 
+const findSlot = (candidates: Candidate[], j: number, startAt: number): number => {
+  for (let s = startAt; s < candidates.length; s++) {
+    if (
+      candidates[s].buffer2index < j &&
+      (s === candidates.length - 1 || candidates[s + 1].buffer2index > j)
+    ) {
+      return s
+    }
+  }
+  return candidates.length
+}
+
+const buildEquivalenceClasses = <T>(buffer: T[]): Map<T, number[]> => {
+  const classes = new Map<T, number[]>()
+  for (const [j, item] of buffer.entries()) {
+    const arr = classes.get(item)
+    if (arr) arr.push(j)
+    else classes.set(item, [j])
+  }
+  return classes
+}
+
 /**
  * Longest Common Subsequence between two arrays of comparable items.
  * Returns the tail of a linked list (via `.chain`) describing the matches.
  */
 function longestCommonSubsequence<T>(buffer1: T[], buffer2: T[]): Candidate {
-  const equivalenceClasses = new Map<T, number[]>()
-  for (let j = 0; j < buffer2.length; j++) {
-    const item = buffer2[j]
-    const arr = equivalenceClasses.get(item)
-    if (arr) arr.push(j)
-    else equivalenceClasses.set(item, [j])
-  }
+  const equivalenceClasses = buildEquivalenceClasses(buffer2)
 
   const NULLRESULT: Candidate = { buffer1index: -1, buffer2index: -1, chain: null }
   const candidates: Candidate[] = [NULLRESULT]
 
   for (let i = 0; i < buffer1.length; i++) {
     const item = buffer1[i]
-    const buffer2indices = equivalenceClasses.get(item) || []
+    const buffer2indices = equivalenceClasses.get(item) ?? []
     let r = 0
     let c = candidates[0]
 
-    for (let jx = 0; jx < buffer2indices.length; jx++) {
-      const j = buffer2indices[jx]
-
-      let s = r
-      for (; s < candidates.length; s++) {
-        if (
-          candidates[s].buffer2index < j &&
-          (s === candidates.length - 1 || candidates[s + 1].buffer2index > j)
-        ) {
-          break
-        }
-      }
+    for (const j of buffer2indices) {
+      const s = findSlot(candidates, j, r)
 
       if (s < candidates.length) {
         const newCandidate: Candidate = {
@@ -65,7 +71,7 @@ function longestCommonSubsequence<T>(buffer1: T[], buffer2: T[]): Candidate {
     candidates[r] = c
   }
 
-  return candidates[candidates.length - 1]
+  return candidates.at(-1)!
 }
 
 type DiffIndex = {
@@ -119,25 +125,59 @@ type Hunk = {
   abLength: number
 }
 
-export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
-  const hunks: Hunk[] = []
-  const addHunk = (h: DiffIndex, ab: "a" | "b") => {
-    hunks.push({
-      ab,
-      oStart: h.buffer1[0],
-      oLength: h.buffer1[1],
-      abStart: h.buffer2[0],
-      abLength: h.buffer2[1],
-    })
+const buildConflictRegion = (
+  a: string[],
+  o: string[],
+  b: string[],
+  regionHunks: Hunk[],
+  regionStart: number,
+  regionEnd: number
+): ConflictRegion => {
+  const bounds = {
+    a: [a.length, -1, o.length, -1],
+    b: [b.length, -1, o.length, -1],
   }
-  diffIndices(o, a).forEach((item) => addHunk(item, "a"))
-  diffIndices(o, b).forEach((item) => addHunk(item, "b"))
-  hunks.sort((x, y) => x.oStart - y.oStart || x.ab.localeCompare(y.ab))
+  for (const h of regionHunks) {
+    const oStart = h.oStart
+    const oEnd = oStart + h.oLength
+    const abStart = h.abStart
+    const abEnd = abStart + h.abLength
+    const t = bounds[h.ab]
+    t[0] = Math.min(abStart, t[0])
+    t[1] = Math.max(abEnd, t[1])
+    t[2] = Math.min(oStart, t[2])
+    t[3] = Math.max(oEnd, t[3])
+  }
+  const aStart = bounds.a[0] + (regionStart - bounds.a[2])
+  const aEnd = bounds.a[1] + (regionEnd - bounds.a[3])
+  const bStart = bounds.b[0] + (regionStart - bounds.b[2])
+  const bEnd = bounds.b[1] + (regionEnd - bounds.b[3])
+  return {
+    stable: false,
+    aContent: a.slice(aStart, aEnd),
+    oContent: o.slice(regionStart, regionEnd),
+    bContent: b.slice(bStart, bEnd),
+  }
+}
+
+export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
+  const toHunk = (h: DiffIndex, ab: "a" | "b"): Hunk => ({
+    ab,
+    oStart: h.buffer1[0],
+    oLength: h.buffer1[1],
+    abStart: h.buffer2[0],
+    abLength: h.buffer2[1],
+  })
+
+  const hunks: Hunk[] = [
+    ...diffIndices(o, a).map((h) => toHunk(h, "a")),
+    ...diffIndices(o, b).map((h) => toHunk(h, "b")),
+  ].sort((x, y) => x.oStart - y.oStart || x.ab.localeCompare(y.ab))
 
   const results: MergeRegion[] = []
   let currOffset = 0
 
-  const advanceTo = (endOffset: number) => {
+  const advanceTo = (endOffset: number): void => {
     if (endOffset > currOffset) {
       results.push({ stable: true, bufferContent: o.slice(currOffset, endOffset) })
       currOffset = endOffset
@@ -167,33 +207,7 @@ export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeR
         })
       }
     } else {
-      const bounds = {
-        a: [a.length, -1, o.length, -1],
-        b: [b.length, -1, o.length, -1],
-      }
-      regionHunks.forEach((h) => {
-        const oStart = h.oStart
-        const oEnd = oStart + h.oLength
-        const abStart = h.abStart
-        const abEnd = abStart + h.abLength
-        const t = bounds[h.ab]
-        t[0] = Math.min(abStart, t[0])
-        t[1] = Math.max(abEnd, t[1])
-        t[2] = Math.min(oStart, t[2])
-        t[3] = Math.max(oEnd, t[3])
-      })
-
-      const aStart = bounds.a[0] + (regionStart - bounds.a[2])
-      const aEnd = bounds.a[1] + (regionEnd - bounds.a[3])
-      const bStart = bounds.b[0] + (regionStart - bounds.b[2])
-      const bEnd = bounds.b[1] + (regionEnd - bounds.b[3])
-
-      results.push({
-        stable: false,
-        aContent: a.slice(aStart, aEnd),
-        oContent: o.slice(regionStart, regionEnd),
-        bContent: b.slice(bStart, bEnd),
-      })
+      results.push(buildConflictRegion(a, o, b, regionHunks, regionStart, regionEnd))
     }
 
     advanceTo(regionEnd)
@@ -251,7 +265,7 @@ export function diff3Merge(left: string, base: string, right: string): MergeBloc
 
 export function splitLines(text: string): string[] {
   if (text === "") return []
-  return text.replace(/\r\n/g, "\n").split("\n")
+  return text.replaceAll("\r\n", "\n").split("\n")
 }
 
 export function hasConflicts(left: string, base: string, right: string): boolean {
