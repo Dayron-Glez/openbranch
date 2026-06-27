@@ -185,6 +185,29 @@ const appendStable = (
   return currOffset
 }
 
+const pushMergeResult = (
+  results: MergeRegion[],
+  a: string[],
+  o: string[],
+  b: string[],
+  hunk: Hunk,
+  regionHunks: Hunk[],
+  regionStart: number,
+  regionEnd: number
+): void => {
+  if (regionHunks.length === 1) {
+    if (hunk.abLength > 0) {
+      const buffer = hunk.ab === "a" ? a : b
+      results.push({
+        stable: true,
+        bufferContent: buffer.slice(hunk.abStart, hunk.abStart + hunk.abLength),
+      })
+    }
+  } else {
+    results.push(buildConflictRegion(a, o, b, regionHunks, regionStart, regionEnd))
+  }
+}
+
 export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeRegion[] {
   const hunks: Hunk[] = [
     ...diffIndices(o, a).map(toHunk("a")),
@@ -208,18 +231,7 @@ export function diff3MergeRegions(a: string[], o: string[], b: string[]): MergeR
       regionHunks.push(hunks.shift() as Hunk)
     }
 
-    if (regionHunks.length === 1) {
-      if (hunk.abLength > 0) {
-        const buffer = hunk.ab === "a" ? a : b
-        results.push({
-          stable: true,
-          bufferContent: buffer.slice(hunk.abStart, hunk.abStart + hunk.abLength),
-        })
-      }
-    } else {
-      results.push(buildConflictRegion(a, o, b, regionHunks, regionStart, regionEnd))
-    }
-
+    pushMergeResult(results, a, o, b, hunk, regionHunks, regionStart, regionEnd)
     currOffset = appendStable(results, o, currOffset, regionEnd)
   }
 
