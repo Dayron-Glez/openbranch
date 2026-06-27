@@ -1,7 +1,8 @@
 "use client"
 
+import { useCallback } from "react"
 import type React from "react"
-import type { OnMount } from "@monaco-editor/react"
+import type { Monaco, OnMount } from "@monaco-editor/react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { GitTemplate } from "@/lib/playground/git-templates/git-merge-conflict"
 import type { GitBlockResolution } from "@/lib/playground/review-types"
@@ -41,6 +42,20 @@ export const MergeEditorPane = ({
 }: Readonly<MergeEditorPaneProps>) => {
   const conflictedStarter = template.files[template.editableFile]?.code ?? ""
 
+  const handleBeforeMount = useCallback(
+    (monaco: Monaco): void => {
+      configureMonaco(monaco)
+      for (const [path, file] of Object.entries(template.files)) {
+        if (path === template.editableFile) continue
+        const uri = monaco.Uri.parse(`file:///${path}`)
+        if (monaco.editor.getModel(uri) === null) {
+          monaco.editor.createModel(file.code, "typescript", uri)
+        }
+      }
+    },
+    [template]
+  )
+
   return (
     <div className="h-full">
       <div
@@ -78,7 +93,7 @@ export const MergeEditorPane = ({
               initialResolutions={initialResolutions}
               onBlocksChange={onBlocksChange}
               onChange={onEditorChange}
-              onBeforeMount={configureMonaco}
+              onBeforeMount={handleBeforeMount}
               onCenterMount={onCenterMount}
               className="h-full rounded-none border-0"
             />

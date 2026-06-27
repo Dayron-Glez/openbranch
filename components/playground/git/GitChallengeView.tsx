@@ -56,7 +56,7 @@ export const GitChallengeView = ({
     extraModules: template.extraModules,
   })
 
-  const editor = useMergeEditor({ template, runHiddenTests })
+  const editor = useMergeEditor({ runHiddenTests })
 
   const scheduleAutoSave = useCallback((): void => {
     if (saveTimeoutRef.current !== null) clearTimeout(saveTimeoutRef.current)

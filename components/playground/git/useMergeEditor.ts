@@ -2,7 +2,6 @@ import type React from "react"
 import type * as Monaco from "monaco-editor"
 import type { OnMount } from "@monaco-editor/react"
 import { useState, useRef, useCallback } from "react"
-import type { GitTemplate } from "@/lib/playground/git-templates/git-merge-conflict"
 import { formatTypeScript } from "@/components/playground/formatTypeScript"
 
 export type WorkerResultMessage =
@@ -17,7 +16,6 @@ export type WorkerResultMessage =
   | { readonly type: "error"; readonly message: string }
 
 type UseMergeEditorArgs = {
-  readonly template: GitTemplate
   readonly runHiddenTests: (mergedCode: string) => void
 }
 
@@ -30,10 +28,7 @@ export type MergeEditorState = {
   readonly handleFormat: () => Promise<void>
 }
 
-export const useMergeEditor = ({
-  template,
-  runHiddenTests,
-}: UseMergeEditorArgs): MergeEditorState => {
+export const useMergeEditor = ({ runHiddenTests }: UseMergeEditorArgs): MergeEditorState => {
   const [hasTypeErrors, setHasTypeErrors] = useState<boolean | null>(null)
   const [isFormatting, setIsFormatting] = useState<boolean>(false)
 
@@ -44,15 +39,6 @@ export const useMergeEditor = ({
     (editor, monaco) => {
       editorRef.current = editor
       monacoRef.current = monaco
-
-      // Pre-create read-only models for each dependency so TypeScript imports resolve.
-      for (const [path, file] of Object.entries(template.files)) {
-        if (path === template.editableFile) continue
-        const uri = monaco.Uri.parse(`file:///${path}`)
-        if (monaco.editor.getModel(uri) === null) {
-          monaco.editor.createModel(file.code, "typescript", uri)
-        }
-      }
 
       monaco.editor.onDidChangeMarkers(() => {
         const model = editor.getModel()
@@ -70,7 +56,7 @@ export const useMergeEditor = ({
         runHiddenTests(editor.getModel()?.getValue() ?? "")
       })
     },
-    [template, runHiddenTests]
+    [runHiddenTests]
   )
 
   const handleFormat = useCallback(async (): Promise<void> => {
