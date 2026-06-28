@@ -5,7 +5,8 @@ import Link from "next/link"
 import Editor from "@monaco-editor/react"
 import { saveDocsState, completeDocsChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
-import type { DocsTemplate } from "@/lib/playground/docs-types"
+import type { DocsTemplateData } from "@/lib/playground/docs-types"
+import { getDocsTemplateBySlug } from "@/lib/playground/docs-registry"
 import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { configureMonaco, EDITOR_OPTIONS } from "@/components/playground/monacoTheme"
@@ -15,7 +16,7 @@ const AUTOSAVE_DELAY_MS = 800
 
 type DocumentationChallengeViewProps = {
   readonly title: string
-  readonly template: DocsTemplate
+  readonly template: DocsTemplateData
   readonly initialContent: string | null
   readonly slug: string
   readonly lang: string
@@ -38,6 +39,9 @@ export const DocumentationChallengeView = ({
   const sourceFile = Object.entries(template.files).find(([, file]) => file.readOnly)
   const sourceFilename = sourceFile?.[0] ?? ""
   const sourceCode = sourceFile?.[1].code ?? ""
+  // Criteria are imported client-side from the registry — never passed as props from the server
+  // to avoid the "Functions cannot be passed to Client Components" constraint.
+  const criteria = getDocsTemplateBySlug(slug)?.criteria ?? []
 
   const [content, setContent] = useState<string>(initialContent ?? originalContent)
   const [isPending, startTransition] = useTransition()
@@ -175,7 +179,7 @@ export const DocumentationChallengeView = ({
 
                 {/* checklist + submit */}
                 <DocsChecklist
-                  criteria={template.criteria}
+                  criteria={criteria}
                   content={content}
                   isPending={isPending}
                   dict={dict}

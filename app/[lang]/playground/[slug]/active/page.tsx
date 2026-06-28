@@ -131,13 +131,16 @@ export default async function ActiveChallengePage({
   }
 
   if (category === "documentation") {
-    const template = getDocsTemplateBySlug(slug)
-    if (template === null) notFound()
+    const docsTemplate = getDocsTemplateBySlug(slug)
+    if (docsTemplate === null) notFound()
     const docsSnapshot = session.snapshot as DocsSnapshot | null
+    // Pass only the serializable subset — criteria contain functions and cannot be
+    // sent as Server Component props to a Client Component.
+    const docsTemplateData = { files: docsTemplate.files, editableFile: docsTemplate.editableFile }
     return (
       <DocumentationChallengeView
         title={page.data.title}
-        template={template}
+        template={docsTemplateData}
         initialContent={docsSnapshot?.content ?? null}
         slug={slug}
         lang={lang}
