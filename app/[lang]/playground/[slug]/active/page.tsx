@@ -9,16 +9,19 @@ import { getDiffBySlug } from "@/lib/playground/diff-registry"
 import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
 import { getTestingTemplateBySlug } from "@/lib/playground/testing-registry"
 import { getGitTemplateBySlug } from "@/lib/playground/git-registry"
+import { getDocsTemplateBySlug } from "@/lib/playground/docs-registry"
 import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
 import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
 import { TestingChallengeView } from "@/components/playground/testing/TestingChallengeView"
 import { GitChallengeView } from "@/components/playground/git/GitChallengeView"
+import { DocumentationChallengeView } from "@/components/playground/documentation/DocumentationChallengeView"
 import type {
   ReviewSnapshot,
   BugFixSnapshot,
   TestingSnapshot,
   GitSnapshot,
   GitBlockResolution,
+  DocsSnapshot,
 } from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
@@ -118,6 +121,24 @@ export default async function ActiveChallengePage({
         title={page.data.title}
         template={template}
         initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
+        slug={slug}
+        lang={lang}
+        playgroundPath={playgroundPath}
+        challengePath={challengePath}
+        dict={dict}
+      />
+    )
+  }
+
+  if (category === "documentation") {
+    const template = getDocsTemplateBySlug(slug)
+    if (template === null) notFound()
+    const docsSnapshot = session.snapshot as DocsSnapshot | null
+    return (
+      <DocumentationChallengeView
+        title={page.data.title}
+        template={template}
+        initialContent={docsSnapshot?.content ?? null}
         slug={slug}
         lang={lang}
         playgroundPath={playgroundPath}
