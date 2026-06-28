@@ -54,6 +54,8 @@ export type PlaygroundDict = {
     readonly nextConflict: string
     readonly enterFullscreen: string
     readonly exitFullscreen: string
+    readonly docsChecklistHeading: string
+    readonly docsSubmitButton: string
   }
   readonly result: {
     readonly heading: string
@@ -150,6 +152,7 @@ export type PlaygroundDict = {
     readonly "ship-it": { readonly name: string; readonly description: string }
     readonly "streak-7": { readonly name: string; readonly description: string }
     readonly "all-tracks": { readonly name: string; readonly description: string }
+    readonly "doc-writer": { readonly name: string; readonly description: string }
   }
   readonly time: {
     readonly minutes: string
@@ -235,6 +238,11 @@ const translations = {
   "badges.all-tracks.description": {
     es: "Completaste un reto en cada categoría",
     en: "Completed a challenge in every category",
+  },
+  "badges.doc-writer.name": { es: "Doc Writer", en: "Doc Writer" },
+  "badges.doc-writer.description": {
+    es: "Escribiste documentación que guía a futuros colaboradores",
+    en: "Wrote documentation that guides future contributors",
   },
   "time.minutes": { es: "min", en: "min" },
   "active.exitLabel": { es: "Salir del reto", en: "Exit challenge" },
@@ -322,6 +330,8 @@ const translations = {
   "active.nextConflict": { es: "Conflicto siguiente", en: "Next conflict" },
   "active.enterFullscreen": { es: "Pantalla completa", en: "Enter fullscreen" },
   "active.exitFullscreen": { es: "Salir de pantalla completa", en: "Exit fullscreen" },
+  "active.docsChecklistHeading": { es: "Lista de criterios", en: "Documentation checklist" },
+  "active.docsSubmitButton": { es: "Enviar documentación", en: "Submit documentation" },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -444,6 +454,8 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       nextConflict: tx("active.nextConflict"),
       enterFullscreen: tx("active.enterFullscreen"),
       exitFullscreen: tx("active.exitFullscreen"),
+      docsChecklistHeading: tx("active.docsChecklistHeading"),
+      docsSubmitButton: tx("active.docsSubmitButton"),
     },
     result: {
       heading: tx("result.heading"),
@@ -534,6 +546,10 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       "all-tracks": {
         name: tx("badges.all-tracks.name"),
         description: tx("badges.all-tracks.description"),
+      },
+      "doc-writer": {
+        name: tx("badges.doc-writer.name"),
+        description: tx("badges.doc-writer.description"),
       },
     },
     time: {
