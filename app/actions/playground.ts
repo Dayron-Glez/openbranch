@@ -11,6 +11,7 @@ import type {
   TestingSnapshot,
   GitSnapshot,
   GitBlockResolution,
+  DocsSnapshot,
 } from "@/lib/playground/review-types"
 
 export const startChallengeSession = async (
@@ -256,6 +257,63 @@ export const saveGitState = async (
     .eq("challenge_slug", slug)
     .eq("lang", lang)
     .eq("status", "in_progress")
+}
+
+export const saveDocsState = async (slug: string, lang: string, content: string): Promise<void> => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user === null) return
+
+  await supabase
+    .from("challenge_sessions")
+    .update({ snapshot: { content } satisfies DocsSnapshot })
+    .eq("user_id", user.id)
+    .eq("challenge_slug", slug)
+    .eq("lang", lang)
+    .eq("status", "in_progress")
+}
+
+export const completeDocsChallenge = async (slug: string, lang: string): Promise<void> => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (user === null) return
+
+  const { data: completedDocsSession } = await supabase
+    .from("challenge_sessions")
+    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .eq("user_id", user.id)
+    .eq("challenge_slug", slug)
+    .eq("lang", lang)
+    .eq("status", "in_progress")
+    .select("id")
+
+  if ((completedDocsSession?.length ?? 0) === 0) return
+
+  const { data: existingBadge } = await supabase
+    .from("user_badges")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("badge", "doc-writer")
+    .maybeSingle()
+
+  if (existingBadge === null) {
+    const { data: completedDocsChallenges } = await supabase
+      .from("challenge_sessions")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("status", "completed")
+      .like("challenge_slug", "docs-%")
+
+    if ((completedDocsChallenges?.length ?? 0) >= 1) {
+      await supabase.from("user_badges").insert({ user_id: user.id, badge: "doc-writer" })
+    }
+  }
+
+  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
 }
 
 export const completeGitChallenge = async (slug: string, lang: string): Promise<void> => {
