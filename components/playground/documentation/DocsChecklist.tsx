@@ -2,6 +2,7 @@
 
 import type { DocsCriterion } from "@/lib/playground/docs-types"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { ChallengeSubmitButton } from "@/components/playground/ChallengeSubmitButton"
 
 type DocsChecklistProps = {
   readonly criteria: readonly DocsCriterion[]
@@ -64,21 +65,13 @@ export const DocsChecklist = ({
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={onSubmit}
+      <ChallengeSubmitButton
+        label={dict.active.docsSubmitButton}
+        submittingLabel={dict.active.submitting}
         disabled={!canSubmit}
-        className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
-      >
-        {isPending ? (
-          <>
-            <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-            {dict.active.submitting}
-          </>
-        ) : (
-          dict.active.docsSubmitButton
-        )}
-      </button>
+        isPending={isPending}
+        onClick={onSubmit}
+      />
     </div>
   )
 }
