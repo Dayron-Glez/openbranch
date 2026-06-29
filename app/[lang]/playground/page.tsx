@@ -119,7 +119,6 @@ export default async function PlaygroundPage({
       .from("challenge_sessions")
       .select("challenge_slug, status")
       .eq("user_id", user.id)
-      .eq("lang", lang)
       .in("status", ["in_progress", "completed"])
     for (const s of sessions ?? []) {
       const slug = s.challenge_slug as string
