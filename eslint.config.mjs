@@ -10,11 +10,10 @@ export default tseslint.config(
   {
     // Dependency-direction guard: lib/ must not import from components/.
     // Domain contracts belong in lib/playground/domain/ (see docs/architecture/01-assessment-report.md §4.5).
-    // Severity is "warn" until the existing DiffFile inversion is fixed in Phase 1, then bumped to "error".
     files: ["lib/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
-        "warn",
+        "error",
         {
           patterns: [
             {

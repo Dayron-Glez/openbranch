@@ -1,4 +1,4 @@
-import type { DiffFile } from "@/components/playground/DiffViewer"
+import type { DiffFile } from "@/lib/playground/domain/diff"
 import { codeReviewNoisyPrDiff } from "./diffs/code-review-noisy-pr"
 
 const DIFF_REGISTRY: Record<string, readonly DiffFile[]> = {
