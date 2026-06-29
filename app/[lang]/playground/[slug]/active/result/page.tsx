@@ -272,7 +272,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const challengeBranch = page.data.pr_preview?.branch ?? null
 
   return (
-    <main data-pg-main className="relative z-1 min-h-[calc(100dvh-60px)] overflow-x-hidden">
+    <main data-pg-main className="relative z-1 min-h-full overflow-x-hidden">
       {/* ambient glow — centered on the logo ring, not at the very top */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
