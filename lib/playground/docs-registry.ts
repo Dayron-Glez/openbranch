@@ -1,9 +1,6 @@
-import type { DocsTemplate } from "./docs-types"
 import { docsGatewayModule } from "./docs-templates/docs-gateway-module"
+import { createChallengeRegistry } from "./create-registry"
 
-const DOCS_REGISTRY: Record<string, DocsTemplate> = {
+export const getDocsTemplateBySlug = createChallengeRegistry({
   "docs-gateway-module": docsGatewayModule,
-}
-
-export const getDocsTemplateBySlug = (slug: string): DocsTemplate | null =>
-  DOCS_REGISTRY[slug] ?? null
+})

@@ -9,19 +9,8 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { getMDXComponents } from "@/components/docs/mdx"
 import { StartChallengeButton } from "@/components/playground/StartChallengeButton"
 import { PrPreviewCard } from "@/components/playground/PrPreviewCard"
-import { IconPR, IconBug, IconGitMerge, IconFlask, IconBook, IconBranch } from "@/icons"
 import { createClient } from "@/lib/supabase/server"
-
-const CHALLENGE_ICONS: Record<string, ReactNode> = {
-  GitPullRequest: <IconPR />,
-  Bug: <IconBug />,
-  GitMerge: <IconGitMerge />,
-  FlaskConical: <IconFlask />,
-  BookOpen: <IconBook />,
-}
-
-const getChallengeIcon = (iconName: string | undefined): ReactNode =>
-  (iconName !== undefined && CHALLENGE_ICONS[iconName]) || <IconBranch />
+import { getChallengeIcon } from "@/lib/playground/challenge-icons"
 
 const DIFFICULTY_LEVEL: Record<string, number> = { beginner: 1, moderate: 2, demanding: 3 }
 

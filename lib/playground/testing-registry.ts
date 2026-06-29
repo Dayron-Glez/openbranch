@@ -1,9 +1,6 @@
-import type { TestingTemplate } from "./sandpack-templates/testing-fetchupstream"
 import { testingFetchUpstream } from "./sandpack-templates/testing-fetchupstream"
+import { createChallengeRegistry } from "./create-registry"
 
-const TESTING_REGISTRY: Record<string, TestingTemplate> = {
+export const getTestingTemplateBySlug = createChallengeRegistry({
   "testing-fetchupstream": testingFetchUpstream,
-}
-
-export const getTestingTemplateBySlug = (slug: string): TestingTemplate | null =>
-  TESTING_REGISTRY[slug] ?? null
+})

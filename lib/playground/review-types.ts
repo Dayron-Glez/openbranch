@@ -1,35 +1,12 @@
-export type InlineComment = {
-  readonly id: string
-  readonly filename: string
-  readonly lineIndex: number
-  readonly content: string
-}
-
-export type ReviewDecision = "approve" | "comment" | "request-changes" | null
-
-export type ReviewSnapshot = {
-  readonly comments: InlineComment[]
-  readonly decision: ReviewDecision
-}
-
-export type BugFixSnapshot = {
-  readonly code: string
-}
-
-export type TestingSnapshot = {
-  readonly testCode: string
-}
-
-export type GitBlockResolution = {
-  readonly id: number
-  readonly resolution: "left" | "right" | "both-lr" | "both-rl" | "base" | null
-}
-
-export type GitSnapshot = {
-  readonly code: string
-  readonly resolutions?: readonly GitBlockResolution[]
-}
-
-export type DocsSnapshot = {
-  readonly content: string
-}
+// Re-export shim — types live in domain/snapshots.ts.
+// Kept for backward compatibility; update imports to domain/snapshots when convenient.
+export type {
+  InlineComment,
+  ReviewDecision,
+  ReviewSnapshot,
+  BugFixSnapshot,
+  TestingSnapshot,
+  GitBlockResolution,
+  GitSnapshot,
+  DocsSnapshot,
+} from "./domain/snapshots"

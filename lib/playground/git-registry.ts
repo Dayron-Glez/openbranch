@@ -1,8 +1,6 @@
-import type { GitTemplate } from "./git-templates/git-merge-conflict"
 import { gitMergeConflict } from "./git-templates/git-merge-conflict"
+import { createChallengeRegistry } from "./create-registry"
 
-const GIT_REGISTRY: Record<string, GitTemplate> = {
+export const getGitTemplateBySlug = createChallengeRegistry({
   "git-merge-conflict": gitMergeConflict,
-}
-
-export const getGitTemplateBySlug = (slug: string): GitTemplate | null => GIT_REGISTRY[slug] ?? null
+})

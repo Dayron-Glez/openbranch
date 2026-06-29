@@ -1,5 +1,4 @@
 import { Suspense } from "react"
-import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-dictionary"
@@ -11,20 +10,12 @@ import { StartingLine } from "@/components/playground/StartingLine"
 import { BadgesSection } from "@/components/playground/BadgesSection"
 import { FilterBar } from "@/components/playground/FilterBar"
 import { PlaygroundGridTransition } from "@/components/playground/PlaygroundGridTransition"
-import { IconPR, IconBug, IconFlask, IconBook, IconBranch } from "@/icons"
-import { getChallengeIcon } from "@/lib/playground/challenge-icons"
-
-const CATEGORY_ORDER = ["code-review", "bug-fix", "testing", "git", "documentation"] as const
-
-type CategoryKey = (typeof CATEGORY_ORDER)[number]
-
-const CATEGORY_ICONS: Record<CategoryKey, ReactNode> = {
-  "code-review": <IconPR />,
-  "bug-fix": <IconBug />,
-  testing: <IconFlask />,
-  git: <IconBranch />,
-  documentation: <IconBook />,
-}
+import { getChallengeIcon, getCategoryIcon } from "@/lib/playground/challenge-icons"
+import {
+  CATEGORY_ORDER,
+  type CategoryKey,
+  inferCategoryBadge,
+} from "@/lib/playground/domain/manifest"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -102,15 +93,6 @@ const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["sta
   return statusDict.notStarted
 }
 
-const inferCategoryBadge = (slug: string): string | null => {
-  if (slug.startsWith("git-")) return "first-merge"
-  if (slug.startsWith("docs-")) return "doc-writer"
-  if (slug.startsWith("code-review-")) return "review-corps"
-  if (slug.startsWith("testing-")) return "coverage-hero"
-  if (slug.startsWith("bug-fix-")) return "ship-it"
-  return null
-}
-
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
@@ -173,7 +155,7 @@ export default async function PlaygroundPage({
     key: cat,
     label: dict.category[cat],
     count: challenges.filter((c) => c.data.category === cat).length,
-    icon: CATEGORY_ICONS[cat],
+    icon: getCategoryIcon(cat),
   })).filter(({ count }) => count > 0)
 
   const filteredChallenges =

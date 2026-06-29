@@ -1,8 +1,13 @@
 "use client"
 
+import type { ReactElement } from "react"
 import { useEffect, useRef } from "react"
 
-export function DocsScrollReveal({ children }: { readonly children: React.ReactNode }) {
+type DocsScrollRevealProps = {
+  readonly children: React.ReactNode
+}
+
+export const DocsScrollReveal = ({ children }: DocsScrollRevealProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

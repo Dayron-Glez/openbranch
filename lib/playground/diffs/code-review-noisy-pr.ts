@@ -1,4 +1,4 @@
-import type { DiffFile } from "@/components/playground/DiffViewer"
+import type { DiffFile } from "@/lib/playground/domain/diff"
 
 export const codeReviewNoisyPrDiff: readonly DiffFile[] = [
   {
