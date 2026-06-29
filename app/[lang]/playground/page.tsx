@@ -165,9 +165,9 @@ export default async function PlaygroundPage({
   } = await supabase.auth.getUser()
 
   const { slugToStatus, earnedBadges } =
-    user !== null
-      ? await loadUserPlaygroundData(supabase, user.id)
-      : { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
+    user === null
+      ? { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
+      : await loadUserPlaygroundData(supabase, user.id)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
