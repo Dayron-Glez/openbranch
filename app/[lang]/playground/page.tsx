@@ -37,6 +37,41 @@ const VALID_SORTS = [
 ] as const
 type SortKey = (typeof VALID_SORTS)[number]
 
+type PlaygroundPage = ReturnType<typeof playgroundSource.getPages>[number]
+
+const applySort = (arr: readonly PlaygroundPage[], activeSort: SortKey): PlaygroundPage[] => {
+  if (activeSort === "difficulty-asc") {
+    return [...arr].sort(
+      (a, b) =>
+        (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0)
+    )
+  }
+  if (activeSort === "difficulty-desc") {
+    return [...arr].sort(
+      (a, b) =>
+        (DIFFICULTY_SORT[b.data.difficulty] ?? 0) - (DIFFICULTY_SORT[a.data.difficulty] ?? 0)
+    )
+  }
+  if (activeSort === "duration-asc") {
+    return [...arr].sort((a, b) => a.data.estimated_minutes - b.data.estimated_minutes)
+  }
+  if (activeSort === "duration-desc") {
+    return [...arr].sort((a, b) => b.data.estimated_minutes - a.data.estimated_minutes)
+  }
+  return [...arr]
+}
+
+type SessionStatus = "in_progress" | "completed"
+
+const inferCategoryBadge = (slug: string): string | null => {
+  if (slug.startsWith("git-")) return "first-merge"
+  if (slug.startsWith("docs-")) return "doc-writer"
+  if (slug.startsWith("code-review-")) return "review-corps"
+  if (slug.startsWith("testing-")) return "coverage-hero"
+  if (slug.startsWith("bug-fix-")) return "ship-it"
+  return null
+}
+
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
@@ -76,28 +111,6 @@ export default async function PlaygroundPage({
       ? (sort as SortKey)
       : "recommended"
 
-  const applySort = (arr: typeof challenges): typeof challenges => {
-    if (activeSort === "difficulty-asc") {
-      return [...arr].sort(
-        (a, b) =>
-          (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0)
-      )
-    }
-    if (activeSort === "difficulty-desc") {
-      return [...arr].sort(
-        (a, b) =>
-          (DIFFICULTY_SORT[b.data.difficulty] ?? 0) - (DIFFICULTY_SORT[a.data.difficulty] ?? 0)
-      )
-    }
-    if (activeSort === "duration-asc") {
-      return [...arr].sort((a, b) => a.data.estimated_minutes - b.data.estimated_minutes)
-    }
-    if (activeSort === "duration-desc") {
-      return [...arr].sort((a, b) => b.data.estimated_minutes - a.data.estimated_minutes)
-    }
-    return arr
-  }
-
   const startingChallenge = [...challenges].sort(
     (a, b) =>
       (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0) ||
@@ -112,7 +125,6 @@ export default async function PlaygroundPage({
     data: { user },
   } = await supabase.auth.getUser()
 
-  type SessionStatus = "in_progress" | "completed"
   const slugToStatus = new Map<string, SessionStatus>()
   const earnedBadges = new Set<string>()
   if (user !== null) {
@@ -133,15 +145,10 @@ export default async function PlaygroundPage({
     for (const b of badges ?? []) {
       earnedBadges.add(b.badge as string)
     }
-    // Infer category badges from completed sessions as a reliable fallback,
-    // in case the award action failed to insert into user_badges.
     for (const [challengeSlug, status] of slugToStatus) {
       if (status !== "completed") continue
-      if (challengeSlug.startsWith("git-")) earnedBadges.add("first-merge")
-      else if (challengeSlug.startsWith("docs-")) earnedBadges.add("doc-writer")
-      else if (challengeSlug.startsWith("code-review-")) earnedBadges.add("review-corps")
-      else if (challengeSlug.startsWith("testing-")) earnedBadges.add("coverage-hero")
-      else if (challengeSlug.startsWith("bug-fix-")) earnedBadges.add("ship-it")
+      const badge = inferCategoryBadge(challengeSlug)
+      if (badge !== null) earnedBadges.add(badge)
     }
   }
 
@@ -154,9 +161,12 @@ export default async function PlaygroundPage({
 
   const filteredChallenges =
     activeCategory !== undefined
-      ? applySort(challenges.filter((c) => c.data.category === activeCategory))
+      ? applySort(
+          challenges.filter((c) => c.data.category === activeCategory),
+          activeSort
+        )
       : activeSort !== "recommended"
-        ? applySort(challenges)
+        ? applySort(challenges, activeSort)
         : []
 
   const showFlatGrid =
@@ -233,7 +243,10 @@ export default async function PlaygroundPage({
       ) : (
         <div className="flex flex-col gap-10">
           {CATEGORY_ORDER.map((cat) => {
-            const categoryChallenges = applySort(challenges.filter((c) => c.data.category === cat))
+            const categoryChallenges = applySort(
+              challenges.filter((c) => c.data.category === cat),
+              activeSort
+            )
             if (categoryChallenges.length === 0) return null
             return (
               <div key={cat}>
