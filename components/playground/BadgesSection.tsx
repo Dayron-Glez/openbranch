@@ -14,15 +14,19 @@ type BadgesSectionProps = {
   readonly earnedBadges: ReadonlySet<string>
 }
 
-const BADGE_KEYS = [
+// Badges backed by a server action that awards them on challenge completion.
+const AWARDED_BADGE_KEYS = [
   "first-merge",
   "review-corps",
   "coverage-hero",
   "ship-it",
   "doc-writer",
-  "streak-7",
-  "all-tracks",
 ] as const
+
+// Badges planned for future tracks/features — displayed as locked teasers, not yet awardable.
+const PLANNED_BADGE_KEYS = ["streak-7", "all-tracks"] as const
+
+const BADGE_KEYS = [...AWARDED_BADGE_KEYS, ...PLANNED_BADGE_KEYS] as const
 
 type BadgeKey = (typeof BADGE_KEYS)[number]
 
