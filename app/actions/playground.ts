@@ -73,7 +73,7 @@ export const saveBugFixState = async (slug: string, lang: string, code: string):
   await saveSnapshot(supabase, user.id, slug, { code } satisfies BugFixSnapshot)
 }
 
-export const completeBugFixChallenge = async (slug: string, lang: string): Promise<void> => {
+export const completeTrackChallenge = async (slug: string, lang: string): Promise<void> => {
   const { supabase, user } = await getAuthContext()
   if (user === null) return
   const completed = await markSessionCompleted(supabase, user.id, slug, lang)
@@ -92,15 +92,6 @@ export const saveTestingState = async (
   await saveSnapshot(supabase, user.id, slug, { testCode } satisfies TestingSnapshot)
 }
 
-export const completeTestingChallenge = async (slug: string, lang: string): Promise<void> => {
-  const { supabase, user } = await getAuthContext()
-  if (user === null) return
-  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
-  if (!completed) return
-  await awardTrackBadge(supabase, user.id, slug)
-  redirect(resultHref(lang, slug))
-}
-
 export const saveGitState = async (
   slug: string,
   lang: string,
@@ -116,22 +107,4 @@ export const saveDocsState = async (slug: string, lang: string, content: string)
   const { supabase, user } = await getAuthContext()
   if (user === null) return
   await saveSnapshot(supabase, user.id, slug, { content } satisfies DocsSnapshot)
-}
-
-export const completeDocsChallenge = async (slug: string, lang: string): Promise<void> => {
-  const { supabase, user } = await getAuthContext()
-  if (user === null) return
-  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
-  if (!completed) return
-  await awardTrackBadge(supabase, user.id, slug)
-  redirect(resultHref(lang, slug))
-}
-
-export const completeGitChallenge = async (slug: string, lang: string): Promise<void> => {
-  const { supabase, user } = await getAuthContext()
-  if (user === null) return
-  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
-  if (!completed) return
-  await awardTrackBadge(supabase, user.id, slug)
-  redirect(resultHref(lang, slug))
 }

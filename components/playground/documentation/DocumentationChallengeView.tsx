@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from "react"
 import Editor from "@monaco-editor/react"
-import { saveDocsState, completeDocsChallenge } from "@/app/actions/playground"
+import { saveDocsState, completeTrackChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { DocsTemplateData } from "@/lib/playground/docs-types"
 import { getDocsTemplateBySlug } from "@/lib/playground/docs-registry"
@@ -75,7 +75,7 @@ export const DocumentationChallengeView = ({
       saveTimeoutRef.current = null
     }
     await saveDocsState(slug, lang, content)
-    await completeDocsChallenge(slug, lang)
+    await completeTrackChallenge(slug, lang)
   })
 
   return (

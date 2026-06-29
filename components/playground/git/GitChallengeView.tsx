@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useRef } from "react"
-import { saveGitState, completeGitChallenge } from "@/app/actions/playground"
+import { saveGitState, completeTrackChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { GitTemplate } from "@/lib/playground/git-templates/git-merge-conflict"
 import type { GitBlockResolution } from "@/lib/playground/review-types"
@@ -94,7 +94,7 @@ export const GitChallengeView = ({
 
   const { isPending, handleSubmit } = useChallengeSubmit(async () => {
     await saveGitState(slug, lang, codeRef.current, resolutionsRef.current)
-    await completeGitChallenge(slug, lang)
+    await completeTrackChallenge(slug, lang)
   })
 
   const handleReset = useCallback((): void => {

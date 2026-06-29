@@ -5,7 +5,7 @@ import type * as Monaco from "monaco-editor"
 import type { OnMount } from "@monaco-editor/react"
 import { useState, useCallback, useRef, useEffect } from "react"
 import Editor from "@monaco-editor/react"
-import { saveBugFixState, completeBugFixChallenge } from "@/app/actions/playground"
+import { saveBugFixState, completeTrackChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { BugFixTemplate } from "@/lib/playground/sandpack-templates/bug-fix-off-by-one"
 import { HintPanel } from "@/components/playground/HintPanel"
@@ -247,7 +247,7 @@ export const BugFixChallengeView = ({
       saveTimeoutRef.current = null
     }
     await saveBugFixState(slug, lang, code)
-    await completeBugFixChallenge(slug, lang)
+    await completeTrackChallenge(slug, lang)
   })
 
   const [isFormatting, setIsFormatting] = useState<boolean>(false)

@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useRef, useMemo, useCallback } from "react"
-import { saveTestingState, completeTestingChallenge } from "@/app/actions/playground"
+import { saveTestingState, completeTrackChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { TestingTemplate } from "@/lib/playground/sandpack-templates/testing-fetchupstream"
 import { ChallengeLayout } from "@/components/playground/ChallengeLayout"
@@ -75,7 +75,7 @@ export const TestingChallengeView = ({
 
   const { isPending, handleSubmit } = useChallengeSubmit(async () => {
     await saveTestingState(slug, lang, editor.testCodeRef.current)
-    await completeTestingChallenge(slug, lang)
+    await completeTrackChallenge(slug, lang)
   })
 
   const killedCount = mutations.filter((mutation) => mutation.killed).length
