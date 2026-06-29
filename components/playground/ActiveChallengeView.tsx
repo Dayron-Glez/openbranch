@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState, useTransition, useRef, useCallback } from "react"
-import Link from "next/link"
 import { saveReviewState, completeChallenge } from "@/app/actions/playground"
 import type { InlineComment, ReviewDecision } from "@/lib/playground/review-types"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
@@ -10,6 +9,7 @@ import type { DiffFile } from "@/components/playground/DiffViewer"
 import { DiffViewer } from "@/components/playground/DiffViewer"
 import { ReviewPanel } from "@/components/playground/ReviewPanel"
 import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { ChallengeSidebarHeader } from "@/components/playground/ChallengeSidebarHeader"
 
 const AUTOSAVE_DELAY_MS = 800
 
@@ -137,29 +137,11 @@ export const ActiveChallengeView = ({
           <aside className="max-[900px]:order-first min-[901px]:overflow-y-auto min-[901px]:pb-10">
             <div className="flex flex-col gap-6">
               {/* title + exit */}
-              <div>
-                <h1 className="text-fg mb-2 text-[20px] leading-[1.2] font-medium tracking-[-0.02em]">
-                  {title}
-                </h1>
-                <Link
-                  href={challengePath}
-                  className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-1.5 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
-                >
-                  <svg
-                    viewBox="0 0 16 16"
-                    className="size-3 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M10 3L5 8l5 5" />
-                  </svg>
-                  {dict.active.exitLabel}
-                </Link>
-              </div>
+              <ChallengeSidebarHeader
+                title={title}
+                challengePath={challengePath}
+                exitLabel={dict.active.exitLabel}
+              />
 
               <div className="border-line border-t" />
 

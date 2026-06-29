@@ -4,7 +4,6 @@ import type React from "react"
 import type * as Monaco from "monaco-editor"
 import type { OnMount } from "@monaco-editor/react"
 import { useState, useCallback, useRef, useTransition, useEffect } from "react"
-import Link from "next/link"
 import Editor from "@monaco-editor/react"
 import { saveBugFixState, completeBugFixChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
@@ -12,6 +11,8 @@ import type { BugFixTemplate } from "@/lib/playground/sandpack-templates/bug-fix
 import { HintPanel } from "@/components/playground/HintPanel"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { ChallengeSidebarHeader } from "@/components/playground/ChallengeSidebarHeader"
+import { ChallengeSubmitButton } from "@/components/playground/ChallengeSubmitButton"
 import { configureMonaco } from "@/components/playground/monacoTheme"
 import { DiffView } from "@/components/playground/DiffView"
 import { TestCard, INITIAL_TEST_STATE } from "@/components/playground/TestCard"
@@ -430,29 +431,11 @@ export const BugFixChallengeView = ({
             <ScrollArea className="h-full">
               <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
                 {/* title + exit */}
-                <div>
-                  <h1 className="text-fg mb-2 text-[20px] leading-[1.2] font-medium tracking-[-0.02em]">
-                    {title}
-                  </h1>
-                  <Link
-                    href={challengePath}
-                    className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-1.5 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
-                  >
-                    <svg
-                      viewBox="0 0 16 16"
-                      className="size-3 shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M10 3L5 8l5 5" />
-                    </svg>
-                    {dict.active.exitLabel}
-                  </Link>
-                </div>
+                <ChallengeSidebarHeader
+                  title={title}
+                  challengePath={challengePath}
+                  exitLabel={dict.active.exitLabel}
+                />
 
                 <div className="border-line border-t" />
 
@@ -516,21 +499,13 @@ export const BugFixChallengeView = ({
                 </div>
 
                 {/* submit */}
-                <button
-                  type="button"
-                  onClick={handleSubmit}
+                <ChallengeSubmitButton
+                  label={dict.active.submitButton}
+                  submittingLabel={dict.active.submitting}
                   disabled={!canSubmit || isPending}
-                  className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
-                >
-                  {isPending ? (
-                    <>
-                      <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                      {dict.active.submitting}
-                    </>
-                  ) : (
-                    dict.active.submitButton
-                  )}
-                </button>
+                  isPending={isPending}
+                  onClick={handleSubmit}
+                />
 
                 <div className="border-line border-t" />
 
