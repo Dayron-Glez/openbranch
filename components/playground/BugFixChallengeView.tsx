@@ -3,16 +3,17 @@
 import type React from "react"
 import type * as Monaco from "monaco-editor"
 import type { OnMount } from "@monaco-editor/react"
-import { useState, useCallback, useRef, useTransition, useEffect } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import Editor from "@monaco-editor/react"
 import { saveBugFixState, completeBugFixChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { BugFixTemplate } from "@/lib/playground/sandpack-templates/bug-fix-off-by-one"
 import { HintPanel } from "@/components/playground/HintPanel"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { ChallengeLayout } from "@/components/playground/ChallengeLayout"
 import { ChallengeSidebarHeader } from "@/components/playground/ChallengeSidebarHeader"
 import { ChallengeSubmitButton } from "@/components/playground/ChallengeSubmitButton"
+import { useChallengeSubmit } from "@/components/playground/useChallengeSubmit"
 import { configureMonaco } from "@/components/playground/monacoTheme"
 import { DiffView } from "@/components/playground/DiffView"
 import { TestCard, INITIAL_TEST_STATE } from "@/components/playground/TestCard"
@@ -136,7 +137,6 @@ export const BugFixChallengeView = ({
   const [testState, setTestState] = useState<TestRunState>(INITIAL_TEST_STATE)
   const [showSolution, setShowSolution] = useState<boolean>(false)
   const [hasTypeErrors, setHasTypeErrors] = useState<boolean>(false)
-  const [isPending, startTransition] = useTransition()
 
   const workerRef = useRef<Worker | null>(null)
   const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor | null>(null)
@@ -241,16 +241,14 @@ export const BugFixChallengeView = ({
     [runTests, initialCode, originalCode]
   )
 
-  const handleSubmit = useCallback((): void => {
+  const { isPending, handleSubmit } = useChallengeSubmit(async () => {
     if (saveTimeoutRef.current !== null) {
       clearTimeout(saveTimeoutRef.current)
       saveTimeoutRef.current = null
     }
-    startTransition(async () => {
-      await saveBugFixState(slug, lang, code)
-      await completeBugFixChallenge(slug, lang)
-    })
-  }, [slug, lang, code])
+    await saveBugFixState(slug, lang, code)
+    await completeBugFixChallenge(slug, lang)
+  })
 
   const [isFormatting, setIsFormatting] = useState<boolean>(false)
 
@@ -309,217 +307,201 @@ export const BugFixChallengeView = ({
       : dict.active.waitingForEditor
 
   return (
-    <main
-      data-pg-main
-      className="relative z-1 flex h-full flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
-    >
-      <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
-        <PlaygroundBreadcrumb
-          playgroundPath={playgroundPath}
-          challengePath={challengePath}
-          title={title}
-          inProgressLabel={dict.status.inProgress}
-        />
-
-        {/* two-column layout */}
-        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] grid-rows-1 gap-10 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none">
-          {/* ── left column: editor ── */}
-          <div className="min-w-0 min-[901px]:pb-10">
+    <ChallengeLayout
+      gridClassName="grid min-h-0 flex-1 grid-cols-[1fr_340px] grid-rows-1 gap-10 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none"
+      playgroundPath={playgroundPath}
+      challengePath={challengePath}
+      title={title}
+      inProgressLabel={dict.status.inProgress}
+      mainContent={
+        <div className="min-w-0 min-[901px]:pb-10">
+          <div
+            className={`flex h-full min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border transition-colors duration-200 ${
+              showSolution ? "border-amber-500/40" : "border-line"
+            }`}
+          >
+            {/* file header */}
             <div
-              className={`flex h-full min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border transition-colors duration-200 ${
-                showSolution ? "border-amber-500/40" : "border-line"
+              className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
+                showSolution ? "border-amber-500/30 bg-amber-500/[0.04]" : "border-line bg-bg-elev"
               }`}
             >
-              {/* file header */}
-              <div
-                className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
-                  showSolution
-                    ? "border-amber-500/30 bg-amber-500/[0.04]"
-                    : "border-line bg-bg-elev"
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
-                  {showSolution && (
-                    <span className="rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[10px] tracking-widest text-amber-400 uppercase">
-                      diff
+              <div className="flex items-center gap-2.5">
+                <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
+                {showSolution && (
+                  <span className="rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[10px] tracking-widest text-amber-400 uppercase">
+                    diff
+                  </span>
+                )}
+                {showSolution && (
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-green-400">
+                      <span className="size-1.5 rounded-full bg-green-400" /> added
                     </span>
-                  )}
-                  {showSolution && (
-                    <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-green-400">
-                        <span className="size-1.5 rounded-full bg-green-400" /> added
-                      </span>
-                      <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-red-400">
-                        <span className="size-1.5 rounded-full bg-red-400" /> removed
-                      </span>
-                    </div>
-                  )}
-                </div>
-                {showSolution ? (
+                    <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-red-400">
+                      <span className="size-1.5 rounded-full bg-red-400" /> removed
+                    </span>
+                  </div>
+                )}
+              </div>
+              {showSolution ? (
+                <button
+                  type="button"
+                  onClick={handleToggleSolution}
+                  className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+                >
+                  {dict.active.backToEdit}
+                </button>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleFormat().catch(() => undefined)
+                    }}
+                    disabled={isFormatting}
+                    className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease) disabled:opacity-40"
+                  >
+                    {isFormatting ? "formatting…" : "format"}
+                  </button>
+                  <span className="text-fg-faint font-mono text-[11.5px] select-none">·</span>
                   <button
                     type="button"
                     onClick={handleToggleSolution}
                     className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
                   >
-                    {dict.active.backToEdit}
+                    {dict.active.viewSolution}
                   </button>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleFormat().catch(() => undefined)
-                      }}
-                      disabled={isFormatting}
-                      className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease) disabled:opacity-40"
-                    >
-                      {isFormatting ? "formatting…" : "format"}
-                    </button>
-                    <span className="text-fg-faint font-mono text-[11.5px] select-none">·</span>
-                    <button
-                      type="button"
-                      onClick={handleToggleSolution}
-                      className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
-                    >
-                      {dict.active.viewSolution}
-                    </button>
-                    <kbd className="border-line bg-bg-card text-fg-muted rounded px-1.5 py-0.5 font-mono text-[10px]">
-                      {typeof navigator !== "undefined" && navigator.platform.includes("Mac")
-                        ? "⌘↵ run"
-                        : "Ctrl+↵ run"}
-                    </kbd>
-                  </div>
-                )}
-              </div>
+                  <kbd className="border-line bg-bg-card text-fg-muted rounded px-1.5 py-0.5 font-mono text-[10px]">
+                    {typeof navigator !== "undefined" && navigator.platform.includes("Mac")
+                      ? "⌘↵ run"
+                      : "Ctrl+↵ run"}
+                  </kbd>
+                </div>
+              )}
+            </div>
 
-              <div className="min-h-0 flex-1">
-                {showSolution ? (
-                  <DiffView original={originalCode} solution={template.solutionCode} />
-                ) : (
-                  <Editor
-                    height="100%"
-                    language="typescript"
-                    theme="ob-dark"
-                    path={`file:///${template.editableFile}`}
-                    value={code}
-                    onChange={handleEditorChange}
-                    onMount={handleEditorMount}
-                    beforeMount={configureMonaco}
-                    options={{
-                      minimap: { enabled: false },
-                      fontSize: 13,
-                      lineHeight: 22,
-                      fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
-                      fontLigatures: true,
-                      scrollBeyondLastLine: false,
-                      padding: { top: 16, bottom: 16 },
-                      renderLineHighlight: "line",
-                      overviewRulerBorder: false,
-                      hideCursorInOverviewRuler: true,
-                      scrollbar: { verticalScrollbarSize: 4, horizontalScrollbarSize: 4 },
-                      contextmenu: false,
-                    }}
-                  />
-                )}
-              </div>
+            <div className="min-h-0 flex-1">
+              {showSolution ? (
+                <DiffView original={originalCode} solution={template.solutionCode} />
+              ) : (
+                <Editor
+                  height="100%"
+                  language="typescript"
+                  theme="ob-dark"
+                  path={`file:///${template.editableFile}`}
+                  value={code}
+                  onChange={handleEditorChange}
+                  onMount={handleEditorMount}
+                  beforeMount={configureMonaco}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    lineHeight: 22,
+                    fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
+                    fontLigatures: true,
+                    scrollBeyondLastLine: false,
+                    padding: { top: 16, bottom: 16 },
+                    renderLineHighlight: "line",
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    scrollbar: { verticalScrollbarSize: 4, horizontalScrollbarSize: 4 },
+                    contextmenu: false,
+                  }}
+                />
+              )}
             </div>
           </div>
+        </div>
+      }
+      sidebarContent={
+        <aside className="max-[900px]:order-first">
+          <ScrollArea className="h-full">
+            <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
+              <ChallengeSidebarHeader
+                title={title}
+                challengePath={challengePath}
+                exitLabel={dict.active.exitLabel}
+              />
 
-          {/* ── right column ── */}
-          <aside className="max-[900px]:order-first">
-            <ScrollArea className="h-full">
-              <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
-                {/* title + exit */}
-                <ChallengeSidebarHeader
-                  title={title}
-                  challengePath={challengePath}
-                  exitLabel={dict.active.exitLabel}
-                />
+              <div className="border-line border-t" />
 
-                <div className="border-line border-t" />
-
-                {/* test results */}
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-                      {dict.active.testsLabel}
-                    </p>
-                    <span
-                      className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
-                    >
-                      {testState.status === "running" ? (
-                        <span className="flex items-center gap-1.5">
-                          <span className="border-fg-faint size-3 animate-spin rounded-full border border-t-transparent" />
-                          {dict.active.running}
-                        </span>
-                      ) : (
-                        passLabel
-                      )}
-                    </span>
-                  </div>
-
-                  {testState.compileError !== null && (
-                    <div className="rounded-[var(--r-8)] border border-red-500/20 bg-red-500/[0.03] p-3">
-                      <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
-                        {dict.active.syntaxError}
-                      </p>
-                      <p className="text-fg-muted font-mono text-[11px] leading-relaxed">
-                        {dict.active.fixSyntax}
-                      </p>
-                    </div>
-                  )}
-                  {testState.compileError === null && testState.tests.length === 0 && (
-                    <p className="text-fg-muted font-mono text-[11.5px]">
-                      {dict.active.editToStart}
-                    </p>
-                  )}
-                  {testState.compileError === null && testState.tests.length > 0 && (
-                    <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-[var(--r-8)] border p-3">
-                      {testState.tests.map((test, i) => (
-                        <TestCard key={test.name} test={test} index={i} />
-                      ))}
-                    </div>
-                  )}
-
-                  {allTestsPassing && !hasTypeErrors && (
-                    <div className="border-accent-ring bg-accent-soft rounded-[var(--r-8)] border px-3 py-2.5">
-                      <p className="text-ob-accent font-mono text-[12px]">
-                        {dict.active.allTestsPassing}
-                      </p>
-                    </div>
-                  )}
-                  {allTestsPassing && hasTypeErrors && (
-                    <div className="rounded-[var(--r-8)] border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5">
-                      <p className="font-mono text-[12px] text-amber-400">
-                        {dict.active.fixTypeErrors}
-                      </p>
-                    </div>
-                  )}
+              {/* test results */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
+                    {dict.active.testsLabel}
+                  </p>
+                  <span
+                    className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
+                  >
+                    {testState.status === "running" ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="border-fg-faint size-3 animate-spin rounded-full border border-t-transparent" />
+                        {dict.active.running}
+                      </span>
+                    ) : (
+                      passLabel
+                    )}
+                  </span>
                 </div>
 
-                {/* submit */}
-                <ChallengeSubmitButton
-                  label={dict.active.submitButton}
-                  submittingLabel={dict.active.submitting}
-                  disabled={!canSubmit || isPending}
-                  isPending={isPending}
-                  onClick={handleSubmit}
-                />
+                {testState.compileError !== null && (
+                  <div className="rounded-[var(--r-8)] border border-red-500/20 bg-red-500/[0.03] p-3">
+                    <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
+                      {dict.active.syntaxError}
+                    </p>
+                    <p className="text-fg-muted font-mono text-[11px] leading-relaxed">
+                      {dict.active.fixSyntax}
+                    </p>
+                  </div>
+                )}
+                {testState.compileError === null && testState.tests.length === 0 && (
+                  <p className="text-fg-muted font-mono text-[11.5px]">{dict.active.editToStart}</p>
+                )}
+                {testState.compileError === null && testState.tests.length > 0 && (
+                  <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-[var(--r-8)] border p-3">
+                    {testState.tests.map((test, i) => (
+                      <TestCard key={test.name} test={test} index={i} />
+                    ))}
+                  </div>
+                )}
 
-                <div className="border-line border-t" />
-
-                {/* hints */}
-                <HintPanel
-                  hints={activeHints}
-                  revealLabel={dict.active.revealHint}
-                  hintsLabel={dict.active.hintsLabel}
-                />
+                {allTestsPassing && !hasTypeErrors && (
+                  <div className="border-accent-ring bg-accent-soft rounded-[var(--r-8)] border px-3 py-2.5">
+                    <p className="text-ob-accent font-mono text-[12px]">
+                      {dict.active.allTestsPassing}
+                    </p>
+                  </div>
+                )}
+                {allTestsPassing && hasTypeErrors && (
+                  <div className="rounded-[var(--r-8)] border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5">
+                    <p className="font-mono text-[12px] text-amber-400">
+                      {dict.active.fixTypeErrors}
+                    </p>
+                  </div>
+                )}
               </div>
-            </ScrollArea>
-          </aside>
-        </div>
-      </div>
-    </main>
+
+              <ChallengeSubmitButton
+                label={dict.active.submitButton}
+                submittingLabel={dict.active.submitting}
+                disabled={!canSubmit || isPending}
+                isPending={isPending}
+                onClick={handleSubmit}
+              />
+
+              <div className="border-line border-t" />
+
+              <HintPanel
+                hints={activeHints}
+                revealLabel={dict.active.revealHint}
+                hintsLabel={dict.active.hintsLabel}
+              />
+            </div>
+          </ScrollArea>
+        </aside>
+      }
+    />
   )
 }

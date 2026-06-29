@@ -1,15 +1,16 @@
 "use client"
 
 import type React from "react"
-import { useState, useTransition, useRef, useCallback } from "react"
+import { useState, useRef, useCallback } from "react"
 import { saveReviewState, completeChallenge } from "@/app/actions/playground"
 import type { InlineComment, ReviewDecision } from "@/lib/playground/review-types"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { DiffFile } from "@/components/playground/DiffViewer"
 import { DiffViewer } from "@/components/playground/DiffViewer"
 import { ReviewPanel } from "@/components/playground/ReviewPanel"
-import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { ChallengeLayout } from "@/components/playground/ChallengeLayout"
 import { ChallengeSidebarHeader } from "@/components/playground/ChallengeSidebarHeader"
+import { useChallengeSubmit } from "@/components/playground/useChallengeSubmit"
 
 const AUTOSAVE_DELAY_MS = 800
 
@@ -38,7 +39,6 @@ export const ActiveChallengeView = ({
 }: ActiveChallengeViewProps): React.ReactElement => {
   const [comments, setComments] = useState<InlineComment[]>(initialComments)
   const [decision, setDecision] = useState<ReviewDecision>(initialDecision)
-  const [isPending, startTransition] = useTransition()
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const scheduleAutoSave = useCallback(
@@ -85,89 +85,77 @@ export const ActiveChallengeView = ({
     [comments, slug, lang]
   )
 
-  const handleSubmit = useCallback((): void => {
+  const { isPending, handleSubmit } = useChallengeSubmit(async () => {
     if (saveTimeoutRef.current !== null) {
       clearTimeout(saveTimeoutRef.current)
       saveTimeoutRef.current = null
     }
-    startTransition(async () => {
-      await saveReviewState(slug, lang, comments, decision)
-      await completeChallenge(slug, lang)
-    })
-  }, [slug, lang, comments, decision])
+    await saveReviewState(slug, lang, comments, decision)
+    await completeChallenge(slug, lang)
+  })
 
   return (
-    <main
-      data-pg-main
-      className="relative z-1 flex h-[calc(100dvh-60px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
-    >
-      <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
-        <PlaygroundBreadcrumb
-          playgroundPath={playgroundPath}
-          challengePath={challengePath}
-          title={title}
-          inProgressLabel={dict.status.inProgress}
-        />
-
-        {/* two-column layout */}
-        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10 max-[900px]:grid-cols-1">
-          {/* ── left column: diff viewer ── */}
-          <div className="min-w-0 min-[901px]:overflow-y-auto min-[901px]:pb-10">
-            {diffFiles === null ? (
-              <div className="border-line bg-bg-elev flex h-full min-h-[200px] items-center justify-center rounded-[var(--r-12)] border border-dashed">
-                <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
-              </div>
-            ) : (
-              <DiffViewer
-                files={diffFiles}
-                comments={comments}
-                onAddComment={handleAddComment}
-                onDeleteComment={handleDeleteComment}
-                dict={{
-                  addComment: dict.active.addComment,
-                  cancelComment: dict.active.cancelComment,
-                  deleteComment: dict.active.deleteComment,
-                  commentPlaceholder: dict.active.commentPlaceholder,
-                }}
-              />
-            )}
-          </div>
-
-          {/* ── right column: review panel ── */}
-          <aside className="max-[900px]:order-first min-[901px]:overflow-y-auto min-[901px]:pb-10">
-            <div className="flex flex-col gap-6">
-              {/* title + exit */}
-              <ChallengeSidebarHeader
-                title={title}
-                challengePath={challengePath}
-                exitLabel={dict.active.exitLabel}
-              />
-
-              <div className="border-line border-t" />
-
-              <ReviewPanel
-                commentsCount={comments.length}
-                decision={decision}
-                onDecisionChange={handleDecisionChange}
-                onSubmit={handleSubmit}
-                isPending={isPending}
-                dict={{
-                  submitButton: dict.active.submitButton,
-                  submitting: dict.active.submitting,
-                  decisionLabel: dict.active.decisionLabel,
-                  decisionApprove: dict.active.decisionApprove,
-                  decisionComment: dict.active.decisionComment,
-                  decisionRequestChanges: dict.active.decisionRequestChanges,
-                  commentSingular: dict.active.commentSingular,
-                  commentPlural: dict.active.commentPlural,
-                  noComments: dict.active.noComments,
-                  submitRequirements: dict.active.submitRequirements,
-                }}
-              />
+    <ChallengeLayout
+      mainClassName="relative z-1 flex h-[calc(100dvh-60px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
+      playgroundPath={playgroundPath}
+      challengePath={challengePath}
+      title={title}
+      inProgressLabel={dict.status.inProgress}
+      mainContent={
+        <div className="min-w-0 min-[901px]:overflow-y-auto min-[901px]:pb-10">
+          {diffFiles === null ? (
+            <div className="border-line bg-bg-elev flex h-full min-h-[200px] items-center justify-center rounded-[var(--r-12)] border border-dashed">
+              <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
             </div>
-          </aside>
+          ) : (
+            <DiffViewer
+              files={diffFiles}
+              comments={comments}
+              onAddComment={handleAddComment}
+              onDeleteComment={handleDeleteComment}
+              dict={{
+                addComment: dict.active.addComment,
+                cancelComment: dict.active.cancelComment,
+                deleteComment: dict.active.deleteComment,
+                commentPlaceholder: dict.active.commentPlaceholder,
+              }}
+            />
+          )}
         </div>
-      </div>
-    </main>
+      }
+      sidebarContent={
+        <aside className="max-[900px]:order-first min-[901px]:overflow-y-auto min-[901px]:pb-10">
+          <div className="flex flex-col gap-6">
+            <ChallengeSidebarHeader
+              title={title}
+              challengePath={challengePath}
+              exitLabel={dict.active.exitLabel}
+            />
+
+            <div className="border-line border-t" />
+
+            <ReviewPanel
+              commentsCount={comments.length}
+              decision={decision}
+              onDecisionChange={handleDecisionChange}
+              onSubmit={handleSubmit}
+              isPending={isPending}
+              dict={{
+                submitButton: dict.active.submitButton,
+                submitting: dict.active.submitting,
+                decisionLabel: dict.active.decisionLabel,
+                decisionApprove: dict.active.decisionApprove,
+                decisionComment: dict.active.decisionComment,
+                decisionRequestChanges: dict.active.decisionRequestChanges,
+                commentSingular: dict.active.commentSingular,
+                commentPlural: dict.active.commentPlural,
+                noComments: dict.active.noComments,
+                submitRequirements: dict.active.submitRequirements,
+              }}
+            />
+          </div>
+        </aside>
+      }
+    />
   )
 }
