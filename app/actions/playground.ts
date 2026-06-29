@@ -13,35 +13,33 @@ import type {
   GitBlockResolution,
   DocsSnapshot,
 } from "@/lib/playground/review-types"
+import {
+  ensureSession,
+  saveSnapshot,
+  getInProgressSnapshot,
+  markSessionCompleted,
+  awardTrackBadge,
+} from "@/lib/playground/session-service"
+
+const getAuthContext = async () => {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  return { supabase, user }
+}
+
+const resultHref = (lang: string, slug: string): string =>
+  localizedHref(lang, `/playground/${slug}/active/result`)
 
 export const startChallengeSession = async (
   slug: string,
   lang: string,
   activePath: string
 ): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  const { data: existing } = await supabase
-    .from("challenge_sessions")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .maybeSingle()
-
-  if (existing === null) {
-    await supabase.from("challenge_sessions").insert({
-      user_id: user.id,
-      challenge_slug: slug,
-      lang,
-      status: "in_progress",
-    })
-  }
-
+  await ensureSession(supabase, user.id, slug, lang)
   redirect(activePath)
 }
 
@@ -51,124 +49,37 @@ export const saveReviewState = async (
   comments: InlineComment[],
   decision: ReviewDecision
 ): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  await supabase
-    .from("challenge_sessions")
-    .update({ snapshot: { comments, decision } satisfies ReviewSnapshot })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
+  await saveSnapshot(supabase, user.id, slug, { comments, decision } satisfies ReviewSnapshot)
 }
 
 export const completeChallenge = async (slug: string, lang: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
 
-  const { data: session } = await supabase
-    .from("challenge_sessions")
-    .select("snapshot")
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .maybeSingle()
-
-  const snapshot = session?.snapshot as ReviewSnapshot | null
+  const snapshot = (await getInProgressSnapshot(supabase, user.id, slug)) as ReviewSnapshot | null
   if ((snapshot?.comments?.length ?? 0) === 0 || snapshot?.decision == null) return
 
-  const { data: completedSession } = await supabase
-    .from("challenge_sessions")
-    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .select("id")
-
-  if ((completedSession?.length ?? 0) === 0) return
-
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("badge", "review-corps")
-    .maybeSingle()
-
-  if (existingBadge === null) {
-    const { data: completedReviews } = await supabase
-      .from("challenge_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .like("challenge_slug", "code-review-%")
-
-    if ((completedReviews?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "review-corps" })
-    }
-  }
-
-  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
+  if (!completed) return
+  await awardTrackBadge(supabase, user.id, slug)
+  redirect(resultHref(lang, slug))
 }
 
 export const saveBugFixState = async (slug: string, lang: string, code: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  await supabase
-    .from("challenge_sessions")
-    .update({ snapshot: { code } satisfies BugFixSnapshot })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
+  await saveSnapshot(supabase, user.id, slug, { code } satisfies BugFixSnapshot)
 }
 
 export const completeBugFixChallenge = async (slug: string, lang: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  const { data: completedBugSession } = await supabase
-    .from("challenge_sessions")
-    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .select("id")
-
-  if ((completedBugSession?.length ?? 0) === 0) return
-
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("badge", "ship-it")
-    .maybeSingle()
-
-  if (existingBadge === null) {
-    const { data: completedBugFixes } = await supabase
-      .from("challenge_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .like("challenge_slug", "bug-fix-%")
-
-    if ((completedBugFixes?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "ship-it" })
-    }
-  }
-
-  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
+  if (!completed) return
+  await awardTrackBadge(supabase, user.id, slug)
+  redirect(resultHref(lang, slug))
 }
 
 export const saveTestingState = async (
@@ -176,58 +87,18 @@ export const saveTestingState = async (
   lang: string,
   testCode: string
 ): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  await supabase
-    .from("challenge_sessions")
-    .update({ snapshot: { testCode } satisfies TestingSnapshot })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
+  await saveSnapshot(supabase, user.id, slug, { testCode } satisfies TestingSnapshot)
 }
 
 export const completeTestingChallenge = async (slug: string, lang: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  const { data: completedTestingSession } = await supabase
-    .from("challenge_sessions")
-    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .select("id")
-
-  if ((completedTestingSession?.length ?? 0) === 0) return
-
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("badge", "coverage-hero")
-    .maybeSingle()
-
-  if (existingBadge === null) {
-    const { data: completedTests } = await supabase
-      .from("challenge_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .like("challenge_slug", "testing-%")
-
-    if ((completedTests?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "coverage-hero" })
-    }
-  }
-
-  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
+  if (!completed) return
+  await awardTrackBadge(supabase, user.id, slug)
+  redirect(resultHref(lang, slug))
 }
 
 export const saveGitState = async (
@@ -236,111 +107,31 @@ export const saveGitState = async (
   code: string,
   resolutions: readonly GitBlockResolution[]
 ): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  await supabase
-    .from("challenge_sessions")
-    .update({ snapshot: { code, resolutions } satisfies GitSnapshot })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
+  await saveSnapshot(supabase, user.id, slug, { code, resolutions } satisfies GitSnapshot)
 }
 
 export const saveDocsState = async (slug: string, lang: string, content: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  await supabase
-    .from("challenge_sessions")
-    .update({ snapshot: { content } satisfies DocsSnapshot })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
+  await saveSnapshot(supabase, user.id, slug, { content } satisfies DocsSnapshot)
 }
 
 export const completeDocsChallenge = async (slug: string, lang: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  const { data: completedDocsSession } = await supabase
-    .from("challenge_sessions")
-    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .select("id")
-
-  if ((completedDocsSession?.length ?? 0) === 0) return
-
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("badge", "doc-writer")
-    .maybeSingle()
-
-  if (existingBadge === null) {
-    const { data: completedDocsChallenges } = await supabase
-      .from("challenge_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .like("challenge_slug", "docs-%")
-
-    if ((completedDocsChallenges?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "doc-writer" })
-    }
-  }
-
-  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
+  if (!completed) return
+  await awardTrackBadge(supabase, user.id, slug)
+  redirect(resultHref(lang, slug))
 }
 
 export const completeGitChallenge = async (slug: string, lang: string): Promise<void> => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user } = await getAuthContext()
   if (user === null) return
-
-  const { data: completedGitSession } = await supabase
-    .from("challenge_sessions")
-    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
-    .eq("user_id", user.id)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .select("id")
-
-  if ((completedGitSession?.length ?? 0) === 0) return
-
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("badge", "first-merge")
-    .maybeSingle()
-
-  if (existingBadge === null) {
-    const { data: completedGitChallenges } = await supabase
-      .from("challenge_sessions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "completed")
-      .like("challenge_slug", "git-%")
-
-    if ((completedGitChallenges?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "first-merge" })
-    }
-  }
-
-  redirect(localizedHref(lang, `/playground/${slug}/active/result`))
+  const completed = await markSessionCompleted(supabase, user.id, slug, lang)
+  if (!completed) return
+  await awardTrackBadge(supabase, user.id, slug)
+  redirect(resultHref(lang, slug))
 }
