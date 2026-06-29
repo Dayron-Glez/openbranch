@@ -1,11 +1,12 @@
 "use client"
 
-import { useState, useCallback, useRef, useTransition } from "react"
+import { useState, useCallback, useRef } from "react"
 import { saveGitState, completeGitChallenge } from "@/app/actions/playground"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { GitTemplate } from "@/lib/playground/git-templates/git-merge-conflict"
 import type { GitBlockResolution } from "@/lib/playground/review-types"
 import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcrumb"
+import { useChallengeSubmit } from "@/components/playground/useChallengeSubmit"
 import { useMergeEditor } from "./useMergeEditor"
 import { useMergeRunner } from "./useMergeRunner"
 import { MergeEditorPane } from "./MergeEditorPane"
@@ -37,7 +38,6 @@ export const GitChallengeView = ({
   dict,
 }: Readonly<GitChallengeViewProps>) => {
   const [showSolution, setShowSolution] = useState<boolean>(false)
-  const [isPending, startTransition] = useTransition()
 
   const resolvedInitially =
     initialResolutions?.filter((resolution) => resolution.resolution !== null).length ?? 0
@@ -92,12 +92,10 @@ export const GitChallengeView = ({
     setShowSolution((previous) => !previous)
   }, [])
 
-  const handleSubmit = useCallback((): void => {
-    startTransition(async () => {
-      await saveGitState(slug, lang, codeRef.current, resolutionsRef.current)
-      await completeGitChallenge(slug, lang)
-    })
-  }, [slug, lang])
+  const { isPending, handleSubmit } = useChallengeSubmit(async () => {
+    await saveGitState(slug, lang, codeRef.current, resolutionsRef.current)
+    await completeGitChallenge(slug, lang)
+  })
 
   const handleReset = useCallback((): void => {
     setConflictsRemaining(template.conflictCount)
