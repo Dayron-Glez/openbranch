@@ -1,9 +1,6 @@
-import type { DiffFile } from "@/lib/playground/domain/diff"
 import { codeReviewNoisyPrDiff } from "./diffs/code-review-noisy-pr"
+import { createChallengeRegistry } from "./create-registry"
 
-const DIFF_REGISTRY: Record<string, readonly DiffFile[]> = {
+export const getDiffBySlug = createChallengeRegistry({
   "code-review-noisy-pr": codeReviewNoisyPrDiff,
-}
-
-export const getDiffBySlug = (slug: string): readonly DiffFile[] | null =>
-  DIFF_REGISTRY[slug] ?? null
+})
