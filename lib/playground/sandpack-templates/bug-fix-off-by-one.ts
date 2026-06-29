@@ -85,13 +85,10 @@ export const paginate = <T>(
   }
 }`
 
-export type BugFixTemplateFile = {
-  readonly code: string
-  readonly readOnly?: boolean
-}
+import type { TemplateFile } from "@/lib/playground/domain/template"
 
 export type BugFixTemplate = {
-  readonly files: Record<string, BugFixTemplateFile>
+  readonly files: Record<string, TemplateFile>
   readonly editableFile: string
   readonly testFile: string
   readonly solutionCode: string
