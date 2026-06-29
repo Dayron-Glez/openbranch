@@ -30,7 +30,6 @@ export const startChallengeSession = async (
     .select("id")
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .maybeSingle()
 
@@ -63,7 +62,6 @@ export const saveReviewState = async (
     .update({ snapshot: { comments, decision } satisfies ReviewSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
 }
 
@@ -79,7 +77,6 @@ export const completeChallenge = async (slug: string, lang: string): Promise<voi
     .select("snapshot")
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .maybeSingle()
 
@@ -88,10 +85,9 @@ export const completeChallenge = async (slug: string, lang: string): Promise<voi
 
   const { data: completedSession } = await supabase
     .from("challenge_sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .select("id")
 
@@ -132,7 +128,6 @@ export const saveBugFixState = async (slug: string, lang: string, code: string):
     .update({ snapshot: { code } satisfies BugFixSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
 }
 
@@ -145,10 +140,9 @@ export const completeBugFixChallenge = async (slug: string, lang: string): Promi
 
   const { data: completedBugSession } = await supabase
     .from("challenge_sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .select("id")
 
@@ -193,7 +187,6 @@ export const saveTestingState = async (
     .update({ snapshot: { testCode } satisfies TestingSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
 }
 
@@ -206,10 +199,9 @@ export const completeTestingChallenge = async (slug: string, lang: string): Prom
 
   const { data: completedTestingSession } = await supabase
     .from("challenge_sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .select("id")
 
@@ -255,7 +247,6 @@ export const saveGitState = async (
     .update({ snapshot: { code, resolutions } satisfies GitSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
 }
 
@@ -271,7 +262,6 @@ export const saveDocsState = async (slug: string, lang: string, content: string)
     .update({ snapshot: { content } satisfies DocsSnapshot })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
 }
 
@@ -284,10 +274,9 @@ export const completeDocsChallenge = async (slug: string, lang: string): Promise
 
   const { data: completedDocsSession } = await supabase
     .from("challenge_sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .select("id")
 
@@ -325,10 +314,9 @@ export const completeGitChallenge = async (slug: string, lang: string): Promise<
 
   const { data: completedGitSession } = await supabase
     .from("challenge_sessions")
-    .update({ status: "completed", completed_at: new Date().toISOString() })
+    .update({ status: "completed", lang, completed_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
     .select("id")
 
