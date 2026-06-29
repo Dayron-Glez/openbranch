@@ -56,6 +56,7 @@ export type PlaygroundDict = {
     readonly exitFullscreen: string
     readonly docsChecklistHeading: string
     readonly docsSubmitButton: string
+    readonly docsAllCriteriaMet: string
   }
   readonly result: {
     readonly heading: string
@@ -332,6 +333,10 @@ const translations = {
   "active.exitFullscreen": { es: "Salir de pantalla completa", en: "Exit fullscreen" },
   "active.docsChecklistHeading": { es: "Lista de criterios", en: "Documentation checklist" },
   "active.docsSubmitButton": { es: "Enviar documentación", en: "Submit documentation" },
+  "active.docsAllCriteriaMet": {
+    es: "¡Todos los criterios cumplidos — listo para enviar!",
+    en: "All criteria met — ready to submit!",
+  },
   "result.heading": { es: "Reto", en: "Challenge" },
   "result.headingAccent": { es: "completado", en: "complete" },
   "result.body": {
@@ -456,6 +461,7 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       exitFullscreen: tx("active.exitFullscreen"),
       docsChecklistHeading: tx("active.docsChecklistHeading"),
       docsSubmitButton: tx("active.docsSubmitButton"),
+      docsAllCriteriaMet: tx("active.docsAllCriteriaMet"),
     },
     result: {
       heading: tx("result.heading"),

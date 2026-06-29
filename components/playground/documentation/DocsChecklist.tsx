@@ -24,6 +24,8 @@ export const DocsChecklist = ({
   }))
 
   const passedCount = results.filter((r) => r.passed).length
+  const allPassed = passedCount === criteria.length
+  const canSubmit = allPassed && !isPending
 
   return (
     <div className="flex flex-col gap-4">
@@ -31,7 +33,9 @@ export const DocsChecklist = ({
         <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
           {dict.active.docsChecklistHeading}
         </p>
-        <span className="text-fg-muted font-mono text-[11.5px] tabular-nums">
+        <span
+          className={`font-mono text-[11.5px] tabular-nums ${allPassed ? "text-ob-accent" : "text-fg-muted"}`}
+        >
           {passedCount}/{criteria.length}
         </span>
       </div>
@@ -54,10 +58,16 @@ export const DocsChecklist = ({
         ))}
       </div>
 
+      {allPassed && (
+        <div className="border-accent-ring bg-accent-soft rounded-[var(--r-8)] border px-3 py-2.5">
+          <p className="text-ob-accent font-mono text-[12px]">{dict.active.docsAllCriteriaMet}</p>
+        </div>
+      )}
+
       <button
         type="button"
         onClick={onSubmit}
-        disabled={isPending}
+        disabled={!canSubmit}
         className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
       >
         {isPending ? (
