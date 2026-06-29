@@ -133,6 +133,16 @@ export default async function PlaygroundPage({
     for (const b of badges ?? []) {
       earnedBadges.add(b.badge as string)
     }
+    // Infer category badges from completed sessions as a reliable fallback,
+    // in case the award action failed to insert into user_badges.
+    for (const [challengeSlug, status] of slugToStatus) {
+      if (status !== "completed") continue
+      if (challengeSlug.startsWith("git-")) earnedBadges.add("first-merge")
+      else if (challengeSlug.startsWith("docs-")) earnedBadges.add("doc-writer")
+      else if (challengeSlug.startsWith("code-review-")) earnedBadges.add("review-corps")
+      else if (challengeSlug.startsWith("testing-")) earnedBadges.add("coverage-hero")
+      else if (challengeSlug.startsWith("bug-fix-")) earnedBadges.add("ship-it")
+    }
   }
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
