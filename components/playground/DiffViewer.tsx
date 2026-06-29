@@ -3,9 +3,9 @@
 import type React from "react"
 import { useState, useCallback } from "react"
 import type { InlineComment } from "@/lib/playground/review-types"
-import type { DiffLineType, DiffLine, DiffFile } from "@/lib/playground/domain/diff"
+import type { DiffLineType, DiffFile } from "@/lib/playground/domain/diff"
 
-export type { DiffLineType, DiffLine, DiffFile }
+export type { DiffLineType, DiffLine, DiffFile } from "@/lib/playground/domain/diff"
 
 type DiffViewerDict = {
   readonly addComment: string
