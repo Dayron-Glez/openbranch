@@ -114,17 +114,24 @@ export default async function PlaygroundPage({
 
   type SessionStatus = "in_progress" | "completed"
   const slugToStatus = new Map<string, SessionStatus>()
+  const earnedBadges = new Set<string>()
   if (user !== null) {
-    const { data: sessions } = await supabase
-      .from("challenge_sessions")
-      .select("challenge_slug, status")
-      .eq("user_id", user.id)
-      .in("status", ["in_progress", "completed"])
+    const [{ data: sessions }, { data: badges }] = await Promise.all([
+      supabase
+        .from("challenge_sessions")
+        .select("challenge_slug, status")
+        .eq("user_id", user.id)
+        .in("status", ["in_progress", "completed"]),
+      supabase.from("user_badges").select("badge").eq("user_id", user.id),
+    ])
     for (const s of sessions ?? []) {
       const slug = s.challenge_slug as string
       const status = s.status as SessionStatus
       const current = slugToStatus.get(slug)
       if (current !== "completed") slugToStatus.set(slug, status)
+    }
+    for (const b of badges ?? []) {
+      earnedBadges.add(b.badge as string)
     }
   }
 
@@ -253,7 +260,7 @@ export default async function PlaygroundPage({
 
       {activeCategory === undefined && activeSort === "recommended" && (
         <div className="mt-14">
-          <BadgesSection dict={dict.badges} />
+          <BadgesSection dict={dict.badges} earnedBadges={earnedBadges} />
         </div>
       )}
     </main>

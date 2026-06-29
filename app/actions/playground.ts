@@ -152,7 +152,7 @@ export const completeBugFixChallenge = async (slug: string, lang: string): Promi
     .from("user_badges")
     .select("id")
     .eq("user_id", user.id)
-    .eq("badge", "debug-master")
+    .eq("badge", "ship-it")
     .maybeSingle()
 
   if (existingBadge === null) {
@@ -164,7 +164,7 @@ export const completeBugFixChallenge = async (slug: string, lang: string): Promi
       .like("challenge_slug", "bug-fix-%")
 
     if ((completedBugFixes?.length ?? 0) >= 1) {
-      await supabase.from("user_badges").insert({ user_id: user.id, badge: "debug-master" })
+      await supabase.from("user_badges").insert({ user_id: user.id, badge: "ship-it" })
     }
   }
 
