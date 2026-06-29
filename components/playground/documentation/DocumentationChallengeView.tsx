@@ -11,6 +11,7 @@ import { PlaygroundBreadcrumb } from "@/components/playground/PlaygroundBreadcru
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { configureMonaco, EDITOR_OPTIONS } from "@/components/playground/monacoTheme"
 import { DocsChecklist } from "./DocsChecklist"
+import { HintPanel } from "@/components/playground/HintPanel"
 
 const AUTOSAVE_DELAY_MS = 800
 
@@ -35,6 +36,7 @@ export const DocumentationChallengeView = ({
   challengePath,
   dict,
 }: DocumentationChallengeViewProps) => {
+  const { hints } = template
   const originalContent = template.files[template.editableFile]?.code ?? ""
   const sourceFile = Object.entries(template.files).find(([, file]) => file.readOnly)
   const sourceFilename = sourceFile?.[0] ?? ""
@@ -83,7 +85,7 @@ export const DocumentationChallengeView = ({
       data-pg-main
       className="relative z-1 flex h-full flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
-      <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
+      <div className="flex min-h-0 w-full flex-1 flex-col px-4 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-3">
         <PlaygroundBreadcrumb
           playgroundPath={playgroundPath}
           challengePath={challengePath}
@@ -91,10 +93,11 @@ export const DocumentationChallengeView = ({
           inProgressLabel={dict.status.inProgress}
         />
 
-        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] grid-rows-1 gap-10 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none">
-          {/* ── left column: markdown editor ── */}
-          <div className="min-w-0 min-[901px]:pb-10">
-            <div className="border-line flex h-full min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border">
+        <div className="grid min-h-0 flex-1 grid-cols-[1fr_300px] grid-rows-1 gap-6 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none">
+          {/* ── editors area: markdown (75%) + source (25%) ── */}
+          <div className="grid min-h-0 min-w-0 grid-cols-[3fr_2fr] gap-3 max-[900px]:grid-cols-1 max-[900px]:gap-4 min-[901px]:pb-10">
+            {/* GATEWAY.md — editable */}
+            <div className="border-line flex min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border">
               <div className="border-line bg-bg-elev flex shrink-0 items-center border-b px-4 py-2.5">
                 <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
               </div>
@@ -114,9 +117,35 @@ export const DocumentationChallengeView = ({
                 />
               </div>
             </div>
+
+            {/* src/request.ts — read-only reference */}
+            <div className="border-line flex min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border max-[900px]:min-h-[280px]">
+              <div className="border-line bg-bg-elev flex shrink-0 items-center gap-2 border-b px-4 py-2.5">
+                <span className="text-fg-2 font-mono text-[12px]">{sourceFilename}</span>
+                <span className="text-fg-faint rounded bg-transparent px-1.5 py-0.5 font-mono text-[10px] ring-1 ring-current">
+                  {dict.active.readOnlyLabel}
+                </span>
+              </div>
+              <div className="min-h-0 flex-1">
+                <Editor
+                  height="100%"
+                  language="typescript"
+                  theme="ob-dark"
+                  path={`file:///${sourceFilename}`}
+                  value={sourceCode}
+                  beforeMount={configureMonaco}
+                  options={{
+                    ...EDITOR_OPTIONS,
+                    readOnly: true,
+                    fontSize: 12,
+                    lineHeight: 20,
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* ── right column: reference + checklist ── */}
+          {/* ── sidebar: checklist + submit ── */}
           <aside className="max-[900px]:order-first">
             <ScrollArea className="h-full">
               <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
@@ -147,36 +176,6 @@ export const DocumentationChallengeView = ({
 
                 <div className="border-line border-t" />
 
-                {/* reference file */}
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-                      {sourceFilename}
-                    </span>
-                    <span className="text-fg-faint rounded bg-transparent px-1.5 py-0.5 font-mono text-[10px] ring-1 ring-current">
-                      {dict.active.readOnlyLabel}
-                    </span>
-                  </div>
-                  <div className="border-line h-[220px] overflow-hidden rounded-[var(--r-8)] border">
-                    <Editor
-                      height="100%"
-                      language="typescript"
-                      theme="ob-dark"
-                      path={`file:///${sourceFilename}`}
-                      value={sourceCode}
-                      beforeMount={configureMonaco}
-                      options={{
-                        ...EDITOR_OPTIONS,
-                        readOnly: true,
-                        fontSize: 12,
-                        lineHeight: 20,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="border-line border-t" />
-
                 {/* checklist + submit */}
                 <DocsChecklist
                   criteria={criteria}
@@ -184,6 +183,14 @@ export const DocumentationChallengeView = ({
                   isPending={isPending}
                   dict={dict}
                   onSubmit={handleSubmit}
+                />
+
+                <div className="border-line border-t" />
+
+                <HintPanel
+                  hints={hints}
+                  revealLabel={dict.active.revealHint}
+                  hintsLabel={dict.active.hintsLabel}
                 />
               </div>
             </ScrollArea>

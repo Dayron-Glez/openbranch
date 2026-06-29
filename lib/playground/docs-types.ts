@@ -13,9 +13,11 @@ export type DocsCriterion = {
 export type DocsTemplateData = {
   readonly files: Record<string, DocsFile>
   readonly editableFile: string
+  readonly hints: readonly string[]
 }
 
 // Full template including check functions — only used server-side or imported directly in client modules.
 export type DocsTemplate = DocsTemplateData & {
   readonly criteria: readonly DocsCriterion[]
+  readonly hintsByLang?: Partial<Record<string, readonly string[]>>
 }

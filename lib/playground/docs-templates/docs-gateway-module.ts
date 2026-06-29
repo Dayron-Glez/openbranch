@@ -70,6 +70,20 @@ const criteria: readonly DocsCriterion[] = [
   },
 ]
 
+const hints: readonly string[] = [
+  "Focus on what `Promise<Response | null>` means at the call site — what must the caller do before using the return value?",
+  "The `timeoutMs` option has a default. Document it — a caller shouldn't need to read the source to know what 5000 means in context.",
+  "A runnable example shows the `null` guard before calling `.json()`. The import path is `atlas/gateway/request`.",
+]
+
+const hintsByLang: Partial<Record<string, readonly string[]>> = {
+  es: [
+    "Fíjate en lo que `Promise<Response | null>` significa en el punto de uso — ¿qué debe hacer el código que llama antes de usar el valor de retorno?",
+    "La opción `timeoutMs` tiene un valor por defecto. Documéntalo — quien llame a la función no debería tener que leer el código para saber qué significa 5000 en contexto.",
+    "Un ejemplo ejecutable muestra el guard de `null` antes de llamar a `.json()`. La ruta de import es `atlas/gateway/request`.",
+  ],
+}
+
 export const docsGatewayModule: DocsTemplate = {
   files: {
     "GATEWAY.md": { code: GATEWAY_MD_INITIAL },
@@ -77,4 +91,6 @@ export const docsGatewayModule: DocsTemplate = {
   },
   editableFile: "GATEWAY.md",
   criteria,
+  hints,
+  hintsByLang,
 }
