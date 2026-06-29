@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { i18n } from "@/lib/i18n"
-import { getPlaygroundDict } from "@/lib/playground-dictionary"
+import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
@@ -62,6 +62,45 @@ const applySort = (arr: readonly PlaygroundPage[], activeSort: SortKey): Playgro
 }
 
 type SessionStatus = "in_progress" | "completed"
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
+
+const loadUserPlaygroundData = async (
+  supabase: SupabaseServerClient,
+  userId: string
+): Promise<{ slugToStatus: Map<string, SessionStatus>; earnedBadges: Set<string> }> => {
+  const [{ data: sessions }, { data: badges }] = await Promise.all([
+    supabase
+      .from("challenge_sessions")
+      .select("challenge_slug, status")
+      .eq("user_id", userId)
+      .in("status", ["in_progress", "completed"]),
+    supabase.from("user_badges").select("badge").eq("user_id", userId),
+  ])
+
+  const slugToStatus = new Map<string, SessionStatus>()
+  for (const s of sessions ?? []) {
+    const slug = s.challenge_slug as string
+    const status = s.status as SessionStatus
+    if (slugToStatus.get(slug) !== "completed") slugToStatus.set(slug, status)
+  }
+
+  const earnedBadges = new Set<string>()
+  for (const b of badges ?? []) earnedBadges.add(b.badge as string)
+  for (const [slug, status] of slugToStatus) {
+    if (status !== "completed") continue
+    const badge = inferCategoryBadge(slug)
+    if (badge !== null) earnedBadges.add(badge)
+  }
+
+  return { slugToStatus, earnedBadges }
+}
+
+const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["status"]): string => {
+  if (s === "completed") return statusDict.completed
+  if (s === "in_progress") return statusDict.inProgress
+  return statusDict.notStarted
+}
 
 const inferCategoryBadge = (slug: string): string | null => {
   if (slug.startsWith("git-")) return "first-merge"
@@ -125,32 +164,10 @@ export default async function PlaygroundPage({
     data: { user },
   } = await supabase.auth.getUser()
 
-  const slugToStatus = new Map<string, SessionStatus>()
-  const earnedBadges = new Set<string>()
-  if (user !== null) {
-    const [{ data: sessions }, { data: badges }] = await Promise.all([
-      supabase
-        .from("challenge_sessions")
-        .select("challenge_slug, status")
-        .eq("user_id", user.id)
-        .in("status", ["in_progress", "completed"]),
-      supabase.from("user_badges").select("badge").eq("user_id", user.id),
-    ])
-    for (const s of sessions ?? []) {
-      const slug = s.challenge_slug as string
-      const status = s.status as SessionStatus
-      const current = slugToStatus.get(slug)
-      if (current !== "completed") slugToStatus.set(slug, status)
-    }
-    for (const b of badges ?? []) {
-      earnedBadges.add(b.badge as string)
-    }
-    for (const [challengeSlug, status] of slugToStatus) {
-      if (status !== "completed") continue
-      const badge = inferCategoryBadge(challengeSlug)
-      if (badge !== null) earnedBadges.add(badge)
-    }
-  }
+  const { slugToStatus, earnedBadges } =
+    user !== null
+      ? await loadUserPlaygroundData(supabase, user.id)
+      : { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -171,12 +188,6 @@ export default async function PlaygroundPage({
 
   const showFlatGrid =
     activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
-
-  const getStatusLabel = (s: SessionStatus | null): string => {
-    if (s === "completed") return dict.status.completed
-    if (s === "in_progress") return dict.status.inProgress
-    return dict.status.notStarted
-  }
 
   return (
     <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
@@ -222,7 +233,7 @@ export default async function PlaygroundPage({
           {filteredChallenges.map((challenge) => {
             const slug = challenge.url.split("/").pop() ?? ""
             const status = slugToStatus.get(slug) ?? null
-            const statusLabel = getStatusLabel(status)
+            const statusLabel = getStatusLabel(status, dict.status)
             return (
               <ChallengeCard
                 key={challenge.url}
@@ -257,7 +268,7 @@ export default async function PlaygroundPage({
                   {categoryChallenges.map((challenge) => {
                     const slug = challenge.url.split("/").pop() ?? ""
                     const status = slugToStatus.get(slug) ?? null
-                    const statusLabel = getStatusLabel(status)
+                    const statusLabel = getStatusLabel(status, dict.status)
                     return (
                       <ChallengeCard
                         key={challenge.url}
