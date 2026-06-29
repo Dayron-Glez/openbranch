@@ -114,7 +114,6 @@ export default async function ChallengePage({
       .select("status")
       .eq("user_id", user.id)
       .eq("challenge_slug", slug)
-      .eq("lang", lang)
       .in("status", ["in_progress", "completed"])
     const statuses = new Set((sessions ?? []).map((s) => s.status as string))
     if (statuses.has("in_progress")) {

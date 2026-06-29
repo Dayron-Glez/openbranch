@@ -2,6 +2,7 @@
 
 import type React from "react"
 import type { ReviewDecision } from "@/lib/playground/review-types"
+import { ChallengeSubmitButton } from "@/components/playground/ChallengeSubmitButton"
 
 type ReviewPanelDict = {
   readonly submitButton: string
@@ -92,21 +93,13 @@ export const ReviewPanel = ({
 
       {/* submit */}
       <div>
-        <button
-          type="button"
-          onClick={onSubmit}
+        <ChallengeSubmitButton
+          label={dict.submitButton}
+          submittingLabel={dict.submitting}
           disabled={!canSubmit || isPending}
-          className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-[var(--r-8)] font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
-        >
-          {isPending ? (
-            <>
-              <span className="size-3.5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              {dict.submitting}
-            </>
-          ) : (
-            dict.submitButton
-          )}
-        </button>
+          isPending={isPending}
+          onClick={onSubmit}
+        />
         {!canSubmit && (
           <p className="text-fg-muted mt-2 text-center font-mono text-[11px] leading-[1.5]">
             {dict.submitRequirements}

@@ -9,16 +9,19 @@ import { getDiffBySlug } from "@/lib/playground/diff-registry"
 import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
 import { getTestingTemplateBySlug } from "@/lib/playground/testing-registry"
 import { getGitTemplateBySlug } from "@/lib/playground/git-registry"
+import { getDocsTemplateBySlug } from "@/lib/playground/docs-registry"
 import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
 import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
 import { TestingChallengeView } from "@/components/playground/testing/TestingChallengeView"
 import { GitChallengeView } from "@/components/playground/git/GitChallengeView"
+import { DocumentationChallengeView } from "@/components/playground/documentation/DocumentationChallengeView"
 import type {
   ReviewSnapshot,
   BugFixSnapshot,
   TestingSnapshot,
   GitSnapshot,
   GitBlockResolution,
+  DocsSnapshot,
 } from "@/lib/playground/review-types"
 
 export function generateStaticParams() {
@@ -55,14 +58,16 @@ export default async function ActiveChallengePage({
     redirect(localizedHref(lang, `/playground/${slug}`))
   }
 
-  const { data: session } = await supabase
+  const { data: sessionRows } = await supabase
     .from("challenge_sessions")
     .select("snapshot")
     .eq("user_id", user.id)
     .eq("challenge_slug", slug)
-    .eq("lang", lang)
     .eq("status", "in_progress")
-    .maybeSingle()
+    .order("started_at", { ascending: false })
+    .limit(1)
+
+  const session = sessionRows?.[0] ?? null
 
   if (session === null) {
     redirect(localizedHref(lang, `/playground/${slug}`))
@@ -118,6 +123,32 @@ export default async function ActiveChallengePage({
         title={page.data.title}
         template={template}
         initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
+        slug={slug}
+        lang={lang}
+        playgroundPath={playgroundPath}
+        challengePath={challengePath}
+        dict={dict}
+      />
+    )
+  }
+
+  if (category === "documentation") {
+    const docsTemplate = getDocsTemplateBySlug(slug)
+    if (docsTemplate === null) notFound()
+    const docsSnapshot = session.snapshot as DocsSnapshot | null
+    // Pass only the serializable subset — criteria contain functions and cannot be
+    // sent as Server Component props to a Client Component.
+    const docsHints = docsTemplate.hintsByLang?.[lang] ?? docsTemplate.hints
+    const docsTemplateData = {
+      files: docsTemplate.files,
+      editableFile: docsTemplate.editableFile,
+      hints: docsHints,
+    }
+    return (
+      <DocumentationChallengeView
+        title={page.data.title}
+        template={docsTemplateData}
+        initialContent={docsSnapshot?.content ?? null}
         slug={slug}
         lang={lang}
         playgroundPath={playgroundPath}

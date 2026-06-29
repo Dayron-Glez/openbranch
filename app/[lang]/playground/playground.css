@@ -142,8 +142,8 @@
 
 .pg-prose ol li,
 .pg-prose ul li {
-  display: flex;
-  gap: 12px;
+  position: relative;
+  padding-left: 34px;
   color: var(--color-fg-2);
   font-size: 15px;
   line-height: 1.5;
@@ -153,7 +153,9 @@
 .pg-prose ol li::before,
 .pg-prose ul li::before {
   content: counter(s);
-  flex: none;
+  position: absolute;
+  left: 0;
+  top: 1px;
   width: 22px;
   height: 22px;
   border-radius: 999px;
@@ -164,8 +166,6 @@
   color: var(--color-fg-muted);
   display: grid;
   place-items: center;
-  margin-top: 1px;
-  flex-shrink: 0;
 }
 
 /* --- Test/regression result entrance — staggered fade + rise ---- */

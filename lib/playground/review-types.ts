@@ -29,3 +29,7 @@ export type GitSnapshot = {
   readonly code: string
   readonly resolutions?: readonly GitBlockResolution[]
 }
+
+export type DocsSnapshot = {
+  readonly content: string
+}

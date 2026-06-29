@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import type { ReactNode } from "react"
 import type { Metadata } from "next"
 import { i18n } from "@/lib/i18n"
-import { getPlaygroundDict } from "@/lib/playground-dictionary"
+import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
@@ -36,6 +36,80 @@ const VALID_SORTS = [
   "duration-desc",
 ] as const
 type SortKey = (typeof VALID_SORTS)[number]
+
+type PlaygroundPage = ReturnType<typeof playgroundSource.getPages>[number]
+
+const applySort = (arr: readonly PlaygroundPage[], activeSort: SortKey): PlaygroundPage[] => {
+  if (activeSort === "difficulty-asc") {
+    return [...arr].sort(
+      (a, b) =>
+        (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0)
+    )
+  }
+  if (activeSort === "difficulty-desc") {
+    return [...arr].sort(
+      (a, b) =>
+        (DIFFICULTY_SORT[b.data.difficulty] ?? 0) - (DIFFICULTY_SORT[a.data.difficulty] ?? 0)
+    )
+  }
+  if (activeSort === "duration-asc") {
+    return [...arr].sort((a, b) => a.data.estimated_minutes - b.data.estimated_minutes)
+  }
+  if (activeSort === "duration-desc") {
+    return [...arr].sort((a, b) => b.data.estimated_minutes - a.data.estimated_minutes)
+  }
+  return [...arr]
+}
+
+type SessionStatus = "in_progress" | "completed"
+
+type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
+
+const loadUserPlaygroundData = async (
+  supabase: SupabaseServerClient,
+  userId: string
+): Promise<{ slugToStatus: Map<string, SessionStatus>; earnedBadges: Set<string> }> => {
+  const [{ data: sessions }, { data: badges }] = await Promise.all([
+    supabase
+      .from("challenge_sessions")
+      .select("challenge_slug, status")
+      .eq("user_id", userId)
+      .in("status", ["in_progress", "completed"]),
+    supabase.from("user_badges").select("badge").eq("user_id", userId),
+  ])
+
+  const slugToStatus = new Map<string, SessionStatus>()
+  for (const s of sessions ?? []) {
+    const slug = s.challenge_slug as string
+    const status = s.status as SessionStatus
+    if (slugToStatus.get(slug) !== "completed") slugToStatus.set(slug, status)
+  }
+
+  const earnedBadges = new Set<string>()
+  for (const b of badges ?? []) earnedBadges.add(b.badge as string)
+  for (const [slug, status] of slugToStatus) {
+    if (status !== "completed") continue
+    const badge = inferCategoryBadge(slug)
+    if (badge !== null) earnedBadges.add(badge)
+  }
+
+  return { slugToStatus, earnedBadges }
+}
+
+const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["status"]): string => {
+  if (s === "completed") return statusDict.completed
+  if (s === "in_progress") return statusDict.inProgress
+  return statusDict.notStarted
+}
+
+const inferCategoryBadge = (slug: string): string | null => {
+  if (slug.startsWith("git-")) return "first-merge"
+  if (slug.startsWith("docs-")) return "doc-writer"
+  if (slug.startsWith("code-review-")) return "review-corps"
+  if (slug.startsWith("testing-")) return "coverage-hero"
+  if (slug.startsWith("bug-fix-")) return "ship-it"
+  return null
+}
 
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
@@ -76,28 +150,6 @@ export default async function PlaygroundPage({
       ? (sort as SortKey)
       : "recommended"
 
-  const applySort = (arr: typeof challenges): typeof challenges => {
-    if (activeSort === "difficulty-asc") {
-      return [...arr].sort(
-        (a, b) =>
-          (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0)
-      )
-    }
-    if (activeSort === "difficulty-desc") {
-      return [...arr].sort(
-        (a, b) =>
-          (DIFFICULTY_SORT[b.data.difficulty] ?? 0) - (DIFFICULTY_SORT[a.data.difficulty] ?? 0)
-      )
-    }
-    if (activeSort === "duration-asc") {
-      return [...arr].sort((a, b) => a.data.estimated_minutes - b.data.estimated_minutes)
-    }
-    if (activeSort === "duration-desc") {
-      return [...arr].sort((a, b) => b.data.estimated_minutes - a.data.estimated_minutes)
-    }
-    return arr
-  }
-
   const startingChallenge = [...challenges].sort(
     (a, b) =>
       (DIFFICULTY_SORT[a.data.difficulty] ?? 0) - (DIFFICULTY_SORT[b.data.difficulty] ?? 0) ||
@@ -112,22 +164,10 @@ export default async function PlaygroundPage({
     data: { user },
   } = await supabase.auth.getUser()
 
-  type SessionStatus = "in_progress" | "completed"
-  const slugToStatus = new Map<string, SessionStatus>()
-  if (user !== null) {
-    const { data: sessions } = await supabase
-      .from("challenge_sessions")
-      .select("challenge_slug, status")
-      .eq("user_id", user.id)
-      .eq("lang", lang)
-      .in("status", ["in_progress", "completed"])
-    for (const s of sessions ?? []) {
-      const slug = s.challenge_slug as string
-      const status = s.status as SessionStatus
-      const current = slugToStatus.get(slug)
-      if (current !== "completed") slugToStatus.set(slug, status)
-    }
-  }
+  const { slugToStatus, earnedBadges } =
+    user === null
+      ? { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
+      : await loadUserPlaygroundData(supabase, user.id)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -138,19 +178,16 @@ export default async function PlaygroundPage({
 
   const filteredChallenges =
     activeCategory !== undefined
-      ? applySort(challenges.filter((c) => c.data.category === activeCategory))
+      ? applySort(
+          challenges.filter((c) => c.data.category === activeCategory),
+          activeSort
+        )
       : activeSort !== "recommended"
-        ? applySort(challenges)
+        ? applySort(challenges, activeSort)
         : []
 
   const showFlatGrid =
     activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
-
-  const getStatusLabel = (s: SessionStatus | null): string => {
-    if (s === "completed") return dict.status.completed
-    if (s === "in_progress") return dict.status.inProgress
-    return dict.status.notStarted
-  }
 
   return (
     <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
@@ -196,7 +233,7 @@ export default async function PlaygroundPage({
           {filteredChallenges.map((challenge) => {
             const slug = challenge.url.split("/").pop() ?? ""
             const status = slugToStatus.get(slug) ?? null
-            const statusLabel = getStatusLabel(status)
+            const statusLabel = getStatusLabel(status, dict.status)
             return (
               <ChallengeCard
                 key={challenge.url}
@@ -217,7 +254,10 @@ export default async function PlaygroundPage({
       ) : (
         <div className="flex flex-col gap-10">
           {CATEGORY_ORDER.map((cat) => {
-            const categoryChallenges = applySort(challenges.filter((c) => c.data.category === cat))
+            const categoryChallenges = applySort(
+              challenges.filter((c) => c.data.category === cat),
+              activeSort
+            )
             if (categoryChallenges.length === 0) return null
             return (
               <div key={cat}>
@@ -228,7 +268,7 @@ export default async function PlaygroundPage({
                   {categoryChallenges.map((challenge) => {
                     const slug = challenge.url.split("/").pop() ?? ""
                     const status = slugToStatus.get(slug) ?? null
-                    const statusLabel = getStatusLabel(status)
+                    const statusLabel = getStatusLabel(status, dict.status)
                     return (
                       <ChallengeCard
                         key={challenge.url}
@@ -254,7 +294,7 @@ export default async function PlaygroundPage({
 
       {activeCategory === undefined && activeSort === "recommended" && (
         <div className="mt-14">
-          <BadgesSection dict={dict.badges} />
+          <BadgesSection dict={dict.badges} earnedBadges={earnedBadges} />
         </div>
       )}
     </main>
