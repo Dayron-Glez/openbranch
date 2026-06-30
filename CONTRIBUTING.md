@@ -152,18 +152,21 @@ The `sandbox_template` frontmatter field links the brief to its template folder.
 title: "A concrete, specific scenario title"
 description: "What's wrong and why it matters, in one or two sentences."
 icon: Bug # Lucide icon name
+maturity: stable # stable = published · draft = hidden (work in progress)
 authors:
   - Your Name
-category: bug-fix # bug-fix | code-review | testing | git | docs
+category: bug-fix # bug-fix | code-review | testing | git | documentation
 difficulty: beginner # beginner | moderate | demanding
 estimated_minutes: 15
-validation: jest # the runner that grades the sandbox
+validation: jest # checklist | jest | typecheck — how the sandbox is graded
 sandbox_template: <slug> # folder under content/playground/templates/
 skills:
   - The concrete skills it exercises
   - Keep these specific and searchable
 ---
 ```
+
+> A challenge only appears on the site when `maturity: stable`. Leave it as `draft` (the default) while the sandbox isn't ready — draft challenges are hidden.
 
 ### Writing the brief
 
