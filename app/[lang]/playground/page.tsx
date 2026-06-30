@@ -5,17 +5,17 @@ import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-diction
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
-import { ChallengeCard } from "@/components/playground/ChallengeCard"
-import { StartingLine } from "@/components/playground/StartingLine"
-import { BadgesSection } from "@/components/playground/BadgesSection"
-import { FilterBar } from "@/components/playground/FilterBar"
-import { PlaygroundGridTransition } from "@/components/playground/PlaygroundGridTransition"
-import { getChallengeIcon, getCategoryIcon } from "@/lib/playground/challenge-icons"
+import { ChallengeCard } from "@/features/playground/components/ChallengeCard"
+import { StartingLine } from "@/features/playground/components/StartingLine"
+import { BadgesSection } from "@/features/playground/components/BadgesSection"
+import { FilterBar } from "@/features/playground/components/FilterBar"
+import { PlaygroundGridTransition } from "@/features/playground/components/PlaygroundGridTransition"
+import { getChallengeIcon, getCategoryIcon } from "@/features/playground/domain/challenge-icons"
 import {
   CATEGORY_ORDER,
   type CategoryKey,
   inferCategoryBadge,
-} from "@/lib/playground/domain/manifest"
+} from "@/features/playground/domain/manifest"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 

@@ -5,16 +5,16 @@ import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
-import { getDiffBySlug } from "@/lib/playground/diff-registry"
-import { getSandpackTemplateBySlug } from "@/lib/playground/sandpack-registry"
-import { getTestingTemplateBySlug } from "@/lib/playground/testing-registry"
-import { getGitTemplateBySlug } from "@/lib/playground/git-registry"
-import { getDocsTemplateBySlug } from "@/lib/playground/docs-registry"
-import { ActiveChallengeView } from "@/components/playground/ActiveChallengeView"
-import { BugFixChallengeView } from "@/components/playground/BugFixChallengeView"
-import { TestingChallengeView } from "@/components/playground/testing/TestingChallengeView"
-import { GitChallengeView } from "@/components/playground/git/GitChallengeView"
-import { DocumentationChallengeView } from "@/components/playground/documentation/DocumentationChallengeView"
+import { getDiffBySlug } from "@/features/playground/challenges/code-review/diff-registry"
+import { getSandpackTemplateBySlug } from "@/features/playground/challenges/bug-fix/sandpack-registry"
+import { getTestingTemplateBySlug } from "@/features/playground/challenges/testing/testing-registry"
+import { getGitTemplateBySlug } from "@/features/playground/challenges/git/git-registry"
+import { getDocsTemplateBySlug } from "@/features/playground/challenges/documentation/docs-registry"
+import { ActiveChallengeView } from "@/features/playground/components/ActiveChallengeView"
+import { BugFixChallengeView } from "@/features/playground/components/BugFixChallengeView"
+import { TestingChallengeView } from "@/features/playground/components/testing/TestingChallengeView"
+import { GitChallengeView } from "@/features/playground/components/git/GitChallengeView"
+import { DocumentationChallengeView } from "@/features/playground/components/documentation/DocumentationChallengeView"
 import type {
   ReviewSnapshot,
   BugFixSnapshot,
@@ -22,7 +22,7 @@ import type {
   GitSnapshot,
   GitBlockResolution,
   DocsSnapshot,
-} from "@/lib/playground/review-types"
+} from "@/features/playground/domain/review-types"
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>

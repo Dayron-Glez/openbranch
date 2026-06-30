@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
-import { PlaygroundTransition } from "@/components/playground/PlaygroundTransition"
-import { PlaygroundNav } from "@/components/playground/PlaygroundNav"
+import { PlaygroundTransition } from "@/features/playground/components/PlaygroundTransition"
+import { PlaygroundNav } from "@/features/playground/components/PlaygroundNav"
 import { createClient } from "@/lib/supabase/server"
 import "./playground.css"
 

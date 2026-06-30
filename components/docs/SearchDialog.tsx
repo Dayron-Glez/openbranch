@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation"
 import { getSearchLinks } from "@/lib/i18n.ui"
 import { Kbd } from "@/components/ui/kbd"
 import type { PlaygroundSearchResult } from "@/app/api/playground-search/route"
-import { DiffBars } from "@/components/playground/DiffBars"
+import { DiffBars } from "@/features/playground/components/DiffBars"
 
 function ResultIcon({ type }: Readonly<{ type: "page" | "heading" | "text" }>) {
   if (type === "page") return <IconFileText />
