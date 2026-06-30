@@ -75,13 +75,13 @@ Guides live in `content/docs/` as MDX files. Each guide has a Spanish version (`
 title: Guide title
 description: One-sentence summary shown in cards and SEO.
 icon: IconName # Lucide icon name
-maturity: stable # stable | rfc | experimental | deprecated
+maturity: draft # draft | rfc | field-tested | battle-tested | archived
 authors:
   - Name Surname
 ---
 ```
 
-Maturity levels signal how settled the guidance is — `stable` means the approach is proven and unlikely to change, `rfc` means it's a working proposal open to revision, `experimental` is early and opinionated.
+Maturity levels signal how settled the guidance is — `battle-tested` is proven across teams and the default recommendation, `field-tested` is used in real projects but still evolving, `rfc` is a working proposal open to revision, and `draft` is early and incomplete. The full set is defined in `lib/maturity.ts`.
 
 Playground challenges live in `content/playground/` as MDX files, also bilingual (`.es.mdx` / `.en.mdx`). In addition to the guide fields, each challenge declares its `category` (bug-fix, code-review, testing, git, docs), `difficulty`, `estimated_minutes`, the `validation` runner, a `sandbox_template`, and the `skills` it exercises.
 
