@@ -1,6 +1,6 @@
 # openbranch
 
-An open documentation site for software engineering — practical, opinionated guides on Git workflows, pull requests, testing, releases, and best practices. Built with Next.js and Fumadocs.
+openbranch is an open, opinionated resource for software engineering. It pairs practical guides — Git workflows, pull requests, testing, releases, best practices — with an **interactive playground** of hands-on challenges (bug fixes, code review, testing, Git conflicts). Fully bilingual (Spanish / English), built with Next.js 16 and Fumadocs.
 
 ## Getting started
 
@@ -26,67 +26,45 @@ Open `http://localhost:3000`.
 ## Project structure
 
 ```
-app/
+app/                     ← routes, RSC, server actions (thin)
 ├── [lang]/
-│   ├── (home)/         ← landing page
-│   └── docs/           ← documentation layout and pages
-├── api/search/         ← Fumadocs search route handler
-└── global.css
+│   ├── (home)/          ← landing page
+│   ├── docs/            ← documentation pages
+│   └── playground/      ← interactive challenge routes
+├── actions/            ← server actions
+├── api/                ← search, playground-search, auth callback
+└── og/, llms.txt/, …   ← generated metadata routes
+
+features/               ← feature-first: each domain self-contained
+├── docs/components/    ← documentation UI
+├── home/              ← landing page (components + hooks)
+└── playground/        ← challenges, domain, registry, server, components, hooks
+
+shared/                ← cross-feature leaf components
+                         (Nav, Footer, Logo, MaturityBadge, DiffBars, …)
 
 components/
-├── home/               ← landing page features
-│   ├── Hero.tsx
-│   ├── HeroTerminal.tsx
-│   ├── AmbientBackground.tsx
-│   ├── CommunityCTA.tsx
-│   ├── FeaturedGuide.tsx
-│   ├── FeaturedGuideStats.tsx
-│   ├── Terminal.tsx
-│   ├── TopicCard.tsx
-│   └── ValueProp.tsx
-├── docs/               ← documentation UI
-│   ├── DocsSidebar.tsx
-│   ├── SearchDialog.tsx
-│   ├── MaturityBadge.tsx
-│   ├── MaturityFilter.tsx
-│   ├── MaturityProvider.tsx
-│   ├── SuggestGuideButton.tsx
-│   └── …
-├── nav/                ← global navigation
-│   └── Nav.tsx
-├── shared/             ← cross-feature primitives
-│   ├── Footer.tsx
-│   ├── LogoMark.tsx
-│   ├── ScrollReveal.tsx
-│   └── logo.tsx
-└── ui/                 ← shadcn/ui primitives (do not modify directly)
+└── ui/                ← shadcn/ui primitives (do not modify directly)
 
-lib/
-├── hooks/              ← extracted custom hooks
-│   ├── use-hero-animation.ts
-│   └── use-terminal-animation.ts
-├── constants.ts        ← shared URLs and string literals
-├── maturity.ts         ← guide maturity level system
-├── weekly-pick.ts      ← deterministic featured guide selection
-├── reading-time.ts     ← word-count based reading time
-└── …
+lib/                   ← cross-cutting infra (i18n, sources, constants, supabase, …)
 
 content/
-└── docs/               ← MDX guides, organised by topic
-    ├── git/
-    ├── pull-requests/
-    ├── testing/
-    ├── releases/
-    └── best-practices/
+├── docs/              ← MDX guides, organised by topic
+└── playground/        ← MDX challenge definitions
 ```
 
-### Why screaming architecture
+### Why feature-first
 
-`components/` is organised by **feature domain**, not by file type. Opening the folder tells you immediately that this project has a landing page (`home/`), a documentation UI (`docs/`), a navigation bar (`nav/`), and shared primitives (`shared/`). You don't need to read any file to understand the shape of the codebase.
+The codebase is organised by **feature**, not by file type. Each feature under `features/` (`docs`, `home`, `playground`) owns its components, hooks, and — for playground — its domain logic, registry, and server actions. Opening a feature folder tells you its full shape without reading a file.
 
-The alternative — a flat `components/` with `Hero.tsx`, `Nav.tsx`, `SearchDialog.tsx`, `Footer.tsx` all at the same level — scales poorly. At 20 components it becomes a scroll, at 40 it becomes a search problem. Grouping by domain keeps related files together, makes deletions safe (remove a feature → remove its folder), and gives new contributors a map before they open a single file.
+The architecture enforces a strict dependency direction, checked by ESLint (`no-restricted-imports`):
 
-No barrel `index.ts` files are used. Next.js App Router can have server/client boundary issues when barrel files mix component types, and explicit imports (`@/components/home/Hero`) are easier to trace in errors and refactors.
+- **`app/`** is thin and may import any feature.
+- **`features/`** are self-contained; a feature must **not** import another feature. Shared pieces are promoted to `shared/` or `components/ui/`.
+- **`shared/`** is a leaf — it never imports a feature (dependencies are injected via props; see `I18nRootProvider`).
+- **`lib/`** is the lowest layer — no UI, no features.
+
+No barrel `index.ts` files are used: explicit imports (`@/features/home/components/Hero`) are easier to trace in errors and refactors, and they avoid the server/client boundary issues barrels cause in the Next.js App Router. See [`docs/architecture/`](./docs/architecture/) for the full rationale.
 
 ## Content
 
@@ -104,6 +82,8 @@ authors:
 ```
 
 Maturity levels signal how settled the guidance is — `stable` means the approach is proven and unlikely to change, `rfc` means it's a working proposal open to revision, `experimental` is early and opinionated.
+
+Playground challenges live in `content/playground/` as MDX files, also bilingual (`.es.mdx` / `.en.mdx`). In addition to the guide fields, each challenge declares its `category` (bug-fix, code-review, testing, git, docs), `difficulty`, `estimated_minutes`, the `validation` runner, a `sandbox_template`, and the `skills` it exercises.
 
 ## Contributing
 
