@@ -1,4 +1,4 @@
-﻿import { IconFork, IconGlobe, IconLock } from "@/icons"
+import { IconFork, IconGlobe, IconLock } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { Badge } from "@/components/ui/badge"
 
@@ -13,7 +13,7 @@ type ValuePropProps = {
 
 export function ValueProp({ dict }: ValuePropProps) {
   return (
-    <div className="border-line bg-bg-card grid grid-cols-3 overflow-hidden rounded-[var(--r-12)] border max-[980px]:grid-cols-1">
+    <div className="border-line bg-bg-card grid grid-cols-3 overflow-hidden rounded-(--r-12) border max-[980px]:grid-cols-1">
       {dict.map((item, i) => {
         const Icon = ICONS[i] ?? IconFork
         return (

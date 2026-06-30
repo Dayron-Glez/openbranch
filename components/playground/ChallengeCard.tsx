@@ -67,10 +67,10 @@ export const ChallengeCard = ({
     <Link
       href={href}
       data-challenge-card
-      className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-[var(--r-12)] border p-5 text-inherit no-underline transition-[background,border-color] duration-[var(--d-base)] ease-[var(--ease)]"
+      className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-(--r-12) border p-5 text-inherit no-underline transition-[background,border-color] duration-(--d-base) ease-(--ease)"
     >
       <div className="flex items-center justify-between">
-        <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-[var(--r-8)] border [&_svg]:size-[17px]">
+        <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border [&_svg]:size-[17px]">
           {icon}
         </span>
         <span className={`flex items-center gap-1.5 font-mono text-[11.5px] ${statusTextClass}`}>

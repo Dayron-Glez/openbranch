@@ -34,10 +34,7 @@ export const HintPanel = ({
       {revealed > 0 && (
         <div className="flex flex-col gap-2">
           {hints.slice(0, revealed).map((hint, i) => (
-            <div
-              key={hint}
-              className="border-line bg-bg-elev rounded-[var(--r-8)] border px-3 py-2.5"
-            >
+            <div key={hint} className="border-line bg-bg-elev rounded-(--r-8) border px-3 py-2.5">
               <p className="text-fg-2 font-mono text-[12px] leading-[1.6]">
                 <span className="text-fg-faint mr-2">{i + 1}.</span>
                 {hint}
@@ -51,7 +48,7 @@ export const HintPanel = ({
         <button
           type="button"
           onClick={handleReveal}
-          className="border-line hover:border-line-2 text-fg-muted hover:text-fg-2 flex items-center justify-center gap-1.5 rounded-[var(--r-8)] border border-dashed py-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+          className="border-line hover:border-line-2 text-fg-muted hover:text-fg-2 flex items-center justify-center gap-1.5 rounded-(--r-8) border border-dashed py-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
         >
           <svg
             viewBox="0 0 16 16"

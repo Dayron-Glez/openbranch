@@ -41,7 +41,7 @@ export const DocsChecklist = ({
         </span>
       </div>
 
-      <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-[var(--r-8)] border p-3">
+      <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3">
         {results.map(({ criterion, passed }) => (
           <div key={criterion.id} className="flex items-start gap-2.5">
             <span
@@ -60,7 +60,7 @@ export const DocsChecklist = ({
       </div>
 
       {allPassed && (
-        <div className="border-accent-ring bg-accent-soft rounded-[var(--r-8)] border px-3 py-2.5">
+        <div className="border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5">
           <p className="text-ob-accent font-mono text-[12px]">{dict.active.docsAllCriteriaMet}</p>
         </div>
       )}

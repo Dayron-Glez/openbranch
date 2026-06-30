@@ -66,7 +66,7 @@ const AlertIcon = (): ReactNode => (
 )
 
 export const PrPreviewCard = ({ data }: PrPreviewCardProps): ReactNode => (
-  <div className="bg-bg-card border-line mb-8 overflow-hidden rounded-[var(--r-12)] border">
+  <div className="bg-bg-card border-line mb-8 overflow-hidden rounded-(--r-12) border">
     {/* header row */}
     <div className="bg-bg-elev border-line flex items-center justify-between gap-3 border-b px-4 py-[13px]">
       <div className="flex min-w-0 items-center gap-3">

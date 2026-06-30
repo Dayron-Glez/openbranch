@@ -71,7 +71,7 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
             <li key={page.url}>
               <Link
                 href={page.url}
-                className="border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-1 rounded-[var(--r-10)] border px-5 py-4 no-underline transition-[background,border-color] duration-[var(--d-base)]"
+                className="border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-1 rounded-(--r-10) border px-5 py-4 no-underline transition-[background,border-color] duration-(--d-base)"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-fg font-medium">{page.title}</span>

@@ -28,7 +28,7 @@ export const StartingLine = ({
   minutesLabel,
 }: StartingLineProps) => {
   return (
-    <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-[var(--r-12)] border p-6 max-[640px]:grid-cols-1">
+    <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-[640px]:grid-cols-1">
       <div className="flex flex-col gap-4">
         <div>
           <p className="text-ob-accent mb-2.5 font-mono text-[11px] tracking-[0.1em] uppercase">
@@ -40,13 +40,13 @@ export const StartingLine = ({
           <p className="text-fg-2 m-0 max-w-[52ch] text-sm leading-[1.6]">{body}</p>
         </div>
         <div className="flex items-center gap-3.5">
-          <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-[var(--r-8)] border [&_svg]:size-[17px]">
+          <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border [&_svg]:size-[17px]">
             {challengeIcon}
           </span>
           <div>
             <p className="m-0 mb-1 text-[15px] leading-snug font-medium">{challengeTitle}</p>
             <div className="flex items-center gap-3">
-              <span className="border-line bg-bg-elev text-fg-muted rounded-[var(--r-6)] border px-2 py-0.5 font-mono text-[11px] tracking-[0.04em]">
+              <span className="border-line bg-bg-elev text-fg-muted rounded-(--r-6) border px-2 py-0.5 font-mono text-[11px] tracking-[0.04em]">
                 {challengeCategoryLabel}
               </span>
               <span className="text-fg-muted inline-flex items-center gap-1 font-mono text-[11px]">
@@ -60,10 +60,10 @@ export const StartingLine = ({
       <div className="max-[640px]:self-start">
         <Link
           href={href}
-          className="group bg-ob-accent text-accent-ink inline-flex items-center gap-2 rounded-[var(--r-8)] px-5 py-2.5 text-sm font-medium no-underline transition-opacity duration-[var(--d-fast)] ease-[var(--ease)] hover:opacity-90"
+          className="group bg-ob-accent text-accent-ink inline-flex items-center gap-2 rounded-(--r-8) px-5 py-2.5 text-sm font-medium no-underline transition-opacity duration-(--d-fast) ease-(--ease) hover:opacity-90"
         >
           {cta}
-          <IconArrowRight className="size-4 transition-transform duration-[var(--d-fast)] ease-[var(--ease)] group-hover:translate-x-0.75" />
+          <IconArrowRight className="size-4 transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
         </Link>
       </div>
     </div>

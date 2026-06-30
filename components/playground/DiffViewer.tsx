@@ -129,10 +129,7 @@ export const DiffViewer = ({
   return (
     <div className="flex flex-col gap-4">
       {files.map((file) => (
-        <div
-          key={file.filename}
-          className="border-line overflow-hidden rounded-[var(--r-8)] border"
-        >
+        <div key={file.filename} className="border-line overflow-hidden rounded-(--r-8) border">
           {/* file header */}
           <div className="border-line bg-bg-elev flex items-center justify-between gap-4 border-b px-4 py-2.5">
             <span className="text-fg-2 truncate font-mono text-[12px]">{file.filename}</span>
@@ -204,7 +201,7 @@ export const DiffViewer = ({
                   {isFormOpen && (
                     <div className="border-line border-ob-accent/50 border-l-2 px-4 py-3">
                       <textarea
-                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted w-full resize-y rounded-[var(--r-8)] border p-2.5 font-mono text-[12.5px] leading-[1.6] outline-none"
+                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted w-full resize-y rounded-(--r-8) border p-2.5 font-mono text-[12.5px] leading-[1.6] outline-none"
                         placeholder={dict.commentPlaceholder}
                         value={inputText}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -234,7 +231,7 @@ export const DiffViewer = ({
                           type="button"
                           onClick={() => handleAddComment(file.filename, lineIndex)}
                           disabled={!inputText.trim()}
-                          className="bg-ob-accent text-accent-ink rounded-[var(--r-8)] px-3 py-1.5 font-mono text-[12px] font-medium transition-opacity disabled:opacity-40"
+                          className="bg-ob-accent text-accent-ink rounded-(--r-8) px-3 py-1.5 font-mono text-[12px] font-medium transition-opacity disabled:opacity-40"
                         >
                           {dict.addComment}
                         </button>
