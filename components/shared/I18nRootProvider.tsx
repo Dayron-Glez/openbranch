@@ -2,7 +2,7 @@
 
 import type { ComponentProps, ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
-import { CustomSearchDialog } from "@/components/docs/SearchDialog"
+import { CustomSearchDialog } from "@/features/docs/components/SearchDialog"
 
 type RootProviderProps = ComponentProps<typeof RootProvider>
 type I18nConfig = NonNullable<RootProviderProps["i18n"]>

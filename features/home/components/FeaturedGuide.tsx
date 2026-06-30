@@ -1,7 +1,7 @@
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import type { Maturity } from "@/lib/maturity"
-import { FeaturedGuideStats } from "@/components/home/FeaturedGuideStats"
+import { FeaturedGuideStats } from "@/features/home/components/FeaturedGuideStats"
 
 const ctaClass =
   "group inline-flex h-[34px] items-center gap-2 rounded-(--r-8) border border-transparent bg-ob-accent px-3.5 text-[13px] font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-[1.06] [&_svg]:size-3.5"

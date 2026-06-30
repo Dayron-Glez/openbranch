@@ -2,7 +2,7 @@
 
 import { IconCirclePlus } from "@tabler/icons-react"
 import { buildSuggestUrl } from "@/lib/suggest-url"
-import { useDocsUI } from "@/components/docs/DocsUIProvider"
+import { useDocsUI } from "@/features/docs/components/DocsUIProvider"
 import { Button } from "@/components/ui/button"
 
 export function SuggestGuideButton({ sectionName }: { readonly sectionName: string }) {

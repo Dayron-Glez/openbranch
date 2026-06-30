@@ -1,6 +1,6 @@
 import defaultMdxComponents from "fumadocs-ui/mdx"
 import type { MDXComponents } from "mdx/types"
-import { CopyTemplate } from "@/components/docs/CopyTemplate"
+import { CopyTemplate } from "@/features/docs/components/CopyTemplate"
 
 export function getMDXComponents(components?: MDXComponents) {
   return {

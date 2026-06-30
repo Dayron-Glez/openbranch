@@ -9,8 +9,8 @@ import {
   Dim,
   BranchBlock,
   Cursor,
-} from "@/components/home/Terminal"
-import { CMD1, CMD2, useTerminalAnimation } from "@/lib/hooks/use-terminal-animation"
+} from "@/features/home/components/Terminal"
+import { CMD1, CMD2, useTerminalAnimation } from "@/features/home/hooks/use-terminal-animation"
 
 export function HeroTerminal() {
   const { step, cmd1Chars, cmd2Chars } = useTerminalAnimation()

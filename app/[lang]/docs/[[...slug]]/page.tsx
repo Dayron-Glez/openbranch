@@ -1,7 +1,7 @@
 import { getPageImage, getPageGitHubUrl, getPageMarkdownUrl, source } from "@/lib/source"
 import { SITE_URL } from "@/lib/constants"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
-import { SuggestGuideButton } from "@/components/docs/SuggestGuideButton"
+import { SuggestGuideButton } from "@/features/docs/components/SuggestGuideButton"
 import { IconClock } from "@tabler/icons-react"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -11,11 +11,11 @@ import {
   DocsTitle,
   MarkdownCopyButton,
 } from "fumadocs-ui/layouts/docs/page"
-import { DocsOpenButton } from "@/components/docs/DocsOpenButton"
+import { DocsOpenButton } from "@/features/docs/components/DocsOpenButton"
 import { notFound } from "next/navigation"
-import { getMDXComponents } from "@/components/docs/mdx"
-import { DocsScrollReveal } from "@/components/docs/DocsScrollReveal"
-import { SectionCards } from "@/components/docs/SectionCards"
+import { getMDXComponents } from "@/features/docs/components/mdx"
+import { DocsScrollReveal } from "@/features/docs/components/DocsScrollReveal"
+import { SectionCards } from "@/features/docs/components/SectionCards"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
