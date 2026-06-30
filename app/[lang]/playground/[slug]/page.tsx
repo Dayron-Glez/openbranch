@@ -7,10 +7,10 @@ import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { getMDXComponents } from "@/components/docs/mdx"
-import { StartChallengeButton } from "@/components/playground/StartChallengeButton"
-import { PrPreviewCard } from "@/components/playground/PrPreviewCard"
+import { StartChallengeButton } from "@/features/playground/components/StartChallengeButton"
+import { PrPreviewCard } from "@/features/playground/components/PrPreviewCard"
 import { createClient } from "@/lib/supabase/server"
-import { getChallengeIcon } from "@/lib/playground/challenge-icons"
+import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 
 const DIFFICULTY_LEVEL: Record<string, number> = { beginner: 1, moderate: 2, demanding: 3 }
 

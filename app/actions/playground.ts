@@ -12,14 +12,14 @@ import type {
   GitSnapshot,
   GitBlockResolution,
   DocsSnapshot,
-} from "@/lib/playground/review-types"
+} from "@/features/playground/domain/review-types"
 import {
   ensureSession,
   saveSnapshot,
   getInProgressSnapshot,
   markSessionCompleted,
   awardTrackBadge,
-} from "@/lib/playground/session-service"
+} from "@/features/playground/server/session-service"
 
 const getAuthContext = async () => {
   const supabase = await createClient()

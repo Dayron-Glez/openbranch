@@ -7,9 +7,9 @@ import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { createClient } from "@/lib/supabase/server"
-import { ConfettiEffect } from "@/components/playground/ConfettiEffect"
-import { DiffBars } from "@/components/playground/DiffBars"
-import { getChallengeIcon } from "@/lib/playground/challenge-icons"
+import { ConfettiEffect } from "@/features/playground/components/ConfettiEffect"
+import { DiffBars } from "@/features/playground/components/DiffBars"
+import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
