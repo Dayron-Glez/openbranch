@@ -83,7 +83,7 @@ authors:
 
 Maturity levels signal how settled the guidance is — `battle-tested` is proven across teams and the default recommendation, `field-tested` is used in real projects but still evolving, `rfc` is a working proposal open to revision, and `draft` is early and incomplete. The full set is defined in `lib/maturity.ts`.
 
-Playground challenges live in `content/playground/` as MDX files, also bilingual (`.es.mdx` / `.en.mdx`). In addition to the guide fields, each challenge declares its `category` (bug-fix, code-review, testing, git, docs), `difficulty`, `estimated_minutes`, the `validation` runner, a `sandbox_template`, and the `skills` it exercises.
+Playground challenges live in `content/playground/` as MDX files, also bilingual (`.es.mdx` / `.en.mdx`). In addition to the guide fields, each challenge declares its `category` (bug-fix, code-review, testing, git, documentation), `difficulty`, `estimated_minutes`, the `validation` runner, a `sandbox_template`, and the `skills` it exercises.
 
 ## Contributing
 

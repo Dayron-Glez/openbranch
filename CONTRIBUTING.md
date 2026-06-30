@@ -27,7 +27,7 @@ openbranch has two kinds of content: **guides** (opinionated docs in `content/do
 
 - **Fix a factual error or outdated advice** — open a PR directly, or use the _Improve guide_ issue template.
 - **Write a new guide** — use the _New guide_ issue template to discuss scope before writing.
-- **Add a playground challenge** — a real-world bug, review, testing, Git, or docs exercise. Pitch it in a _Feature request_ issue first.
+- **Add a playground challenge** — a real-world bug, review, testing, Git, or docs exercise. Use the _New Challenge_ issue template to pitch it first.
 - **Translate** — add the missing `*.en.mdx` / `*.es.mdx` (or `*.mdx`) counterpart and open a PR.
 - **Improve the UI or infrastructure** — same flow as any other PR.
 
@@ -152,18 +152,21 @@ The `sandbox_template` frontmatter field links the brief to its template folder.
 title: "A concrete, specific scenario title"
 description: "What's wrong and why it matters, in one or two sentences."
 icon: Bug # Lucide icon name
+maturity: stable # stable = published · draft = hidden (work in progress)
 authors:
   - Your Name
-category: bug-fix # bug-fix | code-review | testing | git | docs
+category: bug-fix # bug-fix | code-review | testing | git | documentation
 difficulty: beginner # beginner | moderate | demanding
 estimated_minutes: 15
-validation: jest # the runner that grades the sandbox
+validation: jest # checklist | jest | typecheck — how the sandbox is graded
 sandbox_template: <slug> # folder under content/playground/templates/
 skills:
   - The concrete skills it exercises
   - Keep these specific and searchable
 ---
 ```
+
+> A challenge only appears on the site when `maturity: stable`. Leave it as `draft` (the default) while the sandbox isn't ready — draft challenges are hidden.
 
 ### Writing the brief
 
@@ -178,7 +181,7 @@ Ship the brief in both languages and keep them structurally equivalent, like gui
 
 ### Challenge ideas worth building
 
-Good challenges are small, have one clear "aha", and grade objectively. Pitch your idea in a _Feature request_ issue before building the sandbox. Some gaps worth filling:
+Good challenges are small, have one clear "aha", and grade objectively. Pitch your idea with the _New Challenge_ issue template before building the sandbox. Some gaps worth filling:
 
 - **bug-fix** — a debounce that drops the final call; a timezone off-by-one in date math; a memory leak from a missing effect cleanup; money rounding that breaks with floats.
 - **testing** — pin down a flaky time-dependent function; test an async retry-with-backoff; characterize a legacy function before refactoring it.
