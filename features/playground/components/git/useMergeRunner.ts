@@ -47,7 +47,7 @@ export const useMergeRunner = ({
 
   useEffect(() => {
     const worker = new Worker(
-      new URL("../../../lib/playground/test-runner.worker.ts", import.meta.url)
+      new URL("../../challenges/testing/test-runner.worker.ts", import.meta.url)
     )
     worker.onmessage = (event: MessageEvent<WorkerResultMessage>): void => {
       const msg = event.data
