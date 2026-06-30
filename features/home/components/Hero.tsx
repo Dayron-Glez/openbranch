@@ -3,14 +3,14 @@
 import { useState, useRef } from "react"
 import Link from "next/link"
 import { LogoMark } from "@/components/shared/LogoMark"
-import { HeroTerminal } from "@/components/home/HeroTerminal"
-import { HeroPhrases } from "@/components/home/HeroPhrases"
+import { HeroTerminal } from "@/features/home/components/HeroTerminal"
+import { HeroPhrases } from "@/features/home/components/HeroPhrases"
 import { IconArrowRight } from "@/icons"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Button } from "@/components/ui/button"
-import { useHeroAnimation } from "@/lib/hooks/use-hero-animation"
-import { HeroStats } from "@/components/home/HeroStats"
+import { useHeroAnimation } from "@/features/home/hooks/use-hero-animation"
+import { HeroStats } from "@/features/home/components/HeroStats"
 
 type HeroProps = {
   readonly dict: LandingDict["hero"]

@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useDocsUI } from "@/components/docs/DocsUIProvider"
+import { useDocsUI } from "@/features/docs/components/DocsUIProvider"
 import { cn } from "@/lib/utils"
 
 type CopyTemplateProps = {
