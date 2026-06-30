@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react"
 import Link from "next/link"
-import { LogoMark } from "@/components/shared/LogoMark"
+import { LogoMark } from "@/shared/LogoMark"
 import { HeroTerminal } from "@/features/home/components/HeroTerminal"
 import { HeroPhrases } from "@/features/home/components/HeroPhrases"
 import { IconArrowRight } from "@/icons"

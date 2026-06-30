@@ -1,14 +1,14 @@
-﻿"use client"
+"use client"
 
 import type { ComponentProps, ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
-import { CustomSearchDialog } from "@/features/docs/components/SearchDialog"
 
 type RootProviderProps = ComponentProps<typeof RootProvider>
 type I18nConfig = NonNullable<RootProviderProps["i18n"]>
 
 type Props = {
   readonly i18n: I18nConfig
+  readonly search: RootProviderProps["search"]
   readonly children: ReactNode
 }
 
@@ -17,7 +17,7 @@ type Props = {
 // remounts <html>/RootProvider and makes React 19 warn about the theme
 // <script>. A full-document navigation is the correct context switch and
 // avoids the remount.
-export function I18nRootProvider({ i18n, children }: Props) {
+export function I18nRootProvider({ i18n, search, children }: Props) {
   return (
     <RootProvider
       i18n={{
@@ -31,7 +31,7 @@ export function I18nRootProvider({ i18n, children }: Props) {
           globalThis.location.assign(target)
         },
       }}
-      search={{ SearchDialog: CustomSearchDialog }}
+      search={search}
     >
       {children}
     </RootProvider>
