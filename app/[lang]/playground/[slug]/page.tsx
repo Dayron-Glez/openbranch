@@ -240,7 +240,7 @@ export default async function ChallengePage({
           {/* ── sidebar ── */}
           <aside className="max-[900px]:order-first">
             <div className="flex flex-col gap-4">
-              <div className="bg-bg-card border-line rounded-[var(--r-12)] border p-[18px]">
+              <div className="bg-bg-card border-line rounded-(--r-12) border p-[18px]">
                 <StartChallengeButton
                   dict={dict.detail}
                   isAuthenticated={isAuthenticated}
@@ -324,7 +324,7 @@ export default async function ChallengePage({
 
               {/* card: You'll practice */}
               {skills.length > 0 && (
-                <div className="bg-bg-card border-line rounded-[var(--r-12)] border px-[18px] py-4">
+                <div className="bg-bg-card border-line rounded-(--r-12) border px-[18px] py-4">
                   <p className="text-fg-muted mb-3 font-mono text-[11px] tracking-[0.08em] uppercase">
                     {dict.detail.youllPractice}
                   </p>

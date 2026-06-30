@@ -40,7 +40,7 @@ export const EditorPane = ({
   return (
     <div className="min-w-0 min-[901px]:pb-10">
       <div
-        className={`flex h-full min-h-[400px] flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
+        className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
           showSolution ? "border-amber-500/40" : "border-line"
         }`}
       >

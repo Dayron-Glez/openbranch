@@ -54,10 +54,10 @@ export const BadgesSection = ({ dict, earnedBadges }: BadgesSectionProps) => {
           return (
             <div
               key={key}
-              className={`border-line bg-bg-card flex flex-col items-center gap-2.5 rounded-[var(--r-10)] border p-4 text-center transition-opacity ${earned ? "text-fg" : "text-fg-muted opacity-50"}`}
+              className={`border-line bg-bg-card flex flex-col items-center gap-2.5 rounded-(--r-10) border p-4 text-center transition-opacity ${earned ? "text-fg" : "text-fg-muted opacity-50"}`}
             >
               <span
-                className={`inline-grid size-9 place-items-center rounded-[var(--r-10)] border [&_svg]:size-[17px] ${earned ? "border-accent-ring bg-accent-soft text-ob-accent" : "border-line bg-bg-elev text-fg-faint"}`}
+                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${earned ? "border-accent-ring bg-accent-soft text-ob-accent" : "border-line bg-bg-elev text-fg-faint"}`}
               >
                 {BADGE_ICONS[key]}
               </span>

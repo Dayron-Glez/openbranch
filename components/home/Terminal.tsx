@@ -12,7 +12,7 @@ export function Terminal({
   children,
 }: Readonly<TerminalProps>) {
   return (
-    <div className="border-line-2 bg-bg-card overflow-hidden rounded-[var(--r-12)] border shadow-[var(--sh-4)]">
+    <div className="border-line-2 bg-bg-card overflow-hidden rounded-(--r-12) border shadow-(--sh-4)">
       <div className="border-line bg-bg-elev flex items-center gap-2 border-b px-4 py-3">
         <div className="flex gap-1.5">
           <span className="bg-line-2 size-2.5 rounded-full" />
@@ -24,7 +24,7 @@ export function Terminal({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="border-line text-fg-muted rounded-[var(--r-6)] border px-2 py-0.5 font-mono text-[10.5px]"
+              className="border-line text-fg-muted rounded-(--r-6) border px-2 py-0.5 font-mono text-[10.5px]"
             >
               {tag}
             </span>

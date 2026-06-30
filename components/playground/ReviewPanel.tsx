@@ -73,7 +73,7 @@ export const ReviewPanel = ({
               key={value}
               type="button"
               onClick={() => onDecisionChange(decision === value ? null : value)}
-              className={`flex h-[38px] w-full items-center rounded-[var(--r-8)] border px-3 font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) ${getDecisionClasses(value)}`}
+              className={`flex h-[38px] w-full items-center rounded-(--r-8) border px-3 font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) ${getDecisionClasses(value)}`}
             >
               {label}
             </button>
@@ -82,7 +82,7 @@ export const ReviewPanel = ({
       </div>
 
       {/* comment count indicator */}
-      <div className="bg-bg-elev border-line flex items-center justify-between rounded-[var(--r-8)] border px-3 py-2.5">
+      <div className="bg-bg-elev border-line flex items-center justify-between rounded-(--r-8) border px-3 py-2.5">
         <span className="text-fg-muted font-mono text-[11.5px]">Inline comments</span>
         <span
           className={`font-mono text-[13px] font-medium tabular-nums ${commentsCount > 0 ? "text-ob-accent" : "text-fg-muted"}`}

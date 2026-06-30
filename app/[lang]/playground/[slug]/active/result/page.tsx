@@ -349,7 +349,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             {(buildsOnChallenge ?? newTrackChallenge) !== null && (
               <Link
                 href={(buildsOnChallenge ?? newTrackChallenge)!.url}
-                className="bg-ob-accent text-accent-ink inline-flex h-11 items-center gap-2 rounded-[var(--r-8)] px-5 text-[14.5px] font-medium transition-[filter] hover:brightness-105"
+                className="bg-ob-accent text-accent-ink inline-flex h-11 items-center gap-2 rounded-(--r-8) px-5 text-[14.5px] font-medium transition-[filter] hover:brightness-105"
               >
                 {dict.result.nextChallengeCta}
                 <ArrowRightIcon />
@@ -357,7 +357,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             )}
             <Link
               href={playgroundPath}
-              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg inline-flex h-11 items-center rounded-[var(--r-8)] border px-5 text-[14.5px] font-medium transition-colors duration-(--d-fast) ease-(--ease)"
+              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg inline-flex h-11 items-center rounded-(--r-8) border px-5 text-[14.5px] font-medium transition-colors duration-(--d-fast) ease-(--ease)"
             >
               {dict.result.backToHub}
             </Link>
@@ -368,7 +368,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
         <div className="flex flex-col gap-4">
           {/* badge */}
           {badge !== null && (
-            <div className="bg-bg-card border-line flex items-start gap-3 rounded-[var(--r-12)] border p-4">
+            <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
               <div>
                 <p className="text-fg-muted mb-1 font-mono text-[10.5px] tracking-[0.08em] uppercase">
@@ -383,8 +383,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
           )}
 
           {/* detailed scoring coming soon */}
-          <div className="bg-bg-card border-line flex items-start gap-4 rounded-[var(--r-12)] border p-5">
-            <div className="bg-bg-elev border-line flex size-9 shrink-0 items-center justify-center rounded-[var(--r-8)] border">
+          <div className="bg-bg-card border-line flex items-start gap-4 rounded-(--r-12) border p-5">
+            <div className="bg-bg-elev border-line flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border">
               <ChartIcon />
             </div>
             <div>
@@ -407,10 +407,10 @@ export default async function ResultPage({ params }: ResultPageProps) {
                 {buildsOnChallenge !== null && (
                   <Link
                     href={buildsOnChallenge.url}
-                    className="bg-bg-card border-line hover:border-line-2 group flex flex-col rounded-[var(--r-12)] border p-5 transition-colors duration-(--d-fast) ease-(--ease)"
+                    className="bg-bg-card border-line hover:border-line-2 group flex flex-col rounded-(--r-12) border p-5 transition-colors duration-(--d-fast) ease-(--ease)"
                   >
                     <div className="mb-4 flex items-start justify-between gap-3">
-                      <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-[var(--r-8)] border [&_svg]:size-[18px]">
+                      <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border [&_svg]:size-[18px]">
                         {getChallengeIcon(buildsOnChallenge.data.icon)}
                       </div>
                       <span className="bg-bg-elev border-line text-fg-muted shrink-0 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px]">
@@ -440,10 +440,10 @@ export default async function ResultPage({ params }: ResultPageProps) {
                 {newTrackChallenge !== null && (
                   <Link
                     href={newTrackChallenge.url}
-                    className="bg-bg-card border-line hover:border-line-2 group flex flex-col rounded-[var(--r-12)] border p-5 transition-colors duration-(--d-fast) ease-(--ease)"
+                    className="bg-bg-card border-line hover:border-line-2 group flex flex-col rounded-(--r-12) border p-5 transition-colors duration-(--d-fast) ease-(--ease)"
                   >
                     <div className="mb-4 flex items-start justify-between gap-3">
-                      <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-[var(--r-8)] border [&_svg]:size-[18px]">
+                      <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border [&_svg]:size-[18px]">
                         {getChallengeIcon(newTrackChallenge.data.icon)}
                       </div>
                       <span className="bg-bg-elev border-line text-fg-muted shrink-0 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px]">

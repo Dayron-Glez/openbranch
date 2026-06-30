@@ -118,7 +118,7 @@ export const StartChallengeButton = ({
         {sessionStatus === "in_progress" ? (
           <Link
             href={activePath}
-            className="bg-ob-accent text-accent-ink inline-flex h-[42px] w-full items-center justify-center gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105"
+            className="bg-ob-accent text-accent-ink inline-flex h-[42px] w-full items-center justify-center gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105"
           >
             <PlayIcon />
             {ctaLabel}
@@ -130,7 +130,7 @@ export const StartChallengeButton = ({
               await startChallengeSession(slug, lang, activePath)
             }}
             disabled={loading}
-            className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+            className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
           >
             <PlayIcon />
             {ctaLabel}
@@ -196,14 +196,14 @@ export const StartChallengeButton = ({
     <>
       <Button
         onClick={() => setOpen(true)}
-        className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-[var(--r-8)] text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
       >
         <PlayIcon />
         {dict.startChallenge}
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-bg-card border-line-2 w-[380px] max-w-[calc(100vw-2rem)] gap-0 rounded-[var(--r-16)] p-0 shadow-[var(--sh-4)]">
+        <DialogContent className="bg-bg-card border-line-2 w-[380px] max-w-[calc(100vw-2rem)] gap-0 rounded-(--r-16) p-0 shadow-(--sh-4)">
           <div className="px-8 pt-8 pb-7">
             <div className="mb-5 flex justify-center">
               <svg
@@ -239,7 +239,7 @@ export const StartChallengeButton = ({
             <Button
               onClick={handleGitHubSignIn}
               disabled={loading}
-              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-[var(--r-8)] text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-(--r-8) text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
             >
               <GitHubIcon />
               {dict.authGithub}

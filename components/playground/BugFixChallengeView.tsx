@@ -316,7 +316,7 @@ export const BugFixChallengeView = ({
       mainContent={
         <div className="min-w-0 min-[901px]:pb-10">
           <div
-            className={`flex h-full min-h-[400px] flex-col overflow-hidden rounded-[var(--r-8)] border transition-colors duration-200 ${
+            className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
               showSolution ? "border-amber-500/40" : "border-line"
             }`}
           >
@@ -447,7 +447,7 @@ export const BugFixChallengeView = ({
                 </div>
 
                 {testState.compileError !== null && (
-                  <div className="rounded-[var(--r-8)] border border-red-500/20 bg-red-500/[0.03] p-3">
+                  <div className="rounded-(--r-8) border border-red-500/20 bg-red-500/[0.03] p-3">
                     <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
                       {dict.active.syntaxError}
                     </p>
@@ -460,7 +460,7 @@ export const BugFixChallengeView = ({
                   <p className="text-fg-muted font-mono text-[11.5px]">{dict.active.editToStart}</p>
                 )}
                 {testState.compileError === null && testState.tests.length > 0 && (
-                  <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-[var(--r-8)] border p-3">
+                  <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3">
                     {testState.tests.map((test, i) => (
                       <TestCard key={test.name} test={test} index={i} />
                     ))}
@@ -468,14 +468,14 @@ export const BugFixChallengeView = ({
                 )}
 
                 {allTestsPassing && !hasTypeErrors && (
-                  <div className="border-accent-ring bg-accent-soft rounded-[var(--r-8)] border px-3 py-2.5">
+                  <div className="border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5">
                     <p className="text-ob-accent font-mono text-[12px]">
                       {dict.active.allTestsPassing}
                     </p>
                   </div>
                 )}
                 {allTestsPassing && hasTypeErrors && (
-                  <div className="rounded-[var(--r-8)] border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5">
+                  <div className="rounded-(--r-8) border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5">
                     <p className="font-mono text-[12px] text-amber-400">
                       {dict.active.fixTypeErrors}
                     </p>
