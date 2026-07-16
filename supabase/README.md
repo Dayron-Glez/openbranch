@@ -36,6 +36,15 @@ Rules:
 - Keep the generated `YYYYMMDDHHMMSS_` prefix as-is. Mixing it with short `YYYYMMDD_` prefixes breaks the CLI's filename-based version ordering (`_` sorts after digits), which is why the three pre-CLI migrations were renamed to `*000000_*.sql`.
 - If the `badge_catalog` seed or `CHALLENGE_TRACKS` in `features/playground/domain/manifest.ts` changes, keep both in sync.
 
+### Challenges catalog
+
+The `challenges` table mirrors `content/playground` frontmatter (category, difficulty, points). After adding, removing, or re-classifying a challenge, regenerate the sync migration and apply it:
+
+```sh
+bun run db:sync-challenges   # writes migrations/<timestamp>_sync_challenges.sql
+bunx supabase db push
+```
+
 ## Applying migrations
 
 Preview first, then push:

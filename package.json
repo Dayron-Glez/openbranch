@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "types:check": "next typegen && fumadocs-mdx && tsc --noEmit",
+    "db:sync-challenges": "bun scripts/sync-challenges.ts",
     "postinstall": "fumadocs-mdx",
     "prepare": "husky"
   },
