@@ -28,7 +28,7 @@ type ChallengeMeta = {
 }
 
 const readFrontmatterField = (source: string, field: string): string | null => {
-  const match = new RegExp(`^${field}:\\s*(.+)$`, "m").exec(source)
+  const match = new RegExp(String.raw`^${field}:\s*(.+)$`, "m").exec(source)
   const value = match?.[1]
   return value === undefined ? null : value.trim().replace(/^"(.*)"$/, "$1")
 }
