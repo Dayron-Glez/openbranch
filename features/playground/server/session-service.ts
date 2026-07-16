@@ -3,28 +3,26 @@ import { CHALLENGE_TRACKS } from "../domain/manifest"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
+const UNIQUE_VIOLATION = "23505"
+
 export const ensureSession = async (
   supabase: SupabaseServerClient,
   userId: string,
   slug: string,
   lang: string
 ): Promise<void> => {
-  const { data: existing } = await supabase
-    .from("challenge_sessions")
-    .select("id")
-    .eq("user_id", userId)
-    .eq("challenge_slug", slug)
-    .eq("status", "in_progress")
-    .maybeSingle()
-
-  if (existing !== null) return
-
-  await supabase.from("challenge_sessions").insert({
+  const { error } = await supabase.from("challenge_sessions").insert({
     user_id: userId,
     challenge_slug: slug,
     lang,
     status: "in_progress",
   })
+
+  // A unique violation on the partial index means an in-progress session
+  // already exists — exactly the desired end state, so it is not an error.
+  if (error !== null && error.code !== UNIQUE_VIOLATION) {
+    console.error("ensureSession: failed to create session", error)
+  }
 }
 
 export const saveSnapshot = async (
@@ -75,8 +73,9 @@ export const markSessionCompleted = async (
 
 /**
  * Awards the track badge for the given slug if the user has completed at least
- * one challenge in that track and does not already hold the badge.
- * Badge key and slug prefix are resolved from CHALLENGE_TRACKS (domain/manifest).
+ * one challenge in that track. The upsert ignores duplicates, so holding the
+ * badge already is a no-op. Badge key and slug prefix are resolved from
+ * CHALLENGE_TRACKS (domain/manifest).
  */
 export const awardTrackBadge = async (
   supabase: SupabaseServerClient,
@@ -88,23 +87,29 @@ export const awardTrackBadge = async (
 
   const { badgeKey, slugPrefix } = track
 
-  const { data: existingBadge } = await supabase
-    .from("user_badges")
-    .select("id")
-    .eq("user_id", userId)
-    .eq("badge", badgeKey)
-    .maybeSingle()
-
-  if (existingBadge !== null) return
-
-  const { data: completedInTrack } = await supabase
+  const { data: completedInTrack, error: completedError } = await supabase
     .from("challenge_sessions")
     .select("id")
     .eq("user_id", userId)
     .eq("status", "completed")
     .like("challenge_slug", `${slugPrefix}%`)
+    .limit(1)
 
-  if ((completedInTrack?.length ?? 0) >= 1) {
-    await supabase.from("user_badges").insert({ user_id: userId, badge: badgeKey })
+  if (completedError !== null) {
+    console.error("awardTrackBadge: failed to check completed challenges", completedError)
+    return
+  }
+
+  if ((completedInTrack?.length ?? 0) === 0) return
+
+  const { error: upsertError } = await supabase
+    .from("user_badges")
+    .upsert(
+      { user_id: userId, badge: badgeKey },
+      { onConflict: "user_id,badge", ignoreDuplicates: true }
+    )
+
+  if (upsertError !== null) {
+    console.error("awardTrackBadge: failed to award badge", upsertError)
   }
 }
