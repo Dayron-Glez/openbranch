@@ -1,6 +1,6 @@
 # Spec: Supabase Database Redesign
 
-**Status:** Draft
+**Status:** Phases 1, 2 and 4 shipped — Phase 3 pending product decisions
 **Date:** 2026-07-16
 **Owner:** @Dayron-Glez
 
@@ -40,7 +40,7 @@ Access is anon-key only (`lib/supabase/client.ts`, `lib/supabase/server.ts`) —
 
 ---
 
-## Phase 1 — Hotfix: badge CHECK drift (ship first, standalone PR)
+## Phase 1 — Hotfix: badge CHECK drift ✅ (shipped in #111)
 
 **Migration:** `supabase/migrations/20260716_fix_badge_check.sql`
 
@@ -57,7 +57,7 @@ Access is anon-key only (`lib/supabase/client.ts`, `lib/supabase/server.ts`) —
 
 **Explicitly out of scope for Phase 1:** error handling in `awardTrackBadge`, the upsert refactor, indexes. Keep the diff minimal so the fix ships fast.
 
-## Phase 2 — Schema hardening
+## Phase 2 — Schema hardening ✅ (shipped in #113)
 
 One migration + a small `session-service.ts` refactor. No behavior changes visible to users.
 
@@ -108,7 +108,7 @@ Design-gated: build only when the corresponding product feature is prioritized. 
 3. Are points retroactive for already-completed sessions?
 4. Does `challenges` reference-table sync run in CI, at deploy, or via a script?
 
-## Phase 4 — Migration tooling and conventions
+## Phase 4 — Migration tooling and conventions ✅ (CLI adopted in #111/#113; workflow documented in supabase/README.md)
 
 - Adopt the Supabase CLI flow (`supabase migration new`, `supabase db push`) or document the current manual flow explicitly — decide and write it down in `supabase/README.md`.
 - Convention: `YYYYMMDDHHMMSS_short_description.sql` (the format `supabase migration new` generates — mixing it with short `YYYYMMDD_` prefixes breaks the CLI's filename-based version ordering), one logical change per file, never edit an applied migration.
