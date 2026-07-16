@@ -111,7 +111,7 @@ Design-gated: build only when the corresponding product feature is prioritized. 
 ## Phase 4 — Migration tooling and conventions
 
 - Adopt the Supabase CLI flow (`supabase migration new`, `supabase db push`) or document the current manual flow explicitly — decide and write it down in `supabase/README.md`.
-- Convention: `YYYYMMDD_short_description.sql`, one logical change per file, never edit an applied migration.
+- Convention: `YYYYMMDDHHMMSS_short_description.sql` (the format `supabase migration new` generates — mixing it with short `YYYYMMDD_` prefixes breaks the CLI's filename-based version ordering), one logical change per file, never edit an applied migration.
 - Document how to reset/seed a local dev database.
 
 ## Rollout
