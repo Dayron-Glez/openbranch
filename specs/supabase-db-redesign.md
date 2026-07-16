@@ -92,21 +92,32 @@ One migration + a small `session-service.ts` refactor. No behavior changes visib
 - `explain` on the dominant queries shows index scans, not seq scans.
 - Logging in after a GitHub username change updates `public.users.username`.
 
-## Phase 3 — Foundations for future features
+## Phase 3 — Leaderboard, streaks and points foundations
 
-Design-gated: build only when the corresponding product feature is prioritized. Sketch:
+**Product decisions (2026-07-16):** global all-time leaderboard; streaks = calendar days (UTC) with ≥1 completion; points per difficulty (`beginner=10`, `moderate=20`, `demanding=30`); points are retroactive. Catalog sync runs as a script that generates a migration (CI automation deferred).
 
-- **Per-user stats** (`user_stats`: completed count, per-category counts, current/best streak, points, `last_completed_at`) maintained by a DB function called on completion — not by app-side read-modify-write. Streak/points rules live in one place (the function).
-- **Leaderboard** as a view (or materialized view if volume demands) over `user_stats`; needs a deliberate RLS exception (public read of username/avatar/points only) — decide policy before building.
-- **Points model**: constant per challenge vs. per-difficulty from MDX frontmatter. If per-difficulty, sync challenge metadata (slug, category, points) into a `challenges` reference table at build/deploy time — this also fixes gap #7 (free-text slugs) via FK.
-- Keep `challenge_sessions` as the raw event source; stats are derivable/rebuildable from it.
+### Data model
 
-**Open questions (answer before implementing Phase 3)**
+- **`challenges`** — reference catalog synced from MDX frontmatter: `slug` PK, `category`, `difficulty`, `points`, `active` (retired challenges keep their row for history). Public-read RLS. Populated by `bun run db:sync-challenges`, which reads `content/playground/*.es.mdx` and generates a `*_sync_challenges.sql` migration (applied with the normal `db push` flow). No FK from `challenge_sessions.challenge_slug` yet — the sync is manual, and a forgotten sync must not break session inserts; revisit when sync moves to CI.
+- **`user_stats`** — one row per user: `total_points`, `completed_count`, `current_streak`, `best_streak`, `last_completed_on` (date, UTC). RLS: select own only. Never written by the app — maintained exclusively by DB functions (security definer), so the rules live in one place.
 
-1. Is the leaderboard global, per-track, or both? Time-windowed (weekly/all-time)?
-2. Streak definition: calendar days with ≥1 completion, or consecutive challenges?
-3. Are points retroactive for already-completed sessions?
-4. Does `challenges` reference-table sync run in CI, at deploy, or via a script?
+### Behavior rules
+
+- Only the **first** completion of a (user, challenge) pair counts — for points, count, and streak. Re-completions are no-ops (prevents point farming via replay).
+- A challenge missing from the catalog scores the `beginner` default (10) rather than failing.
+- `current_streak` is only meaningful together with `last_completed_on`: consumers must treat it as broken if the last completion is older than yesterday. `rebuild_user_stats()` normalizes stale streaks to 0.
+
+### Mechanics
+
+- Trigger on `challenge_sessions` (`in_progress → completed`) calls `apply_completion_to_stats()` — **zero app-code changes**; `markSessionCompleted` already produces the transition.
+- `rebuild_user_stats()` recomputes everything from `challenge_sessions` × `challenges` (first completions only). Called once in the migration for retroactivity; reusable if rules change.
+- **`leaderboard`** view (`security_invoker = off`, deliberate RLS bypass) exposing only `username`, `avatar_url`, `total_points`, `completed_count`, `best_streak` for users with ≥1 completion, ordered by points.
+
+### Out of scope
+
+- Leaderboard/streaks/points **UI** (separate feature PRs).
+- Time-windowed or per-track leaderboards (the model supports adding them later).
+- CI-automated catalog sync and the `challenge_slug` FK.
 
 ## Phase 4 — Migration tooling and conventions ✅ (CLI adopted in #111/#113; workflow documented in supabase/README.md)
 
