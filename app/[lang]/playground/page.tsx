@@ -8,6 +8,9 @@ import { createClient } from "@/lib/supabase/server"
 import { ChallengeCard } from "@/features/playground/components/ChallengeCard"
 import { StartingLine } from "@/features/playground/components/StartingLine"
 import { BadgesSection } from "@/features/playground/components/BadgesSection"
+import { StatsStrip } from "@/features/playground/components/StatsStrip"
+import { SignInNudge } from "@/features/playground/components/SignInNudge"
+import { getEngagementStats } from "@/features/playground/server/stats-service"
 import { FilterBar } from "@/features/playground/components/FilterBar"
 import { PlaygroundGridTransition } from "@/features/playground/components/PlaygroundGridTransition"
 import { getChallengeIcon, getCategoryIcon } from "@/features/playground/domain/challenge-icons"
@@ -146,10 +149,14 @@ export default async function PlaygroundPage({
     data: { user },
   } = await supabase.auth.getUser()
 
+  const engagementStatsPromise = user === null ? null : getEngagementStats(supabase, user.id)
+
   const { slugToStatus, earnedBadges } =
     user === null
       ? { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
       : await loadUserPlaygroundData(supabase, user.id)
+
+  const engagementStats = engagementStatsPromise === null ? null : await engagementStatsPromise
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -184,6 +191,24 @@ export default async function PlaygroundPage({
         {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
       </h1>
       <p className="text-fg-2 m-0 mb-10 max-w-[56ch] text-base leading-[1.55]">{dict.hub.intro}</p>
+
+      {user === null ? (
+        <div className="mb-10">
+          <SignInNudge dict={dict.nudge} redirectPath={basePath} />
+        </div>
+      ) : (
+        engagementStats !== null && (
+          <div className="mb-10">
+            <StatsStrip
+              dict={dict.stats}
+              categoryDict={dict.category}
+              stats={engagementStats}
+              totalChallenges={challenges.length}
+              lang={lang}
+            />
+          </div>
+        )
+      )}
 
       {startingChallenge !== undefined && (
         <StartingLine

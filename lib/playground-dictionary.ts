@@ -158,6 +158,29 @@ export type PlaygroundDict = {
   readonly time: {
     readonly minutes: string
   }
+  readonly stats: {
+    readonly eyebrow: string
+    readonly points: string
+    readonly pointsToday: string
+    readonly acrossTracksSingular: string
+    readonly acrossTracksPlural: string
+    readonly streak: string
+    readonly days: string
+    readonly of: string
+    readonly streakAlive: string
+    readonly streakBroken: string
+    readonly streakFirst: string
+    readonly completed: string
+    readonly nextUp: string
+    readonly allTracksStarted: string
+    readonly best: string
+    readonly bestNote: string
+  }
+  readonly nudge: {
+    readonly lead: string
+    readonly sub: string
+    readonly cta: string
+  }
 }
 
 type LocalizedEntry = { readonly es: string; readonly en: string }
@@ -399,6 +422,40 @@ const translations = {
   "detail.signOutCancel": { es: "Cancelar", en: "Cancel" },
   "detail.practiceAgain": { es: "Practicar de nuevo", en: "Practice again" },
   "detail.continueChallenge": { es: "Continuar reto", en: "Continue challenge" },
+  "stats.eyebrow": { es: "Tu progreso", en: "Your progress" },
+  "stats.points": { es: "Puntos", en: "Points" },
+  "stats.pointsToday": { es: "+{points} hoy", en: "+{points} today" },
+  "stats.acrossTracksSingular": { es: "En 1 track", en: "Across 1 track" },
+  "stats.acrossTracksPlural": { es: "En {count} tracks", en: "Across {count} tracks" },
+  "stats.streak": { es: "Racha actual", en: "Current streak" },
+  "stats.days": { es: "días", en: "days" },
+  "stats.of": { es: "de {total}", en: "of {total}" },
+  "stats.streakAlive": {
+    es: "Viva — completaste uno hoy",
+    en: "Alive — you completed one today",
+  },
+  "stats.streakBroken": {
+    es: "Terminó el {date} — una entrega la reinicia",
+    en: "Ended {date} — one completion restarts it",
+  },
+  "stats.streakFirst": {
+    es: "Tu primera entrega la inicia",
+    en: "Your first completion starts it",
+  },
+  "stats.completed": { es: "Completados", en: "Completed" },
+  "stats.nextUp": { es: "Siguiente: track de {track}", en: "Next up: {track} track" },
+  "stats.allTracksStarted": { es: "Todos los tracks empezados", en: "All tracks started" },
+  "stats.best": { es: "Mejor racha", en: "Best streak" },
+  "stats.bestNote": { es: "Récord personal", en: "Personal best" },
+  "nudge.lead": {
+    es: "Puntos, rachas y un lugar en el tablero.",
+    en: "Points, streaks and a place on the board.",
+  },
+  "nudge.sub": {
+    es: "Inicia sesión para empezar a contar — el progreso se registra desde tu primera entrega.",
+    en: "Sign in to start counting — progress is tracked from your first completion.",
+  },
+  "nudge.cta": { es: "Inicia sesión con GitHub", en: "Sign in with GitHub" },
 } satisfies Record<string, LocalizedEntry>
 
 export const getPlaygroundDict = (lang: string): PlaygroundDict => {
@@ -560,6 +617,29 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
     },
     time: {
       minutes: tx("time.minutes"),
+    },
+    stats: {
+      eyebrow: tx("stats.eyebrow"),
+      points: tx("stats.points"),
+      pointsToday: tx("stats.pointsToday"),
+      acrossTracksSingular: tx("stats.acrossTracksSingular"),
+      acrossTracksPlural: tx("stats.acrossTracksPlural"),
+      streak: tx("stats.streak"),
+      days: tx("stats.days"),
+      of: tx("stats.of"),
+      streakAlive: tx("stats.streakAlive"),
+      streakBroken: tx("stats.streakBroken"),
+      streakFirst: tx("stats.streakFirst"),
+      completed: tx("stats.completed"),
+      nextUp: tx("stats.nextUp"),
+      allTracksStarted: tx("stats.allTracksStarted"),
+      best: tx("stats.best"),
+      bestNote: tx("stats.bestNote"),
+    },
+    nudge: {
+      lead: tx("nudge.lead"),
+      sub: tx("nudge.sub"),
+      cta: tx("nudge.cta"),
     },
     detail: {
       back: tx("detail.back"),
