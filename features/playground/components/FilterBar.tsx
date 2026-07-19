@@ -115,7 +115,7 @@ export const FilterBar = ({
         <TabsList className="border-line bg-bg-card h-auto w-auto justify-start overflow-x-auto rounded-(--r-10) border p-1">
           <TabsTrigger
             value="all"
-            className="data-[state=active]:bg-bg-elev data-[state=active]:text-ob-accent data-[state=inactive]:text-fg-muted data-[state=inactive]:hover:bg-bg-elev/60 flex shrink-0 items-center gap-1.5 rounded-(--r-8) px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-sm [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="data-[state=active]:bg-bg-elev data-[state=active]:text-ob-accent data-[state=inactive]:text-fg-muted data-[state=inactive]:hover:bg-bg-elev/60 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-sm [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
           >
             <svg
               viewBox="0 0 24 24"
@@ -139,7 +139,7 @@ export const FilterBar = ({
             <TabsTrigger
               key={key}
               value={key}
-              className="data-[state=active]:bg-bg-elev data-[state=active]:text-ob-accent data-[state=inactive]:text-fg-muted data-[state=inactive]:hover:bg-bg-elev/60 flex shrink-0 items-center gap-1.5 rounded-(--r-8) px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-sm [&_svg]:size-3.5 [&_svg]:shrink-0"
+              className="data-[state=active]:bg-bg-elev data-[state=active]:text-ob-accent data-[state=inactive]:text-fg-muted data-[state=inactive]:hover:bg-bg-elev/60 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-sm [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
             >
               {icon}
               {label}
