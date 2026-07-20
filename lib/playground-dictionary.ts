@@ -182,6 +182,19 @@ export type PlaygroundDict = {
     readonly sub: string
     readonly cta: string
   }
+  readonly reward: {
+    readonly pointsSuffix: string
+    readonly streakExtendedLabel: string
+    readonly streakExtendedTag: string
+    readonly streakStartedLabel: string
+    readonly streakStartedNote: string
+    readonly streakUnchangedLabel: string
+    readonly rankLabel: string
+    readonly totalPointsSuffix: string
+    readonly timeComparisonLabel: string
+    readonly repeatNote: string
+    readonly badgeNewTag: string
+  }
   readonly leaderboard: {
     readonly metaTitle: string
     readonly metaDescription: string
@@ -482,6 +495,26 @@ const translations = {
   },
   "nudge.cta": { es: "Inicia sesión con GitHub", en: "Sign in with GitHub" },
   "hub.boardLink": { es: "Clasificación", en: "Leaderboard" },
+  "reward.pointsSuffix": { es: "puntos", en: "points" },
+  "reward.streakExtendedLabel": { es: "Racha — día {day}", en: "Streak — day {day}" },
+  "reward.streakExtendedTag": { es: "extendida", en: "extended" },
+  "reward.streakStartedLabel": { es: "Racha iniciada — día 1", en: "Streak started — day 1" },
+  "reward.streakStartedNote": {
+    es: "Vuelve mañana (UTC) para llegar al día 2.",
+    en: "Come back tomorrow (UTC) to make it day 2.",
+  },
+  "reward.streakUnchangedLabel": { es: "Racha sin cambios", en: "Streak unchanged" },
+  "reward.rankLabel": { es: "#{rank} en el tablero", en: "#{rank} on the board" },
+  "reward.totalPointsSuffix": { es: "puntos totales", en: "total points" },
+  "reward.timeComparisonLabel": {
+    es: "{current} vs {first} primera vez",
+    en: "{current} vs {first} first run",
+  },
+  "reward.repeatNote": {
+    es: "Los puntos se otorgan una sola vez por reto — la repetición sigue contando.",
+    en: "Points pay out once per challenge — the rep still counts.",
+  },
+  "reward.badgeNewTag": { es: "Nuevo", en: "New" },
   "leaderboard.metaTitle": { es: "Clasificación · openbranch", en: "Leaderboard · openbranch" },
   "leaderboard.metaDescription": {
     es: "El ranking histórico del playground — puntos por cada reto completado.",
@@ -719,6 +752,19 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       lead: tx("nudge.lead"),
       sub: tx("nudge.sub"),
       cta: tx("nudge.cta"),
+    },
+    reward: {
+      pointsSuffix: tx("reward.pointsSuffix"),
+      streakExtendedLabel: tx("reward.streakExtendedLabel"),
+      streakExtendedTag: tx("reward.streakExtendedTag"),
+      streakStartedLabel: tx("reward.streakStartedLabel"),
+      streakStartedNote: tx("reward.streakStartedNote"),
+      streakUnchangedLabel: tx("reward.streakUnchangedLabel"),
+      rankLabel: tx("reward.rankLabel"),
+      totalPointsSuffix: tx("reward.totalPointsSuffix"),
+      timeComparisonLabel: tx("reward.timeComparisonLabel"),
+      repeatNote: tx("reward.repeatNote"),
+      badgeNewTag: tx("reward.badgeNewTag"),
     },
     leaderboard: {
       metaTitle: tx("leaderboard.metaTitle"),
