@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import type { Metadata } from "next"
+import Link from "next/link"
 import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
@@ -187,9 +188,29 @@ export default async function PlaygroundPage({
       <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
         {dict.hub.eyebrow}
       </p>
-      <h1 className="m-0 mb-[18px] text-[42px] leading-[1.05] font-medium tracking-[0] text-balance max-[980px]:text-[32px]">
-        {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
-      </h1>
+      <div className="mb-[18px] flex items-baseline justify-between gap-8">
+        <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-[0] text-balance max-[980px]:text-[32px]">
+          {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
+        </h1>
+        <Link
+          href={localizedHref(lang, "/playground/leaderboard")}
+          className="text-fg-2 hover:text-fg inline-flex shrink-0 items-center gap-1.5 text-[13.5px] transition-colors"
+        >
+          {dict.hub.boardLink}
+          <svg
+            viewBox="0 0 24 24"
+            className="size-3.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
+      </div>
       <p className="text-fg-2 m-0 mb-10 max-w-[56ch] text-base leading-[1.55]">{dict.hub.intro}</p>
 
       {user === null ? (

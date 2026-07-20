@@ -112,6 +112,7 @@ export type PlaygroundDict = {
     readonly startCta: string
     readonly continueCta: string
     readonly filterAll: string
+    readonly boardLink: string
     readonly sort: {
       readonly label: string
       readonly recommended: string
@@ -180,6 +181,30 @@ export type PlaygroundDict = {
     readonly lead: string
     readonly sub: string
     readonly cta: string
+  }
+  readonly leaderboard: {
+    readonly metaTitle: string
+    readonly metaDescription: string
+    readonly title: string
+    readonly titleAccent: string
+    readonly subSparse: string
+    readonly subFull: string
+    readonly subEmpty: string
+    readonly rank: string
+    readonly builder: string
+    readonly points: string
+    readonly completed: string
+    readonly best: string
+    readonly you: string
+    readonly openSeat: string
+    readonly footSparse: string
+    readonly footPinned: string
+    readonly footOrder: string
+    readonly emptyTitle: string
+    readonly emptyBody: string
+    readonly emptyCta: string
+    readonly back: string
+    readonly error: string
   }
 }
 
@@ -435,11 +460,11 @@ const translations = {
     en: "Alive — you completed one today",
   },
   "stats.streakBroken": {
-    es: "Terminó el {date} — una entrega la reinicia",
+    es: "Terminó el {date} — completar un reto la reinicia",
     en: "Ended {date} — one completion restarts it",
   },
   "stats.streakFirst": {
-    es: "Tu primera entrega la inicia",
+    es: "Tu primer reto completado la inicia",
     en: "Your first completion starts it",
   },
   "stats.completed": { es: "Completados", en: "Completed" },
@@ -452,10 +477,63 @@ const translations = {
     en: "Points, streaks and a place on the board.",
   },
   "nudge.sub": {
-    es: "Inicia sesión para empezar a contar — el progreso se registra desde tu primera entrega.",
+    es: "Inicia sesión para empezar a contar — el progreso se registra desde tu primer reto completado.",
     en: "Sign in to start counting — progress is tracked from your first completion.",
   },
   "nudge.cta": { es: "Inicia sesión con GitHub", en: "Sign in with GitHub" },
+  "hub.boardLink": { es: "Clasificación", en: "Leaderboard" },
+  "leaderboard.metaTitle": { es: "Clasificación · openbranch", en: "Leaderboard · openbranch" },
+  "leaderboard.metaDescription": {
+    es: "El ranking histórico del playground — puntos por cada reto completado.",
+    en: "The playground's all-time ranking — points for every completed challenge.",
+  },
+  "leaderboard.title": { es: "Clasificación", en: "Leaderboard" },
+  "leaderboard.titleAccent": { es: "cada reto suma", en: "every challenge adds up" },
+  "leaderboard.subSparse": {
+    es: "Primeros días: {count} en el tablero. Ordenado por puntos y luego por retos completados.",
+    en: "Early days: {count} on the board. Ranked by points, then challenges completed.",
+  },
+  "leaderboard.subFull": {
+    es: "{count} builders. Ordenado por puntos y luego por retos completados.",
+    en: "{count} builders. Ranked by points, then challenges completed.",
+  },
+  "leaderboard.subEmpty": {
+    es: "Ordenado por puntos y luego por retos completados.",
+    en: "Ranked by points, then challenges completed.",
+  },
+  "leaderboard.rank": { es: "Puesto", en: "Rank" },
+  "leaderboard.builder": { es: "Builder", en: "Builder" },
+  "leaderboard.points": { es: "Puntos", en: "Points" },
+  "leaderboard.completed": { es: "Completados", en: "Completed" },
+  "leaderboard.best": { es: "Mejor racha", en: "Best streak" },
+  "leaderboard.you": { es: "tú", en: "you" },
+  "leaderboard.openSeat": {
+    es: "Asiento libre — completa un reto para ocuparlo",
+    en: "Open seat — complete a challenge to claim it",
+  },
+  "leaderboard.footSparse": {
+    es: "Se actualiza con cada reto completado · los usuarios se sincronizan desde GitHub",
+    en: "Refreshed on every completion · usernames sync from GitHub on login",
+  },
+  "leaderboard.footPinned": {
+    es: "Tu posición se actualiza al completar un reto",
+    en: "Your position updates the moment a challenge completes",
+  },
+  "leaderboard.footOrder": {
+    es: "Ordenado por puntos y luego por retos completados",
+    en: "Ranked by points, then challenges completed",
+  },
+  "leaderboard.emptyTitle": { es: "El tablero espera", en: "The board is waiting" },
+  "leaderboard.emptyBody": {
+    es: "Nadie ha completado un reto todavía. El primero en hacerlo se lleva el #1 — hasta que alguien lo recupere.",
+    en: "Nobody has completed a challenge yet. The first one takes #1 — and holds it until someone earns it back.",
+  },
+  "leaderboard.emptyCta": { es: "Empieza un reto", en: "Start a challenge" },
+  "leaderboard.back": { es: "Todos los retos", en: "All challenges" },
+  "leaderboard.error": {
+    es: "El tablero se ha tomado un descanso — recarga para reintentar.",
+    en: "The board took a break — refresh to retry.",
+  },
 } satisfies Record<string, LocalizedEntry>
 
 export const getPlaygroundDict = (lang: string): PlaygroundDict => {
@@ -551,6 +629,7 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       startCta: tx("hub.startCta"),
       continueCta: tx("hub.continueCta"),
       filterAll: tx("hub.filterAll"),
+      boardLink: tx("hub.boardLink"),
       sort: {
         label: tx("hub.sort.label"),
         recommended: tx("hub.sort.recommended"),
@@ -640,6 +719,30 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       lead: tx("nudge.lead"),
       sub: tx("nudge.sub"),
       cta: tx("nudge.cta"),
+    },
+    leaderboard: {
+      metaTitle: tx("leaderboard.metaTitle"),
+      metaDescription: tx("leaderboard.metaDescription"),
+      title: tx("leaderboard.title"),
+      titleAccent: tx("leaderboard.titleAccent"),
+      subSparse: tx("leaderboard.subSparse"),
+      subFull: tx("leaderboard.subFull"),
+      subEmpty: tx("leaderboard.subEmpty"),
+      rank: tx("leaderboard.rank"),
+      builder: tx("leaderboard.builder"),
+      points: tx("leaderboard.points"),
+      completed: tx("leaderboard.completed"),
+      best: tx("leaderboard.best"),
+      you: tx("leaderboard.you"),
+      openSeat: tx("leaderboard.openSeat"),
+      footSparse: tx("leaderboard.footSparse"),
+      footPinned: tx("leaderboard.footPinned"),
+      footOrder: tx("leaderboard.footOrder"),
+      emptyTitle: tx("leaderboard.emptyTitle"),
+      emptyBody: tx("leaderboard.emptyBody"),
+      emptyCta: tx("leaderboard.emptyCta"),
+      back: tx("leaderboard.back"),
+      error: tx("leaderboard.error"),
     },
     detail: {
       back: tx("detail.back"),
