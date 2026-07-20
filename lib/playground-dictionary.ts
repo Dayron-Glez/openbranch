@@ -185,7 +185,6 @@ export type PlaygroundDict = {
   readonly leaderboard: {
     readonly metaTitle: string
     readonly metaDescription: string
-    readonly eyebrow: string
     readonly title: string
     readonly titleAccent: string
     readonly subSparse: string
@@ -461,11 +460,11 @@ const translations = {
     en: "Alive — you completed one today",
   },
   "stats.streakBroken": {
-    es: "Terminó el {date} — una entrega la reinicia",
+    es: "Terminó el {date} — completar un reto la reinicia",
     en: "Ended {date} — one completion restarts it",
   },
   "stats.streakFirst": {
-    es: "Tu primera entrega la inicia",
+    es: "Tu primer reto completado la inicia",
     en: "Your first completion starts it",
   },
   "stats.completed": { es: "Completados", en: "Completed" },
@@ -478,7 +477,7 @@ const translations = {
     en: "Points, streaks and a place on the board.",
   },
   "nudge.sub": {
-    es: "Inicia sesión para empezar a contar — el progreso se registra desde tu primera entrega.",
+    es: "Inicia sesión para empezar a contar — el progreso se registra desde tu primer reto completado.",
     en: "Sign in to start counting — progress is tracked from your first completion.",
   },
   "nudge.cta": { es: "Inicia sesión con GitHub", en: "Sign in with GitHub" },
@@ -488,9 +487,8 @@ const translations = {
     es: "El ranking histórico del playground — puntos por cada reto completado.",
     en: "The playground's all-time ranking — points for every completed challenge.",
   },
-  "leaderboard.eyebrow": { es: "Playground — histórico", en: "Playground — all time" },
   "leaderboard.title": { es: "Clasificación", en: "Leaderboard" },
-  "leaderboard.titleAccent": { es: "cada merge cuenta", en: "every merge counts" },
+  "leaderboard.titleAccent": { es: "cada reto suma", en: "every challenge adds up" },
   "leaderboard.subSparse": {
     es: "Primeros días: {count} en el tablero. Ordenado por puntos y luego por retos completados.",
     en: "Early days: {count} on the board. Ranked by points, then challenges completed.",
@@ -510,11 +508,11 @@ const translations = {
   "leaderboard.best": { es: "Mejor racha", en: "Best streak" },
   "leaderboard.you": { es: "tú", en: "you" },
   "leaderboard.openSeat": {
-    es: "Asiento libre — una entrega pone a alguien aquí",
-    en: "Open seat — one completion puts a builder here",
+    es: "Asiento libre — completa un reto para ocuparlo",
+    en: "Open seat — complete a challenge to claim it",
   },
   "leaderboard.footSparse": {
-    es: "Se actualiza con cada entrega · los usuarios se sincronizan desde GitHub",
+    es: "Se actualiza con cada reto completado · los usuarios se sincronizan desde GitHub",
     en: "Refreshed on every completion · usernames sync from GitHub on login",
   },
   "leaderboard.footPinned": {
@@ -527,7 +525,7 @@ const translations = {
   },
   "leaderboard.emptyTitle": { es: "El tablero espera", en: "The board is waiting" },
   "leaderboard.emptyBody": {
-    es: "Nadie ha completado un reto todavía. La primera entrega se lleva el #1 — hasta que alguien lo recupere.",
+    es: "Nadie ha completado un reto todavía. El primero en hacerlo se lleva el #1 — hasta que alguien lo recupere.",
     en: "Nobody has completed a challenge yet. The first one takes #1 — and holds it until someone earns it back.",
   },
   "leaderboard.emptyCta": { es: "Empieza un reto", en: "Start a challenge" },
@@ -725,7 +723,6 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
     leaderboard: {
       metaTitle: tx("leaderboard.metaTitle"),
       metaDescription: tx("leaderboard.metaDescription"),
-      eyebrow: tx("leaderboard.eyebrow"),
       title: tx("leaderboard.title"),
       titleAccent: tx("leaderboard.titleAccent"),
       subSparse: tx("leaderboard.subSparse"),

@@ -42,9 +42,9 @@ export default async function LeaderboardPage({
   const sub = getLeaderboardSub(dict.leaderboard, leaderboard)
 
   return (
-    <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
+    <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 pt-10 pb-12 max-[520px]:px-5">
       <div className="mx-auto max-w-[980px]">
-        <nav aria-label="Breadcrumb" className="mb-[22px]">
+        <nav aria-label="Breadcrumb" className="mb-4">
           <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
             <li>
               <Link href={hubPath} className="hover:text-fg-2 transition-colors">
@@ -58,20 +58,17 @@ export default async function LeaderboardPage({
           </ol>
         </nav>
 
-        <div className="mb-[30px] flex flex-col gap-2.5">
-          <p className="text-ob-accent m-0 font-mono text-[11px] tracking-[0.08em] uppercase">
-            {dict.leaderboard.eyebrow}
-          </p>
-          <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-[0] max-[980px]:text-[32px]">
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5">
+          <h1 className="m-0 text-[26px] leading-[1.1] font-medium tracking-[-0.01em] max-[640px]:text-[22px]">
             {dict.leaderboard.title}{" "}
             <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
           </h1>
-          {sub !== null && <p className="text-fg-2 m-0 text-[15px] leading-[1.55]">{sub}</p>}
+          {sub !== null && <p className="text-fg-muted m-0 text-[13px] leading-[1.5]">{sub}</p>}
         </div>
 
         <LeaderboardTable dict={dict.leaderboard} data={leaderboard} hubPath={hubPath} />
 
-        <div className="mt-[26px] flex justify-center">
+        <div className="mt-5 flex justify-center">
           <Link
             href={hubPath}
             className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-[13.5px] transition-colors"

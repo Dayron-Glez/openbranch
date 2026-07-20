@@ -28,9 +28,9 @@ type LeaderboardTableProps = {
 
 const CARD_CLASS = "border-line bg-bg-card overflow-hidden rounded-(--r-12) border"
 const HEAD_CLASS =
-  "text-fg-muted h-[42px] font-mono text-[10.5px] font-normal tracking-[0.08em] uppercase"
-const NUMBER_CLASS = "text-fg-2 text-right font-mono text-[13px] tabular-nums"
-const RANK_CLASS = "text-fg-muted font-mono text-[12.5px] tabular-nums"
+  "text-fg-muted h-9 font-mono text-[10.5px] font-normal tracking-[0.08em] uppercase"
+const NUMBER_CLASS = "text-fg-2 text-center font-mono text-[13px] leading-none tabular-nums"
+const RANK_CLASS = "text-fg-muted font-mono text-[12.5px] leading-none tabular-nums"
 const HIDE_ON_MOBILE = "max-[640px]:hidden"
 
 const formatRank = (rank: number): string => String(rank).padStart(2, "0")
@@ -57,14 +57,14 @@ const BuilderCell = ({
   readonly isOwn: boolean
   readonly youLabel: string
 }): React.ReactElement => (
-  <div className="flex min-w-0 items-center gap-3">
-    <Avatar className="border-line size-7 shrink-0 border">
+  <div className="flex min-w-0 items-center gap-2.5">
+    <Avatar className="border-line size-6 shrink-0 border">
       {row.avatarUrl !== null && <AvatarImage src={row.avatarUrl} alt={row.username} />}
-      <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[10px]">
+      <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[9px]">
         {getInitials(row.username)}
       </AvatarFallback>
     </Avatar>
-    <span className="truncate text-[14px] font-medium">{row.username}</span>
+    <span className="truncate text-[14px] leading-none font-medium">{row.username}</span>
     {isOwn && (
       <Badge className="bg-accent-soft border-accent-ring text-ob-accent shrink-0 rounded-full border px-[7px] py-0 font-mono text-[10px] font-normal tracking-[0.06em] uppercase">
         {youLabel}
@@ -91,9 +91,9 @@ const BoardRow = ({
   }
 
   return (
-    <TableRow className={`border-line h-[58px] hover:bg-transparent ${getRowClass()}`}>
+    <TableRow className={`border-line h-[42px] hover:bg-transparent ${getRowClass()}`}>
       <TableCell
-        className={`pl-[22px] ${RANK_CLASS} ${row.rank === 1 || pinned ? "text-ob-accent" : ""}`}
+        className={`pl-4 text-center ${RANK_CLASS} ${row.rank === 1 || pinned ? "text-ob-accent" : ""}`}
       >
         {formatRank(row.rank)}
       </TableCell>
@@ -102,9 +102,7 @@ const BoardRow = ({
       </TableCell>
       <TableCell className={`${NUMBER_CLASS} text-fg font-medium`}>{row.totalPoints}</TableCell>
       <TableCell className={`${NUMBER_CLASS} ${HIDE_ON_MOBILE}`}>{row.completedCount}</TableCell>
-      <TableCell className={`${NUMBER_CLASS} ${HIDE_ON_MOBILE} pr-[22px]`}>
-        {row.bestStreak}
-      </TableCell>
+      <TableCell className={`${NUMBER_CLASS} ${HIDE_ON_MOBILE} pr-4`}>{row.bestStreak}</TableCell>
     </TableRow>
   )
 }
@@ -118,13 +116,15 @@ const GhostRow = ({
 }): React.ReactElement => (
   <TableRow
     aria-hidden
-    className="border-line h-[52px] border-t border-dashed hover:bg-transparent"
+    className="border-line h-[38px] border-t border-dashed hover:bg-transparent"
   >
-    <TableCell className={`pl-[22px] ${RANK_CLASS} text-fg-faint`}>{formatRank(seat)}</TableCell>
-    <TableCell colSpan={4} className="pr-[22px]">
-      <div className="flex items-center gap-3">
-        <span className="border-line-2 size-7 shrink-0 rounded-full border border-dashed" />
-        <span className="text-fg-faint truncate text-[13px]">{label}</span>
+    <TableCell className={`pl-4 text-center ${RANK_CLASS} text-fg-faint`}>
+      {formatRank(seat)}
+    </TableCell>
+    <TableCell colSpan={4} className="pr-4">
+      <div className="flex items-center gap-2.5">
+        <span className="border-line-2 size-6 shrink-0 rounded-full border border-dashed" />
+        <span className="text-fg-faint truncate text-[13px] leading-none">{label}</span>
       </div>
     </TableCell>
   </TableRow>
@@ -138,7 +138,7 @@ const EmptyState = ({
   readonly hubPath: string
 }): React.ReactElement => (
   <div className={CARD_CLASS}>
-    <div className="flex flex-col items-center gap-3.5 px-10 py-16 text-center">
+    <div className="flex flex-col items-center gap-3.5 px-10 py-12 text-center">
       <span className="border-line bg-bg-elev text-fg-muted inline-grid size-[46px] place-items-center rounded-(--r-10) border [&_svg]:size-5">
         <IconBranch aria-hidden />
       </span>
@@ -151,7 +151,7 @@ const EmptyState = ({
         {dict.emptyCta}
       </Link>
     </div>
-    <div className="border-line text-fg-muted border-t px-[22px] py-3 font-mono text-[11px] tracking-[0.04em]">
+    <div className="border-line text-fg-muted border-t px-4 py-2.5 font-mono text-[11px] tracking-[0.04em]">
       {dict.footOrder}
     </div>
   </div>
@@ -165,7 +165,7 @@ export const LeaderboardTable = ({
   if (data === null) {
     return (
       <div className={CARD_CLASS}>
-        <p className="text-fg-muted m-0 px-[22px] py-6 font-mono text-[12.5px]">{dict.error}</p>
+        <p className="text-fg-muted m-0 px-4 py-5 font-mono text-[12.5px]">{dict.error}</p>
       </div>
     )
   }
@@ -197,15 +197,15 @@ export const LeaderboardTable = ({
       <Table className="text-[14px]">
         <TableHeader>
           <TableRow className="border-line hover:bg-transparent">
-            <TableHead className={`w-16 pl-[22px] ${HEAD_CLASS}`}>{dict.rank}</TableHead>
+            <TableHead className={`w-14 pl-4 text-center ${HEAD_CLASS}`}>{dict.rank}</TableHead>
             <TableHead className={HEAD_CLASS}>{dict.builder}</TableHead>
-            <TableHead className={`w-[130px] text-right max-[640px]:w-20 ${HEAD_CLASS}`}>
+            <TableHead className={`w-[110px] text-center max-[640px]:w-20 ${HEAD_CLASS}`}>
               {dict.points}
             </TableHead>
-            <TableHead className={`w-[130px] text-right ${HIDE_ON_MOBILE} ${HEAD_CLASS}`}>
+            <TableHead className={`w-[110px] text-center ${HIDE_ON_MOBILE} ${HEAD_CLASS}`}>
               {dict.completed}
             </TableHead>
-            <TableHead className={`w-[130px] pr-[22px] text-right ${HIDE_ON_MOBILE} ${HEAD_CLASS}`}>
+            <TableHead className={`w-[110px] pr-4 text-center ${HIDE_ON_MOBILE} ${HEAD_CLASS}`}>
               {dict.best}
             </TableHead>
           </TableRow>
@@ -232,7 +232,7 @@ export const LeaderboardTable = ({
               <TableRow aria-hidden className="border-line hover:bg-transparent">
                 <TableCell
                   colSpan={5}
-                  className="text-fg-faint py-[7px] text-center font-mono text-[12px] tracking-[0.3em]"
+                  className="text-fg-faint py-1 text-center font-mono text-[12px] leading-none tracking-[0.3em]"
                 >
                   ···
                 </TableCell>
@@ -241,7 +241,7 @@ export const LeaderboardTable = ({
             </>
           )}
         </TableBody>
-        <TableCaption className="border-line text-fg-muted m-0 border-t px-[22px] py-3 text-left font-mono text-[11px] tracking-[0.04em]">
+        <TableCaption className="border-line text-fg-muted m-0 border-t px-4 py-2.5 text-left font-mono text-[11px] tracking-[0.04em]">
           {getFooter()}
         </TableCaption>
       </Table>
