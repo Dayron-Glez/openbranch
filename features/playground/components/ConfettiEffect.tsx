@@ -5,6 +5,8 @@ import confetti from "canvas-confetti"
 
 export const ConfettiEffect = (): null => {
   useEffect(() => {
+    if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
     const timer = setTimeout(() => {
       confetti({
         particleCount: 120,

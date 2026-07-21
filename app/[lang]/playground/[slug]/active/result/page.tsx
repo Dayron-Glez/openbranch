@@ -10,6 +10,11 @@ import { createClient } from "@/lib/supabase/server"
 import { ConfettiEffect } from "@/features/playground/components/ConfettiEffect"
 import { DiffBars } from "@/shared/DiffBars"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
+import { formatElapsed } from "@/features/playground/domain/format-elapsed"
+import { inferCategoryBadge } from "@/features/playground/domain/manifest"
+import { getCompletionReward } from "@/features/playground/server/reward-service"
+import { RewardMoment } from "@/features/playground/components/RewardMoment"
+import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -34,37 +39,6 @@ export async function generateMetadata({ params }: ResultPageProps): Promise<Met
 }
 
 /* ── small icons ── */
-
-const CheckIcon = (): ReactNode => (
-  <svg
-    viewBox="0 0 16 16"
-    className="size-3.5 shrink-0"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M2.5 8.5l3.5 3.5 7-7" />
-  </svg>
-)
-
-const ClockIcon = (): ReactNode => (
-  <svg
-    viewBox="0 0 16 16"
-    className="size-3.5 shrink-0"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.7"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <circle cx="8" cy="8" r="6" />
-    <path d="M8 5v3l2 1.5" />
-  </svg>
-)
 
 const BranchIcon = (): ReactNode => (
   <svg
@@ -225,27 +199,31 @@ export default async function ResultPage({ params }: ResultPageProps) {
     startedAt === null || completedAt === null
       ? null
       : Math.max(0, Math.floor((completedAt.getTime() - startedAt.getTime()) / 1000))
-  const elapsedDisplay =
-    elapsedSeconds === null
-      ? null
-      : `${Math.floor(elapsedSeconds / 60)}:${String(elapsedSeconds % 60).padStart(2, "0")}`
+  const elapsedDisplay = elapsedSeconds === null ? null : formatElapsed(elapsedSeconds)
 
-  /* badge */
-  const { data: badge } = await supabase
-    .from("user_badges")
-    .select("badge")
-    .eq("user_id", user.id)
-    .eq("badge", "review-corps")
-    .maybeSingle()
+  /* badge, next-challenge candidates, and reward — independent reads, run together */
+  const badgeKey = inferCategoryBadge(slug)
+  const [badgeResult, completedRowsResult, reward] = await Promise.all([
+    badgeKey === null
+      ? Promise.resolve({ data: null })
+      : supabase
+          .from("user_badges")
+          .select("badge")
+          .eq("user_id", user.id)
+          .eq("badge", badgeKey)
+          .maybeSingle(),
+    supabase
+      .from("challenge_sessions")
+      .select("challenge_slug")
+      .eq("user_id", user.id)
+      .eq("status", "completed"),
+    getCompletionReward(supabase, user.id, slug),
+  ])
 
-  /* next challenges */
-  const { data: completedRows } = await supabase
-    .from("challenge_sessions")
-    .select("challenge_slug")
-    .eq("user_id", user.id)
-    .eq("status", "completed")
-
-  const completedSlugs = new Set((completedRows ?? []).map((r) => r.challenge_slug as string))
+  const badge = badgeResult.data
+  const completedSlugs = new Set(
+    (completedRowsResult.data ?? []).map((r) => r.challenge_slug as string)
+  )
 
   const allOthers = playgroundSource
     .getPages(lang)
@@ -270,6 +248,14 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const dict = getPlaygroundDict(lang)
   const playgroundPath = localizedHref(lang, "/playground")
   const challengeBranch = page.data.pr_preview?.branch ?? null
+
+  const badgeInfo =
+    badge === null || badgeKey === null
+      ? null
+      : (dict.badges[badgeKey as keyof typeof dict.badges] as {
+          readonly name: string
+          readonly description: string
+        })
 
   return (
     <main data-pg-main className="relative z-1 min-h-full overflow-x-hidden">
@@ -344,6 +330,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </span>
           </div>
 
+          <RewardMoment reward={reward} currentElapsedDisplay={elapsedDisplay} dict={dict.reward} />
+
           {/* CTAs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {(buildsOnChallenge ?? newTrackChallenge) !== null && (
@@ -367,17 +355,20 @@ export default async function ResultPage({ params }: ResultPageProps) {
         {/* ── sections ── */}
         <div className="flex flex-col gap-4">
           {/* badge */}
-          {badge !== null && (
+          {badgeInfo !== null && (
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
               <div>
-                <p className="text-fg-muted mb-1 font-mono text-[10.5px] tracking-[0.08em] uppercase">
+                <p className="text-fg-muted mb-1 flex items-center gap-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
                   {dict.result.badgeEarnedLabel}
+                  {reward?.badgeNewlyEarned === true && (
+                    <span className="bg-accent-soft border-accent-ring text-ob-accent rounded-full border px-1.5 py-0.5 text-[9.5px] tracking-[0.04em]">
+                      {dict.reward.badgeNewTag}
+                    </span>
+                  )}
                 </p>
-                <p className="text-fg mb-0.5 text-[14.5px] font-medium">
-                  {dict.badges["review-corps"].name}
-                </p>
-                <p className="text-fg-2 text-[13px]">{dict.badges["review-corps"].description}</p>
+                <p className="text-fg mb-0.5 text-[14.5px] font-medium">{badgeInfo.name}</p>
+                <p className="text-fg-2 text-[13px]">{badgeInfo.description}</p>
               </div>
             </div>
           )}
