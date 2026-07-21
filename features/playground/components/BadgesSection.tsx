@@ -41,6 +41,12 @@ const BADGE_ICONS: Record<BadgeKey, React.ReactNode> = {
   "all-tracks": <IconAward />,
 }
 
+const getTileClassName = (earned: boolean, hasTrack: boolean): string => {
+  if (!earned) return "border-line bg-bg-elev text-fg-faint"
+  if (hasTrack) return "border-(--track-ring) bg-(--track-soft) text-(color:--track)"
+  return "border-accent-ring bg-accent-soft text-ob-accent"
+}
+
 export const BadgesSection = ({ dict, earnedBadges }: BadgesSectionProps) => {
   const hasLocked = BADGE_KEYS.some((key) => !earnedBadges.has(key))
 
@@ -53,6 +59,7 @@ export const BadgesSection = ({ dict, earnedBadges }: BadgesSectionProps) => {
         {BADGE_KEYS.map((key) => {
           const earned = earnedBadges.has(key)
           const track = TRACK_BY_BADGE_KEY.get(key)
+          const tileClassName = getTileClassName(earned, track !== undefined)
           return (
             <div
               key={key}
@@ -60,13 +67,7 @@ export const BadgesSection = ({ dict, earnedBadges }: BadgesSectionProps) => {
             >
               <span
                 data-track={earned ? track?.colorToken : undefined}
-                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${
-                  earned
-                    ? track
-                      ? "border-(--track-ring) bg-(--track-soft) text-(color:--track)"
-                      : "border-accent-ring bg-accent-soft text-ob-accent"
-                    : "border-line bg-bg-elev text-fg-faint"
-                }`}
+                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${tileClassName}`}
               >
                 {BADGE_ICONS[key]}
               </span>
