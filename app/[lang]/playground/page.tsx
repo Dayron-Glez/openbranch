@@ -19,6 +19,7 @@ import {
   CATEGORY_ORDER,
   type CategoryKey,
   inferCategoryBadge,
+  getTrackColorToken,
 } from "@/features/playground/domain/manifest"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
@@ -271,6 +272,7 @@ export default async function PlaygroundPage({
                 difficulty={challenge.data.difficulty}
                 estimatedMinutes={challenge.data.estimated_minutes}
                 icon={getChallengeIcon(challenge.data.icon)}
+                colorToken={getTrackColorToken(challenge.data.category)}
                 difficultyLabel={dict.difficulty[challenge.data.difficulty]}
                 statusLabel={statusLabel}
                 sessionStatus={status}
@@ -306,6 +308,7 @@ export default async function PlaygroundPage({
                         difficulty={challenge.data.difficulty}
                         estimatedMinutes={challenge.data.estimated_minutes}
                         icon={getChallengeIcon(challenge.data.icon)}
+                        colorToken={getTrackColorToken(challenge.data.category)}
                         difficultyLabel={dict.difficulty[challenge.data.difficulty]}
                         statusLabel={statusLabel}
                         sessionStatus={status}
