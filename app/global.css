@@ -50,6 +50,39 @@
   --color-info: oklch(78% 0.13 230);
   --color-warn: oklch(80% 0.14 75);
   --color-danger: oklch(72% 0.18 25);
+  --color-info-soft: oklch(78% 0.13 230 / 0.15);
+  --color-info-ring: oklch(78% 0.13 230 / 0.35);
+  --color-info-ink: oklch(27% 0.06 230);
+  --color-warn-soft: oklch(80% 0.14 75 / 0.15);
+  --color-warn-ring: oklch(80% 0.14 75 / 0.35);
+  --color-warn-ink: oklch(27% 0.06 75);
+  --color-danger-soft: oklch(72% 0.18 25 / 0.15);
+  --color-danger-ring: oklch(72% 0.18 25 / 0.35);
+  --color-danger-ink: oklch(27% 0.07 25);
+}
+
+/* openbranch playground track identity (Layer B — see specs/color-tokens-badges.md) */
+@theme {
+  --color-track-git: oklch(78% 0.18 265);
+  --color-track-git-soft: oklch(78% 0.18 265 / 0.15);
+  --color-track-git-ring: oklch(78% 0.18 265 / 0.35);
+  --color-track-git-ink: oklch(27% 0.07 265);
+  --color-track-review: oklch(78% 0.18 310);
+  --color-track-review-soft: oklch(78% 0.18 310 / 0.15);
+  --color-track-review-ring: oklch(78% 0.18 310 / 0.35);
+  --color-track-review-ink: oklch(27% 0.07 310);
+  --color-track-docs: oklch(78% 0.18 350);
+  --color-track-docs-soft: oklch(78% 0.18 350 / 0.15);
+  --color-track-docs-ring: oklch(78% 0.18 350 / 0.35);
+  --color-track-docs-ink: oklch(27% 0.07 350);
+  --color-track-bugfix: oklch(78% 0.18 50);
+  --color-track-bugfix-soft: oklch(78% 0.18 50 / 0.15);
+  --color-track-bugfix-ring: oklch(78% 0.18 50 / 0.35);
+  --color-track-bugfix-ink: oklch(27% 0.07 50);
+  --color-track-test: oklch(78% 0.18 195);
+  --color-track-test-soft: oklch(78% 0.18 195 / 0.15);
+  --color-track-test-ring: oklch(78% 0.18 195 / 0.35);
+  --color-track-test-ink: oklch(27% 0.07 195);
 }
 
 @layer base {
@@ -111,6 +144,42 @@
     --border: 220 12% 15%;
     --input: 220 12% 15%;
     --ring: 140 63% 57%;
+  }
+
+  /* playground track identity — see specs/color-tokens-badges.md */
+  [data-track="git"] {
+    --track: var(--color-track-git);
+    --track-soft: var(--color-track-git-soft);
+    --track-ring: var(--color-track-git-ring);
+    --track-ink: var(--color-track-git-ink);
+  }
+
+  [data-track="review"] {
+    --track: var(--color-track-review);
+    --track-soft: var(--color-track-review-soft);
+    --track-ring: var(--color-track-review-ring);
+    --track-ink: var(--color-track-review-ink);
+  }
+
+  [data-track="docs"] {
+    --track: var(--color-track-docs);
+    --track-soft: var(--color-track-docs-soft);
+    --track-ring: var(--color-track-docs-ring);
+    --track-ink: var(--color-track-docs-ink);
+  }
+
+  [data-track="bugfix"] {
+    --track: var(--color-track-bugfix);
+    --track-soft: var(--color-track-bugfix-soft);
+    --track-ring: var(--color-track-bugfix-ring);
+    --track-ink: var(--color-track-bugfix-ink);
+  }
+
+  [data-track="test"] {
+    --track: var(--color-track-test);
+    --track-soft: var(--color-track-test-soft);
+    --track-ring: var(--color-track-test-ring);
+    --track-ink: var(--color-track-test-ink);
   }
 
   html {
