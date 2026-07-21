@@ -8,6 +8,7 @@ import {
   IconBook,
 } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { TRACK_BY_BADGE_KEY } from "@/features/playground/domain/manifest"
 
 type BadgesSectionProps = {
   readonly dict: PlaygroundDict["badges"]
@@ -51,13 +52,21 @@ export const BadgesSection = ({ dict, earnedBadges }: BadgesSectionProps) => {
       <div className="mb-3 grid grid-cols-7 gap-3 max-[980px]:grid-cols-4 max-[520px]:grid-cols-2">
         {BADGE_KEYS.map((key) => {
           const earned = earnedBadges.has(key)
+          const track = TRACK_BY_BADGE_KEY.get(key)
           return (
             <div
               key={key}
               className={`border-line bg-bg-card flex flex-col items-center gap-2.5 rounded-(--r-10) border p-4 text-center transition-opacity ${earned ? "text-fg" : "text-fg-muted opacity-50"}`}
             >
               <span
-                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${earned ? "border-accent-ring bg-accent-soft text-ob-accent" : "border-line bg-bg-elev text-fg-faint"}`}
+                data-track={earned ? track?.colorToken : undefined}
+                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${
+                  earned
+                    ? track
+                      ? "border-(--track-ring) bg-(--track-soft) text-(color:--track)"
+                      : "border-accent-ring bg-accent-soft text-ob-accent"
+                    : "border-line bg-bg-elev text-fg-faint"
+                }`}
               >
                 {BADGE_ICONS[key]}
               </span>
