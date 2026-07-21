@@ -165,6 +165,7 @@ export default async function PlaygroundPage({
     label: dict.category[cat],
     count: challenges.filter((c) => c.data.category === cat).length,
     icon: getCategoryIcon(cat),
+    colorToken: getTrackColorToken(cat),
   })).filter(({ count }) => count > 0)
 
   const filteredChallenges =
