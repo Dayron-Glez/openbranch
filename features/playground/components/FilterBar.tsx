@@ -147,12 +147,12 @@ export const FilterBar = ({
         >
           <TabsList
             ref={tabListRef}
-            className="relative h-auto w-auto justify-start gap-0.5 overflow-x-auto rounded-none border-0 bg-transparent p-0 shadow-none"
+            className="relative h-auto w-auto justify-start gap-0.5 overflow-x-auto overflow-y-visible rounded-none border-0 bg-transparent p-0 shadow-none"
           >
             {sliderRect !== null && (
               <span
                 aria-hidden="true"
-                className="border-accent-ring bg-bg-card pointer-events-none absolute top-0 bottom-0 z-0 rounded-(--r-8) border shadow-sm transition-[left,width] duration-(--d-slow) ease-(--ease)"
+                className="bg-bg-card pointer-events-none absolute top-0.5 bottom-0.5 z-0 rounded-(--r-8) shadow-[0_1px_2px_rgba(0,0,0,0.5),inset_0_0_0_1px_var(--color-accent-ring)] transition-[left,width] duration-(--d-slow) ease-(--ease)"
                 style={{ left: sliderRect.left, width: sliderRect.width }}
               />
             )}
