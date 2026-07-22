@@ -1,0 +1,50 @@
+[data-challenge-card] {
+  position: relative;
+}
+
+[data-challenge-card] > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-challenge-card]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: radial-gradient(120px 120px at 38px 38px, var(--track-soft), transparent 70%);
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity var(--d-slow) var(--ease);
+}
+
+[data-challenge-card]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 56px;
+  height: 2.5px;
+  background: var(--track);
+  opacity: 0.5;
+  transition:
+    width var(--d-slow) var(--ease),
+    opacity var(--d-slow) var(--ease);
+}
+
+[data-challenge-card]:hover,
+[data-challenge-card]:focus-within {
+  border-color: var(--track-ring);
+}
+
+[data-challenge-card]:hover::before,
+[data-challenge-card]:focus-within::before {
+  opacity: 1;
+}
+
+[data-challenge-card]:hover::after,
+[data-challenge-card]:focus-within::after {
+  width: 100%;
+  opacity: 0.9;
+}
