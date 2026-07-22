@@ -9,13 +9,13 @@ export const DiffBars = ({ difficulty }: DiffBarsProps): ReactNode => {
   return (
     <span className="inline-flex h-3 shrink-0 items-end gap-[3px]">
       <i
-        className={`block h-[5px] w-[3px] rounded-[1px] not-italic ${level >= 1 ? "bg-ob-accent" : "bg-fg-faint"}`}
+        className={`block h-[5px] w-[3px] rounded-[1px] not-italic ${level >= 1 ? "bg-fg-2" : "bg-fg-faint"}`}
       />
       <i
-        className={`block h-2 w-[3px] rounded-[1px] not-italic ${level >= 2 ? "bg-ob-accent" : "bg-fg-faint"}`}
+        className={`block h-2 w-[3px] rounded-[1px] not-italic ${level >= 2 ? "bg-fg-2" : "bg-fg-faint"}`}
       />
       <i
-        className={`block h-3 w-[3px] rounded-[1px] not-italic ${level >= 3 ? "bg-ob-accent" : "bg-fg-faint"}`}
+        className={`block h-3 w-[3px] rounded-[1px] not-italic ${level >= 3 ? "bg-fg-2" : "bg-fg-faint"}`}
       />
     </span>
   )

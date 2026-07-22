@@ -12,27 +12,7 @@ import { PrPreviewCard } from "@/features/playground/components/PrPreviewCard"
 import { createClient } from "@/lib/supabase/server"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { getTrackColorToken } from "@/features/playground/domain/manifest"
-
-const DIFFICULTY_LEVEL: Record<string, number> = { beginner: 1, moderate: 2, demanding: 3 }
-
-type DifficultyBarsProps = { readonly level: number; readonly label: string }
-
-const DifficultyBars = ({ level, label }: DifficultyBarsProps): ReactNode => (
-  <span className="inline-flex items-center gap-2">
-    <span className="inline-flex h-3 items-end gap-[3px]">
-      <i
-        className={`block h-[5px] w-[3px] rounded-[1px] not-italic ${level >= 1 ? "bg-ob-accent" : "bg-fg-faint"}`}
-      />
-      <i
-        className={`block h-2 w-[3px] rounded-[1px] not-italic ${level >= 2 ? "bg-ob-accent" : "bg-fg-faint"}`}
-      />
-      <i
-        className={`block h-3 w-[3px] rounded-[1px] not-italic ${level >= 3 ? "bg-ob-accent" : "bg-fg-faint"}`}
-      />
-    </span>
-    <span className="text-fg text-[13.5px]">{label}</span>
-  </span>
-)
+import { DiffBars } from "@/shared/DiffBars"
 
 const CheckIcon = (): ReactNode => (
   <svg
@@ -116,7 +96,6 @@ export default async function ChallengePage({
   const categoryLabel = dict.category[page.data.category]
   const colorToken = getTrackColorToken(page.data.category)
   const difficultyLabel = dict.difficulty[page.data.difficulty]
-  const difficultyLevel = DIFFICULTY_LEVEL[page.data.difficulty] ?? 1
   const icon = getChallengeIcon(page.data.icon)
   const skills = page.data.skills ?? []
 
@@ -277,7 +256,10 @@ export default async function ChallengePage({
                     <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
                       {dict.detail.metaDifficulty}
                     </span>
-                    <DifficultyBars level={difficultyLevel} label={difficultyLabel} />
+                    <span className="inline-flex items-center gap-2">
+                      <DiffBars difficulty={page.data.difficulty} />
+                      <span className="text-fg text-[13.5px]">{difficultyLabel}</span>
+                    </span>
                   </div>
 
                   <div className="border-line flex items-center justify-between gap-3 border-b py-3">
