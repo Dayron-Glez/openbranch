@@ -50,20 +50,20 @@ type DiffRowProps = {
 
 const DiffRow = ({ line }: DiffRowProps): React.ReactElement => {
   let rowBg = ""
-  if (line.type === "added") rowBg = "bg-green-500/[0.08]"
-  else if (line.type === "removed") rowBg = "bg-red-500/[0.08]"
+  if (line.type === "added") rowBg = "bg-ob-accent/[0.08]"
+  else if (line.type === "removed") rowBg = "bg-danger/[0.08]"
 
   let markerClass = "text-transparent"
-  if (line.type === "added") markerClass = "text-green-400"
-  else if (line.type === "removed") markerClass = "text-red-400"
+  if (line.type === "added") markerClass = "text-ob-accent"
+  else if (line.type === "removed") markerClass = "text-danger"
 
   let markerChar = " "
   if (line.type === "added") markerChar = "+"
   else if (line.type === "removed") markerChar = "-"
 
   let contentClass = ""
-  if (line.type === "added") contentClass = "text-green-300"
-  else if (line.type === "removed") contentClass = "text-red-300/80"
+  if (line.type === "added") contentClass = "text-ob-accent/80"
+  else if (line.type === "removed") contentClass = "text-danger/80"
 
   return (
     <div className={`flex items-center pr-3 ${rowBg}`}>

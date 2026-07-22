@@ -317,29 +317,29 @@ export const BugFixChallengeView = ({
         <div className="min-w-0 min-[901px]:pb-10">
           <div
             className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
-              showSolution ? "border-amber-500/40" : "border-line"
+              showSolution ? "border-warn/40" : "border-line"
             }`}
           >
             {/* file header */}
             <div
               className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
-                showSolution ? "border-amber-500/30 bg-amber-500/[0.04]" : "border-line bg-bg-elev"
+                showSolution ? "border-warn/30 bg-warn/[0.04]" : "border-line bg-bg-elev"
               }`}
             >
               <div className="flex items-center gap-2.5">
                 <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
                 {showSolution && (
-                  <span className="rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[10px] tracking-widest text-amber-400 uppercase">
+                  <span className="bg-warn/15 text-warn rounded px-1.5 py-0.5 font-mono text-[10px] tracking-widest uppercase">
                     diff
                   </span>
                 )}
                 {showSolution && (
                   <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-green-400">
-                      <span className="size-1.5 rounded-full bg-green-400" /> added
+                    <span className="text-ob-accent flex items-center gap-1.5 font-mono text-[10.5px]">
+                      <span className="bg-ob-accent size-1.5 rounded-full" /> added
                     </span>
-                    <span className="flex items-center gap-1.5 font-mono text-[10.5px] text-red-400">
-                      <span className="size-1.5 rounded-full bg-red-400" /> removed
+                    <span className="text-danger flex items-center gap-1.5 font-mono text-[10.5px]">
+                      <span className="bg-danger size-1.5 rounded-full" /> removed
                     </span>
                   </div>
                 )}
@@ -447,7 +447,7 @@ export const BugFixChallengeView = ({
                 </div>
 
                 {testState.compileError !== null && (
-                  <div className="rounded-(--r-8) border border-red-500/20 bg-red-500/[0.03] p-3">
+                  <div className="border-danger/20 bg-danger/[0.03] rounded-(--r-8) border p-3">
                     <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
                       {dict.active.syntaxError}
                     </p>
@@ -475,10 +475,8 @@ export const BugFixChallengeView = ({
                   </div>
                 )}
                 {allTestsPassing && hasTypeErrors && (
-                  <div className="rounded-(--r-8) border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5">
-                    <p className="font-mono text-[12px] text-amber-400">
-                      {dict.active.fixTypeErrors}
-                    </p>
+                  <div className="border-warn/20 bg-warn/[0.04] rounded-(--r-8) border px-3 py-2.5">
+                    <p className="text-warn font-mono text-[12px]">{dict.active.fixTypeErrors}</p>
                   </div>
                 )}
               </div>
