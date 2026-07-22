@@ -27,9 +27,9 @@ type GateChipProps = {
 }
 
 const GateChip = ({ label, value, passed, isError }: Readonly<GateChipProps>) => {
-  const dotColorIfNotPassed = isError ? "bg-red-400" : "bg-fg-faint"
+  const dotColorIfNotPassed = isError ? "bg-danger" : "bg-fg-faint"
   const dotColor = passed ? "bg-ob-accent" : dotColorIfNotPassed
-  const valueColorIfNotPassed = isError ? "text-red-400" : "text-fg-muted"
+  const valueColorIfNotPassed = isError ? "text-danger" : "text-fg-muted"
   const valueColor = passed ? "text-ob-accent" : valueColorIfNotPassed
 
   return (

@@ -9,8 +9,7 @@ type StatusBannersProps = {
 }
 
 const successClass = "ob-rise border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5"
-const warnClass =
-  "ob-rise rounded-(--r-8) border border-amber-500/20 bg-amber-500/[0.04] px-3 py-2.5"
+const warnClass = "ob-rise border-warn/20 bg-warn/[0.04] rounded-(--r-8) border px-3 py-2.5"
 
 export const StatusBanners = ({
   canSubmit,
@@ -29,7 +28,7 @@ export const StatusBanners = ({
       )}
       {showNeedMore && (
         <div className={warnClass}>
-          <p className="font-mono text-[12px] text-amber-400">{dict.active.needMoreTests}</p>
+          <p className="text-warn font-mono text-[12px]">{dict.active.needMoreTests}</p>
         </div>
       )}
     </>

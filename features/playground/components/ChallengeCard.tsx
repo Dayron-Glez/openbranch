@@ -61,11 +61,11 @@ export const ChallengeCard = ({
 }: ChallengeCardProps) => {
   let statusTextClass = "text-fg-muted"
   if (sessionStatus === "completed") statusTextClass = "text-ob-accent"
-  else if (sessionStatus === "in_progress") statusTextClass = "text-amber-400"
+  else if (sessionStatus === "in_progress") statusTextClass = "text-warn"
 
   let statusDotClass = "border-fg-faint border-[1.5px]"
   if (sessionStatus === "completed") statusDotClass = "bg-ob-accent"
-  else if (sessionStatus === "in_progress") statusDotClass = "bg-amber-400"
+  else if (sessionStatus === "in_progress") statusDotClass = "bg-warn"
 
   return (
     <Link

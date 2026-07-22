@@ -33,8 +33,8 @@ export const PlaygroundBreadcrumb = ({
         /
       </li>
       <li>
-        <span className="inline-flex items-center gap-1.5 text-amber-400">
-          <span className="size-[6px] rounded-full bg-amber-400" />
+        <span className="text-warn inline-flex items-center gap-1.5">
+          <span className="bg-warn size-[6px] rounded-full" />
           {inProgressLabel}
         </span>
       </li>

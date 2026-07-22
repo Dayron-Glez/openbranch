@@ -36,13 +36,13 @@ export const TestCard = ({ test, index }: TestCardProps): React.ReactElement => 
   let statusDot: React.ReactElement
   if (test.status === "pass") {
     statusDot = (
-      <span className="text-ob-accent mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full bg-green-500/10 font-mono text-[11px]">
+      <span className="text-ob-accent bg-ob-accent/10 mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full font-mono text-[11px]">
         ✓
       </span>
     )
   } else if (test.status === "fail") {
     statusDot = (
-      <span className="text-danger mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full bg-red-500/10 font-mono text-[11px]">
+      <span className="text-danger bg-danger/10 mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full font-mono text-[11px]">
         ✕
       </span>
     )
@@ -67,7 +67,7 @@ export const TestCard = ({ test, index }: TestCardProps): React.ReactElement => 
         </span>
       </div>
       {test.status === "fail" && test.error !== undefined && (
-        <div className="border-line ml-6.5 rounded-(--r-8) border bg-red-500/4 px-3 py-2">
+        <div className="border-line bg-danger/4 ml-6.5 rounded-(--r-8) border px-3 py-2">
           <div className="mb-1 flex gap-3 font-mono text-[11px]">
             <span className="text-fg-muted w-16 shrink-0 tracking-wide uppercase">Expected</span>
             <span className="text-ob-accent truncate">{test.error.expected}</span>

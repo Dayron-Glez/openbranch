@@ -58,7 +58,7 @@ export const MergeEditorPane = ({
     <div className="h-full">
       <div
         className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
-          showSolution ? "border-amber-500/40" : "border-line"
+          showSolution ? "border-warn/40" : "border-line"
         }`}
       >
         <MergeEditorToolbar

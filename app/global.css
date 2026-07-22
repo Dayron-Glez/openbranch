@@ -85,6 +85,14 @@
   --color-track-test-ink: oklch(27% 0.07 195);
 }
 
+/* Fumadocs callout bridge — route Callout's --color-fd-* accents through our own tokens */
+@theme {
+  --color-fd-info: var(--color-info);
+  --color-fd-warning: var(--color-warn);
+  --color-fd-error: var(--color-danger);
+  --color-fd-success: var(--color-ob-accent);
+}
+
 @layer base {
   :root {
     --background: 45 33% 98%;
