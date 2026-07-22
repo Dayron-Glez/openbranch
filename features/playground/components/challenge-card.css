@@ -35,7 +35,7 @@
 
 [data-challenge-card]:hover,
 [data-challenge-card]:focus-within {
-  border-color: var(--track-ring);
+  border-top-color: var(--track-ring);
 }
 
 [data-challenge-card]:hover::before,
