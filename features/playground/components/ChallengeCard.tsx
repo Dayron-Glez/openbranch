@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { IconClock } from "@/icons"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
+import { DiffBars } from "@/shared/DiffBars"
 import "./challenge-card.css"
 
 type ChallengeDifficultyKey = "beginner" | "moderate" | "demanding"
@@ -21,30 +22,6 @@ type ChallengeCardProps = {
   readonly minutesLabel: string
   readonly sessionStatus?: SessionStatus
 }
-
-const difficultyLevel: Record<ChallengeDifficultyKey, 1 | 2 | 3> = {
-  beginner: 1,
-  moderate: 2,
-  demanding: 3,
-}
-
-type DifficultyBarsProps = {
-  readonly level: 1 | 2 | 3
-}
-
-const DifficultyBars = ({ level }: DifficultyBarsProps) => (
-  <span className="flex items-end gap-[3px]">
-    <span
-      className={`bg-ob-accent h-2 w-[3px] rounded-[1px] ${level >= 1 ? "opacity-100" : "opacity-20"}`}
-    />
-    <span
-      className={`bg-ob-accent h-2.5 w-[3px] rounded-[1px] ${level >= 2 ? "opacity-100" : "opacity-20"}`}
-    />
-    <span
-      className={`bg-ob-accent h-3 w-[3px] rounded-[1px] ${level >= 3 ? "opacity-100" : "opacity-20"}`}
-    />
-  </span>
-)
 
 export const ChallengeCard = ({
   href,
@@ -89,7 +66,7 @@ export const ChallengeCard = ({
       </div>
       <div className="text-fg-muted mt-auto flex items-center justify-between font-mono text-[11px] tracking-[0.04em]">
         <span className="flex items-center gap-2">
-          <DifficultyBars level={difficultyLevel[difficulty]} />
+          <DiffBars difficulty={difficulty} />
           <span>{difficultyLabel}</span>
         </span>
         <span className="flex items-center gap-1">
