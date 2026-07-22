@@ -123,8 +123,8 @@ export default async function ChallengePage({
   let sessionStatusBadge: React.ReactNode
   if (sessionStatus === "in_progress") {
     sessionStatusBadge = (
-      <span className="inline-flex items-center gap-1.5 font-mono text-[11.5px] text-amber-400">
-        <span className="size-[6px] rounded-full bg-amber-400" />
+      <span className="text-warn inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+        <span className="bg-warn size-[6px] rounded-full" />
         {dict.status.inProgress}
       </span>
     )
