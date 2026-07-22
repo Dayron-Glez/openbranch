@@ -43,7 +43,7 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
       </div>
 
       {testState.compileError !== null && (
-        <div className="rounded-(--r-8) border border-red-500/20 bg-red-500/[0.03] p-3">
+        <div className="border-danger/20 bg-danger/[0.03] rounded-(--r-8) border p-3">
           <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
             {dict.active.syntaxError}
           </p>

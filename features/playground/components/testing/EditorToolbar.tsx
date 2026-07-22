@@ -42,13 +42,13 @@ export const EditorToolbar = ({
   return (
     <div
       className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
-        showSolution ? "border-amber-500/30 bg-amber-500/[0.04]" : "border-line bg-bg-elev"
+        showSolution ? "border-warn/30 bg-warn/[0.04]" : "border-line bg-bg-elev"
       }`}
     >
       {showSolution ? (
         <div className="flex items-center gap-2.5">
           <span className="text-fg-2 font-mono text-[12px]">{editableFile}</span>
-          <span className="rounded bg-amber-500/15 px-1.5 py-0.5 font-mono text-[10px] tracking-widest text-amber-400 uppercase">
+          <span className="bg-warn/15 text-warn rounded px-1.5 py-0.5 font-mono text-[10px] tracking-widest uppercase">
             diff
           </span>
         </div>

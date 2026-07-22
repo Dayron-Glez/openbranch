@@ -8,7 +8,7 @@ type MutationRowProps = {
 
 const MutationRow = ({ mutation }: MutationRowProps): React.ReactElement => {
   const dot = mutation.killed ? (
-    <span className="text-ob-accent mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full bg-green-500/10 font-mono text-[11px]">
+    <span className="text-ob-accent bg-ob-accent/10 mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full font-mono text-[11px]">
       ✓
     </span>
   ) : (
