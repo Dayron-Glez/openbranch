@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, type ReactNode } from "react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { i18n } from "@/lib/i18n"
@@ -19,6 +19,7 @@ import {
   CATEGORY_ORDER,
   type CategoryKey,
   inferCategoryBadge,
+  getTrackColorToken,
 } from "@/features/playground/domain/manifest"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
@@ -164,6 +165,7 @@ export default async function PlaygroundPage({
     label: dict.category[cat],
     count: challenges.filter((c) => c.data.category === cat).length,
     icon: getCategoryIcon(cat),
+    colorToken: getTrackColorToken(cat),
   })).filter(({ count }) => count > 0)
 
   const filteredChallenges =
@@ -178,6 +180,27 @@ export default async function PlaygroundPage({
 
   const showFlatGrid =
     activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
+
+  const renderChallengeCard = (challenge: PlaygroundPage): ReactNode => {
+    const slug = challenge.url.split("/").pop() ?? ""
+    const status = slugToStatus.get(slug) ?? null
+    return (
+      <ChallengeCard
+        key={challenge.url}
+        href={challenge.url}
+        title={challenge.data.title}
+        description={challenge.data.description ?? ""}
+        difficulty={challenge.data.difficulty}
+        estimatedMinutes={challenge.data.estimated_minutes}
+        icon={getChallengeIcon(challenge.data.icon)}
+        colorToken={getTrackColorToken(challenge.data.category)}
+        difficultyLabel={dict.difficulty[challenge.data.difficulty]}
+        statusLabel={getStatusLabel(status, dict.status)}
+        sessionStatus={status}
+        minutesLabel={dict.time.minutes}
+      />
+    )
+  }
 
   return (
     <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
@@ -258,26 +281,7 @@ export default async function PlaygroundPage({
 
       {showFlatGrid ? (
         <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
-          {filteredChallenges.map((challenge) => {
-            const slug = challenge.url.split("/").pop() ?? ""
-            const status = slugToStatus.get(slug) ?? null
-            const statusLabel = getStatusLabel(status, dict.status)
-            return (
-              <ChallengeCard
-                key={challenge.url}
-                href={challenge.url}
-                title={challenge.data.title}
-                description={challenge.data.description ?? ""}
-                difficulty={challenge.data.difficulty}
-                estimatedMinutes={challenge.data.estimated_minutes}
-                icon={getChallengeIcon(challenge.data.icon)}
-                difficultyLabel={dict.difficulty[challenge.data.difficulty]}
-                statusLabel={statusLabel}
-                sessionStatus={status}
-                minutesLabel={dict.time.minutes}
-              />
-            )
-          })}
+          {filteredChallenges.map(renderChallengeCard)}
         </div>
       ) : (
         <div className="flex flex-col gap-10">
@@ -293,26 +297,7 @@ export default async function PlaygroundPage({
                   {dict.category[cat]}
                 </div>
                 <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
-                  {categoryChallenges.map((challenge) => {
-                    const slug = challenge.url.split("/").pop() ?? ""
-                    const status = slugToStatus.get(slug) ?? null
-                    const statusLabel = getStatusLabel(status, dict.status)
-                    return (
-                      <ChallengeCard
-                        key={challenge.url}
-                        href={challenge.url}
-                        title={challenge.data.title}
-                        description={challenge.data.description ?? ""}
-                        difficulty={challenge.data.difficulty}
-                        estimatedMinutes={challenge.data.estimated_minutes}
-                        icon={getChallengeIcon(challenge.data.icon)}
-                        difficultyLabel={dict.difficulty[challenge.data.difficulty]}
-                        statusLabel={statusLabel}
-                        sessionStatus={status}
-                        minutesLabel={dict.time.minutes}
-                      />
-                    )
-                  })}
+                  {categoryChallenges.map(renderChallengeCard)}
                 </div>
               </div>
             )

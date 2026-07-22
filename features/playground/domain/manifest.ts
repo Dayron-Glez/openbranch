@@ -65,6 +65,10 @@ export const TRACK_BY_BADGE_KEY: ReadonlyMap<string, ChallengeTrackMeta> = new M
   CHALLENGE_TRACKS.map((t) => [t.badgeKey, t])
 )
 
+/** Every category in CATEGORY_ORDER has exactly one track in CHALLENGE_TRACKS. */
+export const getTrackColorToken = (category: CategoryKey): TrackColorToken =>
+  TRACK_BY_CATEGORY.get(category)!.colorToken
+
 export const inferCategoryBadge = (slug: string): string | null => {
   for (const track of CHALLENGE_TRACKS) {
     if (slug.startsWith(track.slugPrefix)) return track.badgeKey

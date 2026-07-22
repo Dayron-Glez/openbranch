@@ -11,6 +11,7 @@ import { StartChallengeButton } from "@/features/playground/components/StartChal
 import { PrPreviewCard } from "@/features/playground/components/PrPreviewCard"
 import { createClient } from "@/lib/supabase/server"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
+import { getTrackColorToken } from "@/features/playground/domain/manifest"
 
 const DIFFICULTY_LEVEL: Record<string, number> = { beginner: 1, moderate: 2, demanding: 3 }
 
@@ -113,6 +114,7 @@ export default async function ChallengePage({
   }
 
   const categoryLabel = dict.category[page.data.category]
+  const colorToken = getTrackColorToken(page.data.category)
   const difficultyLabel = dict.difficulty[page.data.difficulty]
   const difficultyLevel = DIFFICULTY_LEVEL[page.data.difficulty] ?? 1
   const icon = getChallengeIcon(page.data.icon)
@@ -182,7 +184,10 @@ export default async function ChallengePage({
           <div className="pg-left-scroll min-[901px]:overflow-y-auto min-[901px]:pb-10">
             {/* category tag + status */}
             <div className="mb-3.5 flex items-center gap-3">
-              <span className="border-accent-ring bg-accent-soft text-ob-accent inline-flex items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-[11px] [&_svg]:size-3 [&_svg]:shrink-0">
+              <span
+                data-track={colorToken}
+                className="text-fg inline-flex items-center gap-1.5 rounded-full border border-(--track-ring) bg-(--track-soft) px-2.5 py-[3px] font-mono text-[11px] [&_svg]:size-3 [&_svg]:shrink-0 [&_svg]:text-(color:--track)"
+              >
                 {icon}
                 {categoryLabel}
               </span>

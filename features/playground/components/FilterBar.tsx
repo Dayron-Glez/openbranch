@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ type FilterCategory = {
   readonly label: string
   readonly count: number
   readonly icon: ReactNode
+  readonly colorToken: TrackColorToken
 }
 
 type SortDict = {
@@ -135,12 +137,17 @@ export const FilterBar = ({
             <span className="font-mono text-[10px]">{total}</span>
           </TabsTrigger>
 
-          {categories.map(({ key, label, count, icon }) => (
+          {categories.map(({ key, label, count, icon, colorToken }) => (
             <TabsTrigger
               key={key}
               value={key}
               className="data-[state=active]:bg-bg-elev data-[state=active]:text-ob-accent data-[state=inactive]:text-fg-muted data-[state=inactive]:hover:bg-bg-elev/60 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-sm [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
             >
+              <span
+                data-track={colorToken}
+                aria-hidden="true"
+                className="size-[7px] shrink-0 self-center rounded-full bg-(--track)"
+              />
               {icon}
               {label}
               <span className="font-mono text-[10px]">{count}</span>
