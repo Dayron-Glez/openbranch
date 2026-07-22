@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { IconClock } from "@/icons"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
+import "./challenge-card.css"
 
 type ChallengeDifficultyKey = "beginner" | "moderate" | "demanding"
 
@@ -70,13 +71,11 @@ export const ChallengeCard = ({
     <Link
       href={href}
       data-challenge-card
-      className="group border-line bg-bg-card hover:border-line-2 hover:bg-bg-hover flex flex-col gap-3 overflow-hidden rounded-(--r-12) border p-5 text-inherit no-underline transition-[background,border-color] duration-(--d-base) ease-(--ease)"
+      data-track={colorToken}
+      className="group border-line bg-bg-card hover:bg-bg-hover relative flex flex-col gap-3 overflow-hidden rounded-(--r-12) border p-5 text-inherit no-underline transition-[background,border-color] duration-(--d-base) ease-(--ease)"
     >
       <div className="flex items-center justify-between">
-        <span
-          data-track={colorToken}
-          className="inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border border-(--track-ring) bg-(--track-soft) text-(color:--track) [&_svg]:size-[17px]"
-        >
+        <span className="inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border border-(--track-ring) bg-(--track-soft) text-(color:--track) [&_svg]:size-[17px]">
           {icon}
         </span>
         <span className={`flex items-center gap-1.5 font-mono text-[11.5px] ${statusTextClass}`}>
