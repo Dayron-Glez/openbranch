@@ -19,6 +19,7 @@ import {
   getInProgressSnapshot,
   markSessionCompleted,
   awardTrackBadge,
+  awardMilestoneBadges,
 } from "@/features/playground/server/session-service"
 
 const getAuthContext = async () => {
@@ -64,6 +65,7 @@ export const completeChallenge = async (slug: string, lang: string): Promise<voi
   const completed = await markSessionCompleted(supabase, user.id, slug, lang)
   if (!completed) return
   await awardTrackBadge(supabase, user.id, slug)
+  await awardMilestoneBadges(supabase, user.id)
   redirect(resultHref(lang, slug))
 }
 
@@ -79,6 +81,7 @@ export const completeTrackChallenge = async (slug: string, lang: string): Promis
   const completed = await markSessionCompleted(supabase, user.id, slug, lang)
   if (!completed) return
   await awardTrackBadge(supabase, user.id, slug)
+  await awardMilestoneBadges(supabase, user.id)
   redirect(resultHref(lang, slug))
 }
 
