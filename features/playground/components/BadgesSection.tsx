@@ -22,10 +22,12 @@ const AWARDED_BADGE_KEYS = [
   "coverage-hero",
   "ship-it",
   "doc-writer",
+  "streak-7",
+  "all-tracks",
 ] as const
 
 // Badges planned for future tracks/features — displayed as locked teasers, not yet awardable.
-const PLANNED_BADGE_KEYS = ["streak-7", "all-tracks"] as const
+const PLANNED_BADGE_KEYS = [] as const
 
 const BADGE_KEYS = [...AWARDED_BADGE_KEYS, ...PLANNED_BADGE_KEYS] as const
 
