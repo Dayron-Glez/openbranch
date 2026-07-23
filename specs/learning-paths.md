@@ -1,6 +1,6 @@
 # Spec: Learning Paths — Connecting Docs and Playground
 
-**Status:** Draft — ready for a design session
+**Status:** Draft — content scope decided, ready for a design session
 **Date:** 2026-07-23
 **Owner:** @Dayron-Glez
 **Roadmap:** module 2 of 4 (post-color-system), see project memory. Module 1 (gamification quick-wins, `specs/gamification-quickwins.md`) shipped in PR #149.
@@ -24,12 +24,9 @@ This is thinner content than `specs/engagement-ui.md` or the color system worked
 - **No structural link exists.** Neither MDX schema (`source.config.ts`) has a field connecting a doc to a track or a challenge to a guide. `recommended_first` on playground frontmatter is unrelated — it's a checklist-ordering hint, not a cross-domain link.
 - **Docs sections and playground tracks don't line up 1:1.** `git` (docs) ↔ `git` (track) and `pull-requests` (docs) ↔ `code-review` (track) map cleanly. `testing` maps to `testing`. But the `documentation` track (challenge: write docs for a module) has no docs section that's actually about _writing_ docs — `contributing/ci-guardrails` is the closest and it's a stretch. And `bug-fix` has no docs-section counterpart at all today.
 
-**Net effect: at current content depth, a real curated path is 2 steps** (one guide + one challenge) for the 2-3 tracks where the mapping is clean, and for the rest there's no honest guide to pair with the challenge yet. Two options, and the design session should pick one on purpose rather than default into it:
+**Net effect: at current content depth, a real curated path is 2 steps** (one guide + one challenge) for the 2-3 tracks where the mapping is clean, and for the rest there's no honest guide to pair with the challenge yet.
 
-1. Ship a **small number of genuinely-curated 2-step paths** (the clean matches only — likely git and code-review, maybe testing) as a pattern-setting v1, matching the "ship what today's content supports" philosophy that kept module 1 scoped tight — and treat "not every track has a path yet" as an acceptable, visible gap rather than something to paper over.
-2. **Pair this module with writing 1-2 new guides** (e.g. a short "how to fix a bug without breaking things" guide for the `bug-fix` track) so every track gets a path from day one — pushes scope from "connect existing content" into "write new content," which changes the estimate from M to closer to L.
-
-Either is defensible; what's not defensible is designing a paths UI sized for 5-10 rich multi-step journeys when the content only supports 2-3 thin ones today. Flag this to the owner explicitly before visual design starts.
+**Decided (2026-07-23):** ship with the 2-3 thin paths the existing content already supports — `git` and `code-review` map cleanly, `testing` is the likely third — rather than pairing this module with writing new guides. `documentation` and `bug-fix` stay without a path for now; that's an accepted, visible gap, not a blocker. This matches the "ship what today's content supports" philosophy that kept module 1 scoped tight. Consequence for the design session: **size the paths UI for 2-3 short (2-step) journeys, not 5 rich multi-step ones** — a sparse-state design (what a paths hub looks like with only 2-3 entries, and what a track without a path shows, if anything) deserves real attention, not an afterthought, the same way the leaderboard's sparse state did in `engagement-ui.md`.
 
 ## Non-goals
 
@@ -86,7 +83,7 @@ Same visual system `specs/engagement-ui.md` and the color-system rollout establi
 
 ## Acceptance criteria
 
-- At least the content-scale decision (2-3 thin paths now vs. write new content first) is made explicitly by the owner before any UI ships — not defaulted into.
+- 2-3 paths ship, each backed by content that already exists — no new docs guides written as part of this module.
 - A path page renders its steps in order with correct per-step state (locked/current/completed) for a signed-in user, and a sane degraded state for signed-out (no progress tracking, but the sequence itself is still readable).
 - At least one entry point exists from playground and at least one from docs — a user can discover a path without already knowing the URL.
 - Both locales, both themes, all breakpoints; no new SonarCloud issues.
@@ -97,5 +94,5 @@ Same visual system `specs/engagement-ui.md` and the color-system rollout establi
 1. **Path definitions: data (`paths.ts`) or content (MDX collection)?** Affects how much freeform per-path copy is possible vs. how simple authoring stays.
 2. **Linear or DAG?** Can a guide belong to more than one path? Does a path require completing steps in order, or can a user jump ahead?
 3. **Is doc-reading progress tracked at all**, or does a path's "progress" only ever reflect the challenge steps within it (docs steps always render as available, never as completed)? Building real read-tracking is new DB/schema work, not a frontend-only decision.
-4. **Which content-scale option (see "Content reality check")** — ship 2-3 thin paths now, or pair this module with writing 1-2 new guides so every track has one?
-5. Do paths get their own hub page, or do they only ever surface inline from docs/playground?
+4. Do paths get their own hub page, or do they only ever surface inline from docs/playground? Given only 2-3 paths ship, a dedicated hub may be overkill for v1 — worth weighing against inline-only entry points.
+5. Which exact 2-3 tracks make the cut — is `testing` confirmed as the third, or does the design session find a cleaner match elsewhere (e.g. pairing `releases`/`semver-in-practice` with something)?
