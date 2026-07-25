@@ -80,10 +80,13 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
   return (
     <div data-track={track} className="flex flex-col">
       {steps.map((step, index) => (
-        <div key={step.href} className="grid grid-cols-[48px_1fr] gap-5">
+        <div
+          key={step.href}
+          className="grid grid-cols-[48px_minmax(0,1fr)] gap-5 max-[520px]:grid-cols-[36px_minmax(0,1fr)] max-[520px]:gap-3.5"
+        >
           <div className="flex flex-col items-center">
             <div
-              className={`grid size-12 shrink-0 place-items-center rounded-full border-[1.5px] [&_svg]:shrink-0 ${MARK_CLASS[step.status]}`}
+              className={`grid size-12 shrink-0 place-items-center rounded-full border-[1.5px] max-[520px]:size-9 [&_svg]:shrink-0 ${MARK_CLASS[step.status]}`}
             >
               <StepMark
                 status={step.status}
@@ -95,11 +98,11 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
           </div>
 
           <div
-            className={`bg-bg-card mb-3.5 rounded-(--r-12) border p-5 ${
+            className={`bg-bg-card mb-3.5 min-w-0 rounded-(--r-12) border p-5 max-[520px]:p-4 ${
               step.status === "current" ? "border-(--track-ring)" : "border-line"
             } ${step.status === "locked" ? "opacity-60" : ""}`}
           >
-            <div className="text-fg-muted mb-2.5 flex items-center gap-2.5 font-mono text-[10.5px] tracking-[0.09em] uppercase">
+            <div className="text-fg-muted mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5 font-mono text-[10.5px] tracking-[0.09em] uppercase">
               <span>{dict.stepOf(index + 1, total)}</span>
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 [&_svg]:size-3 ${
@@ -111,7 +114,7 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
                 {step.type === "doc" ? <IconBook /> : step.icon}
                 {step.type === "doc" ? dict.guideLabel : dict.challengeLabel}
               </span>
-              <span className="ml-auto normal-case">
+              <span className="normal-case min-[520px]:ml-auto">
                 {step.status === "completed" && (
                   <span className="text-ob-accent inline-flex items-center gap-1.5">
                     <IconCheck className="size-3.5" />
@@ -134,8 +137,8 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
               {step.description}
             </p>
 
-            <div className="flex items-center justify-between gap-3.5">
-              <div className="text-fg-muted flex items-center gap-4 font-mono text-[11.5px]">
+            <div className="flex flex-wrap items-start justify-between gap-3.5 gap-y-3">
+              <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[11.5px]">
                 {step.type === "doc" ? (
                   <span className="inline-flex items-center gap-1.5">
                     <IconBook className="size-3" />
@@ -158,7 +161,7 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
 
               <Link
                 href={step.href}
-                className={`inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors ${
+                className={`inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-[420px]:w-full max-[420px]:justify-center ${
                   step.status === "current"
                     ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
                     : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"

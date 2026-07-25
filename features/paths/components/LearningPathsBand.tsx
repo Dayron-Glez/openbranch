@@ -63,9 +63,9 @@ export const LearningPathsBand = ({
         <span className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
           {heading}
         </span>
-        <span className="hidden font-mono text-[11.5px] max-[640px]:hidden sm:inline">{sub}</span>
+        <span className="hidden font-mono text-[11.5px] sm:inline">{sub}</span>
       </div>
-      <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-1">
+      <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
         {items.map((item) => (
           <Link
             key={item.href}

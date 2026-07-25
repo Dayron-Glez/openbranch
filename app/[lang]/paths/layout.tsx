@@ -32,10 +32,10 @@ export default async function PathsLayout({
   }
 
   return (
-    <div className="bg-bg text-fg flex h-dvh flex-col overflow-hidden">
+    <div className="bg-bg text-fg min-h-dvh">
       <PlaygroundTransition />
       <PlaygroundNav lang={lang} avatarUrl={avatarUrl} username={username} />
-      <div className="flex-1 overflow-y-auto">{children}</div>
+      {children}
     </div>
   )
 }
