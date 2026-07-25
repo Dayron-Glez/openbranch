@@ -139,7 +139,7 @@ export const FilterBar = ({
 
   return (
     <div className="mb-8 flex items-center gap-3">
-      <div className="border-line-2 bg-bg-elev flex min-w-0 flex-1 items-center gap-1 rounded-(--r-10) border p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+      <div className="border-line-2 bg-bg-elev flex min-w-0 flex-1 items-center gap-1 rounded-(--r-10) border p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] max-[640px]:flex-col max-[640px]:items-stretch">
         <Tabs
           value={value}
           onValueChange={handleValueChange}
@@ -204,9 +204,12 @@ export const FilterBar = ({
           </TabsList>
         </Tabs>
 
-        <div aria-hidden="true" className="bg-line-2 my-1 w-px shrink-0 self-stretch" />
+        <div
+          aria-hidden="true"
+          className="bg-line-2 my-1 w-px shrink-0 self-stretch max-[640px]:hidden"
+        />
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1 max-[640px]:w-full max-[640px]:justify-between">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

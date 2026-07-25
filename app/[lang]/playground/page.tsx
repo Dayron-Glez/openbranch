@@ -265,7 +265,7 @@ export default async function PlaygroundPage({
       <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
         {dict.hub.eyebrow}
       </p>
-      <div className="mb-[18px] flex items-baseline justify-between gap-8">
+      <div className="mb-[18px] flex items-baseline justify-between gap-8 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
         <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-[0] text-balance max-[980px]:text-[32px]">
           {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
         </h1>
