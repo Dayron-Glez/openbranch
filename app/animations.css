@@ -542,3 +542,150 @@
     visibility: hidden !important;
   }
 }
+
+/* ============================================================
+   Dialog / Sheet animations — global (Dialog and Sheet render
+   outside the playground/paths trees too, e.g. landing auth flows).
+   ============================================================ */
+
+@keyframes pg-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pg-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes pg-dialog-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes pg-dialog-out {
+  from {
+    opacity: 1;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.pg-dialog-overlay[data-state="open"],
+.pg-sheet-overlay[data-state="open"] {
+  animation: pg-overlay-in 180ms ease forwards;
+}
+.pg-dialog-overlay[data-state="closed"],
+.pg-sheet-overlay[data-state="closed"] {
+  animation: pg-overlay-out 160ms ease forwards;
+}
+.pg-dialog-content[data-state="open"] {
+  animation: pg-dialog-in 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-dialog-content[data-state="closed"] {
+  animation: pg-dialog-out 180ms ease forwards;
+}
+
+@keyframes pg-sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes pg-sheet-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes pg-sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes pg-sheet-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes pg-sheet-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pg-sheet-out-top {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes pg-sheet-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pg-sheet-out-bottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.pg-sheet-content[data-state="open"][data-side="right"] {
+  animation: pg-sheet-in-right 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-sheet-content[data-state="closed"][data-side="right"] {
+  animation: pg-sheet-out-right 200ms ease forwards;
+}
+.pg-sheet-content[data-state="open"][data-side="left"] {
+  animation: pg-sheet-in-left 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-sheet-content[data-state="closed"][data-side="left"] {
+  animation: pg-sheet-out-left 200ms ease forwards;
+}
+.pg-sheet-content[data-state="open"][data-side="top"] {
+  animation: pg-sheet-in-top 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-sheet-content[data-state="closed"][data-side="top"] {
+  animation: pg-sheet-out-top 200ms ease forwards;
+}
+.pg-sheet-content[data-state="open"][data-side="bottom"] {
+  animation: pg-sheet-in-bottom 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.pg-sheet-content[data-state="closed"][data-side="bottom"] {
+  animation: pg-sheet-out-bottom 200ms ease forwards;
+}
