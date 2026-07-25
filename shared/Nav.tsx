@@ -169,7 +169,7 @@ export function Nav({ dict, lang }: NavProps) {
             </Link>
           </Button>
 
-          <MobileNav lang={lang} stars={stars} showGetStarted />
+          <MobileNav lang={lang} />
         </div>
       </div>
     </nav>

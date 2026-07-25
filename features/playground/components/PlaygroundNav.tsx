@@ -172,7 +172,7 @@ export const PlaygroundNav = ({
             ))}
           </ToggleGroup>
 
-          <MobileNav lang={lang} stars={stars} avatarUrl={avatarUrl} username={username} />
+          <MobileNav lang={lang} avatarUrl={avatarUrl} username={username} />
         </div>
       </div>
     </header>
