@@ -68,6 +68,12 @@ const StepMark = ({
   return icon
 }
 
+const getStepCta = (step: ResolvedPathStep, dict: PathStepperDict): string => {
+  if (step.type === "doc") return dict.openGuide
+  if (step.status === "current") return dict.startChallenge
+  return dict.openChallenge
+}
+
 export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode => {
   const total = steps.length
 
@@ -158,11 +164,7 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
                     : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
                 }`}
               >
-                {step.type === "doc"
-                  ? dict.openGuide
-                  : step.status === "current"
-                    ? dict.startChallenge
-                    : dict.openChallenge}
+                {getStepCta(step, dict)}
                 <IconArrowRight className="size-3.5" />
               </Link>
             </div>

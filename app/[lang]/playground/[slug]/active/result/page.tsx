@@ -17,7 +17,7 @@ import { RewardMoment, type PathRecap } from "@/features/playground/components/R
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 import { source } from "@/lib/source"
 import { pathForChallenge } from "@/features/paths/domain/paths"
-import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
+import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -254,8 +254,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
   /* path recap — this challenge is always a path's last step, so if it
      belongs to one, completing it always finishes the path (Q2/Q3). */
-  const pathsLocale: PathsLocale =
-    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const matchedPath = pathForChallenge(slug)
   const pathRecap: PathRecap | null =

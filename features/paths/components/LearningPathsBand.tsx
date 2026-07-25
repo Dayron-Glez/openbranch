@@ -25,10 +25,27 @@ type LearningPathsBandProps = {
   readonly guideAndChallengeLabel: string
 }
 
-const StepDot = ({ variant }: { readonly variant: "neutral" | "accent" | "track" }): ReactNode => {
+type DotVariant = "neutral" | "accent" | "track"
+
+const StepDot = ({ variant }: { readonly variant: DotVariant }): ReactNode => {
   if (variant === "accent") return <span className="bg-ob-accent size-[5px] rounded-full" />
   if (variant === "track") return <span className="size-[5px] rounded-full bg-(--track)" />
   return <span className="border-line-2 size-[5px] rounded-full border" />
+}
+
+const getChallengeDotVariant = (challengeCompleted: boolean | null): DotVariant => {
+  if (challengeCompleted === true) return "accent"
+  if (challengeCompleted === false) return "track"
+  return "neutral"
+}
+
+const getPathBandCaption = (
+  challengeCompleted: boolean | null,
+  guideAndChallengeLabel: string,
+  practicedLabel: (done: number, total: number) => string
+): string => {
+  if (challengeCompleted === null) return guideAndChallengeLabel
+  return practicedLabel(challengeCompleted ? 1 : 0, 1)
 }
 
 export const LearningPathsBand = ({
@@ -75,20 +92,14 @@ export const LearningPathsBand = ({
             <div className="border-line flex items-center justify-between gap-2.5 border-t pt-3.5">
               <span className="flex items-center gap-1.5">
                 <StepDot variant="neutral" />
-                <StepDot
-                  variant={
-                    item.challengeCompleted === true
-                      ? "accent"
-                      : item.challengeCompleted === false
-                        ? "track"
-                        : "neutral"
-                  }
-                />
+                <StepDot variant={getChallengeDotVariant(item.challengeCompleted)} />
               </span>
               <span className="text-fg-muted font-mono text-[11px]">
-                {item.challengeCompleted === null
-                  ? guideAndChallengeLabel
-                  : practicedLabel(item.challengeCompleted ? 1 : 0, 1)}
+                {getPathBandCaption(
+                  item.challengeCompleted,
+                  guideAndChallengeLabel,
+                  practicedLabel
+                )}
               </span>
             </div>
           </Link>

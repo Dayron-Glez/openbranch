@@ -21,7 +21,7 @@ import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
 import { pathsForDoc } from "@/features/paths/domain/paths"
-import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
+import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { PartOfPathChip } from "@/features/paths/components/PartOfPathChip"
 import { NextInPath } from "@/features/paths/components/NextInPath"
 import { playgroundSource } from "@/lib/playground-source"
@@ -51,8 +51,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const rawText = isSectionPage ? "" : await page.data.getText("processed")
   const readingMinutes = isSectionPage ? 0 : getReadingTime(rawText)
 
-  const pathsLocale: PathsLocale =
-    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const currentDocSlug = (slug ?? []).join("/")
   const primaryPath = isSectionPage ? undefined : pathsForDoc(currentDocSlug)[0]

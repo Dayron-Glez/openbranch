@@ -22,7 +22,7 @@ import {
   inferCategoryBadge,
   getTrackColorToken,
 } from "@/features/playground/domain/manifest"
-import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
+import { pathsDictionary, resolvePathsLocale, type PathsLocale } from "@/lib/dictionaries/paths"
 import { LEARNING_PATHS } from "@/features/paths/domain/paths"
 import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
 import { LearningPathsBand, type PathBandItem } from "@/features/paths/components/LearningPathsBand"
@@ -103,6 +103,41 @@ const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["sta
   return statusDict.notStarted
 }
 
+const buildPathBandItem = (
+  path: (typeof LEARNING_PATHS)[number],
+  lang: string,
+  pathsLocale: PathsLocale,
+  categoryDict: PlaygroundDict["category"],
+  completedPathChallenges: ReadonlySet<string> | null
+): PathBandItem => {
+  const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
+  const challengeSlug = path.steps.find((s) => s.type === "challenge")?.challengeSlug
+  const challengeCompleted =
+    completedPathChallenges === null || challengeSlug === undefined
+      ? null
+      : completedPathChallenges.has(challengeSlug)
+
+  return {
+    href: localizedHref(lang, `/paths/${path.slug}`),
+    title: path.title[pathsLocale],
+    description: path.lead[pathsLocale],
+    track: path.track,
+    trackLabel: trackMeta !== undefined ? categoryDict[trackMeta.category] : path.track,
+    icon: getChallengeIcon(trackMeta?.iconName),
+    challengeCompleted,
+  }
+}
+
+const buildPathBandItems = (
+  lang: string,
+  pathsLocale: PathsLocale,
+  categoryDict: PlaygroundDict["category"],
+  completedPathChallenges: ReadonlySet<string> | null
+): PathBandItem[] =>
+  LEARNING_PATHS.map((path) =>
+    buildPathBandItem(path, lang, pathsLocale, categoryDict, completedPathChallenges)
+  )
+
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
@@ -165,30 +200,19 @@ export default async function PlaygroundPage({
 
   const engagementStats = engagementStatsPromise === null ? null : await engagementStatsPromise
 
-  const pathsLocale: PathsLocale =
-    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const pathChallengeSlugs = LEARNING_PATHS.flatMap((p) =>
     p.steps.filter((s) => s.type === "challenge").map((s) => s.challengeSlug)
   )
   const completedPathChallenges =
     user === null ? null : await getCompletedChallengeSlugs(supabase, user.id, pathChallengeSlugs)
-  const pathBandItems: PathBandItem[] = LEARNING_PATHS.map((path) => {
-    const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
-    const challengeSlug = path.steps.find((s) => s.type === "challenge")?.challengeSlug
-    return {
-      href: localizedHref(lang, `/paths/${path.slug}`),
-      title: path.title[pathsLocale],
-      description: path.lead[pathsLocale],
-      track: path.track,
-      trackLabel: trackMeta !== undefined ? dict.category[trackMeta.category] : path.track,
-      icon: getChallengeIcon(trackMeta?.iconName),
-      challengeCompleted:
-        completedPathChallenges === null || challengeSlug === undefined
-          ? null
-          : completedPathChallenges.has(challengeSlug),
-    }
-  })
+  const pathBandItems = buildPathBandItems(
+    lang,
+    pathsLocale,
+    dict.category,
+    completedPathChallenges
+  )
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,

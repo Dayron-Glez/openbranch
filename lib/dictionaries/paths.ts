@@ -68,3 +68,6 @@ export const pathsDictionary = {
 
 export type PathsLocale = keyof typeof pathsDictionary
 export type PathsDictionary = (typeof pathsDictionary)[PathsLocale]
+
+export const resolvePathsLocale = (lang: string): PathsLocale =>
+  (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"

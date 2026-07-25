@@ -7,15 +7,16 @@ import { source } from "@/lib/source"
 import { playgroundSource } from "@/lib/playground-source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
-import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
-import { LEARNING_PATHS, PATH_BY_SLUG } from "@/features/paths/domain/paths"
-import { computeStepStatuses } from "@/features/paths/domain/path-status"
+import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
+import { LEARNING_PATHS, PATH_BY_SLUG, type LearningPath } from "@/features/paths/domain/paths"
+import { computeStepStatuses, type StepStatus } from "@/features/paths/domain/path-status"
 import { PathStepper, type ResolvedPathStep } from "@/features/paths/components/PathStepper"
 import { getPathProgress, getChallengePoints } from "@/features/paths/server/path-progress"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { CHALLENGE_TRACKS } from "@/features/playground/domain/manifest"
 import { createClient } from "@/lib/supabase/server"
 import { IconRoute, IconClock, IconUser } from "@/icons"
+import type { PlaygroundDict } from "@/lib/playground-dictionary"
 
 export function generateStaticParams(): { lang: string; slug: string }[] {
   return i18n.languages.flatMap((lang) => LEARNING_PATHS.map((p) => ({ lang, slug: p.slug })))
@@ -28,10 +29,76 @@ export async function generateMetadata({
   const path = PATH_BY_SLUG.get(slug)
   if (path === undefined) return {}
 
-  const locale = (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const locale = resolvePathsLocale(lang)
   return {
     title: `${path.title[locale]} · openbranch`,
     description: path.lead[locale],
+  }
+}
+
+/** One step's display data, plus the minutes it adds to the path's total. */
+const resolveStep = async (
+  step: LearningPath["steps"][number],
+  status: StepStatus,
+  lang: string,
+  playgroundDict: PlaygroundDict,
+  pointsBySlug: ReadonlyMap<string, number>
+): Promise<{ readonly resolved: ResolvedPathStep; readonly minutes: number } | null> => {
+  if (step.type === "doc") {
+    const docPage = source.getPage(step.docSlug.split("/"), lang)
+    if (docPage === undefined) return null
+    const rawText = await docPage.data.getText("processed")
+    const minutes = getReadingTime(rawText)
+    return {
+      minutes,
+      resolved: {
+        type: "doc",
+        href: docPage.url,
+        title: docPage.data.title,
+        description: docPage.data.description ?? "",
+        readingLabel: formatReadingTime(minutes, lang),
+        status,
+      },
+    }
+  }
+
+  const challengePage = playgroundSource.getPage([step.challengeSlug], lang)
+  if (challengePage === undefined) return null
+  const points = pointsBySlug.get(step.challengeSlug) ?? 0
+  return {
+    minutes: challengePage.data.estimated_minutes,
+    resolved: {
+      type: "challenge",
+      href: localizedHref(lang, `/playground/${step.challengeSlug}`),
+      title: challengePage.data.title,
+      description: challengePage.data.description ?? "",
+      difficulty: challengePage.data.difficulty,
+      difficultyLabel: playgroundDict.difficulty[challengePage.data.difficulty],
+      timeLabel: `${challengePage.data.estimated_minutes} ${playgroundDict.time.minutes}`,
+      pointsLabel: `+${points} pts`,
+      icon: getChallengeIcon(challengePage.data.icon),
+      status,
+    },
+  }
+}
+
+/** Resolves every step of a path in order, summing the total time estimate. */
+const resolvePathSteps = async (
+  path: LearningPath,
+  statuses: readonly StepStatus[],
+  lang: string,
+  playgroundDict: PlaygroundDict,
+  pointsBySlug: ReadonlyMap<string, number>
+): Promise<{ readonly steps: readonly ResolvedPathStep[]; readonly totalMinutes: number }> => {
+  const resolved = await Promise.all(
+    path.steps.map((step, index) =>
+      resolveStep(step, statuses[index], lang, playgroundDict, pointsBySlug)
+    )
+  )
+  const present = resolved.filter((r) => r !== null)
+  return {
+    steps: present.map((r) => r.resolved),
+    totalMinutes: present.reduce((sum, r) => sum + r.minutes, 0),
   }
 }
 
@@ -40,7 +107,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   const path = PATH_BY_SLUG.get(slug)
   if (path === undefined) notFound()
 
-  const locale = (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const locale = resolvePathsLocale(lang)
   const dict = pathsDictionary[locale]
   const playgroundDict = getPlaygroundDict(lang)
   const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
@@ -62,45 +129,13 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   ])
 
   const statuses = computeStepStatuses(path.steps, completedChallengeSlugs)
-
-  const resolvedSteps: ResolvedPathStep[] = []
-  let totalMinutes = 0
-
-  for (const [index, step] of path.steps.entries()) {
-    const status = statuses[index]
-    if (step.type === "doc") {
-      const docPage = source.getPage(step.docSlug.split("/"), lang)
-      if (docPage === undefined) continue
-      const rawText = await docPage.data.getText("processed")
-      const minutes = getReadingTime(rawText)
-      totalMinutes += minutes
-      resolvedSteps.push({
-        type: "doc",
-        href: docPage.url,
-        title: docPage.data.title,
-        description: docPage.data.description ?? "",
-        readingLabel: formatReadingTime(minutes, lang),
-        status,
-      })
-    } else {
-      const challengePage = playgroundSource.getPage([step.challengeSlug], lang)
-      if (challengePage === undefined) continue
-      const points = pointsBySlug.get(step.challengeSlug) ?? 0
-      totalMinutes += challengePage.data.estimated_minutes
-      resolvedSteps.push({
-        type: "challenge",
-        href: localizedHref(lang, `/playground/${step.challengeSlug}`),
-        title: challengePage.data.title,
-        description: challengePage.data.description ?? "",
-        difficulty: challengePage.data.difficulty,
-        difficultyLabel: playgroundDict.difficulty[challengePage.data.difficulty],
-        timeLabel: `${challengePage.data.estimated_minutes} ${playgroundDict.time.minutes}`,
-        pointsLabel: `+${points} pts`,
-        icon: getChallengeIcon(challengePage.data.icon),
-        status,
-      })
-    }
-  }
+  const { steps: resolvedSteps, totalMinutes } = await resolvePathSteps(
+    path,
+    statuses,
+    lang,
+    playgroundDict,
+    pointsBySlug
+  )
 
   if (resolvedSteps.length === 0) notFound()
 
