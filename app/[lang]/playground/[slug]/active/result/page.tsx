@@ -13,8 +13,12 @@ import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { formatElapsed } from "@/features/playground/domain/format-elapsed"
 import { inferCategoryBadge } from "@/features/playground/domain/manifest"
 import { getCompletionReward } from "@/features/playground/server/reward-service"
-import { RewardMoment } from "@/features/playground/components/RewardMoment"
+import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
+import { source } from "@/lib/source"
+import { pathForChallenge } from "@/features/paths/domain/paths"
+import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
+import { LogoMark } from "@/shared/LogoMark"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -138,25 +142,6 @@ const ChartIcon = (): ReactNode => (
   </svg>
 )
 
-/* ── openbranch logo mark (SVG inline) ── */
-const OpenbranchMark = (): ReactNode => (
-  <svg width="36" height="36" viewBox="0 0 64 64" className="text-fg" aria-hidden="true">
-    <g
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="10" x2="18" y2="54" />
-      <path d="M18 24 C 18 18, 22 14, 30 14 L 40 14 C 48 14, 52 18, 52 26 L 52 38 C 52 46, 48 50, 40 50" />
-      <circle cx="18" cy="10" r="4.5" fill="currentColor" stroke="none" />
-      <circle cx="18" cy="54" r="4.5" fill="currentColor" stroke="none" />
-      <circle cx="40" cy="50" r="4.5" fill="var(--color-ob-accent)" stroke="none" />
-    </g>
-  </svg>
-)
-
 /* ── page ── */
 export default async function ResultPage({ params }: ResultPageProps) {
   const { lang, slug } = await params
@@ -249,6 +234,34 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const playgroundPath = localizedHref(lang, "/playground")
   const challengeBranch = page.data.pr_preview?.branch ?? null
 
+  /* path recap — this challenge is always a path's last step, so if it
+     belongs to one, completing it always finishes the path (Q2/Q3). */
+  const pathsLocale = resolvePathsLocale(lang)
+  const pathsDict = pathsDictionary[pathsLocale]
+  const matchedPath = pathForChallenge(slug)
+  const pathRecap: PathRecap | null =
+    matchedPath === null
+      ? null
+      : {
+          track: matchedPath.track,
+          pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
+          pathTitle: matchedPath.title[pathsLocale],
+          otherPathsHref: playgroundPath,
+          steps: matchedPath.steps.map((s) =>
+            s.type === "doc"
+              ? {
+                  type: "doc" as const,
+                  title: source.getPage(s.docSlug.split("/"), lang)?.data.title ?? s.docSlug,
+                }
+              : {
+                  type: "challenge" as const,
+                  title:
+                    playgroundSource.getPage([s.challengeSlug], lang)?.data.title ??
+                    s.challengeSlug,
+                }
+          ),
+        }
+
   const badgeInfo =
     badge === null || badgeKey === null
       ? null
@@ -276,7 +289,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
           {/* logo ring */}
           <div className="mb-8 flex justify-center">
             <div className="border-ob-accent/30 bg-ob-accent/[0.07] flex size-[80px] items-center justify-center rounded-full border-[1.5px]">
-              <OpenbranchMark />
+              <LogoMark size={36} />
             </div>
           </div>
 
@@ -330,7 +343,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </span>
           </div>
 
-          <RewardMoment reward={reward} currentElapsedDisplay={elapsedDisplay} dict={dict.reward} />
+          <RewardMoment
+            reward={reward}
+            currentElapsedDisplay={elapsedDisplay}
+            dict={dict.reward}
+            pathRecap={pathRecap}
+            pathDict={pathsDict}
+          />
 
           {/* CTAs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">

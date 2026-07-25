@@ -16,6 +16,9 @@ export {
   IconRocket,
   IconFlame,
   IconAward,
+  IconCheck,
+  IconRoute,
+  IconUser,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,

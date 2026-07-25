@@ -9,6 +9,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { startChallengeSession } from "@/app/actions/playground"
+import { LogoMark } from "@/shared/LogoMark"
 
 const PlayIcon = (): React.ReactElement => (
   <svg
@@ -206,27 +207,7 @@ export const StartChallengeButton = ({
         <DialogContent className="bg-bg-card border-line-2 w-[380px] max-w-[calc(100vw-2rem)] gap-0 rounded-(--r-16) p-0 shadow-(--sh-4)">
           <div className="px-8 pt-8 pb-7">
             <div className="mb-5 flex justify-center">
-              <svg
-                width="36"
-                height="36"
-                viewBox="0 0 64 64"
-                className="text-fg"
-                aria-hidden="true"
-              >
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="10" x2="18" y2="54" />
-                  <path d="M18 24 C 18 18, 22 14, 30 14 L 40 14 C 48 14, 52 18, 52 26 L 52 38 C 52 46, 48 50, 40 50" />
-                  <circle cx="18" cy="10" r="4.5" fill="currentColor" stroke="none" />
-                  <circle cx="18" cy="54" r="4.5" fill="currentColor" stroke="none" />
-                  <circle cx="40" cy="50" r="4.5" fill="var(--color-ob-accent)" stroke="none" />
-                </g>
-              </svg>
+              <LogoMark size={36} />
             </div>
 
             <DialogTitle className="text-fg mb-2.5 text-center text-[21px] font-[550] tracking-[-0.02em]">
