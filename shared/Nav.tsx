@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Kbd } from "@/components/ui/kbd"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { MobileNav } from "@/shared/MobileNav"
 
 const LOCALES = ["es", "en"] as const
 
@@ -167,6 +168,8 @@ export function Nav({ dict, lang }: NavProps) {
               <IconArrowRight className="transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
             </Link>
           </Button>
+
+          <MobileNav lang={lang} stars={stars} showGetStarted />
         </div>
       </div>
     </nav>

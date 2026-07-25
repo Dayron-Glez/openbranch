@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { localizedHref } from "@/lib/landing-dictionary"
 import { fetchGitHubStars } from "@/lib/github-stars"
 import { GH_REPO, GH_URL, DISCORD_URL } from "@/lib/constants"
+import { MobileNav } from "@/shared/MobileNav"
 
 type PlaygroundNavProps = {
   readonly lang: string
@@ -170,6 +171,8 @@ export const PlaygroundNav = ({
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
+
+          <MobileNav lang={lang} stars={stars} avatarUrl={avatarUrl} username={username} />
         </div>
       </div>
     </header>
