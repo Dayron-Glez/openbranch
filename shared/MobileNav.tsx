@@ -108,6 +108,7 @@ export const MobileNav = ({
         </nav>
 
         <button
+          type="button"
           onClick={() => {
             close()
             setOpenSearch(true)
