@@ -82,7 +82,7 @@ export const PrPreviewCard = ({ data }: PrPreviewCardProps): ReactNode => (
     </div>
 
     {/* stats row */}
-    <div className="text-fg-muted flex items-center gap-4 px-4 py-[13px] font-mono text-[12px]">
+    <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-[13px] font-mono text-[12px]">
       <span className="inline-flex items-center gap-1.5">
         <FileIcon />
         {data.files} files

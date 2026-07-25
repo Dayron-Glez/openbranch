@@ -15,6 +15,8 @@ import { BugFixChallengeView } from "@/features/playground/components/BugFixChal
 import { TestingChallengeView } from "@/features/playground/components/testing/TestingChallengeView"
 import { GitChallengeView } from "@/features/playground/components/git/GitChallengeView"
 import { DocumentationChallengeView } from "@/features/playground/components/documentation/DocumentationChallengeView"
+import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
+import { NeedsWiderScreenNote } from "@/shared/NeedsWiderScreenNote"
 import type {
   ReviewSnapshot,
   BugFixSnapshot,
@@ -78,20 +80,36 @@ export default async function ActiveChallengePage({
   const challengePath = localizedHref(lang, `/playground/${slug}`)
   const category = page.data.category as string
 
+  const narrow = (
+    <div className="mx-auto max-w-[520px] px-5 py-16">
+      <NeedsWiderScreenNote
+        title={dict.detail.needsWiderScreenTitle}
+        body={dict.detail.needsWiderScreenBody}
+        secondaryHref={challengePath}
+        secondaryLabel={page.data.title}
+      />
+    </div>
+  )
+
   if (category === "bug-fix") {
     const template = getSandpackTemplateBySlug(slug)
     if (template === null) notFound()
     const bugFixSnapshot = session.snapshot as BugFixSnapshot | null
     return (
-      <BugFixChallengeView
-        title={page.data.title}
-        template={template}
-        initialCode={bugFixSnapshot?.code ?? null}
-        slug={slug}
-        lang={lang}
-        playgroundPath={playgroundPath}
-        challengePath={challengePath}
-        dict={dict}
+      <WorkspaceOnly
+        wide={
+          <BugFixChallengeView
+            title={page.data.title}
+            template={template}
+            initialCode={bugFixSnapshot?.code ?? null}
+            slug={slug}
+            lang={lang}
+            playgroundPath={playgroundPath}
+            challengePath={challengePath}
+            dict={dict}
+          />
+        }
+        narrow={narrow}
       />
     )
   }
@@ -101,15 +119,20 @@ export default async function ActiveChallengePage({
     if (template === null) notFound()
     const testingSnapshot = session.snapshot as TestingSnapshot | null
     return (
-      <TestingChallengeView
-        title={page.data.title}
-        template={template}
-        initialTestCode={testingSnapshot?.testCode ?? null}
-        slug={slug}
-        lang={lang}
-        playgroundPath={playgroundPath}
-        challengePath={challengePath}
-        dict={dict}
+      <WorkspaceOnly
+        wide={
+          <TestingChallengeView
+            title={page.data.title}
+            template={template}
+            initialTestCode={testingSnapshot?.testCode ?? null}
+            slug={slug}
+            lang={lang}
+            playgroundPath={playgroundPath}
+            challengePath={challengePath}
+            dict={dict}
+          />
+        }
+        narrow={narrow}
       />
     )
   }
@@ -119,15 +142,20 @@ export default async function ActiveChallengePage({
     if (template === null) notFound()
     const gitSnapshot = session.snapshot as GitSnapshot | null
     return (
-      <GitChallengeView
-        title={page.data.title}
-        template={template}
-        initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
-        slug={slug}
-        lang={lang}
-        playgroundPath={playgroundPath}
-        challengePath={challengePath}
-        dict={dict}
+      <WorkspaceOnly
+        wide={
+          <GitChallengeView
+            title={page.data.title}
+            template={template}
+            initialResolutions={(gitSnapshot?.resolutions ?? null) as GitBlockResolution[] | null}
+            slug={slug}
+            lang={lang}
+            playgroundPath={playgroundPath}
+            challengePath={challengePath}
+            dict={dict}
+          />
+        }
+        narrow={narrow}
       />
     )
   }
@@ -145,15 +173,20 @@ export default async function ActiveChallengePage({
       hints: docsHints,
     }
     return (
-      <DocumentationChallengeView
-        title={page.data.title}
-        template={docsTemplateData}
-        initialContent={docsSnapshot?.content ?? null}
-        slug={slug}
-        lang={lang}
-        playgroundPath={playgroundPath}
-        challengePath={challengePath}
-        dict={dict}
+      <WorkspaceOnly
+        wide={
+          <DocumentationChallengeView
+            title={page.data.title}
+            template={docsTemplateData}
+            initialContent={docsSnapshot?.content ?? null}
+            slug={slug}
+            lang={lang}
+            playgroundPath={playgroundPath}
+            challengePath={challengePath}
+            dict={dict}
+          />
+        }
+        narrow={narrow}
       />
     )
   }
@@ -165,16 +198,21 @@ export default async function ActiveChallengePage({
   const diffFiles = getDiffBySlug(slug)
 
   return (
-    <ActiveChallengeView
-      title={page.data.title}
-      diffFiles={diffFiles}
-      initialComments={initialComments}
-      initialDecision={initialDecision}
-      slug={slug}
-      lang={lang}
-      playgroundPath={playgroundPath}
-      challengePath={challengePath}
-      dict={dict}
+    <WorkspaceOnly
+      wide={
+        <ActiveChallengeView
+          title={page.data.title}
+          diffFiles={diffFiles}
+          initialComments={initialComments}
+          initialDecision={initialDecision}
+          slug={slug}
+          lang={lang}
+          playgroundPath={playgroundPath}
+          challengePath={challengePath}
+          dict={dict}
+        />
+      }
+      narrow={narrow}
     />
   )
 }
