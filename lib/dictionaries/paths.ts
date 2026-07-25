@@ -30,6 +30,7 @@ export const pathsDictionary = {
     noPathBody:
       "Los retos de esta categoría son autosuficientes. Una ruta guiada llega cuando haya una guía con la que emparejarlos.",
     browseChallenges: "Ver retos",
+    guideAndChallenge: "Guía + reto",
   },
   en: {
     sectionHeading: "Learning paths",
@@ -61,6 +62,7 @@ export const pathsDictionary = {
     noPathBody:
       "This track's challenges stand on their own. A guided path arrives when there's a guide worth pairing them with.",
     browseChallenges: "Browse challenges",
+    guideAndChallenge: "Guide + challenge",
   },
 } as const
 

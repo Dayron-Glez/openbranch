@@ -17,10 +17,15 @@ import { PlaygroundGridTransition } from "@/features/playground/components/Playg
 import { getChallengeIcon, getCategoryIcon } from "@/features/playground/domain/challenge-icons"
 import {
   CATEGORY_ORDER,
+  CHALLENGE_TRACKS,
   type CategoryKey,
   inferCategoryBadge,
   getTrackColorToken,
 } from "@/features/playground/domain/manifest"
+import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
+import { LEARNING_PATHS } from "@/features/paths/domain/paths"
+import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
+import { LearningPathsBand, type PathBandItem } from "@/features/paths/components/LearningPathsBand"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -159,6 +164,31 @@ export default async function PlaygroundPage({
       : await loadUserPlaygroundData(supabase, user.id)
 
   const engagementStats = engagementStatsPromise === null ? null : await engagementStatsPromise
+
+  const pathsLocale: PathsLocale =
+    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsDict = pathsDictionary[pathsLocale]
+  const pathChallengeSlugs = LEARNING_PATHS.flatMap((p) =>
+    p.steps.filter((s) => s.type === "challenge").map((s) => s.challengeSlug)
+  )
+  const completedPathChallenges =
+    user === null ? null : await getCompletedChallengeSlugs(supabase, user.id, pathChallengeSlugs)
+  const pathBandItems: PathBandItem[] = LEARNING_PATHS.map((path) => {
+    const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
+    const challengeSlug = path.steps.find((s) => s.type === "challenge")?.challengeSlug
+    return {
+      href: localizedHref(lang, `/paths/${path.slug}`),
+      title: path.title[pathsLocale],
+      description: path.lead[pathsLocale],
+      track: path.track,
+      trackLabel: trackMeta !== undefined ? dict.category[trackMeta.category] : path.track,
+      icon: getChallengeIcon(trackMeta?.iconName),
+      challengeCompleted:
+        completedPathChallenges === null || challengeSlug === undefined
+          ? null
+          : completedPathChallenges.has(challengeSlug),
+    }
+  })
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -308,6 +338,18 @@ export default async function PlaygroundPage({
       {activeCategory === undefined && activeSort === "recommended" && (
         <div className="mt-14">
           <BadgesSection dict={dict.badges} earnedBadges={earnedBadges} />
+        </div>
+      )}
+
+      {activeCategory === undefined && activeSort === "recommended" && (
+        <div className="mt-14">
+          <LearningPathsBand
+            items={pathBandItems}
+            heading={pathsDict.sectionHeading}
+            sub={pathsDict.sectionSub}
+            practicedLabel={pathsDict.practiced}
+            guideAndChallengeLabel={pathsDict.guideAndChallenge}
+          />
         </div>
       )}
     </main>

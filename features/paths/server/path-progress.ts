@@ -7,17 +7,14 @@ type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 const FALLBACK_POINTS = 10
 
 /**
- * Which of a path's challenge steps the signed-in user has completed.
+ * Which of a set of challenge slugs the signed-in user has completed.
  * Doc steps have no equivalent signal — see specs/learning-paths-v1.md Q3.
  */
-export const getPathProgress = async (
+export const getCompletedChallengeSlugs = async (
   supabase: SupabaseServerClient,
   userId: string,
-  path: LearningPath
+  challengeSlugs: readonly string[]
 ): Promise<ReadonlySet<string>> => {
-  const challengeSlugs = path.steps
-    .filter((s) => s.type === "challenge")
-    .map((s) => s.challengeSlug)
   if (challengeSlugs.length === 0) return new Set()
 
   const { data, error } = await supabase
@@ -28,12 +25,24 @@ export const getPathProgress = async (
     .in("challenge_slug", challengeSlugs)
 
   if (error !== null) {
-    console.error("getPathProgress: failed to load completed challenges", error)
+    console.error("getCompletedChallengeSlugs: failed to load completed challenges", error)
     return new Set()
   }
 
   return new Set((data ?? []).map((row) => row.challenge_slug as string))
 }
+
+/** Progress for a single path's challenge steps. */
+export const getPathProgress = (
+  supabase: SupabaseServerClient,
+  userId: string,
+  path: LearningPath
+): Promise<ReadonlySet<string>> =>
+  getCompletedChallengeSlugs(
+    supabase,
+    userId,
+    path.steps.filter((s) => s.type === "challenge").map((s) => s.challengeSlug)
+  )
 
 /** Points per challenge slug, for the step meta chip (e.g. "+30 pts"). */
 export const getChallengePoints = async (
