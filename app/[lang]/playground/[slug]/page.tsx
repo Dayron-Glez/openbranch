@@ -13,6 +13,8 @@ import { createClient } from "@/lib/supabase/server"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { getTrackColorToken } from "@/features/playground/domain/manifest"
 import { DiffBars } from "@/shared/DiffBars"
+import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
+import { NeedsWiderScreenNote } from "@/shared/NeedsWiderScreenNote"
 
 const CheckIcon = (): ReactNode => (
   <svg
@@ -225,20 +227,33 @@ export default async function ChallengePage({
           <aside className="max-[900px]:order-first">
             <div className="flex flex-col gap-4">
               <div className="bg-bg-card border-line rounded-(--r-12) border p-[18px]">
-                <StartChallengeButton
-                  dict={dict.detail}
-                  isAuthenticated={isAuthenticated}
-                  sessionStatus={sessionStatus}
-                  challengePath={challengePath}
-                  activePath={activePath}
-                  slug={slug}
-                  lang={lang}
-                  authUser={authUser}
+                <WorkspaceOnly
+                  wide={
+                    <>
+                      <StartChallengeButton
+                        dict={dict.detail}
+                        isAuthenticated={isAuthenticated}
+                        sessionStatus={sessionStatus}
+                        challengePath={challengePath}
+                        activePath={activePath}
+                        slug={slug}
+                        lang={lang}
+                        authUser={authUser}
+                      />
+                      <p className="text-fg-muted mt-2.5 mb-4 text-center font-mono text-[11px]">
+                        {dict.detail.sandboxNote}
+                      </p>
+                    </>
+                  }
+                  narrow={
+                    <div className="mb-4">
+                      <NeedsWiderScreenNote
+                        title={dict.detail.needsWiderScreenTitle}
+                        body={dict.detail.needsWiderScreenBody}
+                      />
+                    </div>
+                  }
                 />
-
-                <p className="text-fg-muted mt-2.5 mb-4 text-center font-mono text-[11px]">
-                  {dict.detail.sandboxNote}
-                </p>
 
                 {/* kv metadata */}
                 <div>

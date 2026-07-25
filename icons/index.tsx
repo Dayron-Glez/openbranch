@@ -19,6 +19,7 @@ export {
   IconCheck,
   IconRoute,
   IconUser,
+  IconDeviceLaptop,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,

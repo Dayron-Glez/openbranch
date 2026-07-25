@@ -1,9 +1,10 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
-import { IconBook, IconClock, IconCheck, IconLock, IconArrowRight } from "@/icons"
+import { IconBook, IconClock, IconCheck, IconLock, IconArrowRight, IconDeviceLaptop } from "@/icons"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import type { StepStatus } from "@/features/paths/domain/path-status"
 import { DiffBars } from "@/shared/DiffBars"
+import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
 
 export type ResolvedPathStep =
   | {
@@ -37,6 +38,7 @@ type PathStepperDict = {
   readonly available: string
   readonly completed: string
   readonly stepOf: (n: number, total: number) => string
+  readonly needsWiderScreenTitle: string
 }
 
 type PathStepperProps = {
@@ -73,6 +75,13 @@ const getStepCta = (step: ResolvedPathStep, dict: PathStepperDict): string => {
   if (step.status === "current") return dict.startChallenge
   return dict.openChallenge
 }
+
+const ctaClass = (step: ResolvedPathStep): string =>
+  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-[420px]:w-full max-[420px]:justify-center ${
+    step.status === "current"
+      ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
+      : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
+  }`
 
 export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode => {
   const total = steps.length
@@ -159,17 +168,27 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
                 )}
               </div>
 
-              <Link
-                href={step.href}
-                className={`inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-[420px]:w-full max-[420px]:justify-center ${
-                  step.status === "current"
-                    ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
-                    : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
-                }`}
-              >
-                {getStepCta(step, dict)}
-                <IconArrowRight className="size-3.5" />
-              </Link>
+              {step.type === "challenge" ? (
+                <WorkspaceOnly
+                  wide={
+                    <Link href={step.href} className={ctaClass(step)}>
+                      {getStepCta(step, dict)}
+                      <IconArrowRight className="size-3.5" />
+                    </Link>
+                  }
+                  narrow={
+                    <span className="text-fg-muted border-line-2 inline-flex h-9 shrink-0 items-center gap-1.5 rounded-(--r-8) border px-3.5 text-[12px] max-[420px]:w-full max-[420px]:justify-center">
+                      <IconDeviceLaptop className="size-3.5" />
+                      {dict.needsWiderScreenTitle}
+                    </span>
+                  }
+                />
+              ) : (
+                <Link href={step.href} className={ctaClass(step)}>
+                  {getStepCta(step, dict)}
+                  <IconArrowRight className="size-3.5" />
+                </Link>
+              )}
             </div>
           </div>
         </div>

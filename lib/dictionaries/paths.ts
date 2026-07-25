@@ -31,6 +31,8 @@ export const pathsDictionary = {
       "Los retos de esta categoría son autosuficientes. Una ruta guiada llega cuando haya una guía con la que emparejarlos.",
     browseChallenges: "Ver retos",
     guideAndChallenge: "Guía + reto",
+    needsWiderScreenTitle: "Necesita más pantalla",
+    needsWiderScreenBody: "Abre este reto desde una tablet o un portátil para poder resolverlo.",
   },
   en: {
     sectionHeading: "Learning paths",
@@ -63,6 +65,8 @@ export const pathsDictionary = {
       "This track's challenges stand on their own. A guided path arrives when there's a guide worth pairing them with.",
     browseChallenges: "Browse challenges",
     guideAndChallenge: "Guide + challenge",
+    needsWiderScreenTitle: "Needs more screen",
+    needsWiderScreenBody: "Open this challenge from a tablet or laptop to work through it.",
   },
 } as const
 

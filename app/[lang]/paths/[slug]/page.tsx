@@ -250,6 +250,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
           available: dict.available,
           completed: dict.completed,
           stepOf: dict.stepOf,
+          needsWiderScreenTitle: dict.needsWiderScreenTitle,
         }}
       />
     </main>
