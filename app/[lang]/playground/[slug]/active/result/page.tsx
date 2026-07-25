@@ -18,6 +18,7 @@ import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIco
 import { source } from "@/lib/source"
 import { pathForChallenge } from "@/features/paths/domain/paths"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
+import { LogoMark } from "@/shared/LogoMark"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -138,25 +139,6 @@ const ChartIcon = (): ReactNode => (
     <rect x="3" y="12" width="4" height="9" rx="0.5" />
     <rect x="10" y="7" width="4" height="14" rx="0.5" />
     <rect x="17" y="3" width="4" height="18" rx="0.5" />
-  </svg>
-)
-
-/* ── openbranch logo mark (SVG inline) ── */
-const OpenbranchMark = (): ReactNode => (
-  <svg width="36" height="36" viewBox="0 0 64 64" className="text-fg" aria-hidden="true">
-    <g
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="10" x2="18" y2="54" />
-      <path d="M18 24 C 18 18, 22 14, 30 14 L 40 14 C 48 14, 52 18, 52 26 L 52 38 C 52 46, 48 50, 40 50" />
-      <circle cx="18" cy="10" r="4.5" fill="currentColor" stroke="none" />
-      <circle cx="18" cy="54" r="4.5" fill="currentColor" stroke="none" />
-      <circle cx="40" cy="50" r="4.5" fill="var(--color-ob-accent)" stroke="none" />
-    </g>
   </svg>
 )
 
@@ -307,7 +289,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
           {/* logo ring */}
           <div className="mb-8 flex justify-center">
             <div className="border-ob-accent/30 bg-ob-accent/[0.07] flex size-[80px] items-center justify-center rounded-full border-[1.5px]">
-              <OpenbranchMark />
+              <LogoMark size={36} />
             </div>
           </div>
 
