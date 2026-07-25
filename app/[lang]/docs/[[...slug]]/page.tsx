@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import { getPageImage, getPageGitHubUrl, getPageMarkdownUrl, source } from "@/lib/source"
 import { SITE_URL } from "@/lib/constants"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
@@ -19,6 +20,14 @@ import { SectionCards } from "@/features/docs/components/SectionCards"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
+import { pathsForDoc } from "@/features/paths/domain/paths"
+import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
+import { PartOfPathChip } from "@/features/paths/components/PartOfPathChip"
+import { NextInPath } from "@/features/paths/components/NextInPath"
+import { playgroundSource } from "@/lib/playground-source"
+import { getPlaygroundDict } from "@/lib/playground-dictionary"
+import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
+import { localizedHref } from "@/lib/landing-dictionary"
 
 export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...slug]]">>) {
   const { lang, slug } = await props.params
@@ -42,6 +51,38 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const rawText = isSectionPage ? "" : await page.data.getText("processed")
   const readingMinutes = isSectionPage ? 0 : getReadingTime(rawText)
 
+  const pathsLocale: PathsLocale =
+    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsDict = pathsDictionary[pathsLocale]
+  const currentDocSlug = (slug ?? []).join("/")
+  const primaryPath = isSectionPage ? undefined : pathsForDoc(currentDocSlug)[0]
+  const stepIndex = primaryPath?.steps.findIndex(
+    (s) => s.type === "doc" && s.docSlug === currentDocSlug
+  )
+  const nextStep =
+    primaryPath !== undefined && stepIndex !== undefined
+      ? primaryPath.steps[stepIndex + 1]
+      : undefined
+
+  let nextInPathBlock: ReactNode = null
+  if (primaryPath !== undefined && nextStep?.type === "challenge") {
+    const challengePage = playgroundSource.getPage([nextStep.challengeSlug], lang)
+    if (challengePage !== undefined) {
+      const playgroundDict = getPlaygroundDict(lang)
+      nextInPathBlock = (
+        <NextInPath
+          track={primaryPath.track}
+          href={localizedHref(lang, `/playground/${nextStep.challengeSlug}`)}
+          title={challengePage.data.title}
+          meta={`${playgroundDict.difficulty[challengePage.data.difficulty]} · ${challengePage.data.estimated_minutes}m`}
+          icon={getChallengeIcon(challengePage.data.icon)}
+          label={pathsDict.nextInPath}
+          cta={pathsDict.startChallenge}
+        />
+      )
+    }
+  }
+
   return (
     <DocsPage
       toc={page.data.toc}
@@ -53,13 +94,25 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       <div className="flex flex-col gap-2">
         <DocsTitle className="leading-tight">{page.data.title}</DocsTitle>
         {!isSectionPage && (
-          <Badge
-            variant="outline"
-            className="bg-accent-soft text-ob-accent w-fit gap-1.5 border-transparent font-mono"
-          >
-            <IconClock className="size-3" />
-            {formatReadingTime(readingMinutes, lang)}
-          </Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              variant="outline"
+              className="bg-accent-soft text-ob-accent w-fit gap-1.5 border-transparent font-mono"
+            >
+              <IconClock className="size-3" />
+              {formatReadingTime(readingMinutes, lang)}
+            </Badge>
+            {primaryPath !== undefined && stepIndex !== undefined && stepIndex >= 0 && (
+              <PartOfPathChip
+                path={primaryPath}
+                href={localizedHref(lang, `/paths/${primaryPath.slug}`)}
+                locale={pathsLocale}
+                label={pathsDict.partOfPath}
+                stepOf={pathsDict.stepOf}
+                stepIndex={stepIndex}
+              />
+            )}
+          </div>
         )}
       </div>
       <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
@@ -80,6 +133,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
           />
         </DocsScrollReveal>
         <SectionCards pages={sectionChildren} />
+        {nextInPathBlock}
       </DocsBody>
     </DocsPage>
   )
