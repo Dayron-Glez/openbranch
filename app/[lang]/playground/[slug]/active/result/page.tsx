@@ -13,8 +13,11 @@ import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { formatElapsed } from "@/features/playground/domain/format-elapsed"
 import { inferCategoryBadge } from "@/features/playground/domain/manifest"
 import { getCompletionReward } from "@/features/playground/server/reward-service"
-import { RewardMoment } from "@/features/playground/components/RewardMoment"
+import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
+import { source } from "@/lib/source"
+import { pathForChallenge } from "@/features/paths/domain/paths"
+import { pathsDictionary, type PathsLocale } from "@/lib/dictionaries/paths"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -249,6 +252,35 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const playgroundPath = localizedHref(lang, "/playground")
   const challengeBranch = page.data.pr_preview?.branch ?? null
 
+  /* path recap — this challenge is always a path's last step, so if it
+     belongs to one, completing it always finishes the path (Q2/Q3). */
+  const pathsLocale: PathsLocale =
+    (lang as PathsLocale) in pathsDictionary ? (lang as PathsLocale) : "es"
+  const pathsDict = pathsDictionary[pathsLocale]
+  const matchedPath = pathForChallenge(slug)
+  const pathRecap: PathRecap | null =
+    matchedPath === null
+      ? null
+      : {
+          track: matchedPath.track,
+          pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
+          pathTitle: matchedPath.title[pathsLocale],
+          otherPathsHref: playgroundPath,
+          steps: matchedPath.steps.map((s) =>
+            s.type === "doc"
+              ? {
+                  type: "doc" as const,
+                  title: source.getPage(s.docSlug.split("/"), lang)?.data.title ?? s.docSlug,
+                }
+              : {
+                  type: "challenge" as const,
+                  title:
+                    playgroundSource.getPage([s.challengeSlug], lang)?.data.title ??
+                    s.challengeSlug,
+                }
+          ),
+        }
+
   const badgeInfo =
     badge === null || badgeKey === null
       ? null
@@ -330,7 +362,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </span>
           </div>
 
-          <RewardMoment reward={reward} currentElapsedDisplay={elapsedDisplay} dict={dict.reward} />
+          <RewardMoment
+            reward={reward}
+            currentElapsedDisplay={elapsedDisplay}
+            dict={dict.reward}
+            pathRecap={pathRecap}
+            pathDict={pathsDict}
+          />
 
           {/* CTAs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
