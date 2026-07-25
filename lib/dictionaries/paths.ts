@@ -1,0 +1,64 @@
+export const pathsDictionary = {
+  es: {
+    sectionHeading: "Rutas de aprendizaje",
+    sectionSub: "Lee la guía, luego practícala — tres recorridos curados",
+    breadcrumbPlayground: "Playground",
+    breadcrumbPaths: "Rutas",
+    partOfPath: "Parte de una ruta",
+    stepOf: (n: number, total: number): string => `Paso ${n} de ${total}`,
+    startWithGuide: "Empieza con la guía",
+    startThePath: "Empezar la ruta",
+    openGuide: "Abrir guía",
+    openChallenge: "Abrir reto",
+    startChallenge: "Empezar reto",
+    youAreHere: "Estás aquí",
+    available: "Disponible",
+    completed: "Completado",
+    practiced: (done: number, total: number): string =>
+      `${done} de ${total} practicado${total === 1 ? "" : "s"}`,
+    nextInPath: "Siguiente en esta ruta",
+    pathComplete: "Ruta completada",
+    youFinishedThePath: "Completaste la ruta.",
+    explorePaths: "Explorar otra ruta",
+    guestReading: "Leyendo como invitado.",
+    guestSignInPrompt:
+      "Inicia sesión para trackear qué retos completaste y seguir donde lo dejaste.",
+    signIn: "Iniciar sesión con GitHub",
+    noPathHeading: "Aún no hay ruta aquí",
+    noPathBody:
+      "Los retos de esta categoría son autosuficientes. Una ruta guiada llega cuando haya una guía con la que emparejarlos.",
+    browseChallenges: "Ver retos",
+  },
+  en: {
+    sectionHeading: "Learning paths",
+    sectionSub: "Read the guide, then practice it — three curated journeys",
+    breadcrumbPlayground: "Playground",
+    breadcrumbPaths: "Paths",
+    partOfPath: "Part of a path",
+    stepOf: (n: number, total: number): string => `Step ${n} of ${total}`,
+    startWithGuide: "Start with the guide",
+    startThePath: "Start the path",
+    openGuide: "Open guide",
+    openChallenge: "Open challenge",
+    startChallenge: "Start challenge",
+    youAreHere: "You're here",
+    available: "Available",
+    completed: "Completed",
+    practiced: (done: number, total: number): string => `${done} of ${total} practiced`,
+    nextInPath: "Next in this path",
+    pathComplete: "Path complete",
+    youFinishedThePath: "You finished the path.",
+    explorePaths: "Explore another path",
+    guestReading: "Reading as a guest.",
+    guestSignInPrompt:
+      "Sign in to track which challenges you've completed and pick up where you left off.",
+    signIn: "Sign in with GitHub",
+    noPathHeading: "No path here yet",
+    noPathBody:
+      "This track's challenges stand on their own. A guided path arrives when there's a guide worth pairing them with.",
+    browseChallenges: "Browse challenges",
+  },
+} as const
+
+export type PathsLocale = keyof typeof pathsDictionary
+export type PathsDictionary = (typeof pathsDictionary)[PathsLocale]
