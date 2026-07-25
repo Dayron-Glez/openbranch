@@ -8,6 +8,13 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* Minimum viewport width the challenge workspace (Monaco panes, resizable
+   gutters) can actually lay out in — see shared/viewport.ts. Generates the
+   `workspace:` / `max-workspace:` variants. */
+@theme {
+  --breakpoint-workspace: 900px;
+}
+
 /* Fumadocs HSL bridge -> Tailwind color utilities */
 @theme {
   --color-background: hsl(var(--background));

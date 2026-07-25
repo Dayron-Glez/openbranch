@@ -103,6 +103,8 @@ export type PlaygroundDict = {
     readonly signOutCancel: string
     readonly practiceAgain: string
     readonly continueChallenge: string
+    readonly needsWiderScreenTitle: string
+    readonly needsWiderScreenBody: string
   }
   readonly hub: {
     readonly eyebrow: string
@@ -460,6 +462,14 @@ const translations = {
   "detail.signOutCancel": { es: "Cancelar", en: "Cancel" },
   "detail.practiceAgain": { es: "Practicar de nuevo", en: "Practice again" },
   "detail.continueChallenge": { es: "Continuar reto", en: "Continue challenge" },
+  "detail.needsWiderScreenTitle": {
+    es: "Este reto necesita más pantalla",
+    en: "This challenge needs more screen",
+  },
+  "detail.needsWiderScreenBody": {
+    es: "El editor de código necesita al menos 900px de ancho para funcionar bien. Ábrelo desde una tablet o un portátil.",
+    en: "The code editor needs at least 900px of width to work well. Open it from a tablet or laptop.",
+  },
   "stats.eyebrow": { es: "Tu progreso", en: "Your progress" },
   "stats.points": { es: "Puntos", en: "Points" },
   "stats.pointsToday": { es: "+{points} hoy", en: "+{points} today" },
@@ -812,6 +822,8 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       signOutCancel: tx("detail.signOutCancel"),
       practiceAgain: tx("detail.practiceAgain"),
       continueChallenge: tx("detail.continueChallenge"),
+      needsWiderScreenTitle: tx("detail.needsWiderScreenTitle"),
+      needsWiderScreenBody: tx("detail.needsWiderScreenBody"),
     },
   }
 }
