@@ -205,7 +205,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
           {`~${totalMinutes} min`}
         </span>
         {user !== null && (
-          <span className="text-fg-muted ml-auto inline-flex items-center gap-3 font-mono text-[11.5px]">
+          <span className="text-fg-muted inline-flex items-center gap-3 font-mono text-[11.5px] max-[640px]:w-full min-[640px]:ml-auto">
             {dict.practiced(completedCount, totalChallenges)}
             <span className="bg-bg-elev h-[5px] w-[110px] overflow-hidden rounded-full">
               <i
@@ -231,7 +231,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         </div>
         <Link
           href={firstStep.href}
-          className="inline-flex h-10 shrink-0 items-center gap-2 rounded-(--r-8) bg-(--track) px-4.5 text-[14px] font-semibold text-(color:--track-ink) no-underline hover:brightness-110"
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4.5 text-[14px] font-semibold text-(color:--track-ink) no-underline hover:brightness-110 max-[520px]:w-full"
         >
           {dict.startThePath}
         </Link>

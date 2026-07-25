@@ -24,7 +24,7 @@ export const NextInPath = ({
   <Link
     href={href}
     data-track={track}
-    className="mt-6 flex items-center gap-4 rounded-(--r-12) border border-(--track-ring) bg-(--track-soft) p-5 text-inherit no-underline"
+    className="mt-6 flex items-center gap-4 rounded-(--r-12) border border-(--track-ring) bg-(--track-soft) p-5 text-inherit no-underline max-[640px]:flex-col max-[640px]:items-start"
   >
     <span className="bg-bg-card inline-grid size-11 shrink-0 place-items-center rounded-(--r-10) border border-(--track-ring) text-(color:--track) [&_svg]:size-[22px]">
       {icon}
@@ -36,7 +36,7 @@ export const NextInPath = ({
       <div className="text-fg text-[15px] font-medium">{title}</div>
       <div className="text-fg-muted mt-0.5 font-mono text-[12px]">{meta}</div>
     </div>
-    <span className="inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) bg-(--track) px-4 text-[13px] font-semibold text-(color:--track-ink)">
+    <span className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4 text-[13px] font-semibold text-(color:--track-ink) max-[640px]:w-full">
       {cta}
     </span>
   </Link>
