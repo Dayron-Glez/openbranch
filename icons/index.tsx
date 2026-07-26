@@ -20,6 +20,7 @@ export {
   IconRoute,
   IconUser,
   IconDeviceLaptop,
+  IconLayoutGrid,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,
