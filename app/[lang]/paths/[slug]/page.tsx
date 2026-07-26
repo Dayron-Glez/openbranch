@@ -8,10 +8,17 @@ import { playgroundSource } from "@/lib/playground-source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
-import { LEARNING_PATHS, PATH_BY_SLUG, type LearningPath } from "@/features/paths/domain/paths"
+import {
+  challengeSlugsOf,
+  flattenSteps,
+  type LearningPath,
+  type PathStep,
+} from "@/features/paths/domain/paths"
 import { computeStepStatuses, type StepStatus } from "@/features/paths/domain/path-status"
 import { PathStepper, type ResolvedPathStep } from "@/features/paths/components/PathStepper"
 import { getPathProgress, getChallengePoints } from "@/features/paths/server/path-progress"
+import { getAllPaths, getPath } from "@/features/paths/server/path-catalog"
+import { validatePathCatalog } from "@/features/paths/server/path-validation"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { CHALLENGE_TRACKS } from "@/features/playground/domain/manifest"
 import { createClient } from "@/lib/supabase/server"
@@ -19,33 +26,37 @@ import { IconRoute, IconClock, IconUser } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 
 export function generateStaticParams(): { lang: string; slug: string }[] {
-  return i18n.languages.flatMap((lang) => LEARNING_PATHS.map((p) => ({ lang, slug: p.slug })))
+  // Runs during `next build` — a broken doc/challenge reference fails here
+  // rather than rendering a silently missing step.
+  validatePathCatalog()
+  return i18n.languages.flatMap((lang) =>
+    getAllPaths(lang).map((path) => ({ lang, slug: path.slug }))
+  )
 }
 
 export async function generateMetadata({
   params,
 }: Readonly<PageProps<"/[lang]/paths/[slug]">>): Promise<Metadata> {
   const { lang, slug } = await params
-  const path = PATH_BY_SLUG.get(slug)
-  if (path === undefined) return {}
+  const path = getPath(slug, lang)
+  if (path === null) return {}
 
-  const locale = resolvePathsLocale(lang)
   return {
-    title: `${path.title[locale]} · openbranch`,
-    description: path.lead[locale],
+    title: `${path.title} · openbranch`,
+    description: path.lead,
   }
 }
 
 /** One step's display data, plus the minutes it adds to the path's total. */
 const resolveStep = async (
-  step: LearningPath["steps"][number],
+  step: PathStep,
   status: StepStatus,
   lang: string,
   playgroundDict: PlaygroundDict,
   pointsBySlug: ReadonlyMap<string, number>
 ): Promise<{ readonly resolved: ResolvedPathStep; readonly minutes: number } | null> => {
   if (step.type === "doc") {
-    const docPage = source.getPage(step.docSlug.split("/"), lang)
+    const docPage = source.getPage(step.slug.split("/"), lang)
     if (docPage === undefined) return null
     const rawText = await docPage.data.getText("processed")
     const minutes = getReadingTime(rawText)
@@ -62,14 +73,14 @@ const resolveStep = async (
     }
   }
 
-  const challengePage = playgroundSource.getPage([step.challengeSlug], lang)
+  const challengePage = playgroundSource.getPage([step.slug], lang)
   if (challengePage === undefined) return null
-  const points = pointsBySlug.get(step.challengeSlug) ?? 0
+  const points = pointsBySlug.get(step.slug) ?? 0
   return {
     minutes: challengePage.data.estimated_minutes,
     resolved: {
       type: "challenge",
-      href: localizedHref(lang, `/playground/${step.challengeSlug}`),
+      href: localizedHref(lang, `/playground/${step.slug}`),
       title: challengePage.data.title,
       description: challengePage.data.description ?? "",
       difficulty: challengePage.data.difficulty,
@@ -91,7 +102,7 @@ const resolvePathSteps = async (
   pointsBySlug: ReadonlyMap<string, number>
 ): Promise<{ readonly steps: readonly ResolvedPathStep[]; readonly totalMinutes: number }> => {
   const resolved = await Promise.all(
-    path.steps.map((step, index) =>
+    flattenSteps(path).map((step, index) =>
       resolveStep(step, statuses[index], lang, playgroundDict, pointsBySlug)
     )
   )
@@ -104,8 +115,8 @@ const resolvePathSteps = async (
 
 export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/paths/[slug]">>) {
   const { lang, slug } = await params
-  const path = PATH_BY_SLUG.get(slug)
-  if (path === undefined) notFound()
+  const path = getPath(slug, lang)
+  if (path === null) notFound()
 
   const locale = resolvePathsLocale(lang)
   const dict = pathsDictionary[locale]
@@ -119,16 +130,14 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
     data: { user },
   } = await supabase.auth.getUser()
 
-  const challengeSlugs = path.steps
-    .filter((s) => s.type === "challenge")
-    .map((s) => s.challengeSlug)
+  const challengeSlugs = challengeSlugsOf(path)
 
   const [completedChallengeSlugs, pointsBySlug] = await Promise.all([
     user !== null ? getPathProgress(supabase, user.id, path) : Promise.resolve(null),
     getChallengePoints(supabase, challengeSlugs),
   ])
 
-  const statuses = computeStepStatuses(path.steps, completedChallengeSlugs)
+  const statuses = computeStepStatuses(flattenSteps(path), completedChallengeSlugs)
   const { steps: resolvedSteps, totalMinutes } = await resolvePathSteps(
     path,
     statuses,
@@ -164,7 +173,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
             /
           </li>
           <li className="text-fg-2 max-w-[40ch] truncate" aria-current="page">
-            {path.title[locale]}
+            {path.title}
           </li>
         </ol>
       </nav>
@@ -189,11 +198,9 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
       </div>
 
       <h1 className="text-fg m-0 mb-4 text-[34px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-[640px]:text-[27px]">
-        {path.title[locale]}
+        {path.title}
       </h1>
-      <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">
-        {path.lead[locale]}
-      </p>
+      <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">{path.lead}</p>
 
       <div className="border-line mb-7 flex flex-wrap items-center gap-5 border-b pb-6">
         <span className="text-fg-muted inline-flex items-center gap-2 font-mono text-[12px]">

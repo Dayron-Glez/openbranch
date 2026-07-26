@@ -1,5 +1,5 @@
 import type { createClient } from "@/lib/supabase/server"
-import type { LearningPath } from "../domain/paths"
+import { challengeSlugsOf, type LearningPath } from "../domain/paths"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
@@ -38,11 +38,7 @@ export const getPathProgress = (
   userId: string,
   path: LearningPath
 ): Promise<ReadonlySet<string>> =>
-  getCompletedChallengeSlugs(
-    supabase,
-    userId,
-    path.steps.filter((s) => s.type === "challenge").map((s) => s.challengeSlug)
-  )
+  getCompletedChallengeSlugs(supabase, userId, challengeSlugsOf(path))
 
 /** Points per challenge slug, for the step meta chip (e.g. "+30 pts"). */
 export const getChallengePoints = async (

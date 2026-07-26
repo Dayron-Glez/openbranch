@@ -3,6 +3,7 @@ import lastModified from "fumadocs-mdx/plugins/last-modified"
 import { metaSchema, pageSchema } from "fumadocs-core/source/schema"
 import { z } from "zod"
 import { maturitySchema } from "./lib/maturity"
+import { pathFrontmatterFields } from "./lib/paths-schema"
 
 export const docs = defineDocs({
   dir: "content/docs",
@@ -51,6 +52,17 @@ export const playground = defineDocs({
         .optional(),
       checklist: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
     }),
+  },
+  meta: {
+    schema: metaSchema,
+  },
+})
+
+export const paths = defineDocs({
+  dir: "content/paths",
+  docs: {
+    files: ["*.md", "*.mdx"],
+    schema: pageSchema.extend(pathFrontmatterFields),
   },
   meta: {
     schema: metaSchema,

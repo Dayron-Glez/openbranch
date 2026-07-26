@@ -20,7 +20,8 @@ import { SectionCards } from "@/features/docs/components/SectionCards"
 import type { Metadata } from "next"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
-import { pathsForDoc } from "@/features/paths/domain/paths"
+import { flattenSteps, locateStep } from "@/features/paths/domain/paths"
+import { pathsForDoc } from "@/features/paths/server/path-catalog"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { PartOfPathChip } from "@/features/paths/components/PartOfPathChip"
 import { NextInPath } from "@/features/paths/components/NextInPath"
@@ -54,24 +55,26 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const currentDocSlug = (slug ?? []).join("/")
-  const primaryPath = isSectionPage ? undefined : pathsForDoc(currentDocSlug)[0]
-  const stepIndex = primaryPath?.steps.findIndex(
-    (s) => s.type === "doc" && s.docSlug === currentDocSlug
-  )
+  const primaryPath = isSectionPage ? undefined : pathsForDoc(currentDocSlug, lang)[0]
+  const docLocation =
+    primaryPath === undefined
+      ? null
+      : locateStep(primaryPath, (s) => s.type === "doc" && s.slug === currentDocSlug)
+  const stepIndex = docLocation?.flatIndex
   const nextStep =
-    primaryPath !== undefined && stepIndex !== undefined
-      ? primaryPath.steps[stepIndex + 1]
+    primaryPath !== undefined && docLocation !== null
+      ? flattenSteps(primaryPath)[docLocation.flatIndex + 1]
       : undefined
 
   let nextInPathBlock: ReactNode = null
   if (primaryPath !== undefined && nextStep?.type === "challenge") {
-    const challengePage = playgroundSource.getPage([nextStep.challengeSlug], lang)
+    const challengePage = playgroundSource.getPage([nextStep.slug], lang)
     if (challengePage !== undefined) {
       const playgroundDict = getPlaygroundDict(lang)
       nextInPathBlock = (
         <NextInPath
           track={primaryPath.track}
-          href={localizedHref(lang, `/playground/${nextStep.challengeSlug}`)}
+          href={localizedHref(lang, `/playground/${nextStep.slug}`)}
           title={challengePage.data.title}
           meta={`${playgroundDict.difficulty[challengePage.data.difficulty]} · ${challengePage.data.estimated_minutes}m`}
           icon={getChallengeIcon(challengePage.data.icon)}
@@ -105,7 +108,6 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
               <PartOfPathChip
                 path={primaryPath}
                 href={localizedHref(lang, `/paths/${primaryPath.slug}`)}
-                locale={pathsLocale}
                 label={pathsDict.partOfPath}
                 stepOf={pathsDict.stepOf}
                 stepIndex={stepIndex}

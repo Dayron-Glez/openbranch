@@ -22,7 +22,7 @@ export const computeStepStatuses = (
   return steps.map((step) => {
     if (step.type === "doc") return "available"
     if (completedChallengeSlugs === null) return "available"
-    if (completedChallengeSlugs.has(step.challengeSlug)) return "completed"
+    if (completedChallengeSlugs.has(step.slug)) return "completed"
     if (currentAssigned) return "available"
     currentAssigned = true
     return "current"

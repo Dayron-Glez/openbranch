@@ -22,8 +22,9 @@ import {
   inferCategoryBadge,
   getTrackColorToken,
 } from "@/features/playground/domain/manifest"
-import { pathsDictionary, resolvePathsLocale, type PathsLocale } from "@/lib/dictionaries/paths"
-import { LEARNING_PATHS } from "@/features/paths/domain/paths"
+import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
+import { challengeSlugsOf, type LearningPath } from "@/features/paths/domain/paths"
+import { getAllPaths } from "@/features/paths/server/path-catalog"
 import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
 import { LearningPathsBand, type PathBandItem } from "@/features/paths/components/LearningPathsBand"
 
@@ -104,14 +105,13 @@ const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["sta
 }
 
 const buildPathBandItem = (
-  path: (typeof LEARNING_PATHS)[number],
+  path: LearningPath,
   lang: string,
-  pathsLocale: PathsLocale,
   categoryDict: PlaygroundDict["category"],
   completedPathChallenges: ReadonlySet<string> | null
 ): PathBandItem => {
   const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
-  const challengeSlug = path.steps.find((s) => s.type === "challenge")?.challengeSlug
+  const challengeSlug = challengeSlugsOf(path)[0]
   const challengeCompleted =
     completedPathChallenges === null || challengeSlug === undefined
       ? null
@@ -119,8 +119,8 @@ const buildPathBandItem = (
 
   return {
     href: localizedHref(lang, `/paths/${path.slug}`),
-    title: path.title[pathsLocale],
-    description: path.lead[pathsLocale],
+    title: path.title,
+    description: path.lead,
     track: path.track,
     trackLabel: trackMeta !== undefined ? categoryDict[trackMeta.category] : path.track,
     icon: getChallengeIcon(trackMeta?.iconName),
@@ -130,12 +130,11 @@ const buildPathBandItem = (
 
 const buildPathBandItems = (
   lang: string,
-  pathsLocale: PathsLocale,
   categoryDict: PlaygroundDict["category"],
   completedPathChallenges: ReadonlySet<string> | null
 ): PathBandItem[] =>
-  LEARNING_PATHS.map((path) =>
-    buildPathBandItem(path, lang, pathsLocale, categoryDict, completedPathChallenges)
+  getAllPaths(lang).map((path) =>
+    buildPathBandItem(path, lang, categoryDict, completedPathChallenges)
   )
 
 export function generateStaticParams() {
@@ -202,17 +201,10 @@ export default async function PlaygroundPage({
 
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
-  const pathChallengeSlugs = LEARNING_PATHS.flatMap((p) =>
-    p.steps.filter((s) => s.type === "challenge").map((s) => s.challengeSlug)
-  )
+  const pathChallengeSlugs = getAllPaths(lang).flatMap((path) => challengeSlugsOf(path))
   const completedPathChallenges =
     user === null ? null : await getCompletedChallengeSlugs(supabase, user.id, pathChallengeSlugs)
-  const pathBandItems = buildPathBandItems(
-    lang,
-    pathsLocale,
-    dict.category,
-    completedPathChallenges
-  )
+  const pathBandItems = buildPathBandItems(lang, dict.category, completedPathChallenges)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
