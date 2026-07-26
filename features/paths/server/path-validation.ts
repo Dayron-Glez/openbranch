@@ -64,8 +64,7 @@ export const validatePathCatalog = (): void => {
 
   for (const lang of i18n.languages) {
     for (const path of getAllPaths(lang)) {
-      problems.push(...collectBrokenReferences(path, lang))
-      problems.push(...collectDuplicateIds(path, lang))
+      problems.push(...collectBrokenReferences(path, lang), ...collectDuplicateIds(path, lang))
 
       const key = structureKey(path)
       const previous = structureByPath.get(path.slug)
