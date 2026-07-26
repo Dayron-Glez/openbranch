@@ -1,12 +1,11 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { IconRoute } from "@/icons"
-import type { LearningPath } from "@/features/paths/domain/paths"
+import { flattenSteps, type LearningPath } from "@/features/paths/domain/paths"
 
 type PartOfPathChipProps = {
   readonly path: LearningPath
   readonly href: string
-  readonly locale: "es" | "en"
   readonly label: string
   readonly stepOf: (n: number, total: number) => string
   readonly stepIndex: number
@@ -15,7 +14,6 @@ type PartOfPathChipProps = {
 export const PartOfPathChip = ({
   path,
   href,
-  locale,
   label,
   stepOf,
   stepIndex,
@@ -30,10 +28,12 @@ export const PartOfPathChip = ({
     <span className="shrink-0" aria-hidden="true">
       ·
     </span>
-    <span className="min-w-0 truncate">{path.title[locale]}</span>
+    <span className="min-w-0 truncate">{path.title}</span>
     <span className="shrink-0 max-[520px]:hidden" aria-hidden="true">
       ·
     </span>
-    <span className="shrink-0 max-[520px]:hidden">{stepOf(stepIndex + 1, path.steps.length)}</span>
+    <span className="shrink-0 max-[520px]:hidden">
+      {stepOf(stepIndex + 1, flattenSteps(path).length)}
+    </span>
   </Link>
 )

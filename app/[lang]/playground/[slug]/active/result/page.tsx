@@ -16,7 +16,8 @@ import { getCompletionReward } from "@/features/playground/server/reward-service
 import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 import { source } from "@/lib/source"
-import { pathForChallenge } from "@/features/paths/domain/paths"
+import { flattenSteps } from "@/features/paths/domain/paths"
+import { pathForChallenge } from "@/features/paths/server/path-catalog"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
 
@@ -238,26 +239,24 @@ export default async function ResultPage({ params }: ResultPageProps) {
      belongs to one, completing it always finishes the path (Q2/Q3). */
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
-  const matchedPath = pathForChallenge(slug)
+  const matchedPath = pathForChallenge(slug, lang)
   const pathRecap: PathRecap | null =
     matchedPath === null
       ? null
       : {
           track: matchedPath.track,
           pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
-          pathTitle: matchedPath.title[pathsLocale],
+          pathTitle: matchedPath.title,
           otherPathsHref: playgroundPath,
-          steps: matchedPath.steps.map((s) =>
+          steps: flattenSteps(matchedPath).map((s) =>
             s.type === "doc"
               ? {
                   type: "doc" as const,
-                  title: source.getPage(s.docSlug.split("/"), lang)?.data.title ?? s.docSlug,
+                  title: source.getPage(s.slug.split("/"), lang)?.data.title ?? s.slug,
                 }
               : {
                   type: "challenge" as const,
-                  title:
-                    playgroundSource.getPage([s.challengeSlug], lang)?.data.title ??
-                    s.challengeSlug,
+                  title: playgroundSource.getPage([s.slug], lang)?.data.title ?? s.slug,
                 }
           ),
         }
