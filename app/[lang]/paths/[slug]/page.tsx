@@ -17,7 +17,13 @@ import {
 import { computeStepStatuses, type StepStatus } from "@/features/paths/domain/path-status"
 import { PathStepper, type ResolvedPathStep } from "@/features/paths/components/PathStepper"
 import { getPathProgress, getChallengePoints } from "@/features/paths/server/path-progress"
-import { getAllPaths, getPath } from "@/features/paths/server/path-catalog"
+import {
+  getAllPaths,
+  getPath,
+  getPathPage,
+  toLearningPath,
+} from "@/features/paths/server/path-catalog"
+import { getMDXComponents } from "@/features/docs/components/mdx"
 import { validatePathCatalog } from "@/features/paths/server/path-validation"
 import { getChallengeIcon } from "@/features/playground/domain/challenge-icons"
 import { CHALLENGE_TRACKS } from "@/features/playground/domain/manifest"
@@ -93,30 +99,67 @@ const resolveStep = async (
   }
 }
 
-/** Resolves every step of a path in order, summing the total time estimate. */
-const resolvePathSteps = async (
+type ResolvedSection = {
+  readonly id: string
+  readonly title: string
+  readonly description?: string
+  readonly steps: readonly ResolvedPathStep[]
+  /** Position of this section's first step in the whole path. */
+  readonly startIndex: number
+}
+
+/**
+ * Resolves every step in reading order, then slices the result back into
+ * sections. Slicing before dropping unresolved steps is what keeps a section's
+ * slice aligned with its own step count — the build-time validator means a
+ * `null` should be impossible, but the ordering makes that assumption harmless.
+ */
+const resolvePathSections = async (
   path: LearningPath,
   statuses: readonly StepStatus[],
   lang: string,
   playgroundDict: PlaygroundDict,
   pointsBySlug: ReadonlyMap<string, number>
-): Promise<{ readonly steps: readonly ResolvedPathStep[]; readonly totalMinutes: number }> => {
+): Promise<{
+  readonly sections: readonly ResolvedSection[]
+  readonly totalMinutes: number
+  readonly totalSteps: number
+}> => {
   const resolved = await Promise.all(
     flattenSteps(path).map((step, index) =>
       resolveStep(step, statuses[index], lang, playgroundDict, pointsBySlug)
     )
   )
+
+  let cursor = 0
+  const sections = path.sections.map((section) => {
+    const slice = resolved.slice(cursor, cursor + section.steps.length)
+    const startIndex = cursor
+    cursor += section.steps.length
+    return {
+      id: section.id,
+      title: section.title,
+      description: section.description,
+      startIndex,
+      steps: slice.filter((r) => r !== null).map((r) => r.resolved),
+    }
+  })
+
   const present = resolved.filter((r) => r !== null)
   return {
-    steps: present.map((r) => r.resolved),
+    sections,
     totalMinutes: present.reduce((sum, r) => sum + r.minutes, 0),
+    totalSteps: present.length,
   }
 }
 
 export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/paths/[slug]">>) {
   const { lang, slug } = await params
-  const path = getPath(slug, lang)
-  if (path === null) notFound()
+  const page = getPathPage(slug, lang)
+  if (page === undefined) notFound()
+
+  const path = toLearningPath(page)
+  const PathProse = page.data.body
 
   const locale = resolvePathsLocale(lang)
   const dict = pathsDictionary[locale]
@@ -138,7 +181,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   ])
 
   const statuses = computeStepStatuses(flattenSteps(path), completedChallengeSlugs)
-  const { steps: resolvedSteps, totalMinutes } = await resolvePathSteps(
+  const { sections, totalMinutes, totalSteps } = await resolvePathSections(
     path,
     statuses,
     lang,
@@ -146,13 +189,13 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
     pointsBySlug
   )
 
-  if (resolvedSteps.length === 0) notFound()
+  if (totalSteps === 0) notFound()
 
   const completedCount = challengeSlugs.filter(
     (s) => completedChallengeSlugs?.has(s) === true
   ).length
   const totalChallenges = challengeSlugs.length
-  const firstStep = resolvedSteps[0]
+  const firstStep = sections.flatMap((section) => section.steps)[0]
 
   const playgroundHref = localizedHref(lang, "/playground")
 
@@ -202,10 +245,14 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
       </h1>
       <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">{path.lead}</p>
 
+      <div className="pg-prose mb-7">
+        <PathProse components={getMDXComponents()} />
+      </div>
+
       <div className="border-line mb-7 flex flex-wrap items-center gap-5 border-b pb-6">
         <span className="text-fg-muted inline-flex items-center gap-2 font-mono text-[12px]">
           <IconRoute className="size-3.5" />
-          {resolvedSteps.length} {locale === "es" ? "pasos" : "steps"}
+          {dict.stepsCount(totalSteps)}
         </span>
         <span className="text-fg-muted inline-flex items-center gap-2 font-mono text-[12px]">
           <IconClock className="size-3.5" />
@@ -233,7 +280,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         <div className="text-[14px]">
           <b className="font-semibold text-(color:--track)">{dict.startWithGuide}</b>
           <span className="text-fg-muted mt-0.5 block font-mono text-[11.5px]">
-            {dict.stepOf(1, resolvedSteps.length)} · {firstStep.title}
+            {dict.stepOf(1, totalSteps)} · {firstStep.title}
           </span>
         </div>
         <Link
@@ -244,22 +291,42 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         </Link>
       </div>
 
-      <PathStepper
-        steps={resolvedSteps}
-        track={path.track}
-        dict={{
-          guideLabel: dict.guideLabel,
-          challengeLabel: dict.challengeLabel,
-          openGuide: dict.openGuide,
-          openChallenge: dict.openChallenge,
-          startChallenge: dict.startChallenge,
-          youAreHere: dict.youAreHere,
-          available: dict.available,
-          completed: dict.completed,
-          stepOf: dict.stepOf,
-          needsWiderScreenTitle: dict.needsWiderScreenTitle,
-        }}
-      />
+      {sections.map((section, index) => (
+        <section key={section.id} className={index === 0 ? "" : "mt-10"}>
+          <div className="mb-5">
+            <p className="text-fg-muted m-0 mb-2 font-mono text-[11px] tracking-[0.1em] uppercase">
+              {dict.sectionOf(index + 1, sections.length)}
+            </p>
+            <h2 className="text-fg m-0 mb-2 text-[21px] leading-[1.2] font-semibold tracking-[-0.015em]">
+              {section.title}
+            </h2>
+            {section.description !== undefined && (
+              <p className="text-fg-muted m-0 max-w-[64ch] text-[14px] leading-[1.6]">
+                {section.description}
+              </p>
+            )}
+          </div>
+
+          <PathStepper
+            steps={section.steps}
+            track={path.track}
+            startIndex={section.startIndex}
+            totalSteps={totalSteps}
+            dict={{
+              guideLabel: dict.guideLabel,
+              challengeLabel: dict.challengeLabel,
+              openGuide: dict.openGuide,
+              openChallenge: dict.openChallenge,
+              startChallenge: dict.startChallenge,
+              youAreHere: dict.youAreHere,
+              available: dict.available,
+              completed: dict.completed,
+              stepOf: dict.stepOf,
+              needsWiderScreenTitle: dict.needsWiderScreenTitle,
+            }}
+          />
+        </section>
+      ))}
     </main>
   )
 }

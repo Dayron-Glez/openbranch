@@ -1,0 +1,40 @@
+---
+title: "The life of a breaking change"
+lead: "A null enters a codebase hidden inside a 380-line PR. Follow it: catch it in review, work out who it breaks, pin it down with tests, and document it before it catches the next person."
+track: review
+sections:
+  - id: catch-it
+    title: "Catch it"
+    description: "PR #214 fixes a real timeout and carries plenty of noise: a forgotten console.log, cleanup that had nothing to do with it, and a changed return type. First why noisy PRs get rubber-stamped; then it is your turn to review it."
+    steps:
+      - { type: doc, slug: pull-requests/review-culture }
+      - { type: challenge, slug: code-review-noisy-pr }
+  - id: who-it-breaks
+    title: "Work out who it breaks"
+    description: "You flagged it. Now the uncomfortable question: breaking for whom? The answer is not the same for a library you publish as for two services you deploy together this afternoon."
+    steps:
+      - { type: doc, slug: releases/semver-in-practice }
+  - id: live-with-it
+    title: "Live with it"
+    description: "PR #214 was merged. The null is real and permanent now, and not one test or line of documentation backs it up. What remains are the two jobs nobody celebrates."
+    steps:
+      - { type: challenge, slug: testing-fetchupstream }
+      - { type: challenge, slug: docs-gateway-module }
+---
+
+Almost no breaking change arrives announced. It arrives inside a PR that fixes
+something real, written by someone acting in good faith, on a line that does
+not look important.
+
+In `atlas/gateway` that line changed `Promise<Response>` to
+`Promise<Response | null>`. The timeout fix was correct: a request to a slow
+upstream no longer hangs forever. The return type came along for the ride.
+
+This path follows that `null` from end to end. You catch it in a diff you would
+rather approve without reading, decide who it actually breaks, pin it down with
+tests so it cannot quietly disappear, and document it so the next person does
+not fall into the trap.
+
+They are four different jobs on the same defect, and only the first looks like
+what people call "reviewing code". The other three are what decide whether that
+`null` is a decision or an accident nobody remembers making.
