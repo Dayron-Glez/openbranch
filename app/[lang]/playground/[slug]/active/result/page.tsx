@@ -16,7 +16,7 @@ import { getCompletionReward } from "@/features/playground/server/reward-service
 import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 import { source } from "@/lib/source"
-import { flattenSteps } from "@/features/paths/domain/paths"
+import { buildPathRecap, type RecapStep } from "@/features/paths/domain/path-recap"
 import { pathForChallenge } from "@/features/paths/server/path-catalog"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
@@ -235,31 +235,46 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const playgroundPath = localizedHref(lang, "/playground")
   const challengeBranch = page.data.pr_preview?.branch ?? null
 
-  /* path recap — this challenge is always a path's last step, so if it
-     belongs to one, completing it always finishes the path (Q2/Q3). */
+  /* path recap — the completed challenge may sit anywhere in the path, so the
+     model decides whether this finished it or merely advanced it. */
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const matchedPath = pathForChallenge(slug, lang)
-  const pathRecap: PathRecap | null =
-    matchedPath === null
-      ? null
-      : {
-          track: matchedPath.track,
-          pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
-          pathTitle: matchedPath.title,
-          otherPathsHref: playgroundPath,
-          steps: flattenSteps(matchedPath).map((s) =>
-            s.type === "doc"
-              ? {
-                  type: "doc" as const,
-                  title: source.getPage(s.slug.split("/"), lang)?.data.title ?? s.slug,
-                }
-              : {
-                  type: "challenge" as const,
-                  title: playgroundSource.getPage([s.slug], lang)?.data.title ?? s.slug,
-                }
-          ),
-        }
+
+  const titleOfStep = (step: RecapStep): string =>
+    step.type === "doc"
+      ? (source.getPage(step.slug.split("/"), lang)?.data.title ?? step.slug)
+      : (playgroundSource.getPage([step.slug], lang)?.data.title ?? step.slug)
+
+  const hrefOfStep = (step: RecapStep): string =>
+    step.type === "doc"
+      ? (source.getPage(step.slug.split("/"), lang)?.url ??
+        localizedHref(lang, `/docs/${step.slug}`))
+      : localizedHref(lang, `/playground/${step.slug}`)
+
+  let pathRecap: PathRecap | null = null
+  if (matchedPath !== null) {
+    const model = buildPathRecap(matchedPath, slug, completedSlugs)
+    const nextStep = model.nextStepIndex === null ? null : model.steps[model.nextStepIndex]
+
+    pathRecap = {
+      track: matchedPath.track,
+      pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
+      pathTitle: matchedPath.title,
+      otherPathsHref: playgroundPath,
+      steps: model.steps.map((step) => ({
+        type: step.type,
+        title: titleOfStep(step),
+        status: step.status,
+      })),
+      completedChallengeCount: model.completedChallengeCount,
+      totalChallengeSteps: model.totalChallengeSteps,
+      nextStep:
+        nextStep === undefined || nextStep === null
+          ? null
+          : { title: titleOfStep(nextStep), href: hrefOfStep(nextStep) },
+    }
+  }
 
   const badgeInfo =
     badge === null || badgeKey === null

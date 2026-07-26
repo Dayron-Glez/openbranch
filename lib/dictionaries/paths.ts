@@ -20,7 +20,9 @@ export const pathsDictionary = {
       `${done} de ${total} practicado${total === 1 ? "" : "s"}`,
     nextInPath: "Siguiente en esta ruta",
     pathComplete: "Ruta completada",
+    pathInProgress: "En la ruta",
     youFinishedThePath: "Completaste la ruta.",
+    continuePath: "Continuar la ruta",
     explorePaths: "Explorar otra ruta",
     guestReading: "Leyendo como invitado.",
     guestSignInPrompt:
@@ -54,7 +56,9 @@ export const pathsDictionary = {
     practiced: (done: number, total: number): string => `${done} of ${total} practiced`,
     nextInPath: "Next in this path",
     pathComplete: "Path complete",
+    pathInProgress: "On this path",
     youFinishedThePath: "You finished the path.",
+    continuePath: "Continue the path",
     explorePaths: "Explore another path",
     guestReading: "Reading as a guest.",
     guestSignInPrompt:
