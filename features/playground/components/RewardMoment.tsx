@@ -9,17 +9,30 @@ import { RewardCountUp } from "./RewardCountUp"
 import { CheckIcon, ClockIcon } from "./ResultIcons"
 
 /**
- * Only the "path just finished" shape ships in v1 — every path is exactly
- * one doc step + one challenge step, and the challenge is always last, so
- * completing it always finishes the path (specs/learning-paths-v1.md).
- * A "step X of Y, continue" variant is a seam left for a future 3+ step path.
+ * Declared here rather than imported from the paths feature: this component
+ * is presentation-only, and `features/paths` already depends on this feature
+ * for `TrackColorToken`. The result page maps the domain model onto this
+ * shape, so a status added there stops compiling until it is handled here.
+ */
+export type PathRecapStep = {
+  readonly title: string
+  readonly type: "doc" | "challenge"
+  readonly status: "done" | "justCompleted" | "upcoming"
+}
+
+/**
+ * Models both outcomes: a path finished, and a path advanced. `nextStep` is
+ * what distinguishes them — `null` means there is nothing left to do.
  */
 export type PathRecap = {
   readonly track: TrackColorToken
   readonly pathHref: string
   readonly pathTitle: string
   readonly otherPathsHref: string
-  readonly steps: readonly { readonly title: string; readonly type: "doc" | "challenge" }[]
+  readonly steps: readonly PathRecapStep[]
+  readonly completedChallengeCount: number
+  readonly totalChallengeSteps: number
+  readonly nextStep: { readonly title: string; readonly href: string } | null
 }
 
 type RewardMomentProps = {
@@ -29,10 +42,14 @@ type RewardMomentProps = {
   readonly pathRecap?: PathRecap | null
   readonly pathDict?: {
     readonly pathComplete: string
+    readonly pathInProgress: string
     readonly youFinishedThePath: string
+    readonly continuePath: string
     readonly explorePaths: string
+    readonly nextInPath: string
     readonly guideLabel: string
     readonly challengeLabel: string
+    readonly practiced: (done: number, total: number) => string
   }
 }
 
@@ -73,6 +90,112 @@ const CHIP_BASE =
 const CHIP_ACCENT = `${CHIP_BASE} bg-accent-soft border-accent-ring text-ob-accent`
 const CHIP_NORMAL = `${CHIP_BASE} bg-bg-card border-line text-fg-2`
 const CHIP_DIMMED = `${CHIP_BASE} bg-bg-card border-line text-fg-muted`
+
+const STEP_MARKER_BASE = "inline-grid size-6 shrink-0 place-items-center rounded-full border"
+
+const stepMarkerClass = (status: PathRecapStep["status"]): string => {
+  if (status === "justCompleted") {
+    return `${STEP_MARKER_BASE} bg-ob-accent border-ob-accent text-accent-ink [&_svg]:size-3`
+  }
+  if (status === "done") {
+    return `${STEP_MARKER_BASE} bg-accent-soft border-accent-ring text-ob-accent [&_svg]:size-3`
+  }
+  return `${STEP_MARKER_BASE} border-line text-fg-faint`
+}
+
+const StepRow = ({
+  step,
+  dict,
+}: {
+  readonly step: PathRecapStep
+  readonly dict: NonNullable<RewardMomentProps["pathDict"]>
+}): ReactNode => (
+  <div className="flex items-center gap-2.5 text-[13.5px]">
+    <span className={stepMarkerClass(step.status)}>
+      {step.status === "upcoming" ? (
+        <span className="bg-fg-faint size-1.5 rounded-full" />
+      ) : (
+        <CheckIcon />
+      )}
+    </span>
+    <span
+      className={`flex-1 ${step.status === "upcoming" ? "text-fg-muted" : "text-fg-2"} ${
+        step.status === "justCompleted" ? "text-fg font-medium" : ""
+      }`}
+    >
+      {step.title}
+    </span>
+    <span className="text-fg-muted inline-flex items-center gap-1 font-mono text-[10.5px]">
+      {step.type === "doc" ? <IconBook className="size-3" /> : <IconRoute className="size-3" />}
+      {step.type === "doc" ? dict.guideLabel : dict.challengeLabel}
+    </span>
+  </div>
+)
+
+/**
+ * Two outcomes, told apart by `nextStep`: a path finished, or a path
+ * advanced. Claiming completion mid-path was the v1 bug this replaces.
+ */
+const PathRecapCard = ({
+  recap,
+  dict,
+}: {
+  readonly recap: PathRecap
+  readonly dict: NonNullable<RewardMomentProps["pathDict"]>
+}): ReactNode => {
+  const finished = recap.nextStep === null
+
+  return (
+    <div
+      data-track={recap.track}
+      className="bg-bg-card mt-2 w-full max-w-[420px] rounded-(--r-16) border border-(--track-ring) p-6 text-left"
+    >
+      <Link
+        href={recap.pathHref}
+        className="mb-4 flex items-center gap-2.5 text-inherit no-underline hover:underline"
+      >
+        <span className="size-2 shrink-0 rounded-full bg-(--track)" />
+        <span className="min-w-0 font-mono text-[10.5px] tracking-[0.1em] text-(color:--track) uppercase">
+          {finished ? dict.pathComplete : dict.pathInProgress} · {recap.pathTitle}
+        </span>
+      </Link>
+
+      <p className="text-fg m-0 mb-4 text-[16px] font-medium">
+        {finished
+          ? dict.youFinishedThePath
+          : dict.practiced(recap.completedChallengeCount, recap.totalChallengeSteps)}
+      </p>
+
+      <div className="mb-5 flex flex-col gap-2">
+        {recap.steps.map((step, index) => (
+          <StepRow key={`${step.type}-${index}`} step={step} dict={dict} />
+        ))}
+      </div>
+
+      {recap.nextStep === null ? (
+        <Link
+          href={recap.otherPathsHref}
+          className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) text-[13px] font-semibold text-(color:--track-ink) no-underline"
+        >
+          {dict.explorePaths}
+        </Link>
+      ) : (
+        <>
+          <p className="text-fg-muted m-0 mb-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
+            {dict.nextInPath}
+          </p>
+          <Link
+            href={recap.nextStep.href}
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 text-[13px] font-semibold text-(color:--track-ink) no-underline"
+          >
+            <span className="min-w-0 truncate">{dict.continuePath}</span>
+          </Link>
+          <p className="text-fg-2 m-0 mt-2 text-center text-[12.5px]">{recap.nextStep.title}</p>
+        </>
+      )}
+    </div>
+  )
+}
 
 export const RewardMoment = ({
   reward,
@@ -147,45 +270,7 @@ export const RewardMoment = ({
         <p className="text-fg-muted font-mono text-[12px]">{dict.streakStartedNote}</p>
       )}
       {pathRecap != null && pathDict !== undefined && (
-        <div
-          data-track={pathRecap.track}
-          className="bg-bg-card mt-2 w-full max-w-[420px] rounded-(--r-16) border border-(--track-ring) p-6 text-left"
-        >
-          <Link
-            href={pathRecap.pathHref}
-            className="mb-4 flex items-center gap-2.5 text-inherit no-underline hover:underline"
-          >
-            <span className="size-2 rounded-full bg-(--track)" />
-            <span className="font-mono text-[10.5px] tracking-[0.1em] text-(color:--track) uppercase">
-              {pathDict.pathComplete} · {pathRecap.pathTitle}
-            </span>
-          </Link>
-          <p className="text-fg m-0 mb-4 text-[16px] font-medium">{pathDict.youFinishedThePath}</p>
-          <div className="mb-5 flex flex-col gap-2">
-            {pathRecap.steps.map((step) => (
-              <div key={step.title} className="flex items-center gap-2.5 text-[13.5px]">
-                <span className="bg-accent-soft border-accent-ring text-ob-accent inline-grid size-6 shrink-0 place-items-center rounded-full border [&_svg]:size-3">
-                  <CheckIcon />
-                </span>
-                <span className="text-fg-2 flex-1">{step.title}</span>
-                <span className="text-fg-muted inline-flex items-center gap-1 font-mono text-[10.5px]">
-                  {step.type === "doc" ? (
-                    <IconBook className="size-3" />
-                  ) : (
-                    <IconRoute className="size-3" />
-                  )}
-                  {step.type === "doc" ? pathDict.guideLabel : pathDict.challengeLabel}
-                </span>
-              </div>
-            ))}
-          </div>
-          <Link
-            href={pathRecap.otherPathsHref}
-            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) text-[13px] font-semibold text-(color:--track-ink) no-underline"
-          >
-            {pathDict.explorePaths}
-          </Link>
-        </div>
+        <PathRecapCard recap={pathRecap} dict={pathDict} />
       )}
     </div>
   )
