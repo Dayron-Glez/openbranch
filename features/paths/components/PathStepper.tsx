@@ -45,6 +45,14 @@ type PathStepperProps = {
   readonly steps: readonly ResolvedPathStep[]
   readonly track: TrackColorToken
   readonly dict: PathStepperDict
+  /**
+   * Position of `steps[0]` within the whole path. Sections render their own
+   * stepper, but "step 3 of 5" has to count across the path, not restart in
+   * every section.
+   */
+  readonly startIndex?: number
+  /** Steps in the whole path; defaults to this stepper's own count. */
+  readonly totalSteps?: number
 }
 
 const MARK_CLASS: Readonly<Record<StepStatus, string>> = {
@@ -83,8 +91,14 @@ const ctaClass = (step: ResolvedPathStep): string =>
       : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
   }`
 
-export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode => {
-  const total = steps.length
+export const PathStepper = ({
+  steps,
+  track,
+  dict,
+  startIndex = 0,
+  totalSteps,
+}: PathStepperProps): ReactNode => {
+  const total = totalSteps ?? steps.length
 
   return (
     <div data-track={track} className="flex flex-col">
@@ -112,7 +126,7 @@ export const PathStepper = ({ steps, track, dict }: PathStepperProps): ReactNode
             } ${step.status === "locked" ? "opacity-60" : ""}`}
           >
             <div className="text-fg-muted mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5 font-mono text-[10.5px] tracking-[0.09em] uppercase">
-              <span>{dict.stepOf(index + 1, total)}</span>
+              <span>{dict.stepOf(startIndex + index + 1, total)}</span>
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 [&_svg]:size-3 ${
                   step.type === "challenge"

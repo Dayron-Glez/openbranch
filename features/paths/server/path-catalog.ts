@@ -9,7 +9,7 @@ import { hasChallengeStep, hasDocStep } from "../domain/paths"
  * track the manifest does not know would resolve to no `data-track` CSS vars,
  * and this assignment stops compiling before that can ship.
  */
-const toLearningPath = (page: PathPage): LearningPath => ({
+export const toLearningPath = (page: PathPage): LearningPath => ({
   slug: page.slugs[0],
   track: page.data.track,
   title: page.data.title,
@@ -24,6 +24,10 @@ export const getPath = (slug: string, lang: string): LearningPath | null => {
   const page = pathsSource.getPage([slug], lang)
   return page === undefined ? null : toLearningPath(page)
 }
+
+/** The source page, for callers that also need the MDX prose body. */
+export const getPathPage = (slug: string, lang: string): PathPage | undefined =>
+  pathsSource.getPage([slug], lang)
 
 /** Paths referencing a given doc slug — powers the docs chip and next-in-path block. */
 export const pathsForDoc = (docSlug: string, lang: string): readonly LearningPath[] =>

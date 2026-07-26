@@ -1,0 +1,42 @@
+---
+title: "La vida de un breaking change"
+lead: "Un null entra en una base de código escondido en un PR de 380 líneas. Síguelo: detéctalo en revisión, entiende a quién rompe, blíndalo con tests y documéntalo antes de que atrape al siguiente."
+track: review
+sections:
+  - id: catch-it
+    title: "Detectarlo"
+    description: "El PR #214 arregla un timeout real y trae ruido de sobra: un console.log olvidado, limpieza que no venía a cuento y un tipo de retorno cambiado. Primero por qué los PRs ruidosos acaban aprobados de trámite; después te toca revisarlo a ti."
+    steps:
+      - { type: doc, slug: pull-requests/review-culture }
+      - { type: challenge, slug: code-review-noisy-pr }
+  - id: who-it-breaks
+    title: "Entender a quién rompe"
+    description: "Ya lo señalaste. Ahora la pregunta incómoda: ¿romper para quién? La respuesta no es la misma para una librería que publicas que para dos servicios que despliegas juntos esta tarde."
+    steps:
+      - { type: doc, slug: releases/semver-in-practice }
+  - id: live-with-it
+    title: "Vivir con ello"
+    description: "El PR #214 se mergeó. El null ya es real y permanente, y no hay ni un test ni una línea de documentación que lo respalde. Quedan los dos trabajos que nadie celebra."
+    steps:
+      - { type: challenge, slug: testing-fetchupstream }
+      - { type: challenge, slug: docs-gateway-module }
+---
+
+Casi ningún cambio que rompe llega anunciado. Llega dentro de un PR que arregla
+algo real, escrito por alguien con buenas intenciones, en una línea que no
+parece importante.
+
+En `atlas/gateway` esa línea cambió `Promise<Response>` por
+`Promise<Response | null>`. El fix del timeout era correcto: una petición a un
+upstream lento ya no se queda colgada para siempre. El tipo de retorno se coló
+de acompañante.
+
+Esta ruta sigue ese `null` de principio a fin. Lo detectas en un diff que
+preferirías aprobar sin leer, decides a quién rompe de verdad, lo fijas con
+tests para que no pueda desaparecer en silencio, y lo documentas para que el
+siguiente no caiga en la trampa.
+
+Son cuatro trabajos distintos sobre el mismo defecto, y solo el primero se
+parece a lo que la gente llama "revisar código". Los otros tres son los que
+deciden si ese `null` es una decisión o un accidente que nadie recuerda haber
+tomado.
