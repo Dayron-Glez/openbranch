@@ -206,6 +206,16 @@ export const RewardMoment = ({
 }: RewardMomentProps): React.ReactElement | null => {
   if (reward === null) return null
 
+  /**
+   * Rendered by both branches. The chips below are rewards — a repeat earns
+   * no points, leaves the streak alone and does not move your rank — but the
+   * recap answers "where am I in this path", which stays true on a repeat.
+   */
+  const recap =
+    pathRecap != null && pathDict !== undefined ? (
+      <PathRecapCard recap={pathRecap} dict={pathDict} />
+    ) : null
+
   if (!reward.isFirstCompletion) {
     const hasTimeComparison =
       currentElapsedDisplay !== null && reward.firstRunElapsedDisplay !== null
@@ -227,6 +237,7 @@ export const RewardMoment = ({
           )}
         </div>
         <p className="text-fg-muted font-mono text-[12px]">{dict.repeatNote}</p>
+        {recap}
       </div>
     )
   }
@@ -269,9 +280,7 @@ export const RewardMoment = ({
       {reward.streakEffect === "started" && (
         <p className="text-fg-muted font-mono text-[12px]">{dict.streakStartedNote}</p>
       )}
-      {pathRecap != null && pathDict !== undefined && (
-        <PathRecapCard recap={pathRecap} dict={pathDict} />
-      )}
+      {recap}
     </div>
   )
 }
