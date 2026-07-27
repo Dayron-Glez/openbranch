@@ -15,7 +15,7 @@ export const getReadDocSlugs = async (
   userId: string,
   docSlugs?: readonly string[]
 ): Promise<ReadonlySet<string>> => {
-  if (docSlugs !== undefined && docSlugs.length === 0) return new Set()
+  if (docSlugs?.length === 0) return new Set()
 
   const query = supabase.from("doc_reads").select("doc_slug").eq("user_id", userId)
   const { data, error } =

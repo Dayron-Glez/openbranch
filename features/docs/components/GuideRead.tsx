@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { setGuideRead } from "@/app/actions/docs"
 import { IconCheck, IconBook } from "@/icons"
 
@@ -82,11 +82,14 @@ export const DocReadsProvider = ({ children }: { readonly children: ReactNode })
     chainRef.current.set(docSlug, next)
   }, [])
 
-  return (
-    <DocReadsContext.Provider value={{ readSlugs, signedIn, setRead }}>
-      {children}
-    </DocReadsContext.Provider>
+  // Memoised: a fresh object here re-renders every guide's control on any
+  // render of the docs layout.
+  const value = useMemo<DocReadsValue>(
+    () => ({ readSlugs, signedIn, setRead }),
+    [readSlugs, signedIn, setRead]
   )
+
+  return <DocReadsContext.Provider value={value}>{children}</DocReadsContext.Provider>
 }
 
 const useDocReads = (): DocReadsValue | null => useContext(DocReadsContext)
