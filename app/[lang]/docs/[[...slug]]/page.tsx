@@ -143,8 +143,16 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
           <GuideReadButton
             docSlug={currentDocSlug}
             lang={lang}
-            markLabel={docsDict.markAsRead}
-            readLabel={docsDict.markedAsRead}
+            dict={{
+              markLabel: docsDict.markAsRead,
+              readLabel: docsDict.markedAsRead,
+              markHint: docsDict.markHint,
+              unmarkHint: docsDict.unmarkHint,
+              confirmTitle: docsDict.unmarkTitle,
+              confirmBody: docsDict.unmarkBody,
+              confirmAction: docsDict.unmarkAction,
+              cancel: docsDict.cancel,
+            }}
           />
         )}
         {nextInPathBlock}

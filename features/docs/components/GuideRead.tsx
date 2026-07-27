@@ -4,6 +4,8 @@ import type { ReactNode } from "react"
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
 import { setGuideRead } from "@/app/actions/docs"
 import { IconCheck, IconBook } from "@/icons"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 
 /**
  * Read state is per-user, but the docs pages are statically rendered and their
@@ -116,25 +118,31 @@ export const GuideReadIndicator = ({
 /** Milliseconds the end of the article must stay on screen before auto-marking. */
 const DWELL_MS = 1200
 
+export type GuideReadDict = {
+  readonly markLabel: string
+  readonly readLabel: string
+  readonly markHint: string
+  readonly unmarkHint: string
+  readonly confirmTitle: string
+  readonly confirmBody: string
+  readonly confirmAction: string
+  readonly cancel: string
+}
+
 type GuideReadButtonProps = {
   readonly docSlug: string
   readonly lang: string
-  readonly markLabel: string
-  readonly readLabel: string
+  readonly dict: GuideReadDict
 }
 
 /**
  * At the end of the article, so it doubles as the "reached the end" sentinel —
  * no second element to keep in sync with it.
  */
-export const GuideReadButton = ({
-  docSlug,
-  lang,
-  markLabel,
-  readLabel,
-}: GuideReadButtonProps): ReactNode => {
+export const GuideReadButton = ({ docSlug, lang, dict }: GuideReadButtonProps): ReactNode => {
   const ctx = useDocReads()
   const hostRef = useRef<HTMLDivElement>(null)
+  const [confirmOpen, setConfirmOpen] = useState<boolean>(false)
   /** One-shot. Disarmed by any toggle, and never re-armed for this mount. */
   const autoMarkArmed = useRef<boolean>(true)
 
@@ -178,26 +186,54 @@ export const GuideReadButton = ({
   // Nothing until loaded, so the label never flips under the reader.
   if (!ready || setRead === undefined) return null
 
-  const onToggle = (): void => {
+  /**
+   * Marking is one click; un-marking asks first. Un-marking deletes the row,
+   * which loses the original `read_at` — re-marking starts the date over — and
+   * it drops the path's progress, so it is worth a beat of friction that
+   * marking is not.
+   */
+  const onClick = (): void => {
     autoMarkArmed.current = false
-    setRead(docSlug, lang, !isRead)
+    if (isRead) {
+      setConfirmOpen(true)
+      return
+    }
+    setRead(docSlug, lang, true)
   }
 
   return (
     <div ref={hostRef} className="border-line mt-10 border-t pt-6">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-pressed={isRead}
-        className={`inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 text-[13px] font-medium transition-colors [&_svg]:size-3.5 ${
-          isRead
-            ? "border-accent-ring bg-accent-soft text-ob-accent"
-            : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg"
-        }`}
-      >
-        {isRead ? <IconCheck /> : <IconBook />}
-        {isRead ? readLabel : markLabel}
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={onClick}
+            aria-pressed={isRead}
+            className={`inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 text-[13px] font-medium transition-colors [&_svg]:size-3.5 ${
+              isRead
+                ? "border-accent-ring bg-accent-soft text-ob-accent"
+                : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg"
+            }`}
+          >
+            {isRead ? <IconCheck /> : <IconBook />}
+            {isRead ? dict.readLabel : dict.markLabel}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="top">{isRead ? dict.unmarkHint : dict.markHint}</TooltipContent>
+      </Tooltip>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        title={dict.confirmTitle}
+        description={dict.confirmBody}
+        confirmLabel={dict.confirmAction}
+        cancelLabel={dict.cancel}
+        onConfirm={() => {
+          setConfirmOpen(false)
+          setRead(docSlug, lang, false)
+        }}
+      />
     </div>
   )
 }
