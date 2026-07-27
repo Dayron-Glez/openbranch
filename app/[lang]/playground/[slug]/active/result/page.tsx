@@ -18,6 +18,7 @@ import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIco
 import { source } from "@/lib/source"
 import { buildPathRecap, type RecapStep } from "@/features/paths/domain/path-recap"
 import { pathForChallenge } from "@/features/paths/server/path-catalog"
+import { getReadDocSlugs } from "@/features/paths/server/doc-reads"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
 
@@ -254,7 +255,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
   let pathRecap: PathRecap | null = null
   if (matchedPath !== null) {
-    const model = buildPathRecap(matchedPath, slug, completedSlugs)
+    // Guides count towards the recap now, so the read set is needed as well as
+    // the completed challenges the page already loaded.
+    const readDocSlugs = await getReadDocSlugs(supabase, user.id)
+    const model = buildPathRecap(matchedPath, slug, {
+      completedChallengeSlugs: completedSlugs,
+      readDocSlugs,
+    })
     const nextStep = model.nextStepIndex === null ? null : model.steps[model.nextStepIndex]
 
     pathRecap = {
@@ -267,8 +274,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
         title: titleOfStep(step),
         status: step.status,
       })),
-      completedChallengeCount: model.completedChallengeCount,
-      totalChallengeSteps: model.totalChallengeSteps,
+      doneCount: model.doneCount,
+      totalSteps: model.totalSteps,
       nextStep:
         nextStep === undefined || nextStep === null
           ? null

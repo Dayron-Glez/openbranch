@@ -22,6 +22,8 @@ import { createRelativeLink } from "fumadocs-ui/mdx"
 import { findNeighbour } from "fumadocs-core/page-tree"
 import { flattenSteps, locateStep } from "@/features/paths/domain/paths"
 import { pathsForDoc } from "@/features/paths/server/path-catalog"
+import { GuideReadButton, GuideReadIndicator } from "@/features/docs/components/GuideRead"
+import { docsDictionary, type DocsLocale } from "@/lib/dictionaries/docs"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { PartOfPathChip } from "@/features/paths/components/PartOfPathChip"
 import { NextInPath } from "@/features/paths/components/NextInPath"
@@ -54,6 +56,8 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
 
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
+  const docsLocale = (lang as DocsLocale) in docsDictionary ? (lang as DocsLocale) : "es"
+  const docsDict = docsDictionary[docsLocale]
   const currentDocSlug = (slug ?? []).join("/")
   const primaryPath = isSectionPage ? undefined : pathsForDoc(currentDocSlug, lang)[0]
   const docLocation =
@@ -113,6 +117,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
                 stepIndex={stepIndex}
               />
             )}
+            <GuideReadIndicator docSlug={currentDocSlug} label={docsDict.markedAsRead} />
           </div>
         )}
       </div>
@@ -134,6 +139,14 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
           />
         </DocsScrollReveal>
         <SectionCards pages={sectionChildren} />
+        {!isSectionPage && (
+          <GuideReadButton
+            docSlug={currentDocSlug}
+            lang={lang}
+            markLabel={docsDict.markAsRead}
+            readLabel={docsDict.markedAsRead}
+          />
+        )}
         {nextInPathBlock}
       </DocsBody>
     </DocsPage>

@@ -2,10 +2,10 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
 
-/** `completed` is `null` when signed out; doc steps are never completed. */
+/** `done` is `null` when signed out. Guides can be done too — they are read. */
 export type PathCardStep = {
   readonly type: "doc" | "challenge"
-  readonly completed: boolean | null
+  readonly done: boolean | null
 }
 
 export type PathCardItem = {
@@ -16,12 +16,14 @@ export type PathCardItem = {
   readonly trackLabel: string
   readonly icon: ReactNode
   readonly steps: readonly PathCardStep[]
+  /** Counted on the server; `null` when signed out. */
+  readonly progress: { readonly done: number; readonly total: number } | null
 }
 
 export type PathCardDict = {
   /** e.g. "2 guides · 3 challenges" — shown when progress is unknown. */
   readonly shape: (guides: number, challenges: number) => string
-  readonly practiced: (done: number, total: number) => string
+  readonly stepsDone: (done: number, total: number) => string
 }
 
 /**
@@ -37,18 +39,17 @@ export const PATH_CARD_GRID =
  * card hardcoded two dots because every path was a guide plus a challenge.
  */
 const StepDot = ({ step }: { readonly step: PathCardStep }): ReactNode => {
-  if (step.completed === true) return <span className="bg-ob-accent size-[5px] rounded-full" />
+  if (step.done === true) return <span className="bg-ob-accent size-[5px] rounded-full" />
   if (step.type === "challenge") return <span className="size-[5px] rounded-full bg-(--track)" />
   return <span className="border-line-2 size-[5px] rounded-full border" />
 }
 
-const caption = (steps: readonly PathCardStep[], dict: PathCardDict): string => {
-  const challenges = steps.filter((step) => step.type === "challenge")
-  const known = challenges.filter((step) => step.completed !== null)
-  if (known.length === 0) {
-    return dict.shape(steps.length - challenges.length, challenges.length)
+const caption = (item: PathCardItem, dict: PathCardDict): string => {
+  if (item.progress === null) {
+    const challenges = item.steps.filter((step) => step.type === "challenge").length
+    return dict.shape(item.steps.length - challenges, challenges)
   }
-  return dict.practiced(known.filter((step) => step.completed === true).length, challenges.length)
+  return dict.stepsDone(item.progress.done, item.progress.total)
 }
 
 export const PathCard = ({
@@ -85,7 +86,7 @@ export const PathCard = ({
           <StepDot key={`${step.type}-${index}`} step={step} />
         ))}
       </span>
-      <span className="text-fg-muted font-mono text-[11px]">{caption(item.steps, dict)}</span>
+      <span className="text-fg-muted font-mono text-[11px]">{caption(item, dict)}</span>
     </div>
   </Link>
 )

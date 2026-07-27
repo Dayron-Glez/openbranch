@@ -14,9 +14,13 @@ import {
   type LearningPath,
   type PathStep,
 } from "@/features/paths/domain/paths"
-import { computeStepStatuses, type StepStatus } from "@/features/paths/domain/path-status"
+import {
+  computeStepStatuses,
+  isStepDone,
+  type StepStatus,
+} from "@/features/paths/domain/path-status"
 import { PathStepper, type ResolvedPathStep } from "@/features/paths/components/PathStepper"
-import { getPathProgress, getChallengePoints } from "@/features/paths/server/path-progress"
+import { loadPathProgress, getChallengePoints } from "@/features/paths/server/path-progress"
 import {
   getAllPaths,
   getPath,
@@ -173,14 +177,13 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
     data: { user },
   } = await supabase.auth.getUser()
 
-  const challengeSlugs = challengeSlugsOf(path)
-
-  const [completedChallengeSlugs, pointsBySlug] = await Promise.all([
-    user !== null ? getPathProgress(supabase, user.id, path) : Promise.resolve(null),
-    getChallengePoints(supabase, challengeSlugs),
+  const [progress, pointsBySlug] = await Promise.all([
+    user !== null ? loadPathProgress(supabase, user.id, [path]) : Promise.resolve(null),
+    getChallengePoints(supabase, challengeSlugsOf(path)),
   ])
 
-  const statuses = computeStepStatuses(flattenSteps(path), completedChallengeSlugs)
+  const flatSteps = flattenSteps(path)
+  const statuses = computeStepStatuses(flatSteps, progress)
   const { sections, totalMinutes, totalSteps } = await resolvePathSections(
     path,
     statuses,
@@ -191,11 +194,16 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
 
   if (totalSteps === 0) notFound()
 
-  const completedCount = challengeSlugs.filter(
-    (s) => completedChallengeSlugs?.has(s) === true
-  ).length
-  const totalChallenges = challengeSlugs.length
-  const firstStep = sections.flatMap((section) => section.steps)[0]
+  const doneCount =
+    progress === null ? 0 : flatSteps.filter((step) => isStepDone(step, progress)).length
+  const resolvedSteps = sections.flatMap((section) => section.steps)
+  /**
+   * The CTA points at where you actually are. Before guides were trackable the
+   * pointer skipped them, so a signed-in reader could be told to "start with
+   * the guide" while the marker sat on a later challenge.
+   */
+  const currentStep = resolvedSteps.find((step) => step.status === "current") ?? resolvedSteps[0]
+  const currentStepNumber = resolvedSteps.indexOf(currentStep) + 1
 
   const pathsIndexHref = localizedHref(lang, "/paths")
 
@@ -256,12 +264,12 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         </span>
         {user !== null && (
           <span className="text-fg-muted inline-flex items-center gap-3 font-mono text-[11.5px] max-[640px]:w-full min-[640px]:ml-auto">
-            {dict.practiced(completedCount, totalChallenges)}
+            {dict.stepsDone(doneCount, totalSteps)}
             <span className="bg-bg-elev h-[5px] w-[110px] overflow-hidden rounded-full">
               <i
                 className="bg-ob-accent block h-full rounded-full"
                 style={{
-                  width: `${totalChallenges === 0 ? 0 : Math.round((completedCount / totalChallenges) * 100)}%`,
+                  width: `${totalSteps === 0 ? 0 : Math.round((doneCount / totalSteps) * 100)}%`,
                 }}
               />
             </span>
@@ -276,11 +284,11 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         <div className="text-[14px]">
           <b className="font-semibold text-(color:--track)">{dict.startWithGuide}</b>
           <span className="text-fg-muted mt-0.5 block font-mono text-[11.5px]">
-            {dict.stepOf(1, totalSteps)} · {firstStep.title}
+            {dict.stepOf(currentStepNumber, totalSteps)} · {currentStep.title}
           </span>
         </div>
         <Link
-          href={firstStep.href}
+          href={currentStep.href}
           className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4.5 text-[14px] font-semibold text-(color:--track-ink) no-underline hover:brightness-110 max-[520px]:w-full"
         >
           {dict.startThePath}

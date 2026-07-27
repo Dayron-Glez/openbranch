@@ -1,6 +1,8 @@
 export const docsDictionary = {
   es: {
     suggestGuide: "Sugerir una guía",
+    markAsRead: "Marcar como leída",
+    markedAsRead: "Leída",
     copyTemplate: {
       copy: "Copiar",
       copied: "Copiado",
@@ -13,6 +15,8 @@ export const docsDictionary = {
   },
   en: {
     suggestGuide: "Suggest a guide",
+    markAsRead: "Mark as read",
+    markedAsRead: "Read",
     copyTemplate: {
       copy: "Copy",
       copied: "Copied",
