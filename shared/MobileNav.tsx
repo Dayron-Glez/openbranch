@@ -35,6 +35,7 @@ export const MobileNav = ({
 
   const inDocs = pathname.includes("/docs")
   const inPlayground = pathname.includes("/playground")
+  const inPaths = pathname.includes("/paths")
 
   const close = (): void => setOpen(false)
 
@@ -89,6 +90,13 @@ export const MobileNav = ({
             onClick={close}
           >
             {dict.playgroundLabel}
+          </Link>
+          <Link
+            href={localizedHref(lang, "/paths")}
+            className={navLinkClass(inPaths)}
+            onClick={close}
+          >
+            {dict.pathsLabel}
           </Link>
         </nav>
 

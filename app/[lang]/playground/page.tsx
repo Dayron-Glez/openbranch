@@ -17,16 +17,15 @@ import { PlaygroundGridTransition } from "@/features/playground/components/Playg
 import { getChallengeIcon, getCategoryIcon } from "@/features/playground/domain/challenge-icons"
 import {
   CATEGORY_ORDER,
-  CHALLENGE_TRACKS,
   type CategoryKey,
   inferCategoryBadge,
   getTrackColorToken,
 } from "@/features/playground/domain/manifest"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
-import { challengeSlugsOf, type LearningPath } from "@/features/paths/domain/paths"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
 import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
-import { LearningPathsBand, type PathBandItem } from "@/features/paths/components/LearningPathsBand"
+import { buildPathCardItems, challengeSlugsAcross } from "@/features/paths/server/path-cards"
+import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -104,39 +103,6 @@ const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["sta
   return statusDict.notStarted
 }
 
-const buildPathBandItem = (
-  path: LearningPath,
-  lang: string,
-  categoryDict: PlaygroundDict["category"],
-  completedPathChallenges: ReadonlySet<string> | null
-): PathBandItem => {
-  const trackMeta = CHALLENGE_TRACKS.find((t) => t.colorToken === path.track)
-  const challengeSlug = challengeSlugsOf(path)[0]
-  const challengeCompleted =
-    completedPathChallenges === null || challengeSlug === undefined
-      ? null
-      : completedPathChallenges.has(challengeSlug)
-
-  return {
-    href: localizedHref(lang, `/paths/${path.slug}`),
-    title: path.title,
-    description: path.lead,
-    track: path.track,
-    trackLabel: trackMeta !== undefined ? categoryDict[trackMeta.category] : path.track,
-    icon: getChallengeIcon(trackMeta?.iconName),
-    challengeCompleted,
-  }
-}
-
-const buildPathBandItems = (
-  lang: string,
-  categoryDict: PlaygroundDict["category"],
-  completedPathChallenges: ReadonlySet<string> | null
-): PathBandItem[] =>
-  getAllPaths(lang).map((path) =>
-    buildPathBandItem(path, lang, categoryDict, completedPathChallenges)
-  )
-
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
 }
@@ -201,10 +167,17 @@ export default async function PlaygroundPage({
 
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
-  const pathChallengeSlugs = getAllPaths(lang).flatMap((path) => challengeSlugsOf(path))
+  const learningPaths = getAllPaths(lang)
   const completedPathChallenges =
-    user === null ? null : await getCompletedChallengeSlugs(supabase, user.id, pathChallengeSlugs)
-  const pathBandItems = buildPathBandItems(lang, dict.category, completedPathChallenges)
+    user === null
+      ? null
+      : await getCompletedChallengeSlugs(supabase, user.id, challengeSlugsAcross(learningPaths))
+  const pathBandItems = buildPathCardItems(
+    learningPaths,
+    lang,
+    dict.category,
+    completedPathChallenges
+  )
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -363,8 +336,9 @@ export default async function PlaygroundPage({
             items={pathBandItems}
             heading={pathsDict.sectionHeading}
             sub={pathsDict.sectionSub}
-            practicedLabel={pathsDict.practiced}
-            guideAndChallengeLabel={pathsDict.guideAndChallenge}
+            allHref={localizedHref(lang, "/paths")}
+            allLabel={pathsDict.allPaths}
+            cardDict={{ shape: pathsDict.pathShape, practiced: pathsDict.practiced }}
           />
         </div>
       )}
