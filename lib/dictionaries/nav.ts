@@ -2,12 +2,14 @@ export const navDictionary = {
   es: {
     docsLabel: "Docs",
     playgroundLabel: "Playground",
+    pathsLabel: "Rutas",
     menuAria: "Abrir menú",
     menuTitle: "Menú",
   },
   en: {
     docsLabel: "Docs",
     playgroundLabel: "Playground",
+    pathsLabel: "Paths",
     menuAria: "Open menu",
     menuTitle: "Menu",
   },

@@ -197,21 +197,17 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   const totalChallenges = challengeSlugs.length
   const firstStep = sections.flatMap((section) => section.steps)[0]
 
-  const playgroundHref = localizedHref(lang, "/playground")
+  const pathsIndexHref = localizedHref(lang, "/paths")
 
   return (
     <main data-pg-main className="mx-auto max-w-[760px] px-7 py-10 max-[520px]:px-5">
       <nav className="mb-6" aria-label="Breadcrumb">
         <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
           <li>
-            <Link href={playgroundHref} className="hover:text-fg-2 transition-colors">
-              {dict.breadcrumbPlayground}
+            <Link href={pathsIndexHref} className="hover:text-fg-2 transition-colors">
+              {dict.breadcrumbPaths}
             </Link>
           </li>
-          <li className="text-fg-faint" aria-hidden="true">
-            /
-          </li>
-          <li>{dict.breadcrumbPaths}</li>
           <li className="text-fg-faint" aria-hidden="true">
             /
           </li>

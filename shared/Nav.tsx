@@ -15,8 +15,14 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Kbd } from "@/components/ui/kbd"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { MobileNav } from "@/shared/MobileNav"
+import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
 
 const LOCALES = ["es", "en"] as const
+
+const topLinkClass = (active: boolean): string =>
+  `font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) ${
+    active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
+  }`
 
 type NavProps = {
   readonly dict: LandingDict["nav"]
@@ -28,6 +34,7 @@ export function Nav({ dict, lang }: NavProps) {
   const [stars, setStars] = useState<string | null>(null)
   const pathname = usePathname()
   const { setOpenSearch } = useSearchContext()
+  const navDict = navDictionary[resolveNavLocale(lang)]
   const current = lang === "en" ? "en" : "es"
   const stripped = pathname.replace(/^\/en(?=\/|$)/, "") || "/"
   const localeHref: Record<string, string> = {
@@ -69,16 +76,20 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <Link
-          href={localizedHref(lang, "/playground")}
-          className={`font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[640px]:hidden ${
-            pathname.includes("/playground")
-              ? "text-fg font-medium"
-              : "text-fg-muted hover:text-fg-2"
-          }`}
-        >
-          Playground
-        </Link>
+        <nav className="flex items-center gap-6 max-[640px]:hidden" aria-label={navDict.menuTitle}>
+          <Link
+            href={localizedHref(lang, "/playground")}
+            className={topLinkClass(pathname.includes("/playground"))}
+          >
+            {navDict.playgroundLabel}
+          </Link>
+          <Link
+            href={localizedHref(lang, "/paths")}
+            className={topLinkClass(pathname.includes("/paths"))}
+          >
+            {navDict.pathsLabel}
+          </Link>
+        </nav>
 
         <div className="ml-auto flex items-center gap-4 max-[520px]:gap-2">
           <button

@@ -15,6 +15,7 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { fetchGitHubStars } from "@/lib/github-stars"
 import { GH_REPO, GH_URL, DISCORD_URL } from "@/lib/constants"
 import { MobileNav } from "@/shared/MobileNav"
+import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
 
 type PlaygroundNavProps = {
   readonly lang: string
@@ -46,6 +47,8 @@ export const PlaygroundNav = ({
   const homeHref = lang === "en" ? "/en" : "/"
   const inPlayground = pathname.includes("/playground")
   const inDocs = pathname.includes("/docs")
+  const inPaths = pathname.includes("/paths")
+  const navDict = navDictionary[resolveNavLocale(lang)]
 
   useEffect(() => {
     fetchGitHubStars(GH_REPO)
@@ -75,10 +78,13 @@ export const PlaygroundNav = ({
           aria-label="Playground navigation"
         >
           <Link href={localizedHref(lang, "/docs")} className={navLinkClass(inDocs)}>
-            Docs
+            {navDict.docsLabel}
           </Link>
           <Link href={localizedHref(lang, "/playground")} className={navLinkClass(inPlayground)}>
-            Playground
+            {navDict.playgroundLabel}
+          </Link>
+          <Link href={localizedHref(lang, "/paths")} className={navLinkClass(inPaths)}>
+            {navDict.pathsLabel}
           </Link>
         </nav>
 

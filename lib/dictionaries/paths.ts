@@ -2,7 +2,6 @@ export const pathsDictionary = {
   es: {
     sectionHeading: "Rutas de aprendizaje",
     sectionSub: "Guías y retos encadenados en un recorrido que suma",
-    breadcrumbPlayground: "Playground",
     breadcrumbPaths: "Rutas",
     guideLabel: "Guía",
     challengeLabel: "Reto",
@@ -30,18 +29,19 @@ export const pathsDictionary = {
     guestSignInPrompt:
       "Inicia sesión para trackear qué retos completaste y seguir donde lo dejaste.",
     signIn: "Iniciar sesión con GitHub",
-    noPathHeading: "Aún no hay ruta aquí",
-    noPathBody:
-      "Los retos de esta categoría son autosuficientes. Una ruta guiada llega cuando haya una guía con la que emparejarlos.",
-    browseChallenges: "Ver retos",
-    guideAndChallenge: "Guía + reto",
+    allPaths: "Ver todas",
+    pathShape: (guides: number, challenges: number): string =>
+      `${guides} guía${guides === 1 ? "" : "s"} · ${challenges} reto${challenges === 1 ? "" : "s"}`,
+    indexEyebrow: "aprende en orden",
+    indexHeading: "Un tema no se entiende de una sentada.",
+    indexIntro:
+      "Una guía te da una idea; un reto te da una hora de práctica. Una ruta los encadena hasta que el trabajo entero — leer, decidir, practicar, documentar — encaja como una sola cosa.",
     needsWiderScreenTitle: "Necesita más pantalla",
     needsWiderScreenBody: "Abre este reto desde una tablet o un portátil para poder resolverlo.",
   },
   en: {
     sectionHeading: "Learning paths",
     sectionSub: "Guides and challenges chained into a journey that adds up",
-    breadcrumbPlayground: "Playground",
     breadcrumbPaths: "Paths",
     guideLabel: "Guide",
     challengeLabel: "Challenge",
@@ -68,11 +68,13 @@ export const pathsDictionary = {
     guestSignInPrompt:
       "Sign in to track which challenges you've completed and pick up where you left off.",
     signIn: "Sign in with GitHub",
-    noPathHeading: "No path here yet",
-    noPathBody:
-      "This track's challenges stand on their own. A guided path arrives when there's a guide worth pairing them with.",
-    browseChallenges: "Browse challenges",
-    guideAndChallenge: "Guide + challenge",
+    allPaths: "See all",
+    pathShape: (guides: number, challenges: number): string =>
+      `${guides} guide${guides === 1 ? "" : "s"} · ${challenges} challenge${challenges === 1 ? "" : "s"}`,
+    indexEyebrow: "learn in order",
+    indexHeading: "A topic doesn't land in one sitting.",
+    indexIntro:
+      "A guide gives you an idea; a challenge gives you an hour of practice. A path chains them until the whole job — read, decide, practise, document — fits together as one thing.",
     needsWiderScreenTitle: "Needs more screen",
     needsWiderScreenBody: "Open this challenge from a tablet or laptop to work through it.",
   },
