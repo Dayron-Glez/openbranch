@@ -9,7 +9,6 @@ import { Footer } from "@/shared/Footer"
 import { ScrollReveal } from "@/shared/ScrollReveal"
 import { AmbientBackground } from "@/features/home/components/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
-import { i18n } from "@/lib/i18n"
 import { source } from "@/lib/source"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import type { TopicItem } from "@/lib/landing-dictionary"
@@ -26,11 +25,11 @@ const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   bulb: <IconBulb />,
 }
 
-export const revalidate = 604800 // re-render once a week so the weekly pick rotates
-
-export function generateStaticParams() {
-  return i18n.languages.map((lang) => ({ lang }))
-}
+// Forces this page to render on every request: getWeeklyPick(lang) reads the
+// real current date, and ISR's revalidate window doesn't reliably line up
+// with calendar weeks or fire without traffic. force-dynamic guarantees the
+// weekly pick always reflects "now".
+export const dynamic = "force-dynamic"
 
 function buildAuthorsDisplay(authors: string[], lang: string): string {
   if (authors.length === 0) return ""
