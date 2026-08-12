@@ -36,7 +36,7 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
   const paths = getAllPaths(lang)
   const progress = user === null ? null : await loadPathProgress(supabase, user.id, paths)
 
-  const items = buildPathCardItems(paths, lang, playgroundDict.category, progress)
+  const items = await buildPathCardItems(paths, lang, playgroundDict.category, progress)
 
   return (
     <main data-pg-main className="mx-auto max-w-[1000px] px-7 py-14 max-[520px]:px-5">
@@ -55,7 +55,15 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
           <PathCard
             key={item.href}
             item={item}
-            dict={{ shape: dict.pathShape, stepsDone: dict.stepsDone }}
+            dict={{
+              shape: dict.pathShape,
+              stepsDone: dict.stepsDone,
+              progressFraction: dict.progressFraction,
+              nextStepLabel: dict.nextStepLabel,
+              routeComplete: dict.routeComplete,
+              stepsCount: dict.stepsCount,
+              minutesSuffix: playgroundDict.time.minutes,
+            }}
           />
         ))}
       </div>
