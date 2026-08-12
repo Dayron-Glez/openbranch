@@ -30,8 +30,8 @@ export type PathRecap = {
   readonly pathTitle: string
   readonly otherPathsHref: string
   readonly steps: readonly PathRecapStep[]
-  readonly completedChallengeCount: number
-  readonly totalChallengeSteps: number
+  readonly doneCount: number
+  readonly totalSteps: number
   readonly nextStep: { readonly title: string; readonly href: string } | null
 }
 
@@ -49,7 +49,7 @@ type RewardMomentProps = {
     readonly nextInPath: string
     readonly guideLabel: string
     readonly challengeLabel: string
-    readonly practiced: (done: number, total: number) => string
+    readonly stepsDone: (done: number, total: number) => string
   }
 }
 
@@ -161,9 +161,7 @@ const PathRecapCard = ({
       </Link>
 
       <p className="text-fg m-0 mb-4 text-[16px] font-medium">
-        {finished
-          ? dict.youFinishedThePath
-          : dict.practiced(recap.completedChallengeCount, recap.totalChallengeSteps)}
+        {finished ? dict.youFinishedThePath : dict.stepsDone(recap.doneCount, recap.totalSteps)}
       </p>
 
       <div className="mb-5 flex flex-col gap-2">
