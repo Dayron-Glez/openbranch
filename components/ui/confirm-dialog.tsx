@@ -1,9 +1,25 @@
 "use client"
 
 import type React from "react"
-import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
+/**
+ * The single confirmation surface in the app. Built on Radix's AlertDialog
+ * rather than Dialog because that is what a confirmation is: it takes
+ * `role="alertdialog"`, focuses Cancel first, and — unlike Dialog — does not
+ * dismiss on an outside click, so a stray click cannot silently answer the
+ * question.
+ *
+ * The props are deliberately the same as the Dialog-based version this
+ * replaced, so existing call sites did not have to change.
+ */
 type ConfirmDialogProps = {
   readonly open: boolean
   readonly onOpenChange: (open: boolean) => void
@@ -25,32 +41,28 @@ export const ConfirmDialog = ({
   cancelLabel,
   onConfirm,
 }: ConfirmDialogProps): React.ReactElement => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="bg-bg-card border-line-2 w-[480px] max-w-[calc(100vw-2rem)] gap-0 rounded-(--r-16) p-0 shadow-(--sh-4)">
+  <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialogContent className="bg-bg-card border-line-2 w-[480px] max-w-[calc(100vw-2rem)] gap-0 rounded-(--r-16) p-0 shadow-(--sh-4)">
       <div className="px-8 pt-8 pb-7">
         {icon !== undefined && <div className="mb-5 flex justify-center">{icon}</div>}
-        <DialogTitle className="text-fg mb-2.5 text-center text-[19px] font-[550] tracking-[-0.02em]">
+        <AlertDialogTitle className="text-fg mb-2.5 text-center text-[19px] font-[550] tracking-[-0.02em]">
           {title}
-        </DialogTitle>
-        <DialogDescription className="text-fg-2 mb-7 text-center text-[13.5px] leading-[1.6]">
+        </AlertDialogTitle>
+        <AlertDialogDescription className="text-fg-2 mb-7 text-center text-[13.5px] leading-[1.6]">
           {description}
-        </DialogDescription>
+        </AlertDialogDescription>
         <div className="flex gap-2.5">
-          <Button
-            onClick={() => onOpenChange(false)}
-            variant="ghost"
-            className="border-line h-10 flex-1 rounded-(--r-8) border text-[13px]"
-          >
+          <AlertDialogCancel className="border-line bg-bg-elev text-fg-2 hover:text-fg m-0 h-10 flex-1 rounded-(--r-8) border text-[13px]">
             {cancelLabel}
-          </Button>
-          <Button
+          </AlertDialogCancel>
+          <AlertDialogAction
             onClick={onConfirm}
             className="bg-ob-accent text-accent-ink h-10 flex-1 rounded-(--r-8) text-[13px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             {confirmLabel}
-          </Button>
+          </AlertDialogAction>
         </div>
       </div>
-    </DialogContent>
-  </Dialog>
+    </AlertDialogContent>
+  </AlertDialog>
 )

@@ -6,6 +6,7 @@ import { Logo } from "@/shared/Logo"
 import { DocsPageTransition } from "@/features/docs/components/DocsPageTransition"
 import { DocsSidebarItem } from "@/features/docs/components/DocsSidebar"
 import { DocsUIProvider } from "@/features/docs/components/DocsUIProvider"
+import { DocReadsProvider } from "@/features/docs/components/GuideRead"
 import { docsDictionary } from "@/lib/dictionaries/docs"
 import type { DocsLocale } from "@/lib/dictionaries/docs"
 
@@ -17,15 +18,19 @@ export default async function Layout({ children, params }: LayoutProps<"/[lang]/
 
   return (
     <DocsUIProvider dict={docsDictionary[locale]}>
-      <DocsLayout
-        tree={source.pageTree[lang]}
-        {...base}
-        nav={{ ...base.nav, title: <Logo /> }}
-        containerProps={{}}
-        sidebar={{ components: { Item: DocsSidebarItem } }}
-      >
-        <DocsPageTransition>{children}</DocsPageTransition>
-      </DocsLayout>
+      {/* Outside DocsLayout so the read set survives navigation between guides
+          and is fetched once per docs session, not once per guide. */}
+      <DocReadsProvider>
+        <DocsLayout
+          tree={source.pageTree[lang]}
+          {...base}
+          nav={{ ...base.nav, title: <Logo /> }}
+          containerProps={{}}
+          sidebar={{ components: { Item: DocsSidebarItem } }}
+        >
+          <DocsPageTransition>{children}</DocsPageTransition>
+        </DocsLayout>
+      </DocReadsProvider>
     </DocsUIProvider>
   )
 }

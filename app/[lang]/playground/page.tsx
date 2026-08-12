@@ -23,8 +23,8 @@ import {
 } from "@/features/playground/domain/manifest"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
-import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
-import { buildPathCardItems, challengeSlugsAcross } from "@/features/paths/server/path-cards"
+import { loadPathProgress } from "@/features/paths/server/path-progress"
+import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
@@ -168,16 +168,9 @@ export default async function PlaygroundPage({
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const learningPaths = getAllPaths(lang)
-  const completedPathChallenges =
-    user === null
-      ? null
-      : await getCompletedChallengeSlugs(supabase, user.id, challengeSlugsAcross(learningPaths))
-  const pathBandItems = buildPathCardItems(
-    learningPaths,
-    lang,
-    dict.category,
-    completedPathChallenges
-  )
+  const pathProgress =
+    user === null ? null : await loadPathProgress(supabase, user.id, learningPaths)
+  const pathBandItems = buildPathCardItems(learningPaths, lang, dict.category, pathProgress)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -338,7 +331,7 @@ export default async function PlaygroundPage({
             sub={pathsDict.sectionSub}
             allHref={localizedHref(lang, "/paths")}
             allLabel={pathsDict.allPaths}
-            cardDict={{ shape: pathsDict.pathShape, practiced: pathsDict.practiced }}
+            cardDict={{ shape: pathsDict.pathShape, stepsDone: pathsDict.stepsDone }}
           />
         </div>
       )}
