@@ -170,7 +170,7 @@ export default async function PlaygroundPage({
   const learningPaths = getAllPaths(lang)
   const pathProgress =
     user === null ? null : await loadPathProgress(supabase, user.id, learningPaths)
-  const pathBandItems = buildPathCardItems(learningPaths, lang, dict.category, pathProgress)
+  const pathBandItems = await buildPathCardItems(learningPaths, lang, dict.category, pathProgress)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -331,7 +331,15 @@ export default async function PlaygroundPage({
             sub={pathsDict.sectionSub}
             allHref={localizedHref(lang, "/paths")}
             allLabel={pathsDict.allPaths}
-            cardDict={{ shape: pathsDict.pathShape, stepsDone: pathsDict.stepsDone }}
+            cardDict={{
+              shape: pathsDict.pathShape,
+              stepsDone: pathsDict.stepsDone,
+              progressFraction: pathsDict.progressFraction,
+              nextStepLabel: pathsDict.nextStepLabel,
+              routeComplete: pathsDict.routeComplete,
+              stepsCount: pathsDict.stepsCount,
+              minutesSuffix: dict.time.minutes,
+            }}
           />
         </div>
       )}

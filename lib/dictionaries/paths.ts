@@ -18,6 +18,10 @@ export const pathsDictionary = {
     available: "Disponible",
     completed: "Completado",
     stepsDone: (done: number, total: number): string => `${done} de ${total} completados`,
+    progressFraction: (done: number, total: number): string => `${done} de ${total}`,
+    nextStepLabel: (kind: "doc" | "challenge"): string =>
+      kind === "doc" ? "siguiente: guía" : "siguiente: reto",
+    routeComplete: "Ruta recorrida",
     nextInPath: "Siguiente en esta ruta",
     pathComplete: "Ruta completada",
     pathInProgress: "En la ruta",
@@ -57,6 +61,10 @@ export const pathsDictionary = {
     available: "Available",
     completed: "Completed",
     stepsDone: (done: number, total: number): string => `${done} of ${total} done`,
+    progressFraction: (done: number, total: number): string => `${done} of ${total}`,
+    nextStepLabel: (kind: "doc" | "challenge"): string =>
+      kind === "doc" ? "next: guide" : "next: challenge",
+    routeComplete: "Route complete",
     nextInPath: "Next in this path",
     pathComplete: "Path complete",
     pathInProgress: "On this path",
