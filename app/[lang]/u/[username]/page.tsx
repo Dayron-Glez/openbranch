@@ -67,14 +67,18 @@ export async function generateMetadata({
  * `current_streak` once the last completion falls outside today-or-yesterday,
  * so a positive streak is a live one.
  */
+const streakStateOf = (overview: ProfileOverview): EngagementStats["streakState"] => {
+  if (overview.completedCount === 0) return "none"
+  return overview.currentStreak > 0 ? "alive" : "broken"
+}
+
 const toEngagementStats = (overview: ProfileOverview, tracksStarted: number): EngagementStats => ({
   totalPoints: overview.totalPoints,
   pointsToday: 0,
   completedCount: overview.completedCount,
   currentStreak: overview.currentStreak,
   bestStreak: overview.bestStreak,
-  streakState:
-    overview.completedCount === 0 ? "none" : overview.currentStreak > 0 ? "alive" : "broken",
+  streakState: streakStateOf(overview),
   lastCompletedOn: overview.lastCompletedOn,
   tracksStarted,
   nextTrack: null,
