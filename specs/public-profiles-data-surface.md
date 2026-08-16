@@ -33,6 +33,8 @@ Guarded with an `if not exists` check on `pg_constraint` so re-running is safe. 
 | `profile_badges`   | `username, badge, earned_at`                                                                                      |                                                                                                                                                                                                                                                                                                                       |
 | `profile_activity` | `username, challenge_slug, category, lang, completed_at, points`                                                  | Filtered to `status = 'completed'`. **`snapshot` is excluded deliberately** — it can hold the user's submitted code. `category` rides along because the feed's row dot is track-coloured; `points` joins `challenges` (already `challenges_select_all`). Challenge _titles_ stay in MDX and are resolved server-side. |
 
+**One row per challenge, earliest completion.** Found while writing the view, not assumed: the only unique index on `challenge_sessions` covers `status = 'in_progress'`, so replaying a challenge leaves several `completed` rows for the same slug. Without a `distinct on`, a single much-replayed challenge could fill the whole five-row feed — and the owner's account, which has replayed challenges, is the one real populated profile today. It keeps the _earliest_ completion because `apply_completion_to_stats` awards points only for "the FIRST completion of a (user, challenge) pair"; showing the latest date next to points earned months earlier would put two different events on one row.
+
 None expose `user_id`, matching `leaderboard`.
 
 ### Two functions
