@@ -5,11 +5,7 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
-import {
-  profileDictionary,
-  resolveProfileLocale,
-  type ProfileDictionary,
-} from "@/lib/dictionaries/profile"
+import { getProfileDict, type ProfileDict } from "@/lib/dictionaries/profile"
 import { formatRelativeDate } from "@/lib/relative-date"
 import {
   CATEGORY_ORDER,
@@ -44,7 +40,7 @@ export async function generateMetadata({
   params,
 }: Readonly<PageProps<"/[lang]/u/[username]">>): Promise<Metadata> {
   const { lang, username } = await params
-  const dict = profileDictionary[resolveProfileLocale(lang)]
+  const dict = getProfileDict(lang)
   return {
     title: dict.metaTitle(username),
     description: dict.metaDescription(username),
@@ -97,7 +93,7 @@ const completedSubLine = (
   completedCount: number,
   totalChallenges: number,
   trackLabels: readonly string[],
-  dict: ProfileDictionary
+  dict: ProfileDict
 ): string => {
   if (completedCount === 0) return dict.completedNone
   if (completedCount >= totalChallenges) return dict.completedAll
@@ -108,7 +104,7 @@ const toActivityItems = (
   entries: readonly ProfileActivityEntry[],
   lang: string,
   categoryDict: ReturnType<typeof getPlaygroundDict>["category"],
-  dict: ProfileDictionary
+  dict: ProfileDict
 ): readonly ActivityItem[] =>
   entries.map((entry) => {
     const category = isCategoryKey(entry.category) ? entry.category : null
@@ -129,7 +125,7 @@ const toActivityItems = (
 
 export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang]/u/[username]">>) {
   const { lang, username } = await params
-  const dict = profileDictionary[resolveProfileLocale(lang)]
+  const dict = getProfileDict(lang)
   const pathsDict = pathsDictionary[resolvePathsLocale(lang)]
   const playgroundDict = getPlaygroundDict(lang)
 

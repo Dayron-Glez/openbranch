@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { IconArrowRight } from "@/icons"
-import type { ProfileDictionary } from "@/lib/dictionaries/profile"
+import type { ProfileDict } from "@/lib/dictionaries/profile"
 import type { ProfileOverview, ProfileRank } from "../server/profile-service"
 import { RankChip } from "./RankChip"
 
@@ -26,7 +26,7 @@ export const ProfileHeader = ({
   readonly overview: ProfileOverview
   readonly rank: ProfileRank | null
   readonly leaderboardHref: string
-  readonly dict: ProfileDictionary
+  readonly dict: ProfileDict
   readonly lang: string
 }): ReactNode => (
   <header className="flex items-start gap-4">
