@@ -102,21 +102,23 @@ export const getProfileBadges = async (
 }
 
 /**
- * The most recent completions, newest first. The view already collapses
- * replays to one row per challenge, so `limit` here counts distinct challenges
- * rather than sessions.
+ * Every completion, newest first. The view already collapses replays to one
+ * row per challenge, so this is bounded by the challenge catalogue — six today
+ * — not by how much someone has played.
+ *
+ * Unbounded on purpose: the profile needs the newest few for the activity feed
+ * *and* the distinct tracks across all of them for the summary, and paying for
+ * one small query beats two. Worth a limit if the catalogue ever grows large.
  */
 export const getProfileActivity = async (
   supabase: SupabaseServerClient,
-  username: string,
-  limit: number
+  username: string
 ): Promise<readonly ProfileActivityEntry[]> => {
   const { data, error } = await supabase
     .from("profile_activity")
     .select("challenge_slug, category, completed_at, points")
     .eq("username", username)
     .order("completed_at", { ascending: false })
-    .limit(limit)
 
   if (error !== null) {
     console.error("getProfileActivity: failed to load activity", error)
