@@ -18,8 +18,7 @@ import { BadgesSection, TOTAL_BADGE_COUNT } from "@/features/playground/componen
 import { getAllPaths } from "@/features/paths/server/path-catalog"
 import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import {
-  getProfileActivity,
-  getProfileBadges,
+  getProfileActivityAndBadges,
   getProfileOverview,
   getProfilePathProgress,
   getProfileRank,
@@ -137,9 +136,8 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
   if (overview === null) notFound()
 
   const paths = getAllPaths(lang)
-  const [badges, activity, rank, pathProgress] = await Promise.all([
-    getProfileBadges(supabase, username),
-    getProfileActivity(supabase, username),
+  const [{ activity, earnedBadges }, rank, pathProgress] = await Promise.all([
+    getProfileActivityAndBadges(supabase, username),
     getProfileRank(supabase, username),
     getProfilePathProgress(supabase, username, paths),
   ])
@@ -161,8 +159,8 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
   )
 
   return (
-    <main data-pg-main className="mx-auto max-w-[860px] px-7 py-14 max-[520px]:px-5">
-      <div className="flex flex-col gap-[26px]">
+    <main data-pg-main className="mx-auto max-w-215 px-7 py-14 max-[520px]:px-5">
+      <div className="flex flex-col gap-6.5">
         <ProfileHeader
           overview={overview}
           rank={rank}
@@ -187,9 +185,9 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
 
         <BadgesSection
           dict={playgroundDict.badges}
-          earnedBadges={badges}
+          earnedBadges={earnedBadges}
           showLockMessage={false}
-          headingNote={`${badges.size}/${TOTAL_BADGE_COUNT}`}
+          headingNote={`${earnedBadges.size}/${TOTAL_BADGE_COUNT}`}
         />
 
         <CompletedPaths
