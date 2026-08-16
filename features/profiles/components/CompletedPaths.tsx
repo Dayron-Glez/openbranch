@@ -6,7 +6,7 @@ import {
   type PathCardItem,
 } from "@/features/paths/components/PathCard"
 import { IconRoute } from "@/icons"
-import type { ProfileDictionary } from "@/lib/dictionaries/profile"
+import type { ProfileDict } from "@/lib/dictionaries/profile"
 import { SectionLabel } from "./SectionLabel"
 import { EmptySection } from "./EmptySection"
 
@@ -23,7 +23,7 @@ export const CompletedPaths = ({
 }: {
   readonly items: readonly PathCardItem[]
   readonly cardDict: PathCardDict
-  readonly dict: ProfileDictionary
+  readonly dict: ProfileDict
 }): ReactNode => (
   <section>
     <SectionLabel note={items.length > 0 ? String(items.length) : undefined}>

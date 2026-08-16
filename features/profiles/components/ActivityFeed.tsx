@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import { IconFlask } from "@/icons"
-import type { ProfileDictionary } from "@/lib/dictionaries/profile"
+import type { ProfileDict } from "@/lib/dictionaries/profile"
 import { SectionLabel } from "./SectionLabel"
 import { EmptySection } from "./EmptySection"
 
@@ -20,7 +20,7 @@ export const ActivityFeed = ({
   dict,
 }: {
   readonly items: readonly ActivityItem[]
-  readonly dict: ProfileDictionary
+  readonly dict: ProfileDict
 }): ReactNode => (
   <section>
     <SectionLabel>{dict.activityHeading}</SectionLabel>

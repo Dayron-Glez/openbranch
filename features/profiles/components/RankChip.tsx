@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { IconRoute, IconTrophy } from "@/icons"
-import type { ProfileDictionary } from "@/lib/dictionaries/profile"
+import type { ProfileDict } from "@/lib/dictionaries/profile"
 import type { ProfileRank } from "../server/profile-service"
 
 /**
@@ -29,7 +29,7 @@ export const RankChip = ({
   dict,
 }: {
   readonly rank: ProfileRank | null
-  readonly dict: ProfileDictionary
+  readonly dict: ProfileDict
 }): ReactNode => {
   if (rank === null || rank.totalRanked === 0) {
     return (
