@@ -2,6 +2,7 @@ import type { createClient } from "@/lib/supabase/server"
 import type { LearningPath } from "@/features/paths/domain/paths"
 import type { PathProgress } from "@/features/paths/domain/path-status"
 import { challengeSlugsAcross, docSlugsAcross } from "@/features/paths/server/path-cards"
+import { resolveEarnedBadges } from "@/features/playground/domain/manifest"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
@@ -83,8 +84,7 @@ export const getProfileOverview = async (
   }
 }
 
-/** Earned badge keys. Names and icons stay in the dictionary and BadgesSection. */
-export const getProfileBadges = async (
+const getProfilePersistedBadges = async (
   supabase: SupabaseServerClient,
   username: string
 ): Promise<ReadonlySet<string>> => {
@@ -131,6 +131,27 @@ export const getProfileActivity = async (
     completedAt: row.completed_at as string,
     points: row.points as number,
   }))
+}
+
+export const getProfileActivityAndBadges = async (
+  supabase: SupabaseServerClient,
+  username: string
+): Promise<{
+  readonly activity: readonly ProfileActivityEntry[]
+  readonly earnedBadges: ReadonlySet<string>
+}> => {
+  const [persistedBadges, activity] = await Promise.all([
+    getProfilePersistedBadges(supabase, username),
+    getProfileActivity(supabase, username),
+  ])
+
+  return {
+    activity,
+    earnedBadges: resolveEarnedBadges({
+      completedChallengeSlugs: activity.map((entry) => entry.challengeSlug),
+      persistedBadges,
+    }),
+  }
 }
 
 /**

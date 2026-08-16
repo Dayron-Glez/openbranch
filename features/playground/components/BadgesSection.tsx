@@ -90,7 +90,7 @@ export const BadgesSection = ({
             >
               <span
                 data-track={earned ? track?.colorToken : undefined}
-                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-[17px] ${tileClassName}`}
+                className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-4.25 ${tileClassName}`}
               >
                 {BADGE_ICONS[key]}
               </span>
