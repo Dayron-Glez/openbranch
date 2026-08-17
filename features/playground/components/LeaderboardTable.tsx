@@ -61,25 +61,30 @@ const BuilderCell = ({
   readonly youLabel: string
   readonly lang: string
 }): React.ReactElement => (
-  <Link
-    href={localizedHref(lang, `/u/${row.username}`)}
-    className="group flex min-w-0 items-center gap-2.5 text-inherit no-underline"
-  >
-    <Avatar className="border-line group-hover:border-line-2 size-6 shrink-0 border transition-colors">
-      {row.avatarUrl !== null && <AvatarImage src={row.avatarUrl} alt={row.username} />}
-      <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[9px]">
-        {getInitials(row.username)}
-      </AvatarFallback>
-    </Avatar>
-    <span className="group-hover:text-ob-accent truncate text-[14px] leading-none font-medium transition-colors">
-      {row.username}
-    </span>
+  <div className="flex min-w-0 items-center gap-2.5">
+    <Link
+      href={localizedHref(lang, `/u/${row.username}`)}
+      className="group flex min-w-0 items-center gap-2.5 text-inherit no-underline"
+    >
+      <Avatar className="border-line group-hover:border-line-2 size-6 shrink-0 border transition-colors">
+        {row.avatarUrl !== null && <AvatarImage src={row.avatarUrl} alt={row.username} />}
+        <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[9px]">
+          {getInitials(row.username)}
+        </AvatarFallback>
+      </Avatar>
+      <span className="group-hover:text-ob-accent truncate text-[14px] leading-none font-medium transition-colors">
+        {row.username}
+      </span>
+    </Link>
     {isOwn && (
-      <Badge className="bg-accent-soft border-accent-ring text-ob-accent shrink-0 rounded-full border px-[7px] py-0 font-mono text-[10px] font-normal tracking-[0.06em] uppercase">
+      <Badge
+        variant="outline"
+        className="border-line bg-bg-elev text-fg-muted shrink-0 rounded-(--r-6) px-[7px] py-0 font-mono text-[10px] font-normal tracking-[0.06em] uppercase"
+      >
         {youLabel}
       </Badge>
     )}
-  </Link>
+  </div>
 )
 
 const BoardRow = ({
