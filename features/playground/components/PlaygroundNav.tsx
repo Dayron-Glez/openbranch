@@ -147,13 +147,26 @@ export const PlaygroundNav = ({
             </Tooltip>
           </TooltipProvider>
 
-          {/* user avatar */}
-          {avatarUrl !== null && (
-            <img
-              src={avatarUrl}
-              alt={username ?? "User"}
-              className="size-7 rounded-full object-cover ring-1 ring-white/10 max-[520px]:hidden"
-            />
+          {/* user avatar → own profile */}
+          {avatarUrl !== null && username !== null && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={localizedHref(lang, `/u/${username}`)}
+                    className="max-[520px]:hidden"
+                    aria-label={navDict.profileLabel}
+                  >
+                    <img
+                      src={avatarUrl}
+                      alt={username}
+                      className="hover:ring-accent-ring size-7 rounded-full object-cover ring-1 ring-white/10 transition-[box-shadow]"
+                    />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>{navDict.profileLabel}</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
 
           {/* language toggle */}

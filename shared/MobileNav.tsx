@@ -61,19 +61,19 @@ export const MobileNav = ({
           </SheetTitle>
         </SheetHeader>
 
-        {(avatarUrl !== null || username !== null) && (
-          <div className="flex items-center gap-2.5">
-            {avatarUrl !== null && (
-              <img
-                src={avatarUrl}
-                alt={username ?? "User"}
-                className="size-8 rounded-full object-cover ring-1 ring-white/10"
-              />
-            )}
-            {username !== null && (
-              <span className="text-fg text-[14px] font-medium">{username}</span>
-            )}
-          </div>
+        {avatarUrl !== null && username !== null && (
+          <Link
+            href={localizedHref(lang, `/u/${username}`)}
+            onClick={close}
+            className="flex items-center gap-2.5 text-inherit no-underline"
+          >
+            <img
+              src={avatarUrl}
+              alt={username}
+              className="size-8 rounded-full object-cover ring-1 ring-white/10"
+            />
+            <span className="text-fg text-[14px] font-medium">{username}</span>
+          </Link>
         )}
 
         <nav className="flex flex-col gap-4" aria-label="Mobile navigation">
