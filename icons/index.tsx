@@ -2,6 +2,7 @@
 export {
   IconSearch,
   IconArrowRight,
+  IconArrowLeft,
   IconStar,
   IconEye,
   IconTag,
