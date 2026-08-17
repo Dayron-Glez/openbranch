@@ -12,56 +12,72 @@ const footerLink =
 type FooterProps = {
   readonly dict: LandingDict["footer"]
   readonly lang: string
+  /**
+   * Skips the tagline and link columns, keeping only the bottom legal row —
+   * the sitemap makes no sense on a page whose entire point is to be a quick
+   * exit, and at ~290px tall the full footer is most of why that page needed
+   * to scroll on an ordinary viewport. Defaults to the full footer used
+   * everywhere else; today only the 404 page passes `compact`.
+   */
+  readonly compact?: boolean
 }
 
-export function Footer({ dict, lang }: FooterProps) {
+export function Footer({ dict, lang, compact = false }: FooterProps) {
   const homeHref = lang === "en" ? "/en" : "/"
   return (
     <footer
-      className="scroll-reveal border-line mx-auto max-w-300 border-t px-8 pt-14 pb-9 max-[520px]:px-5"
-      data-scroll-reveal
+      className={`border-line mx-auto max-w-300 border-t px-8 max-[520px]:px-5 ${compact ? "py-6" : "scroll-reveal pt-14 pb-9"}`}
+      // Scroll-reveal assumes there's a fold to scroll past — on a compact,
+      // single-screen page the footer sits inside the observer's own bottom
+      // rootMargin exclusion with nothing left to scroll, so it would never
+      // actually intersect and stay invisible. Skipped entirely for compact.
+      data-scroll-reveal={compact ? undefined : true}
     >
-      <div className="mb-14 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-12 max-[980px]:grid-cols-2 max-[520px]:grid-cols-3 max-[520px]:gap-5">
-        <div className="max-[520px]:col-span-3">
-          <Link href={homeHref} className="text-fg flex items-center gap-2.5 no-underline">
-            <LogoMark size={22} />
-            <span className="text-base tracking-normal">
-              <span className="text-fg-2 font-light">open</span>
-              <span className="font-semibold">branch</span>
-            </span>
-          </Link>
-          <p className="text-fg-muted mt-3.5 max-w-[32ch] text-[13px] leading-[1.55]">
-            {dict.tagline}
-          </p>
-        </div>
-        {dict.columns.map((column, i) => (
-          <div key={column.title} className={i === 2 ? "max-[520px]:hidden" : undefined}>
-            <h5 className={columnTitle}>{column.title}</h5>
-            {column.links.map((link, j) =>
-              link.external ? (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link
-                  key={link.label}
-                  href={localizedHref(lang, link.href)}
-                  className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
+      {!compact && (
+        <>
+          <div className="mb-14 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-12 max-[980px]:grid-cols-2 max-[520px]:grid-cols-3 max-[520px]:gap-5">
+            <div className="max-[520px]:col-span-3">
+              <Link href={homeHref} className="text-fg flex items-center gap-2.5 no-underline">
+                <LogoMark size={22} />
+                <span className="text-base tracking-normal">
+                  <span className="text-fg-2 font-light">open</span>
+                  <span className="font-semibold">branch</span>
+                </span>
+              </Link>
+              <p className="text-fg-muted mt-3.5 max-w-[32ch] text-[13px] leading-[1.55]">
+                {dict.tagline}
+              </p>
+            </div>
+            {dict.columns.map((column, i) => (
+              <div key={column.title} className={i === 2 ? "max-[520px]:hidden" : undefined}>
+                <h5 className={columnTitle}>{column.title}</h5>
+                {column.links.map((link, j) =>
+                  link.external ? (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.label}
+                      href={localizedHref(lang, link.href)}
+                      className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <Separator className="border-line mb-6" />
+          <Separator className="border-line mb-6" />
+        </>
+      )}
       <div className="text-fg-muted flex items-center justify-between font-mono text-[11px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
         <span>
           {dict.legal} · {new Date().getFullYear()}
