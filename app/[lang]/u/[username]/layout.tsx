@@ -1,8 +1,8 @@
 import type { ReactNode } from "react"
 import { AppShell } from "@/features/playground/components/AppShell"
-import "./playground.css"
+import "../../playground/playground.css"
 
-export default async function PlaygroundLayout({
+export default async function ProfileLayout({
   children,
   params,
 }: {
@@ -10,9 +10,5 @@ export default async function PlaygroundLayout({
   readonly params: Promise<{ readonly lang: string }>
 }) {
   const { lang } = await params
-  return (
-    <AppShell lang={lang} variant="fixed">
-      {children}
-    </AppShell>
-  )
+  return <AppShell lang={lang}>{children}</AppShell>
 }

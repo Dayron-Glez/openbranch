@@ -2,6 +2,7 @@ import type { createClient } from "@/lib/supabase/server"
 import type { LearningPath } from "@/features/paths/domain/paths"
 import type { PathProgress } from "@/features/paths/domain/path-status"
 import { challengeSlugsAcross, docSlugsAcross } from "@/features/paths/server/path-cards"
+import { resolveEarnedBadges } from "@/features/playground/domain/manifest"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
@@ -83,8 +84,7 @@ export const getProfileOverview = async (
   }
 }
 
-/** Earned badge keys. Names and icons stay in the dictionary and BadgesSection. */
-export const getProfileBadges = async (
+const getProfilePersistedBadges = async (
   supabase: SupabaseServerClient,
   username: string
 ): Promise<ReadonlySet<string>> => {
@@ -102,21 +102,23 @@ export const getProfileBadges = async (
 }
 
 /**
- * The most recent completions, newest first. The view already collapses
- * replays to one row per challenge, so `limit` here counts distinct challenges
- * rather than sessions.
+ * Every completion, newest first. The view already collapses replays to one
+ * row per challenge, so this is bounded by the challenge catalogue — six today
+ * — not by how much someone has played.
+ *
+ * Unbounded on purpose: the profile needs the newest few for the activity feed
+ * *and* the distinct tracks across all of them for the summary, and paying for
+ * one small query beats two. Worth a limit if the catalogue ever grows large.
  */
 export const getProfileActivity = async (
   supabase: SupabaseServerClient,
-  username: string,
-  limit: number
+  username: string
 ): Promise<readonly ProfileActivityEntry[]> => {
   const { data, error } = await supabase
     .from("profile_activity")
     .select("challenge_slug, category, completed_at, points")
     .eq("username", username)
     .order("completed_at", { ascending: false })
-    .limit(limit)
 
   if (error !== null) {
     console.error("getProfileActivity: failed to load activity", error)
@@ -129,6 +131,27 @@ export const getProfileActivity = async (
     completedAt: row.completed_at as string,
     points: row.points as number,
   }))
+}
+
+export const getProfileActivityAndBadges = async (
+  supabase: SupabaseServerClient,
+  username: string
+): Promise<{
+  readonly activity: readonly ProfileActivityEntry[]
+  readonly earnedBadges: ReadonlySet<string>
+}> => {
+  const [persistedBadges, activity] = await Promise.all([
+    getProfilePersistedBadges(supabase, username),
+    getProfileActivity(supabase, username),
+  ])
+
+  return {
+    activity,
+    earnedBadges: resolveEarnedBadges({
+      completedChallengeSlugs: activity.map((entry) => entry.challengeSlug),
+      persistedBadges,
+    }),
+  }
 }
 
 /**
