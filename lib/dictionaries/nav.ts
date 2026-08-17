@@ -5,6 +5,7 @@ export const navDictionary = {
     pathsLabel: "Rutas",
     menuAria: "Abrir menú",
     menuTitle: "Menú",
+    profileLabel: "Tu perfil",
   },
   en: {
     docsLabel: "Docs",
@@ -12,6 +13,7 @@ export const navDictionary = {
     pathsLabel: "Paths",
     menuAria: "Open menu",
     menuTitle: "Menu",
+    profileLabel: "Your profile",
   },
 } as const
 
