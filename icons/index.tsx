@@ -17,6 +17,7 @@ export {
   IconRocket,
   IconFlame,
   IconAward,
+  IconTrophy,
   IconCheck,
   IconRoute,
   IconUser,
