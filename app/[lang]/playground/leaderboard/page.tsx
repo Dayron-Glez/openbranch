@@ -66,7 +66,12 @@ export default async function LeaderboardPage({
           {sub !== null && <p className="text-fg-muted m-0 text-[13px] leading-[1.5]">{sub}</p>}
         </div>
 
-        <LeaderboardTable dict={dict.leaderboard} data={leaderboard} hubPath={hubPath} />
+        <LeaderboardTable
+          dict={dict.leaderboard}
+          data={leaderboard}
+          hubPath={hubPath}
+          lang={lang}
+        />
 
         <div className="mt-5 flex justify-center">
           <Link
