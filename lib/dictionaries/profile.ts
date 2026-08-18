@@ -28,12 +28,6 @@ const translations = {
   "id.memberSince": { es: "En openbranch desde {date}", en: "On openbranch since {date}" },
   "id.memberSinceUnknown": { es: "En openbranch", en: "On openbranch" },
   "id.seeOnLeaderboard": { es: "Ver en el leaderboard", en: "See on the leaderboard" },
-  "id.shareLabel": { es: "Compartir perfil", en: "Share profile" },
-  "id.shareCopied": { es: "Copiado", en: "Copied" },
-  "id.shareText": {
-    es: "El progreso de {username} en openbranch",
-    en: "{username}'s progress on openbranch",
-  },
 
   "rank.starting": { es: "Empezando", en: "Getting started" },
   "rank.topPercent": { es: "Top {percent}%", en: "Top {percent}%" },
@@ -84,6 +78,14 @@ const translations = {
   "stats.allTracksStarted": { es: "Todos los tracks empezados", en: "All tracks started" },
   "stats.best": { es: "Mejor racha", en: "Best streak" },
   "stats.bestNote": { es: "Su récord", en: "Their best" },
+
+  // Share button — see features/profiles/components/ShareProfileButton.tsx
+  "share.label": { es: "Compartir perfil", en: "Share profile" },
+  "share.copied": { es: "Copiado", en: "Copied" },
+  "share.text": {
+    es: "El progreso de {username} en openbranch",
+    en: "{username}'s progress on openbranch",
+  },
 } satisfies Record<string, LocalizedEntry>
 
 export type ProfileDict = {
@@ -127,9 +129,9 @@ export const getProfileDict = (lang: string): ProfileDict => {
     memberSince: (date: string): string => tx("id.memberSince").replace("{date}", date),
     memberSinceUnknown: tx("id.memberSinceUnknown"),
     seeOnLeaderboard: tx("id.seeOnLeaderboard"),
-    shareLabel: tx("id.shareLabel"),
-    shareCopied: tx("id.shareCopied"),
-    shareText: (username: string): string => tx("id.shareText").replace("{username}", username),
+    shareLabel: tx("share.label"),
+    shareCopied: tx("share.copied"),
+    shareText: (username: string): string => tx("share.text").replace("{username}", username),
     rankStarting: tx("rank.starting"),
     rankTopPercent: (percent: number): string =>
       tx("rank.topPercent").replace("{percent}", String(percent)),
