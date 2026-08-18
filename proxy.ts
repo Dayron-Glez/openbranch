@@ -65,5 +65,12 @@ export default async function proxy(
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)"], // NOSONAR: Next.js requires a static string literal here; String.raw is not allowed
+  // `og` sits alongside `api`: OG image routes are generated assets, not
+  // localizable pages, and the dot-based exclusion above only protects a
+  // dotted URL (like /og/docs/image.png) by accident — a route without an
+  // extension (like the planned /og/u/[username]) would otherwise get
+  // rewritten by the i18n middleware and 404 through the [lang] catch-all.
+  // Confirmed by reproducing that exact failure against a throwaway route
+  // before adding this exclusion.
+  matcher: ["/((?!api|og|_next/static|_next/image|favicon.ico|.*\\..*).*)"], // NOSONAR: Next.js requires a static string literal here; String.raw is not allowed
 }
