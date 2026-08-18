@@ -57,16 +57,20 @@ export const BadgesSection = ({
 }: BadgesSectionProps) => {
   const hasLocked = BADGE_KEYS.some((key) => !earnedBadges.has(key))
 
-  // Hovering an earned tile replays its unlock choreography — playKey bumps
-  // on every mouse-enter so re-hovering the same tile retriggers it.
-  const [hoveredKey, setHoveredKey] = useState<BadgeKey | null>(null)
-  const [playKey, setPlayKey] = useState<number>(0)
+  /**
+   * Hovering starts an earned tile's choreography; leaving the tile does
+   * *not* cut it off — it keeps playing to its natural end regardless of
+   * where the mouse goes next. So this is keyed per badge, not a single
+   * "currently hovered" value: each key's play counter is independent,
+   * bumping on every mouse-enter of *that* tile (to restart if re-hovered
+   * mid-animation) without touching any other tile's in-flight animation.
+   * `undefined` means "never triggered" — show the plain static icon.
+   */
+  const [playKeys, setPlayKeys] = useState<Partial<Record<BadgeKey, number>>>({})
 
   const handleEnter = (key: BadgeKey): void => {
-    setHoveredKey(key)
-    setPlayKey((prev) => prev + 1)
+    setPlayKeys((prev) => ({ ...prev, [key]: (prev[key] ?? 0) + 1 }))
   }
-  const handleLeave = (): void => setHoveredKey(null)
 
   return (
     <div>
@@ -81,6 +85,7 @@ export const BadgesSection = ({
           const earned = earnedBadges.has(key)
           const track = TRACK_BY_BADGE_KEY.get(key)
           const tileClassName = getTileClassName(earned, track !== undefined)
+          const playKey = playKeys[key]
           return (
             <div
               key={key}
@@ -89,10 +94,9 @@ export const BadgesSection = ({
               <span
                 data-track={earned ? track?.colorToken : undefined}
                 onMouseEnter={earned ? () => handleEnter(key) : undefined}
-                onMouseLeave={earned ? handleLeave : undefined}
                 className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-4.25 ${tileClassName}`}
               >
-                {earned && hoveredKey === key ? (
+                {earned && playKey !== undefined ? (
                   <BadgeUnlockIcon badgeKey={key} playKey={playKey} />
                 ) : (
                   BADGE_ICONS[key]
