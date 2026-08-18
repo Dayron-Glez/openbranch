@@ -14,8 +14,7 @@ import { formatElapsed } from "@/features/playground/domain/format-elapsed"
 import { inferCategoryBadge } from "@/features/playground/domain/manifest"
 import { getCompletionReward } from "@/features/playground/server/reward-service"
 import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
-import { BadgeUnlockIcon } from "@/features/playground/components/badges/BadgeUnlockIcon"
-import { BadgeShimmer } from "@/features/playground/components/badges/BadgeShimmer"
+import { BadgeUnlockDialog } from "@/features/playground/components/badges/BadgeUnlockDialog"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 import { source } from "@/lib/source"
 import { buildPathRecap, type RecapStep } from "@/features/paths/domain/path-recap"
@@ -313,6 +312,17 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
       <ConfettiEffect />
 
+      {newlyEarnedInfo !== null && newlyEarnedKey !== null && (
+        <BadgeUnlockDialog
+          badgeKey={newlyEarnedKey}
+          name={newlyEarnedInfo.name}
+          description={newlyEarnedInfo.description}
+          eyebrow={dict.reward.badgeUnlockedEyebrow}
+          continueLabel={dict.reward.badgeUnlockedContinue}
+          newTag={dict.reward.badgeNewTag}
+        />
+      )}
+
       <div className="relative mx-auto max-w-[900px] px-7 pt-12 pb-20 max-[520px]:px-5">
         {/* ── hero ── */}
         <div className="mb-16 text-center">
@@ -403,25 +413,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
         {/* ── sections ── */}
         <div className="flex flex-col gap-4">
-          {/* badge — the animated reveal when this completion earned one, a quiet static reference otherwise */}
-          {newlyEarnedInfo !== null && newlyEarnedKey !== null && (
-            <div className="bg-bg-card border-accent-ring relative flex items-start gap-3 overflow-hidden rounded-(--r-12) border p-4">
-              <BadgeShimmer playKey={0} />
-              <span className="border-accent-ring bg-accent-soft text-ob-accent inline-grid size-8 shrink-0 place-items-center rounded-(--r-8) border [&_svg]:size-5">
-                <BadgeUnlockIcon badgeKey={newlyEarnedKey} playKey={0} />
-              </span>
-              <div>
-                <p className="text-fg-muted mb-1 flex items-center gap-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
-                  {dict.result.badgeEarnedLabel}
-                  <span className="bg-accent-soft border-accent-ring text-ob-accent rounded-full border px-1.5 py-0.5 text-[9.5px] tracking-[0.04em]">
-                    {dict.reward.badgeNewTag}
-                  </span>
-                </p>
-                <p className="text-fg mb-0.5 text-[14.5px] font-medium">{newlyEarnedInfo.name}</p>
-                <p className="text-fg-2 text-[13px]">{newlyEarnedInfo.description}</p>
-              </div>
-            </div>
-          )}
+          {/* A newly earned badge is celebrated by the unlock dialog instead, so
+              this quiet reference only stands in when the badge was already held. */}
           {badgeInfo !== null && badgeKey !== newlyEarnedKey && (
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
