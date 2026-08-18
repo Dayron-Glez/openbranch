@@ -13,6 +13,8 @@ import {
   getProfileOverview,
   getProfilePathProgress,
   getProfileRank,
+  type ProfileOverview,
+  type ProfileRank,
 } from "@/features/profiles/server/profile-service"
 
 export const revalidate = 3600
@@ -319,6 +321,56 @@ const GhostMark = ({ muted }: { readonly muted: boolean }) => (
   </svg>
 )
 
+type Headline = { readonly digit: number; readonly label: string }
+
+const resolveHeadline = (
+  completedCount: number,
+  totalChallenges: number,
+  sparse: boolean
+): Headline => {
+  if (sparse) return { digit: totalChallenges, label: "retos por delante" }
+  if (completedCount >= totalChallenges && totalChallenges > 0) {
+    return { digit: completedCount, label: "catálogo completo" }
+  }
+  return { digit: completedCount, label: `de ${totalChallenges} retos completados` }
+}
+
+type RankChip = { readonly text: string; readonly accent: boolean }
+
+const resolveRankChip = (rank: ProfileRank | null): RankChip => {
+  if (rank === null || rank.totalRanked === 0) {
+    return { text: "Empezando", accent: false }
+  }
+  if (rank.rank <= EXACT_RANK_LIMIT) {
+    return { text: `#${rank.rank} en openbranch`, accent: true }
+  }
+  const percentile = Math.max(1, Math.ceil((rank.rank / rank.totalRanked) * 100))
+  return { text: `Top ${percentile}%`, accent: false }
+}
+
+type MetaPart = string | { readonly text: string; readonly accent: boolean }
+
+const buildMetaParts = (
+  overview: ProfileOverview,
+  completedRouteCount: number,
+  sparse: boolean
+): readonly MetaPart[] => {
+  if (sparse) {
+    const joinedNote =
+      overview.memberSince === null ? null : `se unió en ${formatMemberSince(overview.memberSince)}`
+    const parts: readonly (MetaPart | null)[] = ["ninguno completado todavía", joinedNote]
+    return parts.filter((part): part is MetaPart => part !== null)
+  }
+
+  const pointsPart =
+    overview.totalPoints > 0 ? { text: `${overview.totalPoints} puntos`, accent: true } : null
+  return [
+    pointsPart,
+    `racha ${overview.currentStreak}`,
+    formatRoutesMeta(completedRouteCount),
+  ].filter((part): part is MetaPart => part !== null)
+}
+
 export async function GET(
   _req: Request,
   { params }: RouteContext<"/og/u/[username]">
@@ -362,38 +414,13 @@ export async function GET(
   }).length
 
   const sparse = overview.completedCount === 0
-  const allDone = overview.completedCount >= totalChallenges && totalChallenges > 0
-
-  const headlineDigit = sparse ? totalChallenges : overview.completedCount
-  const headlineLabel = sparse
-    ? "retos por delante"
-    : allDone
-      ? "catálogo completo"
-      : `de ${totalChallenges} retos completados`
-
-  const rankChip = (() => {
-    if (rank === null || rank.totalRanked === 0) {
-      return { text: "Empezando", accent: false }
-    }
-    if (rank.rank <= EXACT_RANK_LIMIT) {
-      return { text: `#${rank.rank} en openbranch`, accent: true }
-    }
-    const percentile = Math.max(1, Math.ceil((rank.rank / rank.totalRanked) * 100))
-    return { text: `Top ${percentile}%`, accent: false }
-  })()
-
-  const metaParts = sparse
-    ? [
-        "ninguno completado todavía",
-        overview.memberSince === null
-          ? null
-          : `se unió en ${formatMemberSince(overview.memberSince)}`,
-      ]
-    : [
-        overview.totalPoints > 0 ? { text: `${overview.totalPoints} puntos`, accent: true } : null,
-        `racha ${overview.currentStreak}`,
-        formatRoutesMeta(completedRouteCount),
-      ]
+  const { digit: headlineDigit, label: headlineLabel } = resolveHeadline(
+    overview.completedCount,
+    totalChallenges,
+    sparse
+  )
+  const rankChip = resolveRankChip(rank)
+  const metaParts = buildMetaParts(overview, completedRouteCount, sparse)
 
   return new ImageResponse(
     <div
@@ -502,7 +529,13 @@ export async function GET(
               }}
             >
               {avatarDataUri !== null ? (
-                <img src={avatarDataUri} width={100} height={100} style={{ borderRadius: 999 }} />
+                <img
+                  src={avatarDataUri}
+                  alt=""
+                  width={100}
+                  height={100}
+                  style={{ borderRadius: 999 }}
+                />
               ) : (
                 getInitials(overview.username)
               )}
@@ -630,18 +663,19 @@ export async function GET(
                 marginTop: 24,
               }}
             >
-              {metaParts
-                .filter((part): part is string | { text: string; accent: boolean } => part !== null)
-                .map((part, index, arr) => (
-                  <div key={index} style={{ display: "flex", alignItems: "center" }}>
+              {metaParts.map((part, index) => {
+                const text = typeof part === "string" ? part : part.text
+                return (
+                  <div key={text} style={{ display: "flex", alignItems: "center" }}>
                     <span style={{ color: typeof part === "string" ? "#b7bcc4" : "#55d671" }}>
-                      {typeof part === "string" ? part : part.text}
+                      {text}
                     </span>
-                    {index < arr.length - 1 && (
+                    {index < metaParts.length - 1 && (
                       <span style={{ color: "#3e444c", padding: "0 13px" }}>·</span>
                     )}
                   </div>
-                ))}
+                )
+              })}
             </div>
           </div>
         </div>
