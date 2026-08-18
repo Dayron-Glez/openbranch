@@ -12,7 +12,7 @@ const BUBBLES = [
 /** `coverage-hero` — the flask outline draws and fills with liquid as bubbles rise. */
 export const FlaskIcon = ({ t }: { readonly t: number }): ReactNode => {
   // useId()'s colons aren't valid in a bare fragment id used via url(#id).
-  const clipId = useId().replace(/:/g, "")
+  const clipId = useId().replaceAll(":", "")
   const rim = MOTION.draw(0, 0.3)(t)
   const body = MOTION.draw(0.15, 0.6)(t)
   const neck = MOTION.draw(0.55, 0.3)(t)
