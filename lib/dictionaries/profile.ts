@@ -78,6 +78,14 @@ const translations = {
   "stats.allTracksStarted": { es: "Todos los tracks empezados", en: "All tracks started" },
   "stats.best": { es: "Mejor racha", en: "Best streak" },
   "stats.bestNote": { es: "Su récord", en: "Their best" },
+
+  // Share button — see features/profiles/components/ShareProfileButton.tsx
+  "share.label": { es: "Compartir perfil", en: "Share profile" },
+  "share.copied": { es: "Copiado", en: "Copied" },
+  "share.text": {
+    es: "El progreso de {username} en openbranch",
+    en: "{username}'s progress on openbranch",
+  },
 } satisfies Record<string, LocalizedEntry>
 
 export type ProfileDict = {
@@ -86,6 +94,9 @@ export type ProfileDict = {
   readonly memberSince: (date: string) => string
   readonly memberSinceUnknown: string
   readonly seeOnLeaderboard: string
+  readonly shareLabel: string
+  readonly shareCopied: string
+  readonly shareText: (username: string) => string
   readonly rankStarting: string
   readonly rankTopPercent: (percent: number) => string
   readonly rankNumber: (rank: number) => string
@@ -118,6 +129,9 @@ export const getProfileDict = (lang: string): ProfileDict => {
     memberSince: (date: string): string => tx("id.memberSince").replace("{date}", date),
     memberSinceUnknown: tx("id.memberSinceUnknown"),
     seeOnLeaderboard: tx("id.seeOnLeaderboard"),
+    shareLabel: tx("share.label"),
+    shareCopied: tx("share.copied"),
+    shareText: (username: string): string => tx("share.text").replace("{username}", username),
     rankStarting: tx("rank.starting"),
     rankTopPercent: (percent: number): string =>
       tx("rank.topPercent").replace("{percent}", String(percent)),

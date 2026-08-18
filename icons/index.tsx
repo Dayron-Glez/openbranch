@@ -23,6 +23,7 @@ export {
   IconUser,
   IconDeviceLaptop,
   IconLayoutGrid,
+  IconShare,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,

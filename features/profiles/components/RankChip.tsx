@@ -11,7 +11,7 @@ import type { ProfileRank } from "../server/profile-service"
 const EXACT_RANK_LIMIT = 100
 
 const CHIP_BASE =
-  "inline-flex shrink-0 items-center gap-[7px] rounded-full border px-3.5 py-[7px] font-mono text-[13px] [&_svg]:size-3.5"
+  "inline-flex shrink-0 items-center gap-[7px] rounded-full border px-3.5 py-[7px] font-mono text-[13px] leading-none [&_svg]:size-3.5"
 
 /** Rounded up, so rank 1 of 8 is "Top 13%" rather than "Top 12%". */
 const percentileOf = (rank: number, totalRanked: number): number =>
@@ -35,7 +35,7 @@ export const RankChip = ({
     return (
       <span className={`${CHIP_BASE} border-line-2 bg-bg-elev text-fg-2`}>
         <IconRoute aria-hidden className="text-fg-muted" />
-        <span className="font-medium">{dict.rankStarting}</span>
+        <span className="translate-y-px font-medium">{dict.rankStarting}</span>
       </span>
     )
   }
@@ -48,7 +48,7 @@ export const RankChip = ({
   return (
     <span className={`${CHIP_BASE} border-accent-ring bg-accent-soft text-ob-accent`}>
       <IconTrophy aria-hidden />
-      <span className="font-medium">{label}</span>
+      <span className="translate-y-px font-medium">{label}</span>
     </span>
   )
 }
