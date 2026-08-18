@@ -40,56 +40,6 @@ const hexToRgb = (hex: string): string => {
   return `${(value >> 16) & 255},${(value >> 8) & 255},${value & 255}`
 }
 
-type Dot = { readonly left: number; readonly top: number; readonly opacity: number }
-
-/**
- * Real elements, not a tiled backgroundImage — Satori has no background-repeat
- * support, so a `backgroundSize`-tiled gradient silently renders as a single
- * unrepeated instance (invisible at this scale). Matches the design handoff's
- * own per-dot formula: 64px spacing, distance-faded from canvas center, radius
- * clamped so it never reaches the card's edges.
- */
-const DOT_GRID: readonly Dot[] = (() => {
-  const SPACING = 64
-  const RADIUS = 1.5
-  const PEAK_OPACITY = 0.09
-  const centerX = WIDTH / 2
-  const centerY = HEIGHT / 2
-  const dots: Dot[] = []
-  for (let y = 32; y < HEIGHT; y += SPACING) {
-    for (let x = 32; x < WIDTH; x += SPACING) {
-      const distance = Math.hypot(x - centerX, (y - centerY) * 1.35)
-      const falloff = Math.max(0, 1 - distance / 620)
-      const opacity = Number((PEAK_OPACITY * falloff ** 1.4).toFixed(4))
-      if (opacity > 0.002) dots.push({ left: x - RADIUS, top: y - RADIUS, opacity })
-    }
-  }
-  return dots
-})()
-
-const DotGrid = () => (
-  <div
-    style={{ position: "absolute", top: 0, left: 0, width: WIDTH, height: HEIGHT, display: "flex" }}
-  >
-    {DOT_GRID.map((dot, index) => (
-      <div
-        key={index}
-        style={{
-          position: "absolute",
-          left: dot.left,
-          top: dot.top,
-          width: 3,
-          height: 3,
-          borderRadius: 999,
-          background: "#ffffff",
-          opacity: dot.opacity,
-          display: "flex",
-        }}
-      />
-    ))}
-  </div>
-)
-
 const fontDir = path.join(process.cwd(), "assets", "fonts", "og")
 
 const loadFonts = async (): Promise<
@@ -458,7 +408,6 @@ export async function GET(
         display: "flex",
       }}
     >
-      <DotGrid />
       <GraphLayer />
       <div
         style={{

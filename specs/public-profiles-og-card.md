@@ -45,15 +45,17 @@ The owner asked for the same dot-grid texture `AmbientBackground` uses on the ho
 
 The owner's reaction to the round-2 result — "no ha quedado como esperaba" — was correct. `AmbientBackground` is three stacked layers (`reference/Landing Page.html`), and the dot grid is the weakest of the three; what actually reads as "the ambient background" on the home and 404 pages is the **git graph** — seven vertical "streets," six branch arcs, twenty-one commit nodes, four of them accent-colored. A round-3 design handoff (`OG Card - u-username v3.html`) specified all three layers transcribed into the card, in the static end-state `prefers-reduced-motion` already defines (fully-drawn strokes, no dash animation, no blur filter on the sweep).
 
-Implemented as two new layers alongside the existing dot grid:
+Implemented as two new layers:
 
 - **`GraphLayer`** — the git graph's 13 paths + 21 circles, coordinates rewritten directly to the card's own 1200×630 (not sliced from the source's 1600×1000 via `preserveAspectRatio="slice"` — not worth trusting inside Satori for a background layer). `color: rgba(183,188,196,.10)` on the wrapping `div`, inherited by the SVG's `stroke="currentColor"`/`fill="currentColor"`, matching the source's `currentColor` pattern through `<use>`.
 - **Sweep layer** — the source's `filter: blur(28px)` has no Satori equivalent, so it's a wider, softer unblurred `radial-gradient` instead (`480×756` at `rgba(85,214,113,.06)`), frozen in the one empty band of the layout (center-right, clear of both the content column and the ghost mark).
 - Both masks recentered to `50% 50%` — production pushes them toward `35%`/`40%` for a top-third hero that doesn't exist here.
 
-**The handoff's own risk table called the tiled-dot-grid technique "ok, verified" again** (`background-image` + `background-size` + `background-position`, one `div`) — re-tested directly rather than trusting that label a second time: a single exaggerated red dot rendered dead-center of the canvas, not a repeated grid. Confirmed conclusively that Satori has no `background-repeat`/tiling support at all, independent of mask or opacity — so the round-2 `DOT_GRID` per-element array stays, not the handoff's one-div version.
+**The handoff's own risk table called the tiled-dot-grid technique "ok, verified" again** (`background-image` + `background-size` + `background-position`, one `div`) — re-tested directly rather than trusting that label a second time: a single exaggerated red dot rendered dead-center of the canvas, not a repeated grid. Confirmed conclusively that Satori has no `background-repeat`/tiling support at all, independent of mask or opacity.
 
 **`mask-image` itself was re-confirmed genuinely working this round** — pixel-diffed the graph layer masked vs. unmasked (sampled every 4px): 325 of ~47,000 sample points differed, some by up to 149/765 in summed RGB distance, concentrated toward the canvas edges as expected from an ellipse fading from 30% to 80% of its radius. So the round-2 finding stands precisely as scoped: masking a normal (non-tiled) layer works; tiling a background never does.
+
+**The dot grid (layer 1) was removed after seeing the result with all three layers together**: with the git graph carrying the actual texture, the round-2 `DOT_GRID` per-element array (~190 divs) read as redundant rather than additive. Two layers, not three — `GraphLayer` and the sweep.
 
 ## Sparse vs. populated
 
