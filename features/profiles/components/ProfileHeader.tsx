@@ -5,6 +5,7 @@ import { IconArrowRight } from "@/icons"
 import type { ProfileDict } from "@/lib/dictionaries/profile"
 import type { ProfileOverview, ProfileRank } from "../server/profile-service"
 import { RankChip } from "./RankChip"
+import { ShareProfileButton } from "./ShareProfileButton"
 
 /** Same fallback as the leaderboard's rows, so one person reads alike in both. */
 const getInitials = (username: string): string => username.slice(0, 2).toUpperCase()
@@ -68,6 +69,16 @@ export const ProfileHeader = ({
       </div>
     </div>
 
-    <RankChip rank={rank} dict={dict} />
+    <div className="flex shrink-0 items-center gap-2">
+      <ShareProfileButton
+        username={overview.username}
+        lang={lang}
+        shareTitle={dict.metaTitle(overview.username)}
+        shareText={dict.shareText(overview.username)}
+        shareLabel={dict.shareLabel}
+        shareCopiedLabel={dict.shareCopied}
+      />
+      <RankChip rank={rank} dict={dict} />
+    </div>
   </header>
 )
