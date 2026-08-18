@@ -29,6 +29,25 @@ type ResultPageProps = {
 
 const DIFFICULTY_ORDER: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
+type PlaygroundPage = ReturnType<typeof playgroundSource.getPages>[number]
+
+/** Gentlest next step from a candidate set — null when nothing is left. */
+const easiestOf = (candidates: readonly PlaygroundPage[]): PlaygroundPage | null =>
+  [...candidates].sort(
+    (a, b) =>
+      (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
+  )[0] ?? null
+
+const titleOfStep = (step: RecapStep, lang: string): string =>
+  step.type === "doc"
+    ? (source.getPage(step.slug.split("/"), lang)?.data.title ?? step.slug)
+    : (playgroundSource.getPage([step.slug], lang)?.data.title ?? step.slug)
+
+const hrefOfStep = (step: RecapStep, lang: string): string =>
+  step.type === "doc"
+    ? (source.getPage(step.slug.split("/"), lang)?.url ?? localizedHref(lang, `/docs/${step.slug}`))
+    : localizedHref(lang, `/playground/${step.slug}`)
+
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
     playgroundSource
@@ -217,21 +236,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
     .getPages(lang)
     .filter((p) => p.data.maturity === "stable" && p.slugs[0] !== slug)
 
-  const buildsOnChallenge =
-    allOthers
-      .filter((p) => p.data.category === page.data.category && !completedSlugs.has(p.slugs[0]))
-      .sort(
-        (a, b) =>
-          (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
-      )[0] ?? null
-
-  const newTrackChallenge =
-    allOthers
-      .filter((p) => p.data.category !== page.data.category && !completedSlugs.has(p.slugs[0]))
-      .sort(
-        (a, b) =>
-          (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
-      )[0] ?? null
+  const uncompleted = allOthers.filter((p) => !completedSlugs.has(p.slugs[0]))
+  const buildsOnChallenge = easiestOf(
+    uncompleted.filter((p) => p.data.category === page.data.category)
+  )
+  const newTrackChallenge = easiestOf(
+    uncompleted.filter((p) => p.data.category !== page.data.category)
+  )
 
   const dict = getPlaygroundDict(lang)
   const playgroundPath = localizedHref(lang, "/playground")
@@ -242,17 +253,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const matchedPath = pathForChallenge(slug, lang)
-
-  const titleOfStep = (step: RecapStep): string =>
-    step.type === "doc"
-      ? (source.getPage(step.slug.split("/"), lang)?.data.title ?? step.slug)
-      : (playgroundSource.getPage([step.slug], lang)?.data.title ?? step.slug)
-
-  const hrefOfStep = (step: RecapStep): string =>
-    step.type === "doc"
-      ? (source.getPage(step.slug.split("/"), lang)?.url ??
-        localizedHref(lang, `/docs/${step.slug}`))
-      : localizedHref(lang, `/playground/${step.slug}`)
 
   let pathRecap: PathRecap | null = null
   if (matchedPath !== null) {
@@ -272,7 +272,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
       otherPathsHref: playgroundPath,
       steps: model.steps.map((step) => ({
         type: step.type,
-        title: titleOfStep(step),
+        title: titleOfStep(step, lang),
         status: step.status,
       })),
       doneCount: model.doneCount,
@@ -280,7 +280,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
       nextStep:
         nextStep === undefined || nextStep === null
           ? null
-          : { title: titleOfStep(nextStep), href: hrefOfStep(nextStep) },
+          : { title: titleOfStep(nextStep, lang), href: hrefOfStep(nextStep, lang) },
     }
   }
 
