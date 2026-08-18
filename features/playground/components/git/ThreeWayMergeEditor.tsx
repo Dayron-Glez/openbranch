@@ -514,6 +514,23 @@ const buildRegionDecorations = (
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
+/**
+ * Model URI for a read-only side pane, derived from the center file's path.
+ *
+ * The side panes need URIs of their own, and those URIs have to keep the
+ * center file's extension: Monaco hands every `typescript` model to the TS
+ * worker, which rejects any path it can't recognise as a source file and
+ * throws "Could not find source file: …" into the console. Both a suffix
+ * *after* the extension and Monaco's auto-assigned `inmemory://model/N`
+ * (what you get by passing no path at all) trip exactly that.
+ */
+const sidePath = (centerPath: string | undefined, side: "left" | "right"): string => {
+  if (centerPath === undefined) return `file:///merge-${side}.ts`
+  const dot = centerPath.lastIndexOf(".")
+  if (dot === -1) return `${centerPath}.${side}.ts`
+  return `${centerPath.slice(0, dot)}.${side}${centerPath.slice(dot)}`
+}
+
 const sharedEditorOptions: editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
   scrollBeyondLastLine: false,
@@ -555,6 +572,9 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
     const leftEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
     const centerEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
     const rightEditorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+
+    const leftPath = sidePath(centerPath, "left")
+    const rightPath = sidePath(centerPath, "right")
 
     const regionsRef = useRef<Region[]>([])
     const lineHeightRef = useRef(18)
@@ -998,6 +1018,7 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
             value={left}
             language={language}
             theme={themeName}
+            path={leftPath}
             options={{ ...sharedEditorOptions, readOnly: true }}
             onMount={handleLeftMount}
             style={{ width: `${leftWidthPct}%`, flexShrink: 0 }}
@@ -1036,6 +1057,7 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
             value={right}
             language={language}
             theme={themeName}
+            path={rightPath}
             options={{ ...sharedEditorOptions, readOnly: true }}
             onMount={handleRightMount}
             style={{ width: `${rightWidthPct}%`, flexShrink: 0 }}
