@@ -396,6 +396,7 @@ export const BugFixChallengeView = ({
                   beforeMount={configureMonaco}
                   options={{
                     minimap: { enabled: false },
+                    automaticLayout: true,
                     fontSize: 13,
                     lineHeight: 22,
                     fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
