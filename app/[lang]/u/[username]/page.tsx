@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import { profileImageRoute } from "@/lib/shared"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
@@ -43,6 +44,12 @@ export async function generateMetadata({
   return {
     title: dict.metaTitle(username),
     description: dict.metaDescription(username),
+    openGraph: {
+      images: `${profileImageRoute}/${username}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
   }
 }
 
