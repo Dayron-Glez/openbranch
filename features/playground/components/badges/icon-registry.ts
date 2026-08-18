@@ -28,7 +28,7 @@ export const BADGE_UNLOCK_DURATION: Record<BadgeKey, number> = {
   "first-merge": 1.6,
   "review-corps": 1.7,
   "coverage-hero": 1.8,
-  "ship-it": 1.6,
+  "ship-it": 1.85,
   "doc-writer": 1.3,
   "streak-7": 1.6,
   "all-tracks": 1.9,

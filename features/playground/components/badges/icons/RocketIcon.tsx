@@ -1,14 +1,22 @@
 import type { ReactNode } from "react"
 import { MOTION, clamp, dash } from "@/features/playground/domain/badge-motion"
 
-/** `ship-it` — the rocket dips for anticipation, then lifts off trailing exhaust. */
+/**
+ * `ship-it` — the rocket dips for anticipation, lifts off trailing exhaust,
+ * then eases back to its resting position. The source composition let the
+ * launch translation persist forever (fine for a video that keeps playing
+ * past it) — here it has to return to (0,0) by the time the animation
+ * settles, or the icon just sits off-center in its tile permanently.
+ */
 export const RocketIcon = ({ t }: { readonly t: number }): ReactNode => {
   const draw = MOTION.draw(0, 0.6)(t)
   const dip = MOTION.enter(0.55, 0.22)(t)
   const go = MOTION.pop(0.8, 0.55)(t)
-  const bob = clamp((t - 1.35) / 0.5, 0, 1) * 0.5 * Math.sin((t - 1.35) * 2.1)
-  const dx = -0.9 * dip + 3.1 * go
-  const dy = 0.9 * dip - 3.1 * go + bob
+
+  const goEnd = 0.8 + 0.55
+  const settleFactor = 1 - MOTION.draw(goEnd, 0.45)(t)
+  const dx = (-0.9 * dip + 3.1 * go) * settleFactor
+  const dy = (0.9 * dip - 3.1 * go) * settleFactor
   const flame = clamp((t - 0.8) / 0.25, 0, 1)
 
   return (
@@ -29,7 +37,7 @@ export const RocketIcon = ({ t }: { readonly t: number }): ReactNode => {
             fill="none"
             d={`M${5.4 - q * 3.6} ${15.6 + q * 3.6}l-1.2 1.2`}
             strokeWidth={1.5 - q}
-            opacity={flame * (1 - q) * 0.9}
+            opacity={flame * (1 - q) * 0.9 * settleFactor}
           />
         )
       })}

@@ -20,10 +20,15 @@ export const FlameIcon = ({ t }: { readonly t: number }): ReactNode => {
       strokeLinejoin="round"
     >
       {[0, 1, 2, 3, 4, 5, 6].map((i) => {
-        const s = MOTION.enter(0.05 + i * 0.11, 0.55)(t)
+        const start = 0.05 + i * 0.11
+        const s = MOTION.enter(start, 0.55)(t)
         if (s <= 0) return null
         const angle = ((-90 + (i - 3) * 26) * Math.PI) / 180
         const r = 13 * (1 - s)
+        // `s` is clamped to 1 by `animate()` and never grows past it, so the
+        // spark has to fade out against the real clock (t), not against s,
+        // once it's arrived — otherwise it just sits at full opacity forever.
+        const fadeOut = clamp(1 - (t - (start + 0.55)) / 0.25, 0, 1)
         return (
           <circle
             key={i}
@@ -32,7 +37,7 @@ export const FlameIcon = ({ t }: { readonly t: number }): ReactNode => {
             r={0.85 * (1 - s * 0.55)}
             fill="currentColor"
             stroke="none"
-            opacity={s < 1 ? 0.9 * s : Math.max(0, 1 - (s - 1) * 6)}
+            opacity={0.9 * s * fadeOut}
           />
         )
       })}
