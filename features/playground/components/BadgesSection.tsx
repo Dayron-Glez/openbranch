@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import {
   IconGitMerge,
   IconPR,
@@ -8,7 +11,12 @@ import {
   IconBook,
 } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
-import { TRACK_BY_BADGE_KEY } from "@/features/playground/domain/manifest"
+import {
+  BADGE_KEYS,
+  TRACK_BY_BADGE_KEY,
+  type BadgeKey,
+} from "@/features/playground/domain/manifest"
+import { BadgeUnlockIcon } from "./badges/BadgeUnlockIcon"
 
 type BadgesSectionProps = {
   readonly dict: PlaygroundDict["badges"]
@@ -24,27 +32,6 @@ type BadgesSectionProps = {
   /** Muted note beside the heading, e.g. "5 of 7". */
   readonly headingNote?: string
 }
-
-// Badges backed by a server action that awards them on challenge completion.
-const AWARDED_BADGE_KEYS = [
-  "first-merge",
-  "review-corps",
-  "coverage-hero",
-  "ship-it",
-  "doc-writer",
-  "streak-7",
-  "all-tracks",
-] as const
-
-// Badges planned for future tracks/features — displayed as locked teasers, not yet awardable.
-const PLANNED_BADGE_KEYS = [] as const
-
-const BADGE_KEYS = [...AWARDED_BADGE_KEYS, ...PLANNED_BADGE_KEYS] as const
-
-/** Denominator for a "N of TOTAL" caption, derived so it cannot drift. */
-export const TOTAL_BADGE_COUNT: number = BADGE_KEYS.length
-
-type BadgeKey = (typeof BADGE_KEYS)[number]
 
 const BADGE_ICONS: Record<BadgeKey, React.ReactNode> = {
   "first-merge": <IconGitMerge />,
@@ -70,6 +57,17 @@ export const BadgesSection = ({
 }: BadgesSectionProps) => {
   const hasLocked = BADGE_KEYS.some((key) => !earnedBadges.has(key))
 
+  // Hovering an earned tile replays its unlock choreography — playKey bumps
+  // on every mouse-enter so re-hovering the same tile retriggers it.
+  const [hoveredKey, setHoveredKey] = useState<BadgeKey | null>(null)
+  const [playKey, setPlayKey] = useState<number>(0)
+
+  const handleEnter = (key: BadgeKey): void => {
+    setHoveredKey(key)
+    setPlayKey((prev) => prev + 1)
+  }
+  const handleLeave = (): void => setHoveredKey(null)
+
   return (
     <div>
       <div className="text-fg-muted border-line mb-4 flex items-center gap-2.5 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
@@ -90,9 +88,15 @@ export const BadgesSection = ({
             >
               <span
                 data-track={earned ? track?.colorToken : undefined}
+                onMouseEnter={earned ? () => handleEnter(key) : undefined}
+                onMouseLeave={earned ? handleLeave : undefined}
                 className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-4.25 ${tileClassName}`}
               >
-                {BADGE_ICONS[key]}
+                {earned && hoveredKey === key ? (
+                  <BadgeUnlockIcon badgeKey={key} playKey={playKey} />
+                ) : (
+                  BADGE_ICONS[key]
+                )}
               </span>
               <span className="font-mono text-[11px]">{dict[key].name}</span>
             </div>

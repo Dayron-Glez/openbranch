@@ -11,11 +11,12 @@ import { formatRelativeDate } from "@/lib/relative-date"
 import {
   CATEGORY_ORDER,
   getTrackColorToken,
+  TOTAL_BADGE_COUNT,
   type CategoryKey,
 } from "@/features/playground/domain/manifest"
 import type { EngagementStats } from "@/features/playground/server/stats-service"
 import { StatsStrip } from "@/features/playground/components/StatsStrip"
-import { BadgesSection, TOTAL_BADGE_COUNT } from "@/features/playground/components/BadgesSection"
+import { BadgesSection } from "@/features/playground/components/BadgesSection"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
 import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import {
