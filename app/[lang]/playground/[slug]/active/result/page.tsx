@@ -48,6 +48,57 @@ const hrefOfStep = (step: RecapStep, lang: string): string =>
     ? (source.getPage(step.slug.split("/"), lang)?.url ?? localizedHref(lang, `/docs/${step.slug}`))
     : localizedHref(lang, `/playground/${step.slug}`)
 
+/**
+ * Shapes the path recap for the view. Its own function because the completed
+ * challenge may sit anywhere in the path, and deciding whether this finished
+ * it or merely advanced it is a lump of branching the page does not need to
+ * carry inline.
+ */
+const buildRecapForPage = async ({
+  supabase,
+  userId,
+  matchedPath,
+  slug,
+  lang,
+  completedSlugs,
+  otherPathsHref,
+}: {
+  readonly supabase: Awaited<ReturnType<typeof createClient>>
+  readonly userId: string
+  readonly matchedPath: NonNullable<ReturnType<typeof pathForChallenge>>
+  readonly slug: string
+  readonly lang: string
+  readonly completedSlugs: ReadonlySet<string>
+  readonly otherPathsHref: string
+}): Promise<PathRecap> => {
+  // Guides count towards the recap now, so the read set is needed as well as
+  // the completed challenges the page already loaded.
+  const readDocSlugs = await getReadDocSlugs(supabase, userId)
+  const model = buildPathRecap(matchedPath, slug, {
+    completedChallengeSlugs: completedSlugs,
+    readDocSlugs,
+  })
+  const nextStep = model.nextStepIndex === null ? null : (model.steps[model.nextStepIndex] ?? null)
+
+  return {
+    track: matchedPath.track,
+    pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
+    pathTitle: matchedPath.title,
+    otherPathsHref,
+    steps: model.steps.map((step) => ({
+      type: step.type,
+      title: titleOfStep(step, lang),
+      status: step.status,
+    })),
+    doneCount: model.doneCount,
+    totalSteps: model.totalSteps,
+    nextStep:
+      nextStep === null
+        ? null
+        : { title: titleOfStep(nextStep, lang), href: hrefOfStep(nextStep, lang) },
+  }
+}
+
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
     playgroundSource
@@ -254,35 +305,18 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const pathsDict = pathsDictionary[pathsLocale]
   const matchedPath = pathForChallenge(slug, lang)
 
-  let pathRecap: PathRecap | null = null
-  if (matchedPath !== null) {
-    // Guides count towards the recap now, so the read set is needed as well as
-    // the completed challenges the page already loaded.
-    const readDocSlugs = await getReadDocSlugs(supabase, user.id)
-    const model = buildPathRecap(matchedPath, slug, {
-      completedChallengeSlugs: completedSlugs,
-      readDocSlugs,
-    })
-    const nextStep = model.nextStepIndex === null ? null : model.steps[model.nextStepIndex]
-
-    pathRecap = {
-      track: matchedPath.track,
-      pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
-      pathTitle: matchedPath.title,
-      otherPathsHref: playgroundPath,
-      steps: model.steps.map((step) => ({
-        type: step.type,
-        title: titleOfStep(step, lang),
-        status: step.status,
-      })),
-      doneCount: model.doneCount,
-      totalSteps: model.totalSteps,
-      nextStep:
-        nextStep === undefined || nextStep === null
-          ? null
-          : { title: titleOfStep(nextStep, lang), href: hrefOfStep(nextStep, lang) },
-    }
-  }
+  const pathRecap =
+    matchedPath === null
+      ? null
+      : await buildRecapForPage({
+          supabase,
+          userId: user.id,
+          matchedPath,
+          slug,
+          lang,
+          completedSlugs,
+          otherPathsHref: playgroundPath,
+        })
 
   const badgeInfo =
     badge === null || badgeKey === null
