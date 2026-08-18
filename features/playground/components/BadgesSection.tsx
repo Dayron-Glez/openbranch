@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import {
   IconGitMerge,
   IconPR,
@@ -8,7 +11,12 @@ import {
   IconBook,
 } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
-import { TRACK_BY_BADGE_KEY } from "@/features/playground/domain/manifest"
+import {
+  BADGE_KEYS,
+  TRACK_BY_BADGE_KEY,
+  type BadgeKey,
+} from "@/features/playground/domain/manifest"
+import { BadgeUnlockIcon } from "./badges/BadgeUnlockIcon"
 
 type BadgesSectionProps = {
   readonly dict: PlaygroundDict["badges"]
@@ -24,27 +32,6 @@ type BadgesSectionProps = {
   /** Muted note beside the heading, e.g. "5 of 7". */
   readonly headingNote?: string
 }
-
-// Badges backed by a server action that awards them on challenge completion.
-const AWARDED_BADGE_KEYS = [
-  "first-merge",
-  "review-corps",
-  "coverage-hero",
-  "ship-it",
-  "doc-writer",
-  "streak-7",
-  "all-tracks",
-] as const
-
-// Badges planned for future tracks/features — displayed as locked teasers, not yet awardable.
-const PLANNED_BADGE_KEYS = [] as const
-
-const BADGE_KEYS = [...AWARDED_BADGE_KEYS, ...PLANNED_BADGE_KEYS] as const
-
-/** Denominator for a "N of TOTAL" caption, derived so it cannot drift. */
-export const TOTAL_BADGE_COUNT: number = BADGE_KEYS.length
-
-type BadgeKey = (typeof BADGE_KEYS)[number]
 
 const BADGE_ICONS: Record<BadgeKey, React.ReactNode> = {
   "first-merge": <IconGitMerge />,
@@ -70,6 +57,21 @@ export const BadgesSection = ({
 }: BadgesSectionProps) => {
   const hasLocked = BADGE_KEYS.some((key) => !earnedBadges.has(key))
 
+  /**
+   * Hovering starts an earned tile's choreography; leaving the tile does
+   * *not* cut it off — it keeps playing to its natural end regardless of
+   * where the mouse goes next. So this is keyed per badge, not a single
+   * "currently hovered" value: each key's play counter is independent,
+   * bumping on every mouse-enter of *that* tile (to restart if re-hovered
+   * mid-animation) without touching any other tile's in-flight animation.
+   * `undefined` means "never triggered" — show the plain static icon.
+   */
+  const [playKeys, setPlayKeys] = useState<Partial<Record<BadgeKey, number>>>({})
+
+  const handleEnter = (key: BadgeKey): void => {
+    setPlayKeys((prev) => ({ ...prev, [key]: (prev[key] ?? 0) + 1 }))
+  }
+
   return (
     <div>
       <div className="text-fg-muted border-line mb-4 flex items-center gap-2.5 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
@@ -83,6 +85,7 @@ export const BadgesSection = ({
           const earned = earnedBadges.has(key)
           const track = TRACK_BY_BADGE_KEY.get(key)
           const tileClassName = getTileClassName(earned, track !== undefined)
+          const playKey = playKeys[key]
           return (
             <div
               key={key}
@@ -90,9 +93,14 @@ export const BadgesSection = ({
             >
               <span
                 data-track={earned ? track?.colorToken : undefined}
+                onMouseEnter={earned ? () => handleEnter(key) : undefined}
                 className={`inline-grid size-9 place-items-center rounded-(--r-10) border [&_svg]:size-4.25 ${tileClassName}`}
               >
-                {BADGE_ICONS[key]}
+                {earned && playKey !== undefined ? (
+                  <BadgeUnlockIcon badgeKey={key} playKey={playKey} />
+                ) : (
+                  BADGE_ICONS[key]
+                )}
               </span>
               <span className="font-mono text-[11px]">{dict[key].name}</span>
             </div>

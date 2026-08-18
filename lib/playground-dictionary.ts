@@ -196,6 +196,8 @@ export type PlaygroundDict = {
     readonly timeComparisonLabel: string
     readonly repeatNote: string
     readonly badgeNewTag: string
+    readonly badgeUnlockedEyebrow: string
+    readonly badgeUnlockedContinue: string
   }
   readonly leaderboard: {
     readonly metaTitle: string
@@ -525,6 +527,8 @@ const translations = {
     en: "Points pay out once per challenge — the rep still counts.",
   },
   "reward.badgeNewTag": { es: "Nuevo", en: "New" },
+  "reward.badgeUnlockedEyebrow": { es: "Badge desbloqueado", en: "Badge unlocked" },
+  "reward.badgeUnlockedContinue": { es: "Continuar", en: "Continue" },
   "leaderboard.metaTitle": { es: "Clasificación · openbranch", en: "Leaderboard · openbranch" },
   "leaderboard.metaDescription": {
     es: "El ranking histórico del playground — puntos por cada reto completado.",
@@ -775,6 +779,8 @@ export const getPlaygroundDict = (lang: string): PlaygroundDict => {
       timeComparisonLabel: tx("reward.timeComparisonLabel"),
       repeatNote: tx("reward.repeatNote"),
       badgeNewTag: tx("reward.badgeNewTag"),
+      badgeUnlockedEyebrow: tx("reward.badgeUnlockedEyebrow"),
+      badgeUnlockedContinue: tx("reward.badgeUnlockedContinue"),
     },
     leaderboard: {
       metaTitle: tx("leaderboard.metaTitle"),
