@@ -4,6 +4,11 @@ import type { BeforeMount } from "@monaco-editor/react"
 // Shared editor construction options for the playground code editors.
 export const EDITOR_OPTIONS: Monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
+  // Every playground editor lives in a flex column that settles *after*
+  // Monaco first measures itself. Without this it latches onto whatever it
+  // saw at mount — 5×5 when the column has not resolved yet — and never
+  // remeasures, leaving a pane that renders no code at all.
+  automaticLayout: true,
   fontSize: 13,
   lineHeight: 22,
   fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
