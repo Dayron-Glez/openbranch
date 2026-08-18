@@ -35,7 +35,8 @@ export const ShareProfileButton = ({
   const [copied, setCopied] = useState<boolean>(false)
 
   const handleShare = async (): Promise<void> => {
-    const url = `${SITE_URL}${localizedHref(lang, `/u/${username}`)}`
+    const profilePath = localizedHref(lang, `/u/${username}`)
+    const url = `${SITE_URL}${profilePath}`
 
     if (typeof navigator.share === "function") {
       try {
