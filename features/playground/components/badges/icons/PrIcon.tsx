@@ -23,6 +23,12 @@ export const PrIcon = ({ t }: { readonly t: number }): ReactNode => {
         d="M4 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"
         style={{ opacity: MOTION.enter(0, 0.3)(t) }}
       />
+      {/* The source branch's other end — present in the real static IconGitPullRequest but missing from the source composition; added so the settled frame matches it exactly. */}
+      <path
+        fill="none"
+        d="M4 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"
+        style={{ opacity: MOTION.enter(0, 0.3)(t) }}
+      />
       <path fill="none" d="M6 8l0 8" {...dash(trunk)} />
       <path fill="none" d="M11 6h5a2 2 0 0 1 2 2v8" {...dash(arm)} />
       <g
