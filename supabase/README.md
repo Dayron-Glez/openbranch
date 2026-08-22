@@ -10,16 +10,159 @@ supabase/
 └── migrations/       # One SQL file per schema change, applied in filename order
 ```
 
-## One-time setup
+## Two projects
 
-The CLI is a dev dependency — run it with `bunx supabase`. To work against the hosted project:
+There are two hosted Supabase projects. They share a schema and nothing else:
+
+| Project           | Ref                    | Backs                                          |
+| ----------------- | ---------------------- | ---------------------------------------------- |
+| `openbranch`      | `hcfaephzphtyzqvhgfyn` | The live site only                             |
+| `openbranch-test` | `uhoamryinrxtukymyxqt` | Local development and every preview deployment |
+
+The split exists because the app writes on use: finishing a challenge inserts rows, awards badges and moves the leaderboard. Before it, `.env.local` and Vercel's preview deployments both pointed at production, so development traffic was indistinguishable from real progress.
+
+Where each one is configured:
+
+- **Local** — `.env.local`, pointing at the test project. Never at production.
+- **Previews** — Vercel environment variables scoped to _All Pre-Production Environments_, holding the test project's values.
+- **Production** — Vercel environment variables scoped to _Production_. Not stored in any file.
+
+Each project needs its own GitHub OAuth app (callback `https://<ref>.supabase.co/auth/v1/callback`) and its own allow-list under Authentication → URL Configuration. The test project allows `http://localhost:3000/**` and the preview wildcard; without the wildcard, signing in from a preview fails.
+
+## Switching between the two projects
+
+Every CLI command acts on the **linked** project. Linking is nothing more than a local pointer file — `supabase/.temp/linked-project.json`, gitignored — that the CLI reads to decide where to connect. Changing it connects to nothing and changes no data.
+
+Three scripts wrap this so no one has to type a project ref:
+
+**Which one am I on?**
 
 ```sh
-bunx supabase login                                    # opens the browser
-bunx supabase link --project-ref hcfaephzphtyzqvhgfyn
+bun run db:which
 ```
 
-`login` is per machine, `link` is per repo checkout. Skipping the database password during `link` is fine — `db push` and `migration repair` authenticate through the login role.
+```
+Linked to openbranch-test (uhoamryinrxtukymyxqt)
+```
+
+Production answers with a marker, because that is the answer worth noticing:
+
+```
+Linked to openbranch (hcfaephzphtyzqvhgfyn)  ← PRODUCTION
+```
+
+**Switch to test:**
+
+```sh
+bun run db:use:test
+```
+
+**Switch to production:**
+
+```sh
+bun run db:use:prod
+```
+
+Each takes about a second and reports the new link. If the CLI asks for a database password, press enter — `db push` and `migration repair` authenticate through the login role, not through that password.
+
+The refs live in `scripts/db-env.ts`. The underlying command is `bunx supabase link --project-ref <ref>` if you ever need it directly.
+
+### Test is the resting state
+
+Stay linked to test. Link to production only to push a migration, and link back immediately afterwards.
+
+The reason is asymmetry: forgetting you are on test costs nothing, while forgetting you are on production can drop its schema. Leaving the pointer on the harmless one means a lapse of memory is never destructive.
+
+### `link` and `.env.local` are unrelated
+
+Two separate switches that are easy to conflate:
+
+|                | Set by          | Affects                                 |
+| -------------- | --------------- | --------------------------------------- |
+| Linked project | `supabase link` | `db push`, `db reset`, `migration list` |
+| App database   | `.env.local`    | The running app in your browser         |
+
+They never read each other. `link` does not change what `bun dev` talks to, and editing `.env.local` does not change where a migration lands. Having the app on test while the CLI is linked to production is not a mistake — it is exactly what pushing a migration looks like.
+
+## Day to day
+
+Four flows cover almost everything. All of them assume the CLI is linked to test, which is where it should sit by default.
+
+### Just building something
+
+```sh
+bun dev
+```
+
+Nothing else. `.env.local` points at test, so the app writes there. Complete challenges, earn badges, break whatever — none of it reaches real users.
+
+### Starting from a clean slate
+
+To see the product as a brand-new user would — no progress, no badges, empty leaderboard:
+
+```sh
+bun run db:reset
+```
+
+It reads the linked project and refuses if that project is production, so there is no ritual to remember and no way to point it at the wrong database by accident.
+
+Afterwards, delete your account under Authentication → Users in the test project's dashboard and sign in again. The reset leaves the `auth` schema alone, so without that step you end up signed in with no profile row.
+
+### Adding a migration
+
+The only flow that touches production. Write it, rehearse on test, then apply.
+
+```sh
+bunx supabase migration new add_something
+```
+
+Write the SQL, then rehearse against test:
+
+```sh
+bunx supabase db push --dry-run
+```
+
+```sh
+bunx supabase db push
+```
+
+Run the app and confirm the change behaves. Only then, production:
+
+```sh
+bun run db:use:prod
+```
+
+```sh
+bunx supabase db push --dry-run
+```
+
+```sh
+bunx supabase db push
+```
+
+And link straight back, before you forget:
+
+```sh
+bun run db:use:test
+```
+
+Then merge the pull request. **Database first, merge second** — Vercel deploys `main` on merge but never runs migrations, so the reverse order ships code that queries a table production does not have yet.
+
+### Opening a pull request
+
+Nothing to do. Preview deployments read the test project, so a preview URL is safe to share and safe to click through.
+
+## One-time setup
+
+The CLI is a dev dependency — run it with `bunx supabase`. `login` is per machine, `link` is per repo checkout:
+
+```sh
+bunx supabase login
+```
+
+```sh
+bun run db:use:test
+```
 
 ## Creating a migration
 
@@ -31,7 +174,7 @@ This generates `migrations/YYYYMMDDHHMMSS_<short_description>.sql` — write you
 
 Rules:
 
-- **Never edit a migration that has been applied** to the hosted project. Fix mistakes with a new migration.
+- **Never edit a migration that has been applied** to a hosted project. Fix mistakes with a new migration.
 - One logical change per file.
 - Keep the generated `YYYYMMDDHHMMSS_` prefix as-is. Mixing it with short `YYYYMMDD_` prefixes breaks the CLI's filename-based version ordering (`_` sorts after digits), which is why the three pre-CLI migrations were renamed to `*000000_*.sql`.
 - If the `badge_catalog` seed or `CHALLENGE_TRACKS` in `features/playground/domain/manifest.ts` changes, keep both in sync.
@@ -41,31 +184,51 @@ Rules:
 The `challenges` table mirrors `content/playground` frontmatter (category, difficulty, points). After adding, removing, or re-classifying a challenge, regenerate the sync migration and apply it:
 
 ```sh
-bun run db:sync-challenges   # writes migrations/<timestamp>_sync_challenges.sql
+bun run db:sync-challenges
+```
+
+```sh
 bunx supabase db push
 ```
 
+The catalogs seed themselves from the migrations, so a database built from scratch already has its challenges and badges — there is no separate seed step.
+
 ## Applying migrations
 
-Preview first, then push:
+Preview with `--dry-run` first, then push. See [Adding a migration](#adding-a-migration) for the full test-then-production sequence.
+
+The "Docker Desktop is a prerequisite" warning at the end of `db push` is harmless — Docker is only needed for local development (`supabase start`), not for pushing to a hosted project. The "failed to cache migrations catalog" line has the same cause.
+
+## Resetting the test database
 
 ```sh
-bunx supabase db push --dry-run   # lists what would be applied
-bunx supabase db push             # applies pending migrations to the hosted DB
+bun run db:reset
 ```
 
-Apply order for schema changes the app depends on: **database first, then merge/deploy** (Vercel deploys `main` on merge).
+Drops every user-created entity in `public` and replays all migrations. Use it to get a clean slate instead of hand-writing SQL against real rows.
 
-The "Docker Desktop is a prerequisite" warning at the end of `db push` is harmless — Docker is only needed for local development (`supabase start`), not for pushing to the hosted project.
+It does **not** reset the `auth` schema. Your account survives in `auth.users` while its `public.users` row does not, and `handle_new_user` only fires for new signups, so you end up signed in without a profile. Fix it by deleting your user under Authentication → Users and signing in again.
+
+The script refuses to run when the linked project is production, where a reset would drop the `public` schema. The raw command it wraps, `bunx supabase db reset --linked`, has no such guard — prefer the script.
 
 ## Fixing migration history
 
 If `db push` complains that local and remote history disagree (e.g. a migration was applied manually, or a file was renamed), inspect and repair:
 
 ```sh
-bunx supabase migration list                                # compare local vs remote
-bunx supabase migration repair --status applied <version>   # mark as applied without running it
-bunx supabase migration repair --status reverted <version>  # remove from remote history
+bunx supabase migration list
+```
+
+```sh
+bunx supabase migration repair --status applied <version>
+```
+
+```sh
+bunx supabase migration repair --status reverted <version>
 ```
 
 `repair` only rewrites the history table — it never executes migration SQL.
+
+## Free-tier pauses
+
+Free projects pause after a week without API requests. A paused project resumes from the dashboard in about a minute with no data loss. The test project will hit this regularly; production will not, as long as the site gets traffic.
