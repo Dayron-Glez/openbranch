@@ -57,8 +57,24 @@ const readLinkedRef = (): string | null => {
 const findByRef = (ref: string | null): Project | null =>
   Object.values(PROJECTS).find((project) => project.ref === ref) ?? null
 
+/**
+ * The CLI is a dev dependency, so it is invoked by absolute path rather than
+ * by name: resolving `supabase` through PATH would let anything writable on
+ * PATH answer instead. That also removes the need for a shell, and with it the
+ * chance of an argument being interpreted rather than passed through.
+ */
+const SUPABASE_BIN = join(
+  process.cwd(),
+  "node_modules",
+  ".bin",
+  process.platform === "win32" ? "supabase.exe" : "supabase"
+)
+
 const runSupabase = (args: readonly string[]): void => {
-  const result = spawnSync("bunx", ["supabase", ...args], { stdio: "inherit", shell: true })
+  const result = spawnSync(SUPABASE_BIN, [...args], { stdio: "inherit" })
+  if (result.error !== undefined) {
+    fail(`Could not run the Supabase CLI at ${SUPABASE_BIN}. Is the dependency installed?`)
+  }
   if (result.status !== 0) process.exit(result.status ?? 1)
 }
 
