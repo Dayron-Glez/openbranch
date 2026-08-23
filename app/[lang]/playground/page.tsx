@@ -18,13 +18,16 @@ import { getChallengeIcon, getCategoryIcon } from "@/features/playground/domain/
 import {
   CATEGORY_ORDER,
   type CategoryKey,
-  inferCategoryBadge,
   getTrackColorToken,
 } from "@/features/playground/domain/manifest"
+import {
+  getUserPlaygroundProgress,
+  type SessionStatus,
+} from "@/features/playground/server/progress-service"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
-import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
-import { buildPathCardItems, challengeSlugsAcross } from "@/features/paths/server/path-cards"
+import { loadPathProgress } from "@/features/paths/server/path-progress"
+import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
@@ -60,41 +63,6 @@ const applySort = (arr: readonly PlaygroundPage[], activeSort: SortKey): Playgro
     return [...arr].sort((a, b) => b.data.estimated_minutes - a.data.estimated_minutes)
   }
   return [...arr]
-}
-
-type SessionStatus = "in_progress" | "completed"
-
-type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
-
-const loadUserPlaygroundData = async (
-  supabase: SupabaseServerClient,
-  userId: string
-): Promise<{ slugToStatus: Map<string, SessionStatus>; earnedBadges: Set<string> }> => {
-  const [{ data: sessions }, { data: badges }] = await Promise.all([
-    supabase
-      .from("challenge_sessions")
-      .select("challenge_slug, status")
-      .eq("user_id", userId)
-      .in("status", ["in_progress", "completed"]),
-    supabase.from("user_badges").select("badge").eq("user_id", userId),
-  ])
-
-  const slugToStatus = new Map<string, SessionStatus>()
-  for (const s of sessions ?? []) {
-    const slug = s.challenge_slug as string
-    const status = s.status as SessionStatus
-    if (slugToStatus.get(slug) !== "completed") slugToStatus.set(slug, status)
-  }
-
-  const earnedBadges = new Set<string>()
-  for (const b of badges ?? []) earnedBadges.add(b.badge as string)
-  for (const [slug, status] of slugToStatus) {
-    if (status !== "completed") continue
-    const badge = inferCategoryBadge(slug)
-    if (badge !== null) earnedBadges.add(badge)
-  }
-
-  return { slugToStatus, earnedBadges }
 }
 
 const getStatusLabel = (s: SessionStatus | null, statusDict: PlaygroundDict["status"]): string => {
@@ -161,23 +129,16 @@ export default async function PlaygroundPage({
   const { slugToStatus, earnedBadges } =
     user === null
       ? { slugToStatus: new Map<string, SessionStatus>(), earnedBadges: new Set<string>() }
-      : await loadUserPlaygroundData(supabase, user.id)
+      : await getUserPlaygroundProgress(supabase, user.id)
 
   const engagementStats = engagementStatsPromise === null ? null : await engagementStatsPromise
 
   const pathsLocale = resolvePathsLocale(lang)
   const pathsDict = pathsDictionary[pathsLocale]
   const learningPaths = getAllPaths(lang)
-  const completedPathChallenges =
-    user === null
-      ? null
-      : await getCompletedChallengeSlugs(supabase, user.id, challengeSlugsAcross(learningPaths))
-  const pathBandItems = buildPathCardItems(
-    learningPaths,
-    lang,
-    dict.category,
-    completedPathChallenges
-  )
+  const pathProgress =
+    user === null ? null : await loadPathProgress(supabase, user.id, learningPaths)
+  const pathBandItems = await buildPathCardItems(learningPaths, lang, dict.category, pathProgress)
 
   const filterCategories = CATEGORY_ORDER.map((cat) => ({
     key: cat,
@@ -187,18 +148,16 @@ export default async function PlaygroundPage({
     colorToken: getTrackColorToken(cat),
   })).filter(({ count }) => count > 0)
 
-  const filteredChallenges =
-    activeCategory !== undefined
-      ? applySort(
-          challenges.filter((c) => c.data.category === activeCategory),
-          activeSort
-        )
-      : activeSort !== "recommended"
-        ? applySort(challenges, activeSort)
-        : []
+  const showFlatGrid = activeCategory !== undefined || activeSort !== "recommended"
+  let filteredChallenges: PlaygroundPage[] = []
+  if (showFlatGrid) {
+    let challengesToShow: readonly PlaygroundPage[] = challenges
+    if (activeCategory !== undefined) {
+      challengesToShow = challenges.filter((c) => c.data.category === activeCategory)
+    }
 
-  const showFlatGrid =
-    activeCategory !== undefined || (activeSort !== "recommended" && activeSort !== undefined)
+    filteredChallenges = applySort(challengesToShow, activeSort)
+  }
 
   const renderChallengeCard = (challenge: PlaygroundPage): ReactNode => {
     const slug = challenge.url.split("/").pop() ?? ""
@@ -230,8 +189,8 @@ export default async function PlaygroundPage({
       <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
         {dict.hub.eyebrow}
       </p>
-      <div className="mb-[18px] flex items-baseline justify-between gap-8 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
-        <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-[0] text-balance max-[980px]:text-[32px]">
+      <div className="mb-4.5 flex items-baseline justify-between gap-8 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
+        <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-normal text-balance max-[980px]:text-[32px]">
           {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
         </h1>
         <Link
@@ -338,7 +297,15 @@ export default async function PlaygroundPage({
             sub={pathsDict.sectionSub}
             allHref={localizedHref(lang, "/paths")}
             allLabel={pathsDict.allPaths}
-            cardDict={{ shape: pathsDict.pathShape, practiced: pathsDict.practiced }}
+            cardDict={{
+              shape: pathsDict.pathShape,
+              stepsDone: pathsDict.stepsDone,
+              progressFraction: pathsDict.progressFraction,
+              nextStepLabel: pathsDict.nextStepLabel,
+              routeComplete: pathsDict.routeComplete,
+              stepsCount: pathsDict.stepsCount,
+              minutesSuffix: dict.time.minutes,
+            }}
           />
         </div>
       )}

@@ -10,6 +10,16 @@ type StatsStripProps = {
   readonly stats: EngagementStats
   readonly totalChallenges: number
   readonly lang: string
+  /**
+   * Replaces the "next up: {track}" line under the completed count.
+   *
+   * That line is a nudge, which is right on your own dashboard and wrong on a
+   * public profile: it tells a stranger what someone else should do next. The
+   * profile passes the tracks they have actually finished in, turning the same
+   * cell from a prompt into a record. Omitted everywhere else, so the hub keeps
+   * its nudge.
+   */
+  readonly completedSub?: string
 }
 
 const formatStreakEndDate = (lastCompletedOn: string, lang: string): string =>
@@ -50,13 +60,15 @@ export const StatsStrip = ({
   stats,
   totalChallenges,
   lang,
+  completedSub,
 }: StatsStripProps): React.ReactElement => {
   const streakAlive = stats.streakState === "alive"
   const tracksSub = getTracksSub(stats, dict)
-  const nextTrackSub =
+  const defaultCompletedSub =
     stats.nextTrack !== null
       ? dict.nextUp.replace("{track}", categoryDict[stats.nextTrack])
       : dict.allTracksStarted
+  const completedSubLine = completedSub ?? defaultCompletedSub
 
   return (
     <div>
@@ -100,7 +112,7 @@ export const StatsStrip = ({
                 {dict.of.replace("{total}", String(totalChallenges))}
               </span>
             </span>
-            <span className={SUB_CLASS}>{nextTrackSub}</span>
+            <span className={SUB_CLASS}>{completedSubLine}</span>
           </div>
 
           <div className={CELL_CLASS}>

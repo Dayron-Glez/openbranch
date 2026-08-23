@@ -14,10 +14,12 @@ import { formatElapsed } from "@/features/playground/domain/format-elapsed"
 import { inferCategoryBadge } from "@/features/playground/domain/manifest"
 import { getCompletionReward } from "@/features/playground/server/reward-service"
 import { RewardMoment, type PathRecap } from "@/features/playground/components/RewardMoment"
+import { BadgeUnlockDialog } from "@/features/playground/components/badges/BadgeUnlockDialog"
 import { CheckIcon, ClockIcon } from "@/features/playground/components/ResultIcons"
 import { source } from "@/lib/source"
 import { buildPathRecap, type RecapStep } from "@/features/paths/domain/path-recap"
 import { pathForChallenge } from "@/features/paths/server/path-catalog"
+import { getReadDocSlugs } from "@/features/paths/server/doc-reads"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
 
@@ -26,6 +28,76 @@ type ResultPageProps = {
 }
 
 const DIFFICULTY_ORDER: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
+
+type PlaygroundPage = ReturnType<typeof playgroundSource.getPages>[number]
+
+/** Gentlest next step from a candidate set — null when nothing is left. */
+const easiestOf = (candidates: readonly PlaygroundPage[]): PlaygroundPage | null =>
+  [...candidates].sort(
+    (a, b) =>
+      (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
+  )[0] ?? null
+
+const titleOfStep = (step: RecapStep, lang: string): string =>
+  step.type === "doc"
+    ? (source.getPage(step.slug.split("/"), lang)?.data.title ?? step.slug)
+    : (playgroundSource.getPage([step.slug], lang)?.data.title ?? step.slug)
+
+const hrefOfStep = (step: RecapStep, lang: string): string =>
+  step.type === "doc"
+    ? (source.getPage(step.slug.split("/"), lang)?.url ?? localizedHref(lang, `/docs/${step.slug}`))
+    : localizedHref(lang, `/playground/${step.slug}`)
+
+/**
+ * Shapes the path recap for the view. Its own function because the completed
+ * challenge may sit anywhere in the path, and deciding whether this finished
+ * it or merely advanced it is a lump of branching the page does not need to
+ * carry inline.
+ */
+const buildRecapForPage = async ({
+  supabase,
+  userId,
+  matchedPath,
+  slug,
+  lang,
+  completedSlugs,
+  otherPathsHref,
+}: {
+  readonly supabase: Awaited<ReturnType<typeof createClient>>
+  readonly userId: string
+  readonly matchedPath: NonNullable<ReturnType<typeof pathForChallenge>>
+  readonly slug: string
+  readonly lang: string
+  readonly completedSlugs: ReadonlySet<string>
+  readonly otherPathsHref: string
+}): Promise<PathRecap> => {
+  // Guides count towards the recap now, so the read set is needed as well as
+  // the completed challenges the page already loaded.
+  const readDocSlugs = await getReadDocSlugs(supabase, userId)
+  const model = buildPathRecap(matchedPath, slug, {
+    completedChallengeSlugs: completedSlugs,
+    readDocSlugs,
+  })
+  const nextStep = model.nextStepIndex === null ? null : (model.steps[model.nextStepIndex] ?? null)
+
+  return {
+    track: matchedPath.track,
+    pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
+    pathTitle: matchedPath.title,
+    otherPathsHref,
+    steps: model.steps.map((step) => ({
+      type: step.type,
+      title: titleOfStep(step, lang),
+      status: step.status,
+    })),
+    doneCount: model.doneCount,
+    totalSteps: model.totalSteps,
+    nextStep:
+      nextStep === null
+        ? null
+        : { title: titleOfStep(nextStep, lang), href: hrefOfStep(nextStep, lang) },
+  }
+}
 
 export function generateStaticParams() {
   return i18n.languages.flatMap((lang) =>
@@ -215,21 +287,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
     .getPages(lang)
     .filter((p) => p.data.maturity === "stable" && p.slugs[0] !== slug)
 
-  const buildsOnChallenge =
-    allOthers
-      .filter((p) => p.data.category === page.data.category && !completedSlugs.has(p.slugs[0]))
-      .sort(
-        (a, b) =>
-          (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
-      )[0] ?? null
-
-  const newTrackChallenge =
-    allOthers
-      .filter((p) => p.data.category !== page.data.category && !completedSlugs.has(p.slugs[0]))
-      .sort(
-        (a, b) =>
-          (DIFFICULTY_ORDER[a.data.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.data.difficulty] ?? 0)
-      )[0] ?? null
+  const uncompleted = allOthers.filter((p) => !completedSlugs.has(p.slugs[0]))
+  const buildsOnChallenge = easiestOf(
+    uncompleted.filter((p) => p.data.category === page.data.category)
+  )
+  const newTrackChallenge = easiestOf(
+    uncompleted.filter((p) => p.data.category !== page.data.category)
+  )
 
   const dict = getPlaygroundDict(lang)
   const playgroundPath = localizedHref(lang, "/playground")
@@ -241,40 +305,18 @@ export default async function ResultPage({ params }: ResultPageProps) {
   const pathsDict = pathsDictionary[pathsLocale]
   const matchedPath = pathForChallenge(slug, lang)
 
-  const titleOfStep = (step: RecapStep): string =>
-    step.type === "doc"
-      ? (source.getPage(step.slug.split("/"), lang)?.data.title ?? step.slug)
-      : (playgroundSource.getPage([step.slug], lang)?.data.title ?? step.slug)
-
-  const hrefOfStep = (step: RecapStep): string =>
-    step.type === "doc"
-      ? (source.getPage(step.slug.split("/"), lang)?.url ??
-        localizedHref(lang, `/docs/${step.slug}`))
-      : localizedHref(lang, `/playground/${step.slug}`)
-
-  let pathRecap: PathRecap | null = null
-  if (matchedPath !== null) {
-    const model = buildPathRecap(matchedPath, slug, completedSlugs)
-    const nextStep = model.nextStepIndex === null ? null : model.steps[model.nextStepIndex]
-
-    pathRecap = {
-      track: matchedPath.track,
-      pathHref: localizedHref(lang, `/paths/${matchedPath.slug}`),
-      pathTitle: matchedPath.title,
-      otherPathsHref: playgroundPath,
-      steps: model.steps.map((step) => ({
-        type: step.type,
-        title: titleOfStep(step),
-        status: step.status,
-      })),
-      completedChallengeCount: model.completedChallengeCount,
-      totalChallengeSteps: model.totalChallengeSteps,
-      nextStep:
-        nextStep === undefined || nextStep === null
-          ? null
-          : { title: titleOfStep(nextStep), href: hrefOfStep(nextStep) },
-    }
-  }
+  const pathRecap =
+    matchedPath === null
+      ? null
+      : await buildRecapForPage({
+          supabase,
+          userId: user.id,
+          matchedPath,
+          slug,
+          lang,
+          completedSlugs,
+          otherPathsHref: playgroundPath,
+        })
 
   const badgeInfo =
     badge === null || badgeKey === null
@@ -283,6 +325,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
           readonly name: string
           readonly description: string
         })
+
+  // The animated reveal takes over from the quiet static card above whenever
+  // this completion actually earned something — track badge or milestone,
+  // covers all 7 keys unlike `badgeInfo`, which only ever knows this
+  // challenge's own track.
+  const newlyEarnedKey = reward?.newlyEarnedBadgeKey ?? null
+  const newlyEarnedInfo = newlyEarnedKey === null ? null : dict.badges[newlyEarnedKey]
 
   return (
     <main data-pg-main className="relative z-1 min-h-full overflow-x-hidden">
@@ -296,6 +345,17 @@ export default async function ResultPage({ params }: ResultPageProps) {
       />
 
       <ConfettiEffect />
+
+      {newlyEarnedInfo !== null && newlyEarnedKey !== null && (
+        <BadgeUnlockDialog
+          badgeKey={newlyEarnedKey}
+          name={newlyEarnedInfo.name}
+          description={newlyEarnedInfo.description}
+          eyebrow={dict.reward.badgeUnlockedEyebrow}
+          continueLabel={dict.reward.badgeUnlockedContinue}
+          newTag={dict.reward.badgeNewTag}
+        />
+      )}
 
       <div className="relative mx-auto max-w-[900px] px-7 pt-12 pb-20 max-[520px]:px-5">
         {/* ── hero ── */}
@@ -387,18 +447,14 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
         {/* ── sections ── */}
         <div className="flex flex-col gap-4">
-          {/* badge */}
-          {badgeInfo !== null && (
+          {/* A newly earned badge is celebrated by the unlock dialog instead, so
+              this quiet reference only stands in when the badge was already held. */}
+          {badgeInfo !== null && badgeKey !== newlyEarnedKey && (
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
               <div>
-                <p className="text-fg-muted mb-1 flex items-center gap-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
+                <p className="text-fg-muted mb-1 font-mono text-[10.5px] tracking-[0.08em] uppercase">
                   {dict.result.badgeEarnedLabel}
-                  {reward?.badgeNewlyEarned === true && (
-                    <span className="bg-accent-soft border-accent-ring text-ob-accent rounded-full border px-1.5 py-0.5 text-[9.5px] tracking-[0.04em]">
-                      {dict.reward.badgeNewTag}
-                    </span>
-                  )}
                 </p>
                 <p className="text-fg mb-0.5 text-[14.5px] font-medium">{badgeInfo.name}</p>
                 <p className="text-fg-2 text-[13px]">{badgeInfo.description}</p>

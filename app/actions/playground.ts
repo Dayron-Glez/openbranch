@@ -1,7 +1,7 @@
 "use server"
 
 import { redirect } from "next/navigation"
-import { createClient } from "@/lib/supabase/server"
+import { getAuthContext } from "@/lib/supabase/auth-context"
 import { localizedHref } from "@/lib/landing-dictionary"
 import type {
   InlineComment,
@@ -21,14 +21,6 @@ import {
   awardTrackBadge,
   awardMilestoneBadges,
 } from "@/features/playground/server/session-service"
-
-const getAuthContext = async () => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  return { supabase, user }
-}
 
 const resultHref = (lang: string, slug: string): string =>
   localizedHref(lang, `/playground/${slug}/active/result`)

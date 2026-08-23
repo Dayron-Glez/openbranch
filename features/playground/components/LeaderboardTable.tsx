@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { localizedHref } from "@/lib/landing-dictionary"
 import type { LeaderboardData, LeaderboardRow } from "../server/leaderboard-service"
 
 /** Rows shown before switching to the pinned-own-row layout. */
@@ -24,6 +25,7 @@ type LeaderboardTableProps = {
   readonly dict: PlaygroundDict["leaderboard"]
   readonly data: LeaderboardData | null
   readonly hubPath: string
+  readonly lang: string
 }
 
 const CARD_CLASS = "border-line bg-bg-card overflow-hidden rounded-(--r-12) border"
@@ -52,21 +54,33 @@ const BuilderCell = ({
   row,
   isOwn,
   youLabel,
+  lang,
 }: {
   readonly row: LeaderboardRow
   readonly isOwn: boolean
   readonly youLabel: string
+  readonly lang: string
 }): React.ReactElement => (
   <div className="flex min-w-0 items-center gap-2.5">
-    <Avatar className="border-line size-6 shrink-0 border">
-      {row.avatarUrl !== null && <AvatarImage src={row.avatarUrl} alt={row.username} />}
-      <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[9px]">
-        {getInitials(row.username)}
-      </AvatarFallback>
-    </Avatar>
-    <span className="truncate text-[14px] leading-none font-medium">{row.username}</span>
+    <Link
+      href={localizedHref(lang, `/u/${row.username}`)}
+      className="group flex min-w-0 items-center gap-2.5 text-inherit no-underline"
+    >
+      <Avatar className="border-line group-hover:border-line-2 size-6 shrink-0 border transition-colors">
+        {row.avatarUrl !== null && <AvatarImage src={row.avatarUrl} alt={row.username} />}
+        <AvatarFallback className="bg-bg-elev text-fg-muted font-mono text-[9px]">
+          {getInitials(row.username)}
+        </AvatarFallback>
+      </Avatar>
+      <span className="group-hover:text-ob-accent truncate text-[14px] leading-none font-medium transition-colors">
+        {row.username}
+      </span>
+    </Link>
     {isOwn && (
-      <Badge className="bg-accent-soft border-accent-ring text-ob-accent shrink-0 rounded-full border px-[7px] py-0 font-mono text-[10px] font-normal tracking-[0.06em] uppercase">
+      <Badge
+        variant="outline"
+        className="border-line bg-bg-elev text-fg-muted shrink-0 rounded-(--r-6) px-[7px] py-0 font-mono text-[10px] font-normal tracking-[0.06em] uppercase"
+      >
         {youLabel}
       </Badge>
     )}
@@ -78,11 +92,13 @@ const BoardRow = ({
   isOwn,
   pinned,
   youLabel,
+  lang,
 }: {
   readonly row: LeaderboardRow
   readonly isOwn: boolean
   readonly pinned: boolean
   readonly youLabel: string
+  readonly lang: string
 }): React.ReactElement => {
   const getRowClass = (): string => {
     if (pinned) return "border-t-accent-ring bg-accent-soft border-t"
@@ -98,7 +114,7 @@ const BoardRow = ({
         {formatRank(row.rank)}
       </TableCell>
       <TableCell>
-        <BuilderCell row={row} isOwn={isOwn} youLabel={youLabel} />
+        <BuilderCell row={row} isOwn={isOwn} youLabel={youLabel} lang={lang} />
       </TableCell>
       <TableCell className={`${NUMBER_CLASS} text-fg font-medium`}>{row.totalPoints}</TableCell>
       <TableCell className={`${NUMBER_CLASS} ${HIDE_ON_MOBILE}`}>{row.completedCount}</TableCell>
@@ -161,6 +177,7 @@ export const LeaderboardTable = ({
   dict,
   data,
   hubPath,
+  lang,
 }: LeaderboardTableProps): React.ReactElement => {
   if (data === null) {
     return (
@@ -218,6 +235,7 @@ export const LeaderboardTable = ({
               isOwn={row.rank === data.ownRank}
               pinned={false}
               youLabel={dict.you}
+              lang={lang}
             />
           ))}
           {ghostSeats.map((seat) => (
@@ -237,7 +255,7 @@ export const LeaderboardTable = ({
                   ···
                 </TableCell>
               </TableRow>
-              <BoardRow row={pinnedRow} isOwn pinned youLabel={dict.you} />
+              <BoardRow row={pinnedRow} isOwn pinned youLabel={dict.you} lang={lang} />
             </>
           )}
         </TableBody>
