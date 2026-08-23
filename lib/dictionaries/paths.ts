@@ -17,8 +17,11 @@ export const pathsDictionary = {
     youAreHere: "Estás aquí",
     available: "Disponible",
     completed: "Completado",
-    practiced: (done: number, total: number): string =>
-      `${done} de ${total} practicado${total === 1 ? "" : "s"}`,
+    stepsDone: (done: number, total: number): string => `${done} de ${total} completados`,
+    progressFraction: (done: number, total: number): string => `${done} de ${total}`,
+    nextStepLabel: (kind: "doc" | "challenge"): string =>
+      kind === "doc" ? "siguiente: guía" : "siguiente: reto",
+    routeComplete: "Ruta recorrida",
     nextInPath: "Siguiente en esta ruta",
     pathComplete: "Ruta completada",
     pathInProgress: "En la ruta",
@@ -27,7 +30,7 @@ export const pathsDictionary = {
     explorePaths: "Explorar otra ruta",
     guestReading: "Leyendo como invitado.",
     guestSignInPrompt:
-      "Inicia sesión para trackear qué retos completaste y seguir donde lo dejaste.",
+      "Inicia sesión para guardar qué has leído y practicado, y seguir donde lo dejaste.",
     signIn: "Iniciar sesión con GitHub",
     allPaths: "Ver todas",
     pathShape: (guides: number, challenges: number): string =>
@@ -57,7 +60,11 @@ export const pathsDictionary = {
     youAreHere: "You're here",
     available: "Available",
     completed: "Completed",
-    practiced: (done: number, total: number): string => `${done} of ${total} practiced`,
+    stepsDone: (done: number, total: number): string => `${done} of ${total} done`,
+    progressFraction: (done: number, total: number): string => `${done} of ${total}`,
+    nextStepLabel: (kind: "doc" | "challenge"): string =>
+      kind === "doc" ? "next: guide" : "next: challenge",
+    routeComplete: "Route complete",
     nextInPath: "Next in this path",
     pathComplete: "Path complete",
     pathInProgress: "On this path",
@@ -66,7 +73,7 @@ export const pathsDictionary = {
     explorePaths: "Explore another path",
     guestReading: "Reading as a guest.",
     guestSignInPrompt:
-      "Sign in to track which challenges you've completed and pick up where you left off.",
+      "Sign in to save what you have read and practised, and pick up where you left off.",
     signIn: "Sign in with GitHub",
     allPaths: "See all",
     pathShape: (guides: number, challenges: number): string =>

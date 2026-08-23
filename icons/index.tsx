@@ -2,6 +2,7 @@
 export {
   IconSearch,
   IconArrowRight,
+  IconArrowLeft,
   IconStar,
   IconEye,
   IconTag,
@@ -16,11 +17,13 @@ export {
   IconRocket,
   IconFlame,
   IconAward,
+  IconTrophy,
   IconCheck,
   IconRoute,
   IconUser,
   IconDeviceLaptop,
   IconLayoutGrid,
+  IconShare,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,

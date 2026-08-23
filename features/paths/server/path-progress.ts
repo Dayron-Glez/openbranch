@@ -1,5 +1,7 @@
 import type { createClient } from "@/lib/supabase/server"
-import { challengeSlugsOf, type LearningPath } from "../domain/paths"
+import { challengeSlugsOf, flattenSteps, type LearningPath } from "../domain/paths"
+import type { PathProgress } from "../domain/path-status"
+import { getReadDocSlugs } from "./doc-reads"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
@@ -39,6 +41,31 @@ export const getPathProgress = (
   path: LearningPath
 ): Promise<ReadonlySet<string>> =>
   getCompletedChallengeSlugs(supabase, userId, challengeSlugsOf(path))
+
+const docSlugsOf = (paths: readonly LearningPath[]): readonly string[] =>
+  paths.flatMap((path) =>
+    flattenSteps(path)
+      .filter((step) => step.type === "doc")
+      .map((step) => step.slug)
+  )
+
+/**
+ * Both halves of a path's progress in one call. Every surface that renders a
+ * path needs both sets, and fetching them separately at each call site is how
+ * the two drift apart.
+ */
+export const loadPathProgress = async (
+  supabase: SupabaseServerClient,
+  userId: string,
+  paths: readonly LearningPath[]
+): Promise<PathProgress> => {
+  const challengeSlugs = paths.flatMap((path) => challengeSlugsOf(path))
+  const [completedChallengeSlugs, readDocSlugs] = await Promise.all([
+    getCompletedChallengeSlugs(supabase, userId, challengeSlugs),
+    getReadDocSlugs(supabase, userId, docSlugsOf(paths)),
+  ])
+  return { completedChallengeSlugs, readDocSlugs }
+}
 
 /** Points per challenge slug, for the step meta chip (e.g. "+30 pts"). */
 export const getChallengePoints = async (

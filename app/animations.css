@@ -7,12 +7,31 @@
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
   background-position: 16px 16px;
   background-size: 32px 32px;
-  mask-image: radial-gradient(ellipse 90% 65% at 50% 35%, black, transparent 78%);
+  mask-image: radial-gradient(
+    ellipse 90% 65% at 50% var(--ambient-dots-mask-y, 35%),
+    black,
+    transparent 78%
+  );
 }
 
 .ambient-graph {
   color: rgba(183, 188, 196, 0.1);
-  mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 30%, transparent 80%);
+  mask-image: radial-gradient(
+    ellipse 90% 70% at 50% var(--ambient-graph-mask-y, 40%),
+    black 30%,
+    transparent 80%
+  );
+}
+
+/*
+ * Recenters the ambient graph around centered content instead of the home
+ * hero's left-aligned block. Used by the 404 page — same component,
+ * unmodified, just re-aimed via custom properties rather than a second
+ * background.
+ */
+.notfound-ambient {
+  --ambient-dots-mask-y: 40%;
+  --ambient-graph-mask-y: 45%;
 }
 
 .ambient-graph .path {
@@ -389,6 +408,32 @@
   animation: ob-ambient-glow 3.2s var(--ease) 1.9s infinite;
 }
 
+/* The 404 anchor's detached accent node — keeps breaking off and falling away. */
+@keyframes ob-loose-drift {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  14% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+.logo-broken .n-loose {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ob-loose-drift 2.8s cubic-bezier(0.55, 0.05, 0.95, 0.4) infinite;
+}
+
 /* Terminal cursor blink */
 @keyframes ob-blink {
   50% {
@@ -540,6 +585,12 @@
   .logo-play .n-shock,
   .logo-play .n-halo {
     visibility: hidden !important;
+  }
+
+  .logo-broken .n-loose {
+    animation: none !important;
+    transform: translateY(-10px) !important;
+    opacity: 1 !important;
   }
 }
 

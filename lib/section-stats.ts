@@ -1,4 +1,5 @@
 import { source } from "./source"
+import { formatRelativeDate as formatRelative } from "./relative-date"
 
 type PageWithLastModified = { lastModified?: Date }
 
@@ -24,15 +25,15 @@ export function getSectionStats(slug: string, lang: string): SectionStats {
   return { count, lastModified }
 }
 
+/**
+ * Kept as the docs sections' entry point, but the bucketing now lives in
+ * lib/relative-date.ts so the profile activity feed can share it. These two
+ * literals were the only copy in this module and stay here to keep the docs
+ * cards rendering exactly as before.
+ */
 export function formatRelativeDate(date: Date | null, lang: string): string {
-  if (!date) return lang === "es" ? "recientemente" : "recently"
-
-  const rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto", style: "narrow" })
-  const diffMs = date.getTime() - Date.now()
-  const diffDays = Math.round(diffMs / 86_400_000)
-
-  if (Math.abs(diffDays) < 1) return lang === "es" ? "hoy" : "today"
-  if (Math.abs(diffDays) < 7) return rtf.format(diffDays, "day")
-  if (Math.abs(diffDays) < 30) return rtf.format(Math.round(diffDays / 7), "week")
-  return rtf.format(Math.round(diffDays / 30), "month")
+  return formatRelative(date, lang, {
+    today: lang === "es" ? "hoy" : "today",
+    unknown: lang === "es" ? "recientemente" : "recently",
+  })
 }

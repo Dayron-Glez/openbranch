@@ -52,7 +52,7 @@ export const ChallengeCard = ({
       className="group border-line bg-bg-card hover:bg-bg-hover relative flex flex-col gap-3 overflow-hidden rounded-(--r-12) border p-5 text-inherit no-underline transition-[background,border-color] duration-(--d-base) ease-(--ease)"
     >
       <div className="flex items-center justify-between">
-        <span className="inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border border-(--track-ring) bg-(--track-soft) text-(color:--track) [&_svg]:size-[17px]">
+        <span className="inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border border-(--track-ring) bg-(--track-soft) text-(--track) [&_svg]:size-4.25">
           {icon}
         </span>
         <span className={`flex items-center gap-1.5 font-mono text-[11.5px] ${statusTextClass}`}>
@@ -61,7 +61,7 @@ export const ChallengeCard = ({
         </span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <h3 className="m-0 text-[15px] leading-snug font-medium tracking-[0]">{title}</h3>
+        <h3 className="m-0 text-[15px] leading-snug font-medium tracking-normal">{title}</h3>
         <p className="text-fg-muted m-0 line-clamp-2 text-[13px] leading-[1.55]">{description}</p>
       </div>
       <div className="text-fg-muted mt-auto flex items-center justify-between font-mono text-[11px] tracking-[0.04em]">

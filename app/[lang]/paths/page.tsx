@@ -3,8 +3,8 @@ import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
-import { getCompletedChallengeSlugs } from "@/features/paths/server/path-progress"
-import { buildPathCardItems, challengeSlugsAcross } from "@/features/paths/server/path-cards"
+import { loadPathProgress } from "@/features/paths/server/path-progress"
+import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { PathCard, PATH_CARD_GRID } from "@/features/paths/components/PathCard"
 import { createClient } from "@/lib/supabase/server"
 
@@ -34,12 +34,9 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
   } = await supabase.auth.getUser()
 
   const paths = getAllPaths(lang)
-  const completed =
-    user === null
-      ? null
-      : await getCompletedChallengeSlugs(supabase, user.id, challengeSlugsAcross(paths))
+  const progress = user === null ? null : await loadPathProgress(supabase, user.id, paths)
 
-  const items = buildPathCardItems(paths, lang, playgroundDict.category, completed)
+  const items = await buildPathCardItems(paths, lang, playgroundDict.category, progress)
 
   return (
     <main data-pg-main className="mx-auto max-w-[1000px] px-7 py-14 max-[520px]:px-5">
@@ -58,7 +55,15 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
           <PathCard
             key={item.href}
             item={item}
-            dict={{ shape: dict.pathShape, practiced: dict.practiced }}
+            dict={{
+              shape: dict.pathShape,
+              stepsDone: dict.stepsDone,
+              progressFraction: dict.progressFraction,
+              nextStepLabel: dict.nextStepLabel,
+              routeComplete: dict.routeComplete,
+              stepsCount: dict.stepsCount,
+              minutesSuffix: playgroundDict.time.minutes,
+            }}
           />
         ))}
       </div>

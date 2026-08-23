@@ -12,6 +12,10 @@
     "format:check": "prettier --check .",
     "types:check": "next typegen && fumadocs-mdx && tsc --noEmit",
     "db:sync-challenges": "bun scripts/sync-challenges.ts",
+    "db:which": "bun scripts/db-env.ts which",
+    "db:use:test": "bun scripts/db-env.ts use-test",
+    "db:use:prod": "bun scripts/db-env.ts use-prod",
+    "db:reset": "bun scripts/db-env.ts reset",
     "postinstall": "fumadocs-mdx",
     "prepare": "husky"
   },
@@ -24,6 +28,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@radix-ui/react-alert-dialog": "^1.1.23",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.16",
     "@radix-ui/react-dropdown-menu": "^2.1.17",

@@ -1,5 +1,5 @@
 import type { createClient } from "@/lib/supabase/server"
-import { CHALLENGE_TRACKS } from "../domain/manifest"
+import { CHALLENGE_TRACKS, type BadgeKey } from "../domain/manifest"
 import { formatElapsed } from "../domain/format-elapsed"
 import { getLeaderboard } from "./leaderboard-service"
 
@@ -7,6 +7,9 @@ type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
 /** Default awarded by the DB trigger when a slug is missing from the catalog. */
 const FALLBACK_POINTS = 10
+
+/** Mirrors session-service.ts's own award threshold — see `awardMilestoneBadges`. */
+const STREAK_BADGE_THRESHOLD = 7
 
 export type StreakEffect = "started" | "extended" | "unchanged"
 
@@ -19,7 +22,8 @@ export type CompletionReward = {
   readonly currentStreak: number
   readonly firstRunElapsedDisplay: string | null
   readonly rank: number | null
-  readonly badgeNewlyEarned: boolean
+  /** The specific badge this completion just earned, across all 7 keys — null on a repeat or when nothing was newly earned. */
+  readonly newlyEarnedBadgeKey: BadgeKey | null
 }
 
 const getElapsedDisplay = (startedAt: string | null, completedAt: string | null): string | null => {
@@ -29,6 +33,87 @@ const getElapsedDisplay = (startedAt: string | null, completedAt: string | null)
     Math.floor((new Date(completedAt).getTime() - new Date(startedAt).getTime()) / 1000)
   )
   return formatElapsed(elapsedSeconds)
+}
+
+/** The track badge, if this completion is the first one in its track. */
+const detectTrackBadge = async (
+  supabase: SupabaseServerClient,
+  userId: string,
+  slug: string
+): Promise<BadgeKey | null> => {
+  const track = CHALLENGE_TRACKS.find((t) => slug.startsWith(t.slugPrefix))
+  if (track === undefined) return null
+
+  const { count, error } = await supabase
+    .from("challenge_sessions")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("status", "completed")
+    .like("challenge_slug", `${track.slugPrefix}%`)
+
+  if (error !== null) {
+    console.error("getCompletionReward: track badge check failed", error)
+    return null
+  }
+  // Safe: ChallengeTrackMeta.badgeKey stays a plain string (it's the domain
+  // model CHALLENGE_TRACKS is built from) even though its values are exactly
+  // 5 of BadgeKey's 7 literals.
+  return count === 1 ? (track.badgeKey as BadgeKey) : null
+}
+
+/** `all-tracks`, if this completion is what closed the last open track. */
+const detectAllTracksBadge = async (
+  supabase: SupabaseServerClient,
+  userId: string,
+  slug: string
+): Promise<BadgeKey | null> => {
+  const { data: completedSlugs, error } = await supabase
+    .from("challenge_sessions")
+    .select("challenge_slug")
+    .eq("user_id", userId)
+    .eq("status", "completed")
+
+  if (error !== null) {
+    console.error("getCompletionReward: all-tracks check failed", error)
+    return null
+  }
+
+  const categoriesFor = (
+    rows: readonly { challenge_slug: unknown }[],
+    excludeSlug: string | null
+  ) =>
+    new Set(
+      rows
+        .map((row) => row.challenge_slug as string)
+        .filter((completedSlug) => completedSlug !== excludeSlug)
+        .map((completedSlug) =>
+          CHALLENGE_TRACKS.find((t) => completedSlug.startsWith(t.slugPrefix))
+        )
+        .filter((track) => track !== undefined)
+        .map((track) => track.category)
+    )
+
+  const rows = completedSlugs ?? []
+  const coveredNow = categoriesFor(rows, null).size === CHALLENGE_TRACKS.length
+  const coveredBefore = categoriesFor(rows, slug).size === CHALLENGE_TRACKS.length
+  return coveredNow && !coveredBefore ? "all-tracks" : null
+}
+
+/**
+ * Mirrors awardTrackBadge's/awardMilestoneBadges' own award conditions,
+ * read-only. Stops at the first match, since in practice only one badge
+ * becomes newly earned by any single completion.
+ */
+const detectNewlyEarnedBadge = async (
+  supabase: SupabaseServerClient,
+  userId: string,
+  slug: string,
+  currentStreak: number
+): Promise<BadgeKey | null> => {
+  const trackBadge = await detectTrackBadge(supabase, userId, slug)
+  if (trackBadge !== null) return trackBadge
+  if (currentStreak === STREAK_BADGE_THRESHOLD) return "streak-7"
+  return detectAllTracksBadge(supabase, userId, slug)
 }
 
 /**
@@ -95,23 +180,11 @@ export const getCompletionReward = async (
   const leaderboard = await getLeaderboard(supabase, userId)
   const rank = leaderboard?.ownRank ?? null
 
-  // Non-critical: mirrors awardTrackBadge's own award condition — if this
-  // session is the only completed one in its track, the badge was just earned.
-  const track = CHALLENGE_TRACKS.find((t) => slug.startsWith(t.slugPrefix))
-  let badgeNewlyEarned = false
-  if (track !== undefined) {
-    const { count, error } = await supabase
-      .from("challenge_sessions")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .eq("status", "completed")
-      .like("challenge_slug", `${track.slugPrefix}%`)
-    if (error !== null) {
-      console.error("getCompletionReward: badge check failed", error)
-    } else {
-      badgeNewlyEarned = count === 1
-    }
-  }
+  // Non-critical. A repeat completion can never newly earn anything, so this
+  // only runs on a first completion.
+  const newlyEarnedBadgeKey = isFirstCompletion
+    ? await detectNewlyEarnedBadge(supabase, userId, slug, currentStreak)
+    : null
 
   return {
     isFirstCompletion,
@@ -122,6 +195,6 @@ export const getCompletionReward = async (
     currentStreak,
     firstRunElapsedDisplay,
     rank,
-    badgeNewlyEarned,
+    newlyEarnedBadgeKey,
   }
 }
