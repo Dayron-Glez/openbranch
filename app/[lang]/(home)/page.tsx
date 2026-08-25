@@ -9,7 +9,6 @@ import { Footer } from "@/shared/Footer"
 import { ScrollReveal } from "@/shared/ScrollReveal"
 import { AmbientBackground } from "@/features/home/components/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
-import { i18n } from "@/lib/i18n"
 import { source } from "@/lib/source"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import type { TopicItem } from "@/lib/landing-dictionary"
@@ -26,11 +25,19 @@ const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   bulb: <IconBulb />,
 }
 
-export const revalidate = 604800 // re-render once a week so the weekly pick rotates
-
-export function generateStaticParams() {
-  return i18n.languages.map((lang) => ({ lang }))
-}
+/**
+ * Hourly, not weekly. `getWeeklyPick()` derives the featured guide from the
+ * current date, and the old seven-day window was the same length as the
+ * rotation it was meant to serve: a page regenerated on day one stayed
+ * correct until day seven and then went stale until someone happened to
+ * visit, which on a quiet week could be never.
+ *
+ * An hour makes the window far shorter than the thing it tracks, so the pick
+ * is never more than an hour late — invisible for something that turns over
+ * once a week. The landing stays prerendered and CDN-cached, which
+ * `force-dynamic` would have given up for the whole page to fix one section.
+ */
+export const revalidate = 3600
 
 function buildAuthorsDisplay(authors: string[], lang: string): string {
   if (authors.length === 0) return ""
