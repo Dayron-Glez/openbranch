@@ -25,11 +25,19 @@ const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   bulb: <IconBulb />,
 }
 
-// Forces this page to render on every request: getWeeklyPick(lang) reads the
-// real current date, and ISR's revalidate window doesn't reliably line up
-// with calendar weeks or fire without traffic. force-dynamic guarantees the
-// weekly pick always reflects "now".
-export const dynamic = "force-dynamic"
+/**
+ * Hourly, not weekly. `getWeeklyPick()` derives the featured guide from the
+ * current date, and the old seven-day window was the same length as the
+ * rotation it was meant to serve: a page regenerated on day one stayed
+ * correct until day seven and then went stale until someone happened to
+ * visit, which on a quiet week could be never.
+ *
+ * An hour makes the window far shorter than the thing it tracks, so the pick
+ * is never more than an hour late — invisible for something that turns over
+ * once a week. The landing stays prerendered and CDN-cached, which
+ * `force-dynamic` would have given up for the whole page to fix one section.
+ */
+export const revalidate = 3600
 
 function buildAuthorsDisplay(authors: string[], lang: string): string {
   if (authors.length === 0) return ""
