@@ -32,8 +32,8 @@ export const playground = defineDocs({
       category: z.enum(["code-review", "bug-fix", "testing", "git", "documentation"]),
       difficulty: z.enum(["beginner", "moderate", "demanding"]),
       estimated_minutes: z.number(),
+      // Reader-facing label only — the engine is selected by `category`.
       validation: z.enum(["checklist", "jest", "typecheck"]),
-      sandbox_template: z.string(),
       skills: z.array(z.string()).optional(),
       recommended_first: z.string().optional(),
       pr_preview: z
@@ -50,7 +50,6 @@ export const playground = defineDocs({
           check_warning: z.string().optional(),
         })
         .optional(),
-      checklist: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
     }),
   },
   meta: {

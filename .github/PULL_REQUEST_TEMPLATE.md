@@ -16,6 +16,7 @@ Closes #
 - [ ] 📚 Docs — content (MDX)
 - [ ] 🎨 Docs — UI / layout
 - [ ] 🌐 i18n / locale routing
+- [ ] 🎮 Playground — challenge or engine
 - [ ] 🔍 Search
 - [ ] ⚙️ Config / infrastructure (CI, dependencies, build)
 
@@ -36,9 +37,9 @@ Closes #
 
 ### General
 
-- [ ] Builds without errors (`npm run build` passes)
-- [ ] No TypeScript errors (`npm run types:check` passes)
-- [ ] Manually tested in `npm run dev`
+- [ ] Builds without errors (`bun run build` passes)
+- [ ] No TypeScript errors (`bun run types:check` passes)
+- [ ] Manually tested in `bun dev`
 - [ ] Does not break existing functionality
 
 ### 🎨 If it touches UI / animations
@@ -55,7 +56,7 @@ Closes #
 - [ ] Both language variants updated if applicable (`*.mdx` + `*.en.mdx`)
 - [ ] Added your name to `authors:` in frontmatter if you wrote or substantially edited the guide
 - [ ] Registered in `meta.json` / `meta.en.json` if a new guide was added
-- [ ] MDX renders without errors (`npm run build` passes)
+- [ ] MDX renders without errors (`bun run build` passes)
 
 ### ⚙️ If it touches config / infrastructure
 

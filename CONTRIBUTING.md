@@ -14,7 +14,9 @@ openbranch has two kinds of content: **guides** (opinionated docs in `content/do
   - [Authorship](#authorship)
 - [Adding a playground challenge](#adding-a-playground-challenge)
   - [Challenge anatomy](#challenge-anatomy)
+  - [The five engine contracts](#the-five-engine-contracts)
   - [Challenge frontmatter](#challenge-frontmatter)
+  - [Registering it in the catalogue](#registering-it-in-the-catalogue)
   - [Writing the brief](#writing-the-brief)
   - [Challenge ideas worth building](#challenge-ideas-worth-building)
 - [Project conventions](#project-conventions)
@@ -27,7 +29,7 @@ openbranch has two kinds of content: **guides** (opinionated docs in `content/do
 
 - **Fix a factual error or outdated advice** — open a PR directly, or use the _Improve guide_ issue template.
 - **Write a new guide** — use the _New guide_ issue template to discuss scope before writing.
-- **Add a playground challenge** — a real-world bug, review, testing, Git, or docs exercise. Use the _New Challenge_ issue template to pitch it first.
+- **Add a playground challenge** — a real-world bug, review, testing, Git, or docs exercise. This one is a coding contribution, not a content one; use the _New Challenge_ issue template to pitch it first.
 - **Translate** — add the missing `*.en.mdx` / `*.es.mdx` (or `*.mdx`) counterpart and open a PR.
 - **Improve the UI or infrastructure** — same flow as any other PR.
 
@@ -126,24 +128,60 @@ There is no automated author extraction from git history. The frontmatter is the
 
 ## Adding a playground challenge
 
-A challenge is a short, self-contained exercise the reader solves in an in-browser sandbox. It grades objectively — the reader's solution passes when the challenge's tests (or diff) pass.
+A challenge is a short, self-contained exercise the reader solves in an in-browser workspace.
+
+**Read this part before you start.** A challenge is not a drop-in content contribution. The workspace, the starting code, the reference solution and the grading logic are all TypeScript that ships in the application bundle, and each of the five categories has its own template shape. Writing a challenge means programming against one of five engines. The brief is the easy half.
+
+If that is more than you were looking for, a guide is a genuinely content-only contribution — and the _New Challenge_ issue template is a good way to pitch a scenario for someone else to build.
 
 ### Challenge anatomy
 
-A challenge is two parts: the **brief** (what the reader reads) and the **sandbox template** (the code they edit).
+A challenge is three parts: the **brief** (what the reader reads), the **engine template** (the workspace and grading logic), and a **registry entry** that connects the two.
 
 ```
-content/playground/<slug>.es.mdx          ← the brief (Spanish)
-content/playground/<slug>.en.mdx          ← the brief (English)
-content/playground/templates/<slug>/      ← the runnable sandbox
-├── package.json
-├── tsconfig.json
-└── src/
-    ├── <module>.ts                        ← the code to fix or extend
-    └── <module>.test.ts                   ← the tests that grade it
+content/playground/<slug>.es.mdx                         ← the brief (Spanish)
+content/playground/<slug>.en.mdx                         ← the brief (English)
+features/playground/challenges/<category>/…/<slug>.ts    ← the engine template
+features/playground/challenges/<category>/…-registry.ts  ← one line registering it
 ```
 
-The `sandbox_template` frontmatter field links the brief to its template folder. The reader edits the sandbox in the browser; validation runs the template's tests; the challenge is solved when they pass.
+Concretely, for the existing testing challenge:
+
+```
+content/playground/testing-fetchupstream.es.mdx
+content/playground/testing-fetchupstream.en.mdx
+features/playground/challenges/testing/testing-fetchupstream.ts
+features/playground/challenges/testing/testing-registry.ts   ← + "testing-fetchupstream": testingFetchUpstream
+```
+
+Two things about this that are easy to get wrong:
+
+- **`category` selects the engine.** `app/[lang]/playground/[slug]/active/page.tsx` branches on it to pick the view and the registry. `validation` is a label shown to the reader, not a dispatcher.
+- **Without the registry entry, the challenge 404s.** The detail page will render from the MDX alone, but opening the workspace calls `notFound()` because the template lookup returns `null`. Adding the entry is not optional.
+
+### The five engine contracts
+
+Each category has its own template type, its own folder and its own registry file — the names are historical and not uniform, so take them from this table rather than guessing:
+
+| Category        | Template file                                       | Registry to edit       |
+| --------------- | --------------------------------------------------- | ---------------------- |
+| `code-review`   | `challenges/code-review/diffs/<slug>.ts`            | `diff-registry.ts`     |
+| `bug-fix`       | `challenges/bug-fix/sandpack-templates/<slug>.ts`   | `sandpack-registry.ts` |
+| `testing`       | `challenges/testing/<slug>.ts`                      | `testing-registry.ts`  |
+| `git`           | `challenges/git/git-templates/<slug>.ts`            | `git-registry.ts`      |
+| `documentation` | `challenges/documentation/docs-templates/<slug>.ts` | `docs-registry.ts`     |
+
+What each template has to export:
+
+- **`code-review`** — a `readonly DiffFile[]`: the PR diff the reader annotates, written by hand, hunk by hunk. The only engine with no hints and no reference solution — submission is gated on the reader having left at least one inline comment and picked a review decision, and the judgement itself is theirs.
+- **`bug-fix`** — `files`, `editableFile`, `testFile`, `solutionCode`, an optional `bugLine`, and `hints`. The reader's fix is graded by running `testFile` against their edit.
+- **`testing`** — the above plus `correctSource`, `minTests`, `referenceTests` and **`mutants[]`**: deliberately broken variants of the source that the reader's tests have to kill. Designing the mutants is most of the work in this engine.
+- **`git`** — `versions{base,ours,theirs}`, `extraModules`, `hiddenTests`, `conflictCount` and `solutionCode`. The reader resolves a three-way merge; hidden tests decide whether the resolution was semantically right.
+- **`documentation`** — `files`, `editableFile` and `criteria[]`, where each criterion carries a `check` function that grades the reader's prose. That function runs in the browser, so keep it cheap and forgiving.
+
+Every engine except `code-review` ships `hints` in English plus a `hintsByLang.es` array. Both are needed for a bilingual challenge.
+
+Look at the existing challenge in the same category before you start — that file is the real specification, and this table is only a map to it.
 
 ### Challenge frontmatter
 
@@ -155,18 +193,30 @@ icon: Bug # Lucide icon name
 maturity: stable # stable = published · draft = hidden (work in progress)
 authors:
   - Your Name
-category: bug-fix # bug-fix | code-review | testing | git | documentation
-difficulty: beginner # beginner | moderate | demanding
+category: bug-fix # bug-fix | code-review | testing | git | documentation — selects the engine
+difficulty: beginner # beginner | moderate | demanding — also sets the points awarded
 estimated_minutes: 15
-validation: jest # checklist | jest | typecheck — how the sandbox is graded
-sandbox_template: <slug> # folder under content/playground/templates/
+validation: jest # checklist | jest | typecheck — the grading style shown to the reader
 skills:
   - The concrete skills it exercises
   - Keep these specific and searchable
 ---
 ```
 
-> A challenge only appears on the site when `maturity: stable`. Leave it as `draft` (the default) while the sandbox isn't ready — draft challenges are hidden.
+`code-review` challenges may also declare `pr_preview` (the PR header card) and `recommended_first` (a nudge shown on the detail page). Copy the shape from `code-review-noisy-pr.es.mdx`.
+
+> A challenge only appears on the site when `maturity: stable`. Leave it as `draft` (the default) while the workspace isn't ready — draft challenges are hidden.
+
+### Registering it in the catalogue
+
+Completing a challenge awards points, and the points come from a `challenges` row in the database keyed by slug. Regenerating that catalogue is a **maintainer step**, not something a contributor can do from a fork:
+
+```bash
+bun run db:sync-challenges   # writes a migration from the MDX frontmatter
+bunx supabase db push        # applies it
+```
+
+Until it runs, a newly merged challenge still works — it just scores the beginner default of 10 points regardless of its declared difficulty. Mention in your PR that the sync is pending so it doesn't get forgotten.
 
 ### Writing the brief
 
@@ -181,7 +231,7 @@ Ship the brief in both languages and keep them structurally equivalent, like gui
 
 ### Challenge ideas worth building
 
-Good challenges are small, have one clear "aha", and grade objectively. Pitch your idea with the _New Challenge_ issue template before building the sandbox. Some gaps worth filling:
+Good challenges are small, have one clear "aha", and grade objectively. Pitch your idea with the _New Challenge_ issue template before building the template — a scenario that doesn't fit any of the five engines is worth catching before you write the code, not after. Some gaps worth filling:
 
 - **bug-fix** — a debounce that drops the final call; a timezone off-by-one in date math; a memory leak from a missing effect cleanup; money rounding that breaks with floats.
 - **testing** — pin down a flaky time-dependent function; test an async retry-with-backoff; characterize a legacy function before refactoring it.
