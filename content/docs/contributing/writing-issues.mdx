@@ -1,0 +1,391 @@
+---
+title: Escribir un issue que alguien arregle
+description: "Issues que otro puede accionar: la repetición mínima de un bug, el apaño que prueba una feature y criterios de aceptación que se marcan sin ti."
+icon: CircleDot
+maturity: rfc
+authors:
+  - Dayron Glez
+---
+
+Alguien abre "[bug] El botón de compartir no funciona". El cuerpo tiene dos
+frases: "Le doy al botón de compartir y no pasa nada. Firefox." El maintainer
+abre el perfil, pulsa Compartir, se abre el diálogo, lo cierra, prueba otra vez.
+Funciona. Escribe "no lo reproduzco", cierra el issue, y tres semanas después
+llega el mismo reporte de otra persona.
+
+El que lo reportó no fue perezoso. Escribió lo que creía que significaba lo que
+había visto, y lo escribió en el hueco donde iba su teoría. El botón nunca
+estuvo roto.
+
+Un issue no es un argumento: es una prueba. Y nadie puede verificar la
+conclusión de otro.
+
+## El modelo mental: lo que viste y lo que crees que significa
+
+Todo lo que escribes en un issue cae en uno de dos montones, y solo uno de los
+dos le sirve a quien lo lea:
+
+| Frase                                        | Clase          | Qué falta debajo                          |
+| -------------------------------------------- | -------------- | ----------------------------------------- |
+| "El botón de compartir no funciona"          | Interpretación | Qué pulsaste y qué pasó después           |
+| "Pulsé Compartir y se abrió el diálogo"      | Observación    | Nada                                      |
+| "Hay un problema con el z-index del overlay" | Interpretación | Qué te hizo pensar eso                    |
+| "Ningún clic responde hasta que recargo"     | Observación    | Nada                                      |
+| "Firefox lo rompe"                           | Interpretación | Si lo probaste en algo que no sea Firefox |
+
+La observación se sostiene sola; la interpretación arrastra siempre una
+pregunta debajo, y esa pregunta solo la puedes responder tú. Separarlas es una
+operación, y se aplica campo a campo: si el autor no vuelve a responder nunca,
+¿este campo sigue funcionando? La línea de la tecla sigue funcionando dentro de
+un año. "Hay un problema con el z-index" caduca en cuanto nadie puede
+preguntarte por qué lo dijiste.
+
+<Callout type="info">
+  Esto no importa siempre. En un repositorio de dos personas, "la búsqueda está rota, pregúntame"
+  funciona perfectamente, y exigir rigor ahí es pedantería. La línea empieza a importar en el
+  momento exacto en que el que lee el issue deja de ser el que lo escribió.
+</Callout>
+
+## Un bug se prueba con una repetición, no con un adjetivo
+
+El mínimo reproducible no es cortesía. Es la condición para que "cerrado"
+signifique algo: sin una repetición, nadie puede demostrar que lo arregló, y el
+issue solo se puede abandonar. Los campos de entorno de `bug-report.md` —
+navegador, sistema, versión — están ahí por la misma razón: una repetición es
+condicional, y sin las condiciones no es una repetición.
+
+El botón de compartir tardó tres intentos, y los dos primeros son más
+instructivos que el tercero.
+
+### Intento 1: "no lo reproduzco"
+
+El cuerpo entero del issue, tal como llegó:
+
+```
+Le doy al botón de compartir y no pasa nada. Firefox.
+```
+
+El maintainer ejecutó el título, no el cuerpo. Pulsó el botón, se abrió el
+diálogo, lo cerró con la X y siguió navegando sin problema. Hizo exactamente lo
+que decía el reporte y por eso no vio nada.
+
+### Intento 2: el vídeo de treinta segundos
+
+El que lo reportó grabó la pantalla. Se ve el fallo entero: pulsa, se abre el
+diálogo, desaparece, y a partir de ahí ningún clic hace nada. El maintainer lo
+vio tres veces y siguió sin poder repetirlo.
+
+Un vídeo enseña el fallo y no registra qué tecla se pulsó.
+
+### Lo que lo resolvió: una tecla
+
+```
+1. Abre el perfil público de cualquier usuario
+2. Pulsa "Compartir" — se abre el diálogo
+3. Ciérralo con Escape (no con la X)
+4. Pulsa cualquier enlace de la página
+
+Esperado: el enlace navega
+Actual: ningún clic responde hasta recargar
+Navegador: Firefox 130 / macOS 15
+```
+
+Cuatro líneas, y el issue entero está en el paso 3. Cerrar con Escape dejaba un
+overlay huérfano del diálogo tumbado sobre la página, invisible y capturando
+todos los clics. Ese dato no lo recupera ningún maintainer por competente que
+sea: o lo escribe quien estuvo delante, o se pierde.
+
+Y aquí es donde casi todo el mundo se pasa de frenada: pegar cuatrocientas
+líneas de log no es más ayuda. Alguien tuvo que filtrarlas para encontrar las
+tres que importan, y si no lo haces tú lo hace el que lo arregle. El filtrado
+también es trabajo que transfieres.
+
+Un adjetivo describe tu experiencia. Una repetición se la traslada a otro.
+
+## Una feature se prueba con el apaño que ya estás usando
+
+Una solución propuesta es una predicción sobre el futuro, y una predicción no
+es prueba de nada. Lo que sí prueba que tienes un problema es lo que estás
+haciendo hoy en su lugar, y lo que te cuesta hacerlo. Si no puedes describir el
+apaño, no tienes un problema: tienes una preferencia.
+
+El mismo issue, escrito de las dos maneras:
+
+```
+Añadir filtros al leaderboard, con un desplegable por track.
+```
+
+```
+Terminé el track de git y quiero saber cómo voy frente a la gente
+que está haciendo ese mismo track.
+
+Ahora mismo abro seis perfiles públicos en seis pestañas y los
+cuento a mano. Lo hago cada dos semanas y me lleva unos diez
+minutos cada vez.
+```
+
+La primera versión es una orden de diseño: solo se puede construir o rechazar.
+La segunda es un problema con un coste medido, y alguien puede resolverlo con
+algo que a ti no se te había ocurrido — un track por defecto, una comparación
+en el propio perfil, cualquier cosa que quite las seis pestañas.
+
+`feature-request.md` ya separa las dos mitades: tiene una sección para el
+problema que resuelve y otra para el alcance técnico. El fallo habitual no es
+saltarse una, es rellenar las dos con la misma frase.
+
+<Callout type="warn">
+  El coste de proponer solución en lugar de problema no es que te la rechacen. Es el contribuidor
+  que la implementa *exactamente* como la pediste, tarda dos semanas, y no resuelve lo que te pasaba
+  — y ya no puedes rechazarle el PR, porque construyó lo que estaba escrito.
+</Callout>
+
+## Una tarea se prueba con un comando que devuelve la lista
+
+En una tarea no hay nada que observar ni nada que diagnosticar. Hay un estado,
+y el estado se prueba enumerándolo:
+
+```bash
+grep -rn "npm run build" .github/ISSUE_TEMPLATE/
+```
+
+Cuando se escribió este issue, ese comando devolvía tres líneas —
+`improve-guide.md:41`, `new-guide.md:51` y `style.md:36` — en un repositorio
+cuyo único lockfile es `bun.lock` y cuyo `package.json` declara
+`"packageManager": "bun@1.3.13"`. Tres plantillas le piden a quien contribuye
+que ejecute un gestor de paquetes que el proyecto no usa.
+
+Ese comando es el alcance completo del issue. No hay que discutir qué entra:
+entra lo que devuelve. Y no hay que discutir cuándo está terminado: está
+terminado cuando devuelve vacío.
+
+Hay tareas que ningún comando enumera — subir una versión mayor de un
+framework, partir un componente de ochocientas líneas. Ahí el sustituto no es
+renunciar a la lista, es escribirla a mano, cerrarla, y decir por qué dejaste
+algo fuera. Lo que no vale es "limpiar el módulo de autenticación".
+
+Una tarea que todavía no se puede enumerar no es una tarea. Es una intención.
+
+## Cómo titular un issue: la única línea donde se te permite concluir
+
+Si el cuerpo tiene que llevar lo observado, ¿por qué el título puede llevar una
+conclusión? Porque el título no es prueba: es una entrada de índice, y un
+índice se ordena por resultados, no por síntomas. El cuerpo tiene que ser
+verificable; el título, encontrable.
+
+Los tres del ejemplo. "El botón de compartir no funciona" pasa a ser "La página
+deja de responder a los clics tras cerrar el diálogo de compartir con Escape":
+más largo, y localizable por cualquiera de sus piezas. "Filtros en el
+leaderboard" pasa a ser "No se puede comparar el progreso dentro de un track",
+que es lo que le pasaba a alguien y no lo que alguien quería construir. Y
+"Arreglar las plantillas" pasa a ser "Tres plantillas de issue piden npm en un
+proyecto con bun".
+
+Las plantillas del repositorio prefijan el título por ti — `"[bug] "`,
+`"[feat] "`, `"[improve] "`, `"[challenge] "`, `"[guide] "` y `"[style] "` —
+con el espacio final dentro de las comillas para que escribas a continuación
+sin pensarlo.
+
+De aquí sale, como consecuencia y no como regla aparte, lo de buscar duplicados
+antes de abrir: solo encuentras el issue que ya existe si el que llegó antes
+tituló por resultado. Los títulos que describen síntomas no colisionan nunca, y
+por eso el mismo bug se reporta tres veces.
+
+## Criterios de aceptación: lo único que otro puede marcar sin ti
+
+El criterio de aceptación es la condición de extinción del contrato. Sin ella
+el issue no se puede cerrar: solo se puede abandonar.
+
+Los del botón de compartir caben en dos casillas que un desconocido puede
+marcar un domingo por la tarde, sin hablar contigo:
+
+```markdown
+- [ ] Los cuatro pasos de la repetición ya no dejan la página sin responder
+- [ ] Cerrar el diálogo con Escape y con la X dejan la página en el mismo estado
+```
+
+Las plantillas del repositorio los usan de dos formas. `feature-request.md`
+deja huecos en blanco, porque nadie conoce de antemano los criterios de algo
+que todavía no existe. Las de contenido y `style.md` los traen escritos,
+porque son invariantes del proyecto y no del issue: que la build pase, que
+existan las dos variantes de idioma, que se respete `prefers-reduced-motion`.
+
+Y `bug-report.md` es la única de las seis sin ninguno. No es un descuido, es
+una consecuencia: una repetición ya contiene su definición de terminado, porque
+el criterio es que deje de repetirse.
+
+De ahí sale la regla de calibración: **escribe como criterio solo lo que un
+desconocido pueda marcar sin preguntarte a ti; todo lo demás es una
+conversación, y una conversación va en el cuerpo.**
+
+El mejor ejemplo del repositorio está en `new-challenge.md`, y el peor también.
+Uno de sus criterios dice "registrado en el registry de ese motor — sin esto,
+el banco de trabajo da 404": nombra lo que se rompe si no se cumple, así que se
+puede evaluar sin conocer el proyecto. Y unas líneas más arriba, la misma
+plantilla ofrece `docs` como categoría válida cuando el esquema declara
+`documentation` — una casilla que nadie puede marcar correctamente porque el
+valor que propone no existe.
+
+<Callout type="info">
+  El criterio que empieza por "que funcione bien" o "que quede limpio" es justamente el que te
+  devolverá el PR. No porque quien lo escribió lo hiciera mal, sino porque nunca hubo forma de saber
+  si lo había cumplido.
+</Callout>
+
+## Etiquetas, asignados e hitos: los metadatos caducan antes que el texto
+
+Las etiquetas que se deducen del propio issue sobreviven, porque cualquiera
+puede volver a derivarlas leyéndolo. Por eso las seis plantillas de openbranch
+asignan exactamente cuatro entre todas — `bug`, `feature`, `style` y `content`
+— y ninguna de ellas describe un estado. Las que sí lo describen (`P2`,
+`needs-discussion`, `blocked`) son marcas de tiempo disfrazadas de
+clasificación: registran tu sesión de triaje de hace ocho meses, nadie se
+atreve a quitarlas porque parecen significar algo, y ya no significan nada.
+
+El asignado es el campo que más miente. Parece un compromiso y funciona como un
+marcapáginas, y mientras tanto vuelve el issue invisible para la única persona
+que importaba: la que estaba buscando por dónde empezar. Un issue asignado es
+una tienda cerrada. Se asigna al empezar, no al proponer.
+
+El hito es una fecha, y las fechas envejecen más rápido que cualquier otra cosa
+que escribas. Merece la pena señalar lo que las seis plantillas no tienen:
+ningún campo de prioridad y ningún campo de severidad. Es una decisión, no un
+olvido — ninguno de los dos se puede derivar del issue, y los dos envejecen
+igual de mal.
+
+Ningún metadato es prueba de nada. Describen tu atención, no el defecto.
+
+## Cerrar sin arreglar es una respuesta, y casi siempre la correcta
+
+Un backlog de sesenta issues con veinte accionables no tiene veinte issues
+útiles: le cobra a cada visitante el trabajo de encontrar cuáles son los
+veinte. Los otros cuarenta no son neutrales. Son un peaje.
+
+Los zombis vienen en tres formas, una por tipo, y cada una se cierra distinto.
+El bug que nadie ha conseguido repetir se cierra pidiendo el dato que falta —
+la tecla, el paso, el orden — y se reabre solo si llega. La feature cuyo apaño
+nunca llegó a describirse se cierra porque, mirada de cerca, era una
+preferencia. Y la tarea cuya lista ya devuelve vacío se cierra sola: el comando
+es el criterio.
+
+El umbral es local: noventa días, dos ciclos de release, lo que encaje. Sin
+actividad y sin criterios escritos, se cierra con una frase que diga qué se
+pierde al cerrarlo.
+
+Y el comentario de cierre también es una prueba. Cerrar sin decir qué probaste
+es exactamente el mismo fallo que abrir sin decir qué viste, cometido desde el
+otro lado del mostrador.
+
+<Callout type="warn">
+  Cerrar el issue de alguien que contribuye por primera vez con "no lo reproduzco" y nada más le
+  enseña una cosa muy concreta: que el rato que pasó escribiéndolo no valió nada. Escribe qué
+  probaste y hasta dónde llegaste. Es la diferencia entre un no y un portazo.
+</Callout>
+
+## Cómo se ve un backlog de issues que la gente sí coge
+
+Aplica esto a los tres tipos y el backlog deja de ser un archivo de
+intenciones:
+
+- repetir un bug es un copiar y pegar y no una excavación arqueológica,
+- decidir una feature es leer un apaño y no adivinar una intención,
+- coger una tarea es ejecutar un comando y mirar lo que devuelve,
+- cerrar un zombi deja de doler, porque el criterio estaba escrito desde el
+  primer día.
+
+No escribiste más. Escribiste primero lo que viste, y dejaste tu teoría donde
+un desconocido pudiera contradecirla.
+
+<CopyTemplate
+  title="Llévate esto — plantillas de issue para bug, feature y tarea"
+  content={`# Bug — .github/ISSUE_TEMPLATE/bug-report.md
+
+\`\`\`yaml
+name: "🐛 Bug"
+about: Algo se comporta de forma distinta a la esperada
+title: "[bug] "
+labels: bug
+\`\`\`
+
+## Qué viste
+
+Los pasos exactos, en orden. Si un paso admite dos formas de hacerlo, di cuál usaste.
+
+1.
+2.
+3.
+
+**Esperado:**
+**Actual:**
+
+## Entorno
+
+- **Navegador / versión:**
+- **Sistema operativo:**
+- **Versión o commit:**
+
+## Qué crees que lo causa
+
+Opcional, y va aquí abajo a propósito: separado de lo que viste, para que quien lo lea pueda descartarlo sin descartar el reporte.
+
+Terminado cuando la repetición de arriba deje de repetir.
+
+---
+
+# Feature — .github/ISSUE_TEMPLATE/feature-request.md
+
+\`\`\`yaml
+name: "✨ Feature"
+about: Propón una capacidad que hoy no existe
+title: "[feat] "
+labels: feature
+\`\`\`
+
+## Qué haces hoy en su lugar
+
+El apaño que ya estás usando, y lo que te cuesta — tiempo, pasos, frecuencia. Si no hay apaño, dilo: puede que sea una preferencia y no un problema.
+
+## Solución propuesta
+
+Opcional. Va después del apaño a propósito: quien lo implemente puede tener una idea mejor, y solo puede tenerla si entiende el problema.
+
+## Alcance
+
+- **Dentro:**
+- **Fuera:**
+
+## Criterios de aceptación
+
+- [ ] Criterio 1
+- [ ] Criterio 2
+
+---
+
+# Tarea — .github/ISSUE_TEMPLATE/task.md
+
+\`\`\`yaml
+name: "🧹 Tarea"
+about: Trabajo mecánico sobre un conjunto conocido de sitios
+title: "[task] "
+labels: content
+\`\`\`
+
+## El comando que devuelve la lista
+
+\`\`\`bash
+
+\`\`\`
+
+Cuando se escribió este issue devolvía N resultados. Ese conjunto es el alcance completo.
+
+Si ningún comando lo enumera, escribe la lista a mano, ciérrala, y di por qué dejaste algo fuera.
+
+## Por qué ahora
+
+Una o dos frases. Qué se rompe o qué confunde mientras siga así.
+
+## Criterios de aceptación
+
+- [ ] El comando de arriba devuelve vacío
+- [ ] \`bun run build\` pasa sin errores
+- [ ] Las dos variantes de idioma actualizadas, si aplica`}
+      />
