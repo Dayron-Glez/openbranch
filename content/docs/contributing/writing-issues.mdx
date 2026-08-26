@@ -8,10 +8,10 @@ authors:
 ---
 
 Alguien abre "[bug] El botón de compartir no funciona". El cuerpo tiene dos
-frases: "Le doy al botón de compartir y no pasa nada. Firefox." El maintainer
-abre el perfil, pulsa Compartir, se abre el diálogo, lo cierra, prueba otra vez.
-Funciona. Escribe "no lo reproduzco", cierra el issue, y tres semanas después
-llega el mismo reporte de otra persona.
+frases: "Le doy al botón de compartir y no pasa nada. Chrome." El maintainer
+abre el perfil, pulsa Compartir, se abre el diálogo, lo cierra, prueba otra
+vez, y todo funciona. Entonces decide escribir "no lo reproduzco", cierra el
+issue, y tres semanas después llega el mismo reporte de otra persona.
 
 El que lo reportó no fue perezoso. Escribió lo que creía que significaba lo que
 había visto, y lo escribió en el hueco donde iba su teoría. El botón nunca
@@ -22,18 +22,18 @@ conclusión de otro.
 
 ## El modelo mental: lo que viste y lo que crees que significa
 
-Todo lo que escribes en un issue cae en uno de dos montones, y solo uno de los
-dos le sirve a quien lo lea:
+Todo lo que escribes en un issue cae en uno de dos montones (Interpretación u
+Observación), y solo uno de los dos le sirve a quien lo lea:
 
-| Frase                                        | Clase          | Qué falta debajo                          |
-| -------------------------------------------- | -------------- | ----------------------------------------- |
-| "El botón de compartir no funciona"          | Interpretación | Qué pulsaste y qué pasó después           |
-| "Pulsé Compartir y se abrió el diálogo"      | Observación    | Nada                                      |
-| "Hay un problema con el z-index del overlay" | Interpretación | Qué te hizo pensar eso                    |
-| "Ningún clic responde hasta que recargo"     | Observación    | Nada                                      |
-| "Firefox lo rompe"                           | Interpretación | Si lo probaste en algo que no sea Firefox |
+| Frase                                        | Clase          | Qué falta debajo                         |
+| -------------------------------------------- | -------------- | ---------------------------------------- |
+| "El botón de compartir no funciona"          | Interpretación | Qué pulsaste y qué pasó después          |
+| "Pulsé Compartir y se abrió el diálogo"      | Observación    | Nada                                     |
+| "Hay un problema con el z-index del overlay" | Interpretación | Qué te hizo pensar eso                   |
+| "Ningún clic responde hasta que recargo"     | Observación    | Nada                                     |
+| "Chrome lo rompe"                            | Interpretación | Si lo probaste en algo que no sea Chrome |
 
-La observación se sostiene sola; la interpretación arrastra siempre una
+La observación tiende a sostenerse sola; la interpretación arrastra siempre una
 pregunta debajo, y esa pregunta solo la puedes responder tú. Separarlas es una
 operación, y se aplica campo a campo: si el autor no vuelve a responder nunca,
 ¿este campo sigue funcionando? La línea de la tecla sigue funcionando dentro de
@@ -62,7 +62,7 @@ instructivos que el tercero.
 El cuerpo entero del issue, tal como llegó:
 
 ```
-Le doy al botón de compartir y no pasa nada. Firefox.
+Le doy al botón de compartir y no pasa nada. Chrome.
 ```
 
 El maintainer ejecutó el título, no el cuerpo. Pulsó el botón, se abrió el
@@ -87,7 +87,7 @@ Un vídeo enseña el fallo y no registra qué tecla se pulsó.
 
 Esperado: el enlace navega
 Actual: ningún clic responde hasta recargar
-Navegador: Firefox 130 / macOS 15
+Navegador: Chrome 130 / macOS 15
 ```
 
 Cuatro líneas, y el issue entero está en el paso 3. Cerrar con Escape dejaba un

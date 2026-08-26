@@ -8,10 +8,10 @@ authors:
 ---
 
 Someone files "[bug] The share button doesn't work". The body is two sentences:
-"I click the share button and nothing happens. Firefox." The maintainer opens a
-profile, clicks Share, the dialog opens, closes it, tries again. It works. He
-writes "can't reproduce", closes the issue, and three weeks later the same
-report arrives from someone else.
+"I click the share button and nothing happens. Chrome." The maintainer opens a
+profile, clicks Share, the dialog opens, closes it, tries again, and everything
+works. So they decide to write "can't reproduce", close the issue, and three
+weeks later the same report arrives from someone else.
 
 The reporter wasn't lazy. They wrote what they believed their observation
 meant, and they wrote it in the slot where their theory belonged. The button
@@ -22,8 +22,8 @@ else's conclusion.
 
 ## The mental model: what you saw and what you think it means
 
-Everything you put in an issue lands in one of two piles, and only one of them
-is any use to the person reading it:
+Everything you put in an issue lands in one of two piles (Interpretation or
+Observation), and only one of them is any use to the person reading it:
 
 | Sentence                                     | Kind           | What's missing underneath          |
 | -------------------------------------------- | -------------- | ---------------------------------- |
@@ -31,14 +31,14 @@ is any use to the person reading it:
 | "I clicked Share and the dialog opened"      | Observation    | Nothing                            |
 | "There's a z-index problem with the overlay" | Interpretation | What made you think that           |
 | "No click responds until I reload"           | Observation    | Nothing                            |
-| "Firefox breaks it"                          | Interpretation | Whether you tried anything else    |
+| "Chrome breaks it"                           | Interpretation | Whether you tried anything else    |
 
-An observation stands on its own; an interpretation always drags a question
-underneath it, and you are the only person who can answer that question.
-Separating them is an operation, and it applies field by field: if the author
-never replies again, does this field still work? The line about the key still
-works a year from now. "There's a z-index problem" expires the moment nobody
-can ask you why you said it.
+An observation tends to stand on its own; an interpretation always drags a
+question underneath it, and you are the only person who can answer that
+question. Separating them is an operation, and it applies field by field: if
+the author never replies again, does this field still work? The line about the
+key still works a year from now. "There's a z-index problem" expires the moment
+nobody can ask you why you said it.
 
 <Callout type="info">
   This doesn't always matter. In a two-person repository, "search is broken, ask me" works perfectly
@@ -62,7 +62,7 @@ third.
 The entire body of the issue, exactly as filed:
 
 ```
-I click the share button and nothing happens. Firefox.
+I click the share button and nothing happens. Chrome.
 ```
 
 The maintainer ran the title, not the body. They clicked the button, the dialog
@@ -87,7 +87,7 @@ A video shows the failure. It doesn't record which key was pressed.
 
 Expected: the link navigates
 Actual: no click responds until reload
-Browser: Firefox 130 / macOS 15
+Browser: Chrome 130 / macOS 15
 ```
 
 Four lines, and the entire issue lives in step 3. Closing with Escape left an
