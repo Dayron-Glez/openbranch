@@ -24,7 +24,7 @@ export default tseslint.config(
   tseslint.configs.recommended,
   eslintConfigPrettier,
   {
-    ignores: [".next/**", "node_modules/**", ".source/**", "content/playground/templates/**"],
+    ignores: [".next/**", "node_modules/**", ".source/**"],
   },
   {
     // Global: no one may resurrect a pre-refactor import path.
