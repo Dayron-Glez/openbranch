@@ -60,8 +60,8 @@ pedir revisión:
 ## Checklist
 
 - [ ] El contenido es preciso y probado contra una base de código real
-- [ ] `npm run build` pasa
-- [ ] Sin errores de TypeScript (`npm run types:check` pasa)
+- [ ] `bun run build` pasa
+- [ ] Sin errores de TypeScript (`bun run types:check` pasa)
 - [ ] Sigue el estilo de escritura de las guías existentes
 ```
 
@@ -72,13 +72,13 @@ request, corre los chequeos que tienen una respuesta objetivamente correcta:
 
 ```yaml
 - name: Lint
-  run: npm run lint
+  run: bun run lint
 - name: Check formatting
-  run: npm run format:check
+  run: bun run format:check
 - name: Type check
-  run: npm run types:check
+  run: bun run types:check
 - name: Build
-  run: npm run build
+  run: bun run build
 ```
 
 <Callout type="warn">
@@ -185,7 +185,7 @@ Conectado al workflow sin flag de formatter, porque `stylish` es el de defecto:
 - name: Lint
   run: |
     echo "::add-matcher::.github/problem-matchers/eslint.json"
-    npm run lint
+    bun run lint
 ```
 
 <Callout type="warn">
@@ -208,7 +208,7 @@ gh api repos/OWNER/REPO/branches/main/protection --method PUT --input - <<'EOF'
     "strict": true,
     "checks": [
       { "context": "Type check & build" },
-      { "context": "SonarCloud Code Analysis" }
+      { "context": "SonarCloud" }
     ]
   },
   "enforce_admins": true,

@@ -38,4 +38,4 @@ What should it say or include instead?
 
 - [ ] Content is accurate and up to date
 - [ ] Both language variants updated (if applicable)
-- [ ] `npm run build` passes with no errors
+- [ ] `bun run build` passes with no errors
