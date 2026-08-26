@@ -1,5 +1,5 @@
 {
   "title": "Contributing to OSS",
   "icon": "GitPullRequest",
-  "pages": ["ci-guardrails"]
+  "pages": ["ci-guardrails", "writing-issues"]
 }

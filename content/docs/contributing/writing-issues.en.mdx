@@ -1,0 +1,388 @@
+---
+title: Writing an issue someone will fix
+description: "Issues another person can act on: the minimal repro for a bug, the workaround that proves a feature, and acceptance criteria a stranger can tick."
+icon: CircleDot
+maturity: rfc
+authors:
+  - Dayron Glez
+---
+
+Someone files "[bug] The share button doesn't work". The body is two sentences:
+"I click the share button and nothing happens. Chrome." The maintainer opens a
+profile, clicks Share, the dialog opens, closes it, tries again, and everything
+works. So they decide to write "can't reproduce", close the issue, and three
+weeks later the same report arrives from someone else.
+
+The reporter wasn't lazy. They wrote what they believed their observation
+meant, and they wrote it in the slot where their theory belonged. The button
+was never broken.
+
+An issue is not an argument. It is evidence — and nobody can verify someone
+else's conclusion.
+
+## The mental model: what you saw and what you think it means
+
+Everything you put in an issue lands in one of two piles (Interpretation or
+Observation), and only one of them is any use to the person reading it:
+
+| Sentence                                     | Kind           | What's missing underneath          |
+| -------------------------------------------- | -------------- | ---------------------------------- |
+| "The share button doesn't work"              | Interpretation | What you clicked and what followed |
+| "I clicked Share and the dialog opened"      | Observation    | Nothing                            |
+| "There's a z-index problem with the overlay" | Interpretation | What made you think that           |
+| "No click responds until I reload"           | Observation    | Nothing                            |
+| "Chrome breaks it"                           | Interpretation | Whether you tried anything else    |
+
+An observation tends to stand on its own; an interpretation always drags a
+question underneath it, and you are the only person who can answer that
+question. Separating them is an operation, and it applies field by field: if
+the author never replies again, does this field still work? The line about the
+key still works a year from now. "There's a z-index problem" expires the moment
+nobody can ask you why you said it.
+
+<Callout type="info">
+  This doesn't always matter. In a two-person repository, "search is broken, ask me" works perfectly
+  well, and demanding rigour there is pedantry. The line starts to matter at the exact moment the
+  person reading the issue stops being the person who wrote it.
+</Callout>
+
+## A bug is proved by a repro, not by an adjective
+
+The minimal repro isn't a courtesy. It's the condition for "closed" to mean
+anything: without one, nobody can demonstrate they fixed it, and the issue can
+only be abandoned. The environment fields in `bug-report.md` — browser, OS,
+version — are there for the same reason: a repro is conditional, and without
+the conditions it isn't a repro.
+
+The share button took three attempts, and the first two teach more than the
+third.
+
+### Attempt 1: "can't reproduce"
+
+The entire body of the issue, exactly as filed:
+
+```
+I click the share button and nothing happens. Chrome.
+```
+
+The maintainer ran the title, not the body. They clicked the button, the dialog
+opened, they closed it with the X and carried on browsing without trouble. They
+did exactly what the report said, which is why they saw nothing.
+
+### Attempt 2: the thirty-second video
+
+The reporter recorded their screen. The whole failure is visible: they click,
+the dialog opens, it disappears, and after that no click does anything. The
+maintainer watched it three times and still couldn't reproduce it.
+
+A video shows the failure. It doesn't record which key was pressed.
+
+### What settled it: one key
+
+```
+1. Open any user's public profile
+2. Click "Share" — the dialog opens
+3. Close it with Escape (not with the X)
+4. Click any link on the page
+
+Expected: the link navigates
+Actual: no click responds until reload
+Browser: Chrome 130 / macOS 15
+```
+
+Four lines, and the entire issue lives in step 3. Closing with Escape left an
+orphaned dialog overlay lying across the page, invisible and swallowing every
+click. No maintainer recovers that detail by being clever: either the person
+who was there writes it down, or it is lost.
+
+And this is where most people overcorrect: pasting four hundred lines of log is
+not more help. Somebody had to filter them down to the three that matter, and
+if you don't, whoever fixes it does. Filtering is work you transferred too.
+
+An adjective describes your experience. A repro hands it to someone else.
+
+## A feature is proved by the workaround you're already running
+
+A proposed solution is a prediction about the future, and a prediction proves
+nothing. What proves you have a problem is what you're doing instead today, and
+what it costs you. If you can't describe the workaround, you don't have a
+problem — you have a preference.
+
+The same issue, written both ways:
+
+```
+Add filters to the leaderboard, with a dropdown per track.
+```
+
+```
+I finished the git track and I want to know how I compare to
+people working through that same track.
+
+Right now I open six public profiles in six tabs and count by
+hand. I do it every couple of weeks and it takes about ten
+minutes each time.
+```
+
+The first version is a design order: it can only be built or rejected. The
+second is a problem with a measured cost, and someone can solve it with
+something you'd never have specified — a default track, a comparison on the
+profile itself, anything that removes the six tabs.
+
+`feature-request.md` already splits the two halves: one section for the problem
+it solves, another for the technical scope. The usual failure isn't skipping
+one. It's filling both with the same sentence.
+
+<Callout type="warn">
+  The cost of proposing a solution instead of a problem isn't getting turned down. It's the
+  contributor who implements it *exactly* as you asked, spends two weeks on it, and doesn't fix what
+  was happening to you — and now you can't reject the PR, because they built what was written.
+</Callout>
+
+## A task is proved by a command that returns the list
+
+A task has nothing to observe and nothing to diagnose. It has a state, and a
+state is proved by enumerating it:
+
+```bash
+grep -rn "npm run build" .github/ISSUE_TEMPLATE/
+```
+
+When this issue was written, that command returned three lines —
+`improve-guide.md:41`, `new-guide.md:51` and `style.md:36` — in a repository
+whose only lockfile is `bun.lock` and whose `package.json` declares
+`"packageManager": "bun@1.3.13"`. Three templates ask contributors to run a
+package manager the project doesn't use.
+
+That command is the issue's entire scope. There's nothing to argue about what's
+included: what it returns is included. And nothing to argue about when it's
+done: it's done when the command returns nothing.
+
+Some tasks no command enumerates — upgrading a framework major, splitting an
+eight-hundred-line component. The substitute isn't giving up on the list. It's
+writing it by hand, closing it, and saying why you left something out. What
+doesn't count is "clean up the auth module".
+
+A task that can't be enumerated yet isn't a task. It's an intention.
+
+## Titling an issue: the one line where you're allowed to conclude
+
+If the body has to carry what you observed, why is the title allowed to carry a
+conclusion? Because the title isn't evidence: it's an index entry, and an index
+sorts by outcomes, not by symptoms. The body has to be verifiable; the title
+has to be findable.
+
+The three from the example. "The share button doesn't work" becomes "Page stops
+responding to clicks after closing the share dialog with Escape": longer, and
+findable by any of its pieces. "Leaderboard filters" becomes "Can't compare
+progress within a track", which is what was happening to someone rather than
+what someone wanted built. And "Fix the templates" becomes "Three issue
+templates ask for npm in a bun project".
+
+The repository's templates prefix the title for you — `"[bug] "`, `"[feat] "`,
+`"[improve] "`, `"[challenge] "`, `"[guide] "` and `"[style] "` — with the
+trailing space inside the quotes so you can start typing without thinking about
+it.
+
+Searching for duplicates before you file follows from this rather than standing
+as a separate rule: you only find the issue that already exists if whoever got
+there first titled by outcome. Symptom titles never collide, which is why the
+same bug gets reported three times.
+
+## Acceptance criteria: the only part a stranger can tick without you
+
+An acceptance criterion is the contract's termination condition. Without one an
+issue can't be closed — only abandoned.
+
+The share button's fit in two boxes a stranger could tick on a Sunday
+afternoon, without talking to you:
+
+```markdown
+- [ ] The four repro steps no longer leave the page unresponsive
+- [ ] Closing the dialog with Escape and with the X leave the page in the same state
+```
+
+The repository's templates use them in two ways. `feature-request.md` ships
+blanks, because nobody knows in advance the criteria of something that doesn't
+exist yet. The content templates and `style.md` ship them pre-filled, because
+they're invariants of the project rather than of the issue: the build passes,
+both language variants exist, `prefers-reduced-motion` is respected.
+
+And `bug-report.md` is the only one of the six with none at all. That isn't an
+oversight, it's a consequence: a repro already contains its own definition of
+done, because the criterion is that it stops repeating.
+
+Which gives the calibration rule: **write as a criterion only what a stranger
+can tick without asking you; everything else is a conversation, and a
+conversation belongs in the body.**
+
+The repository's best example is in `new-challenge.md`, and so is its worst.
+One of its criteria reads "registered in that engine's registry — without this,
+the workspace 404s": it names what breaks if it isn't met, so it can be
+evaluated by someone who doesn't know the project. And a few lines above, the
+same template offers `docs` as a valid category when the schema declares
+`documentation` — a box nobody can tick correctly, because the value it
+proposes doesn't exist.
+
+<Callout type="info">
+  The criterion that starts with "works properly" or "is clean" is precisely the one that will send
+  the PR back. Not because whoever wrote it did a bad job, but because there was never a way to tell
+  whether they'd met it.
+</Callout>
+
+## Labels, assignees and milestones: metadata expires before prose does
+
+Labels that can be derived from the issue itself survive, because anyone can
+re-derive them by reading it. That's why openbranch's six templates assign
+exactly four between them — `bug`, `feature`, `style` and `content` — and none
+of them describes a state. The ones that do describe state (`P2`,
+`needs-discussion`, `blocked`) are timestamps dressed up as classification:
+they record your triage session from eight months ago, nobody dares remove them
+because they look like they mean something, and they no longer do.
+
+The assignee is the field that lies most. It looks like a commitment and
+behaves like a bookmark, and meanwhile it makes the issue invisible to the only
+person who mattered: the one looking for somewhere to start. An assigned issue
+is a closed shop. You assign when you start, not when you propose.
+
+A milestone is a date, and dates age faster than anything else you write. Worth
+noting what the six templates don't have: no priority field and no severity
+field. That's a decision rather than an omission — neither can be derived from
+the issue, and both age just as badly.
+
+No metadata is evidence of anything. It describes your attention, not the
+defect.
+
+## Closing without fixing is an answer, and usually the right one
+
+A backlog of sixty issues with twenty actionable ones doesn't have twenty
+useful issues: it charges every visitor the work of finding which twenty. The
+other forty aren't neutral. They're a toll.
+
+Zombies come in three shapes, one per type, and each closes differently. The
+bug nobody has managed to reproduce closes by asking for the missing detail —
+the key, the step, the order — and reopens only if it arrives. The feature
+whose workaround was never described closes because, looked at closely, it was
+a preference. And the task whose list already returns empty closes itself: the
+command is the criterion.
+
+The threshold is local: ninety days, two release cycles, whatever fits. With no
+activity and no written criteria, close it with a sentence saying what is lost
+by closing it.
+
+The closing comment is evidence too. Closing without saying what you tried is
+the same failure as filing without saying what you saw, committed from the
+other side of the counter.
+
+<Callout type="warn">
+  Closing a first-time contributor's issue with "can't reproduce" and nothing else teaches them one
+  very specific thing: that the time they spent writing it was worth nothing. Write what you tried
+  and how far you got. It's the difference between a no and a door in the face.
+</Callout>
+
+## What an issue backlog people actually pick up looks like
+
+Apply this to all three types and the backlog stops being an archive of
+intentions:
+
+- reproducing a bug is a copy and paste rather than an archaeological dig,
+- deciding a feature is reading a workaround rather than guessing an intent,
+- picking up a task is running a command and looking at what comes back,
+- closing a zombie stops hurting, because the criterion was written on day one.
+
+You didn't write more. You wrote what you saw first, and left your theory where
+a stranger could contradict it.
+
+<CopyTemplate
+  title="Take this with you — issue templates for bug, feature and task"
+  content={`# Bug — .github/ISSUE_TEMPLATE/bug-report.md
+
+\`\`\`yaml
+name: "🐛 Bug"
+about: Something behaves differently from what was expected
+title: "[bug] "
+labels: bug
+\`\`\`
+
+## What you saw
+
+The exact steps, in order. If a step can be done two ways, say which one you used.
+
+1.
+2.
+3.
+
+**Expected:**
+**Actual:**
+
+## Environment
+
+- **Browser / version:**
+- **Operating system:**
+- **Version or commit:**
+
+## What you think causes it
+
+Optional, and down here on purpose: kept apart from what you saw, so whoever reads it can discard your theory without discarding the report.
+
+Done when the repro above stops reproducing.
+
+---
+
+# Feature — .github/ISSUE_TEMPLATE/feature-request.md
+
+\`\`\`yaml
+name: "✨ Feature"
+about: Propose a capability that doesn't exist yet
+title: "[feat] "
+labels: feature
+\`\`\`
+
+## What you do instead today
+
+The workaround you're already running, and what it costs — time, steps, frequency. If there's no workaround, say so: it may be a preference rather than a problem.
+
+## Proposed solution
+
+Optional. It comes after the workaround on purpose: whoever implements this may have a better idea, and they can only have it if they understand the problem.
+
+## Scope
+
+- **In:**
+- **Out:**
+
+## Acceptance criteria
+
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+---
+
+# Task — .github/ISSUE_TEMPLATE/task.md
+
+\`\`\`yaml
+name: "🧹 Task"
+about: Mechanical work across a known set of places
+title: "[task] "
+labels: content
+\`\`\`
+
+## The command that returns the list
+
+\`\`\`bash
+
+\`\`\`
+
+When this issue was written it returned N results. That set is the entire scope.
+
+If no command enumerates it, write the list by hand, close it, and say why you left something out.
+
+## Why now
+
+A sentence or two. What breaks or confuses anyone while it stays this way.
+
+## Acceptance criteria
+
+- [ ] The command above returns nothing
+- [ ] \`bun run build\` passes with no errors
+- [ ] Both language variants updated, if applicable`}
+      />
