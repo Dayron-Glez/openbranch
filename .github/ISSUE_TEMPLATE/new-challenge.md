@@ -11,7 +11,7 @@ What realistic situation does the reader face? The "ticket" — what was reporte
 
 ## 🏷️ Category & difficulty
 
-- **Category:** bug-fix | code-review | testing | git | docs
+- **Category:** bug-fix | code-review | testing | git | documentation
 - **Difficulty:** beginner | moderate | demanding
 - **Estimated time:** ~N minutes
 
