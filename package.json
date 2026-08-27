@@ -12,6 +12,7 @@
     "format:check": "prettier --check .",
     "types:check": "next typegen && fumadocs-mdx && tsc --noEmit",
     "db:sync-challenges": "bun scripts/sync-challenges.ts",
+    "db:check-challenges": "bun scripts/sync-challenges.ts --check",
     "db:which": "bun scripts/db-env.ts which",
     "db:use:test": "bun scripts/db-env.ts use-test",
     "db:use:prod": "bun scripts/db-env.ts use-prod",

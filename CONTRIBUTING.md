@@ -209,14 +209,15 @@ skills:
 
 ### Registering it in the catalogue
 
-Completing a challenge awards points, and the points come from a `challenges` row in the database keyed by slug. Regenerating that catalogue is a **maintainer step**, not something a contributor can do from a fork:
+Completing a challenge awards points, and the points come from a `challenges` row in the database keyed by slug. Regenerating that catalogue is your job, and it needs no database access — the command only writes files:
 
 ```bash
-bun run db:sync-challenges   # writes a migration from the MDX frontmatter
-bunx supabase db push        # applies it
+bun run db:sync-challenges   # rewrites supabase/challenges.json + a migration
 ```
 
-Until it runs, a newly merged challenge still works — it just scores the beginner default of 10 points regardless of its declared difficulty. Mention in your PR that the sync is pending so it doesn't get forgotten.
+Commit both. **CI fails if you don't** — `bun run db:check-challenges` recomputes the catalogue from your frontmatter and compares it against the committed manifest, so a challenge whose entry was never generated cannot merge.
+
+Applying the migration is the part only a maintainer can do (`bunx supabase db push`). Until that runs, a merged challenge still works — it just scores the beginner default of 10 points regardless of its declared difficulty, because the database falls back rather than failing.
 
 ### Writing the brief
 
