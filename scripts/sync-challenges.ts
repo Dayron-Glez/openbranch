@@ -1,18 +1,31 @@
 /**
- * Regenerates the challenges catalog from content/playground frontmatter.
+ * Keeps the challenges catalog in step with content/playground frontmatter.
  *
- * Reads category and difficulty from every challenge MDX (Spanish variant —
- * both languages share the same values), maps difficulty to points, and
- * writes a `*_sync_challenges.sql` migration that upserts the catalog and
- * deactivates removed challenges. Apply it with `bunx supabase db push`.
+ * Two modes:
  *
- * Usage: bun run db:sync-challenges
+ *   bun run db:sync-challenges    Rewrites supabase/challenges.json and emits a
+ *                                 `*_sync_challenges.sql` migration that upserts
+ *                                 the catalog and deactivates removed challenges.
+ *                                 Apply it with `bunx supabase db push`.
+ *
+ *   bun run db:check-challenges   Recomputes the catalog from the MDX and compares
+ *                                 it against supabase/challenges.json. Exits non-zero
+ *                                 on drift. Runs in CI; touches no database.
+ *
+ * The manifest exists so CI can catch a challenge whose catalog entry was never
+ * generated, without needing a database credential. It is written by the same
+ * command that writes the migration, so the two cannot drift from each other —
+ * only from the MDX, which is exactly what the check looks for.
+ *
+ * Note that applying the migration stays a maintainer step. CI verifies that the
+ * catalog was generated and committed; it cannot verify that it was pushed.
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 
 const CONTENT_DIR = join(process.cwd(), "content", "playground")
 const MIGRATIONS_DIR = join(process.cwd(), "supabase", "migrations")
+const MANIFEST_PATH = join(process.cwd(), "supabase", "challenges.json")
 
 const POINTS_BY_DIFFICULTY: Readonly<Record<string, number>> = {
   beginner: 10,
@@ -79,15 +92,101 @@ update public.challenges set active = false where slug not in (${activeSlugs});
 `
 }
 
+/** Trailing newline so the file ends the way every other tracked file does. */
+const buildManifestJson = (challenges: readonly ChallengeMeta[]): string =>
+  `${JSON.stringify(challenges, null, 2)}\n`
+
+const readManifest = (): readonly ChallengeMeta[] => {
+  try {
+    return JSON.parse(readFileSync(MANIFEST_PATH, "utf8")) as readonly ChallengeMeta[]
+  } catch {
+    throw new Error(
+      `Could not read ${MANIFEST_PATH}. Run \`bun run db:sync-challenges\` to generate it.`
+    )
+  }
+}
+
+type Drift = {
+  readonly added: readonly ChallengeMeta[]
+  readonly removed: readonly ChallengeMeta[]
+  readonly changed: readonly { readonly before: ChallengeMeta; readonly after: ChallengeMeta }[]
+}
+
+const diffCatalogs = (
+  manifest: readonly ChallengeMeta[],
+  fromContent: readonly ChallengeMeta[]
+): Drift => {
+  const bySlug = (entries: readonly ChallengeMeta[]): ReadonlyMap<string, ChallengeMeta> =>
+    new Map(entries.map((entry) => [entry.slug, entry]))
+
+  const manifestBySlug = bySlug(manifest)
+  const contentBySlug = bySlug(fromContent)
+
+  const added = fromContent.filter((entry) => !manifestBySlug.has(entry.slug))
+  const removed = manifest.filter((entry) => !contentBySlug.has(entry.slug))
+  const changed = fromContent
+    .map((after) => ({ before: manifestBySlug.get(after.slug), after }))
+    .filter(
+      (pair): pair is { before: ChallengeMeta; after: ChallengeMeta } =>
+        pair.before !== undefined &&
+        (pair.before.category !== pair.after.category ||
+          pair.before.difficulty !== pair.after.difficulty ||
+          pair.before.points !== pair.after.points)
+    )
+
+  return { added, removed, changed }
+}
+
+const describe = ({ slug, category, difficulty, points }: ChallengeMeta): string =>
+  `${slug} (${category}, ${difficulty}, ${points} pts)`
+
+const reportDrift = (drift: Drift): void => {
+  console.error("The challenges catalog does not match content/playground frontmatter.\n")
+
+  for (const entry of drift.added) {
+    console.error(`  + ${describe(entry)} — in the MDX, missing from the catalog`)
+  }
+  for (const entry of drift.removed) {
+    console.error(`  - ${describe(entry)} — in the catalog, no longer in the MDX`)
+  }
+  for (const { before, after } of drift.changed) {
+    console.error(
+      `  ~ ${after.slug} — catalog says ${describe(before)}, MDX says ${describe(after)}`
+    )
+  }
+
+  console.error("\nWithout this, a completed challenge scores the beginner default of 10 points")
+  console.error("regardless of its declared difficulty — silently, because the database falls")
+  console.error("back rather than failing.\n")
+  console.error("Fix it with:  bun run db:sync-challenges")
+  console.error("Then commit supabase/challenges.json and the generated migration.")
+}
+
 const migrationTimestamp = (): string => new Date().toISOString().replace(/\D/g, "").slice(0, 14)
 
-const run = (): void => {
+const runCheck = (): void => {
+  const drift = diffCatalogs(readManifest(), collectChallenges())
+
+  if (drift.added.length === 0 && drift.removed.length === 0 && drift.changed.length === 0) {
+    console.log("Challenges catalog is in sync with content/playground frontmatter.")
+    return
+  }
+
+  reportDrift(drift)
+  process.exit(1)
+}
+
+const runSync = (): void => {
   const challenges = collectChallenges()
   const migrationPath = join(MIGRATIONS_DIR, `${migrationTimestamp()}_sync_challenges.sql`)
 
+  writeFileSync(MANIFEST_PATH, buildManifestJson(challenges))
   writeFileSync(migrationPath, buildMigrationSql(challenges))
-  console.log(`Wrote ${migrationPath} (${challenges.length} challenges).`)
-  console.log("Review it, then apply with: bunx supabase db push")
+
+  console.log(`Wrote ${MANIFEST_PATH} and ${migrationPath} (${challenges.length} challenges).`)
+  console.log("Commit both, then apply the migration with: bunx supabase db push")
 }
+
+const run = (): void => (process.argv.includes("--check") ? runCheck() : runSync())
 
 run()

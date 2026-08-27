@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "bug-fix-event-emitter",
+    "category": "bug-fix",
+    "difficulty": "moderate",
+    "points": 20
+  },
+  {
+    "slug": "bug-fix-off-by-one",
+    "category": "bug-fix",
+    "difficulty": "beginner",
+    "points": 10
+  },
+  {
+    "slug": "code-review-noisy-pr",
+    "category": "code-review",
+    "difficulty": "moderate",
+    "points": 20
+  },
+  {
+    "slug": "docs-gateway-module",
+    "category": "documentation",
+    "difficulty": "beginner",
+    "points": 10
+  },
+  {
+    "slug": "git-merge-conflict",
+    "category": "git",
+    "difficulty": "demanding",
+    "points": 30
+  },
+  {
+    "slug": "testing-fetchupstream",
+    "category": "testing",
+    "difficulty": "moderate",
+    "points": 20
+  }
+]
