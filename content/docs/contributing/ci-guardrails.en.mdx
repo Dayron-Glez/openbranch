@@ -59,8 +59,8 @@ every review. A checklist the contributor reads _before_ requesting review:
 ## Checklist
 
 - [ ] Content is accurate and tested against a real codebase
-- [ ] `npm run build` passes
-- [ ] No TypeScript errors (`npm run types:check` passes)
+- [ ] `bun run build` passes
+- [ ] No TypeScript errors (`bun run types:check` passes)
 - [ ] Follows the writing style of existing guides
 ```
 
@@ -71,13 +71,13 @@ the checks that have an objective right answer:
 
 ```yaml
 - name: Lint
-  run: npm run lint
+  run: bun run lint
 - name: Check formatting
-  run: npm run format:check
+  run: bun run format:check
 - name: Type check
-  run: npm run types:check
+  run: bun run types:check
 - name: Build
-  run: npm run build
+  run: bun run build
 ```
 
 <Callout type="warn">
@@ -179,7 +179,7 @@ default:
 - name: Lint
   run: |
     echo "::add-matcher::.github/problem-matchers/eslint.json"
-    npm run lint
+    bun run lint
 ```
 
 <Callout type="warn">
@@ -201,7 +201,7 @@ gh api repos/OWNER/REPO/branches/main/protection --method PUT --input - <<'EOF'
     "strict": true,
     "checks": [
       { "context": "Type check & build" },
-      { "context": "SonarCloud Code Analysis" }
+      { "context": "SonarCloud" }
     ]
   },
   "enforce_admins": true,

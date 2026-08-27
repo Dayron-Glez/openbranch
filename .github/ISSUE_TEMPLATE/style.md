@@ -33,7 +33,7 @@ Describe the visual or styling change.
 - [ ] Responsive across all breakpoints
 - [ ] No existing styles broken
 - [ ] `prefers-reduced-motion` respected if animations are involved
-- [ ] `npm run build` passes with no errors
+- [ ] `bun run build` passes with no errors
 
 ## 📸 Before / After
 

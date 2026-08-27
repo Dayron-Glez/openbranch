@@ -48,4 +48,4 @@ Links to related docs, PRs, blog posts, or codebases that inspired this:
 - [ ] Guide is accurate and follows the openbranch writing style
 - [ ] Both language variants exist (if applicable)
 - [ ] Registered in the corresponding `meta.json` / `meta.en.json`
-- [ ] `npm run build` passes with no errors
+- [ ] `bun run build` passes with no errors
