@@ -29,3 +29,6 @@ next-env.d.ts
 # claude
 .claude
 .superpowers
+
+# mcp
+.mcp.json
