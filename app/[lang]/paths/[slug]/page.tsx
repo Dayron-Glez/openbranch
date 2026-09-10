@@ -36,8 +36,7 @@ import { IconRoute, IconClock, IconUser } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 
 export function generateStaticParams(): { lang: string; slug: string }[] {
-  // Runs during `next build` — a broken doc/challenge reference fails here
-  // rather than rendering a silently missing step.
+  // Runs during `next build`, so a broken reference fails there.
   validatePathCatalog()
   return i18n.languages.flatMap((lang) =>
     getAllPaths(lang).map((path) => ({ lang, slug: path.slug }))
@@ -113,10 +112,8 @@ type ResolvedSection = {
 }
 
 /**
- * Resolves every step in reading order, then slices the result back into
- * sections. Slicing before dropping unresolved steps is what keeps a section's
- * slice aligned with its own step count — the build-time validator means a
- * `null` should be impossible, but the ordering makes that assumption harmless.
+ * Slicing back into sections happens *before* unresolved steps are dropped —
+ * that is what keeps each section's slice aligned with its own step count.
  */
 const resolvePathSections = async (
   path: LearningPath,
@@ -197,11 +194,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   const doneCount =
     progress === null ? 0 : flatSteps.filter((step) => isStepDone(step, progress)).length
   const resolvedSteps = sections.flatMap((section) => section.steps)
-  /**
-   * The CTA points at where you actually are. Before guides were trackable the
-   * pointer skipped them, so a signed-in reader could be told to "start with
-   * the guide" while the marker sat on a later challenge.
-   */
+  // Falls back to the first step when nothing is "current" — i.e. signed out.
   const currentStep = resolvedSteps.find((step) => step.status === "current") ?? resolvedSteps[0]
   const currentStepNumber = resolvedSteps.indexOf(currentStep) + 1
 

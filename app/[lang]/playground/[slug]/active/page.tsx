@@ -164,7 +164,7 @@ export default async function ActiveChallengePage({
     const docsTemplate = getDocsTemplateBySlug(slug)
     if (docsTemplate === null) notFound()
     const docsSnapshot = session.snapshot as DocsSnapshot | null
-    // Pass only the serializable subset — criteria contain functions and cannot be
+    // Only the serializable subset: `criteria` holds functions, which cannot be
     // sent as Server Component props to a Client Component.
     const docsHints = docsTemplate.hintsByLang?.[lang] ?? docsTemplate.hints
     const docsTemplateData = {
