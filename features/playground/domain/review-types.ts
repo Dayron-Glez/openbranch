@@ -1,5 +1,4 @@
-// Re-export shim — types live in domain/snapshots.ts.
-// Kept for backward compatibility; update imports to domain/snapshots when convenient.
+// Re-export shim: the types live in domain/snapshots.ts. Move imports there.
 export type {
   InlineComment,
   ReviewDecision,

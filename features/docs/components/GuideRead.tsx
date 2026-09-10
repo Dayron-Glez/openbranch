@@ -7,17 +7,11 @@ import { IconCheck, IconBook } from "@/icons"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 
-/**
- * Read state is per-user, but the docs pages are statically rendered and their
- * whole layout chain is free of dynamic APIs. Resolving this during their
- * render would turn every guide into a per-request render — the regression
- * #152 introduced and had to revert.
- *
- * So the set is fetched from /api/doc-reads. It lives in the docs layout, which
- * survives client-side navigation between guides, so it is fetched once per
- * docs session instead of once per guide. Writes still go through a server
- * action, like every other mutation in this codebase.
- */
+// Read state is per-user, but the docs pages are statically rendered and their
+// whole layout chain is free of dynamic APIs — resolving it during their render
+// turns every guide into a per-request render. Hence the fetch from
+// /api/doc-reads, mounted in the docs layout: that survives client-side
+// navigation, so it runs once per docs session rather than once per guide.
 
 type DocReadsValue = {
   /** `null` until the fetch resolves — the UI renders nothing before then. */
@@ -32,7 +26,6 @@ export const DocReadsProvider = ({ children }: { readonly children: ReactNode })
   const [readSlugs, setReadSlugs] = useState<ReadonlySet<string> | null>(null)
   const [signedIn, setSignedIn] = useState<boolean>(false)
 
-  /** Latest desired value per slug, and the in-flight chain that will send it. */
   const desiredRef = useRef<Map<string, boolean>>(new Map())
   const chainRef = useRef<Map<string, Promise<void>>>(new Map())
 
@@ -60,10 +53,10 @@ export const DocReadsProvider = ({ children }: { readonly children: ReactNode })
   }, [])
 
   /**
-   * Optimistic locally, serialised on the wire. Auto-marking fires an insert
-   * and an un-mark a moment later must not be able to land before it — that
-   * would leave a surviving row with the UI showing unread. Chaining per slug
-   * and always sending the latest intent makes that ordering unrepresentable.
+   * Optimistic locally, serialised on the wire. An un-mark must not be able to
+   * land before the auto-mark insert it follows — that leaves a surviving row
+   * with the UI showing unread. Chaining per slug and always sending the latest
+   * intent makes that ordering unrepresentable.
    */
   const setRead = useCallback((docSlug: string, lang: string, read: boolean): void => {
     setReadSlugs((current) => {
@@ -84,8 +77,6 @@ export const DocReadsProvider = ({ children }: { readonly children: ReactNode })
     chainRef.current.set(docSlug, next)
   }, [])
 
-  // Memoised: a fresh object here re-renders every guide's control on any
-  // render of the docs layout.
   const value = useMemo<DocReadsValue>(
     () => ({ readSlugs, signedIn, setRead }),
     [readSlugs, signedIn, setRead]
@@ -96,7 +87,6 @@ export const DocReadsProvider = ({ children }: { readonly children: ReactNode })
 
 const useDocReads = (): DocReadsValue | null => useContext(DocReadsContext)
 
-/** Beside the title. Only ever shown once the guide is actually read. */
 export const GuideReadIndicator = ({
   docSlug,
   label,
@@ -115,7 +105,6 @@ export const GuideReadIndicator = ({
   )
 }
 
-/** Milliseconds the end of the article must stay on screen before auto-marking. */
 const DWELL_MS = 1200
 
 export type GuideReadDict = {
@@ -135,10 +124,7 @@ type GuideReadButtonProps = {
   readonly dict: GuideReadDict
 }
 
-/**
- * At the end of the article, so it doubles as the "reached the end" sentinel —
- * no second element to keep in sync with it.
- */
+/** Sits at the end of the article, so it doubles as the "reached the end" sentinel. */
 export const GuideReadButton = ({ docSlug, lang, dict }: GuideReadButtonProps): ReactNode => {
   const ctx = useDocReads()
   const hostRef = useRef<HTMLDivElement>(null)
@@ -187,10 +173,8 @@ export const GuideReadButton = ({ docSlug, lang, dict }: GuideReadButtonProps): 
   if (!ready || setRead === undefined) return null
 
   /**
-   * Marking is one click; un-marking asks first. Un-marking deletes the row,
-   * which loses the original `read_at` — re-marking starts the date over — and
-   * it drops the path's progress, so it is worth a beat of friction that
-   * marking is not.
+   * Un-marking asks first: it deletes the row, which loses the original
+   * `read_at` and drops the path's progress. Marking back costs neither.
    */
   const onClick = (): void => {
     autoMarkArmed.current = false

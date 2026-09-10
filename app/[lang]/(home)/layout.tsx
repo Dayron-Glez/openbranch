@@ -2,10 +2,8 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
   return (
     <div
       className="bg-bg text-fg min-h-dvh"
-      // Ensure the landing is always rendered with dark palette
-      // regardless of the user's Fumadocs theme preference.
-      // --color-bg / --color-fg are hardcoded dark values in @theme
-      // and never change with light/dark mode.
+      // `--color-bg` / `--color-fg` are hardcoded dark values in @theme and do
+      // not follow light/dark mode.
     >
       {children}
     </div>

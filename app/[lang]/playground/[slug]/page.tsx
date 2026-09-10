@@ -131,7 +131,6 @@ export default async function ChallengePage({
       className="relative z-1 flex h-[calc(100dvh-48px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
       <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
-        {/* breadcrumb */}
         <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
           <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
             <li>
@@ -159,11 +158,8 @@ export default async function ChallengePage({
           </ol>
         </nav>
 
-        {/* two-column layout */}
         <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10 max-[900px]:grid-cols-1">
-          {/* ── left column ── */}
           <div className="pg-left-scroll min-[901px]:overflow-y-auto min-[901px]:pb-10">
-            {/* category tag + status */}
             <div className="mb-3.5 flex items-center gap-3">
               <span
                 data-track={colorToken}
@@ -175,19 +171,16 @@ export default async function ChallengePage({
               {sessionStatusBadge}
             </div>
 
-            {/* title */}
             <h1 className="text-fg m-0 mb-3 text-[32px] leading-[1.08] font-medium tracking-[-0.02em] text-balance max-[640px]:text-[26px]">
               {page.data.title}
             </h1>
 
-            {/* description / lead */}
             {page.data.description !== undefined && (
               <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">
                 {page.data.description}
               </p>
             )}
 
-            {/* skill tags */}
             {skills.length > 0 && (
               <div className="mb-8 flex flex-wrap gap-[7px]">
                 {skills.map((skill) => (
@@ -201,15 +194,12 @@ export default async function ChallengePage({
               </div>
             )}
 
-            {/* PR preview card (code-review challenges) */}
             {page.data.pr_preview !== undefined && <PrPreviewCard data={page.data.pr_preview} />}
 
-            {/* MDX prose body */}
             <div className="pg-prose">
               <MdxContent components={getMDXComponents()} />
             </div>
 
-            {/* recommended first */}
             {page.data.recommended_first !== undefined && (
               <div className="mt-6">
                 <p className="text-fg-muted mb-2 font-mono text-[11px] tracking-[0.08em] uppercase">
@@ -223,7 +213,6 @@ export default async function ChallengePage({
             )}
           </div>
 
-          {/* ── sidebar ── */}
           <aside className="max-[900px]:order-first">
             <div className="flex flex-col gap-4">
               <div className="bg-bg-card border-line rounded-(--r-12) border p-[18px]">
@@ -255,7 +244,6 @@ export default async function ChallengePage({
                   }
                 />
 
-                {/* kv metadata */}
                 <div>
                   <div className="border-line flex items-center justify-between gap-3 border-b py-3">
                     <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
@@ -324,7 +312,6 @@ export default async function ChallengePage({
                 </div>
               </div>
 
-              {/* card: You'll practice */}
               {skills.length > 0 && (
                 <div className="bg-bg-card border-line rounded-(--r-12) border px-[18px] py-4">
                   <p className="text-fg-muted mb-3 font-mono text-[11px] tracking-[0.08em] uppercase">

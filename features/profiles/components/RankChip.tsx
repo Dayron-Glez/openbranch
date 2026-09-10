@@ -3,11 +3,7 @@ import { IconRoute, IconTrophy } from "@/icons"
 import type { ProfileDict } from "@/lib/dictionaries/profile"
 import type { ProfileRank } from "../server/profile-service"
 
-/**
- * Beyond this the position stops being a fact worth printing. `#412 of 1,240`
- * reads as *last in the class*, which is the opposite of what someone still
- * building a record needs to see, so a band replaces the number.
- */
+/** Past this a bare position reads as *last in the class*, so a band replaces it. */
 const EXACT_RANK_LIMIT = 100
 
 const CHIP_BASE =
@@ -17,13 +13,6 @@ const CHIP_BASE =
 const percentileOf = (rank: number, totalRanked: number): number =>
   Math.max(1, Math.ceil((rank / totalRanked) * 100))
 
-/**
- * The profile's one lightly-loud accent, and the only place a number is
- * allowed to shout. Three tiers, so it appears only when it means something:
- * an exact position near the top, a band further down, and nothing at all for
- * a profile with no completions — where `rank` is null and the chip goes quiet
- * instead of inventing a last place.
- */
 export const RankChip = ({
   rank,
   dict,

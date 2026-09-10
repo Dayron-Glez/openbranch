@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 import { MOTION, clamp, dash } from "@/features/playground/domain/badge-motion"
 
-/** `first-merge` — two commit nodes pop in, the trunk draws down, the branch curves into the merge node. */
 export const MergeIcon = ({ t }: { readonly t: number }): ReactNode => {
   const top = MOTION.pop(0, 0.34)(t)
   const bottom = MOTION.pop(0.12, 0.34)(t)

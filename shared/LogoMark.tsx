@@ -4,12 +4,9 @@ type LogoMarkProps = {
   readonly size?: number
   readonly animate?: boolean
   /**
-   * The 404 anchor. The branch stops short of merging back — dashed,
-   * fading — and its accent endpoint breaks free and drifts. Same geometry
-   * as the shipped mark, not a second drawing: a single path shortened and
-   * one node detached, so both variants stay drawn from one source instead
-   * of drifting apart if the logo ever changes. Disabled under
-   * `prefers-reduced-motion` (app/animations.css).
+   * The 404 variant: the branch stops short of merging back. Same geometry as
+   * the shipped mark — one path shortened and one node detached — so the two
+   * cannot drift apart if the logo changes.
    */
   readonly broken?: boolean
   readonly className?: string

@@ -47,7 +47,6 @@ export const PATH_CARD_GRID =
 const NODE_BASE =
   "grid size-[21px] shrink-0 place-items-center rounded-full border-[1.5px] transition-[background-color,border-color,color,box-shadow] duration-(--d-base) ease-(--ease) [&_svg]:size-[11px]"
 
-/** The icon a not-done node shows: what kind of step it is, not a status glyph. */
 const StepTypeIcon = ({
   step,
   trackIcon,
@@ -56,11 +55,6 @@ const StepTypeIcon = ({
   readonly trackIcon: ReactNode
 }): ReactNode => (step.type === "doc" ? <IconBook /> : trackIcon)
 
-/**
- * One node per step. `current` is the first not-done step — only meaningful
- * while signed in and not yet finished; the caller gates it, so this never
- * has to ask "am I current" itself.
- */
 const StepNode = ({
   step,
   trackIcon,
@@ -97,10 +91,6 @@ const Segment = ({ done }: { readonly done: boolean }): ReactNode => (
   <span className={`h-[2px] flex-1 rounded-full ${done ? "bg-ob-accent" : "bg-line-2"}`} />
 )
 
-/**
- * The full node+segment sequence — every step in order. Used signed-out and
- * in-progress; the completed state renders `CollapsedStepper` instead.
- */
 const FullStepper = ({
   steps,
   trackIcon,
@@ -122,11 +112,8 @@ const FullStepper = ({
 )
 
 /**
- * Completed state: not CSS hiding nodes (the mock's trick, valid in static
- * HTML) — only the first and last step render at all. The real step count
- * lives in the caption, not the node count. A 1-step path (unreachable today,
- * the catalog validator requires at least one step per section, but cheap to
- * get right) collapses to a single node with no bar.
+ * Only the first and last step render at all — the real step count lives in the
+ * caption, not the node count. A 1-step path collapses to a single node, no bar.
  */
 const CollapsedStepper = ({ length }: { readonly length: number }): ReactNode => {
   const endpoints = [...new Set([0, length - 1])]
@@ -201,8 +188,8 @@ export const PathCard = ({
 }): ReactNode => {
   const isCompleted =
     item.progress !== null && item.progress.total > 0 && item.progress.done === item.progress.total
-  // Signed out means every step's `done` is `null`, so without gating on
-  // sign-in the first step would read as "current" with nothing done.
+  // Signed out, every step's `done` is `null` — without the gate the first step
+  // would read as "current" with nothing done.
   const currentIndex =
     item.progress !== null && !isCompleted ? item.steps.findIndex((step) => step.done !== true) : -1
 

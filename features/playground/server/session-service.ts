@@ -74,12 +74,7 @@ export const markSessionCompleted = async (
   return (data?.length ?? 0) > 0
 }
 
-/**
- * Awards the track badge for the given slug if the user has completed at least
- * one challenge in that track. The upsert ignores duplicates, so holding the
- * badge already is a no-op. Badge key and slug prefix are resolved from
- * CHALLENGE_TRACKS (domain/manifest).
- */
+/** The upsert ignores duplicates, so already holding the badge is a no-op. */
 export const awardTrackBadge = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -118,10 +113,8 @@ export const awardTrackBadge = async (
 }
 
 /**
- * Awards streak-7 (current_streak >= 7, checked immediately after the
- * completion trigger runs) and all-tracks (the user already holds all 5
- * track badges). Both upserts ignore duplicates, so holding either badge
- * already is a no-op.
+ * `current_streak` is read immediately after the completion trigger runs, so
+ * the streak-7 check sees this completion. Both upserts ignore duplicates.
  */
 export const awardMilestoneBadges = async (
   supabase: SupabaseServerClient,

@@ -1,5 +1,3 @@
-// Formats TypeScript source with Prettier loaded lazily from the browser
-// bundle, matching the project's print style. Shared by the playground editors.
 export const formatTypeScript = async (code: string): Promise<string> => {
   const [prettier, parserTypeScript, parserEstree] = await Promise.all([
     import("prettier/standalone"),

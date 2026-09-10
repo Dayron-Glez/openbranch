@@ -12,21 +12,15 @@ type Props = {
   readonly children: ReactNode
 }
 
-// Switching locale changes <html lang> and the i18n provider. Fumadocs'
-// default locale change does a client-side redirect, which remounts
-// <html>/RootProvider; a full-document navigation is the correct context
-// switch and avoids the remount.
+// Fumadocs' default locale change does a client-side redirect, which remounts
+// <html>/RootProvider. A full-document navigation avoids that remount.
 export function I18nRootProvider({ i18n, search, children }: Props) {
   return (
     <RootProvider
-      // next-themes has nothing to do here: the app is dark-only and <html>
-      // already hardcodes the `dark` class server-side ([lang]/layout.tsx) —
-      // nothing calls `useTheme()`. Left enabled, its FOUC-prevention <script>
+      // The app is dark-only: <html> hardcodes the `dark` class server-side
+      // and nothing calls `useTheme()`. Left enabled, next-themes' FOUC script
       // is what React 19 flags as "Encountered a script tag while rendering
-      // React component" on any fresh render of this provider, including
-      // every notFound() page (previously invisible only because no
-      // notFound() call ever reached this tree — Next rendered its own
-      // bare default instead).
+      // React component" on any fresh render of this provider.
       theme={{ enabled: false }}
       i18n={{
         ...i18n,

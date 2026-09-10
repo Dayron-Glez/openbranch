@@ -10,7 +10,7 @@ export type SectionStats = {
 
 export function getSectionStats(slug: string, lang: string): SectionStats {
   const pages = source.getPages(lang)
-  // Exclude the section index page (slugs.length === 1); only count actual guides
+  // Excludes the section index page, which is not itself a guide.
   const sectionPages = pages.filter((p) => p.slugs[0] === slug && p.slugs.length > 1)
 
   const count = sectionPages.length
@@ -25,12 +25,7 @@ export function getSectionStats(slug: string, lang: string): SectionStats {
   return { count, lastModified }
 }
 
-/**
- * Kept as the docs sections' entry point, but the bucketing now lives in
- * lib/relative-date.ts so the profile activity feed can share it. These two
- * literals were the only copy in this module and stay here to keep the docs
- * cards rendering exactly as before.
- */
+/** Thin wrapper: the bucketing lives in lib/relative-date.ts, shared with the profile. */
 export function formatRelativeDate(date: Date | null, lang: string): string {
   return formatRelative(date, lang, {
     today: lang === "es" ? "hoy" : "today",

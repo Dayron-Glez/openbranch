@@ -4,7 +4,7 @@ import { usePathname } from "fumadocs-core/framework"
 import { SidebarItem, useFolderDepth } from "fumadocs-ui/components/sidebar/base"
 import type { Item as PageTreeItem } from "fumadocs-core/page-tree"
 
-// Base classes — matches fumadocs itemVariants "link" variant
+// Mirrors fumadocs itemVariants, "link" variant.
 const baseCls = [
   "relative flex w-full flex-row items-center gap-2 rounded-lg p-2 text-start",
   "text-fd-muted-foreground transition-colors",
@@ -13,7 +13,7 @@ const baseCls = [
   "[&_svg]:size-4 [&_svg]:shrink-0",
 ].join(" ")
 
-// Left accent bar on active child items — fumadocs "highlight" variant
+// Mirrors fumadocs itemVariants, "highlight" variant.
 const highlightCls = [
   "data-[active=true]:before:content-['']",
   "data-[active=true]:before:bg-fd-primary",

@@ -1,13 +1,5 @@
 import type { ReactNode } from "react"
 
-/**
- * A section with nothing in it yet, drawn on purpose rather than left blank.
- *
- * The whole profile is one template at two densities, and the sparse one keeps
- * the same sections in the same order — so what a section shows when empty is
- * as designed as what it shows when full. Dashed, quiet, and it says what will
- * appear here, which is the difference between "nothing yet" and "broken".
- */
 export const EmptySection = ({
   icon,
   title,

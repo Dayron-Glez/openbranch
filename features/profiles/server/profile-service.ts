@@ -6,20 +6,11 @@ import { resolveEarnedBadges } from "@/features/playground/domain/manifest"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
-/**
- * Reads for a public profile, keyed by username rather than by user id.
- *
- * Every query here hits an object created in the public-profiles migration —
- * views and functions that bypass RLS on a deliberately narrow surface — never
- * a base table. `user_stats`, `user_badges`, `challenge_sessions` and
- * `doc_reads` remain select-own, so pointing any of these at a base table
- * would silently return empty rather than fail, which is exactly the bug the
- * separate surface exists to prevent.
- *
- * Same convention as the other services: the client comes in as the first
- * argument, failures are logged and degraded rather than thrown, so one bad
- * query costs a section and not the page.
- */
+// Every query here must hit an object from the public-profiles migration —
+// views and functions that bypass RLS on a deliberately narrow surface — never
+// a base table. `user_stats`, `user_badges`, `challenge_sessions` and
+// `doc_reads` are select-own, so a base table here returns empty rather than
+// failing.
 
 export type ProfileOverview = {
   readonly username: string
@@ -47,11 +38,8 @@ export type ProfileActivityEntry = {
 }
 
 /**
- * Identity and headline numbers, or null when no such user exists.
- *
- * A query failure also returns null and therefore 404s. That is a deliberate
- * simplification: the alternative is a distinct error state for a page whose
- * every section is already degrading independently, and a transient 404 reads
+ * A query failure returns null and therefore 404s, deliberately: every other
+ * section of the page already degrades on its own, and a transient 404 reads
  * better than a shell with five empty sections.
  */
 export const getProfileOverview = async (
@@ -102,13 +90,10 @@ const getProfilePersistedBadges = async (
 }
 
 /**
- * Every completion, newest first. The view already collapses replays to one
- * row per challenge, so this is bounded by the challenge catalogue — six today
- * — not by how much someone has played.
- *
- * Unbounded on purpose: the profile needs the newest few for the activity feed
- * *and* the distinct tracks across all of them for the summary, and paying for
- * one small query beats two. Worth a limit if the catalogue ever grows large.
+ * Unbounded on purpose: the profile needs the newest few rows for the activity
+ * feed *and* the distinct tracks across all of them for the summary, and one
+ * small query beats two. The view collapses replays to one row per challenge,
+ * so this is bounded by the catalogue — six today. Worth a limit if that grows.
  */
 export const getProfileActivity = async (
   supabase: SupabaseServerClient,
@@ -155,8 +140,7 @@ export const getProfileActivityAndBadges = async (
 }
 
 /**
- * Rank among users with at least one completion, or null when this user has
- * none. Null is the real answer, not a failure: the design suppresses the rank
+ * Null is the real answer, not a failure: the design suppresses the rank
  * entirely for a profile with nothing earned rather than showing a last place.
  */
 export const getProfileRank = async (
@@ -177,11 +161,7 @@ export const getProfileRank = async (
 }
 
 /**
- * Path progress for an arbitrary user, shaped so it drops straight into
- * `buildPathCardItems` — that function already takes progress as an argument
- * and never touches `auth`, so nothing about it assumes the viewer.
- *
- * The slugs to check are sent to the function rather than fetched from it: the
+ * The slugs to check are sent into the RPC rather than fetched from it: the
  * surface deliberately cannot answer "what has this person read", only "of
  * these path steps, which are done".
  */

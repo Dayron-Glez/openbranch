@@ -31,7 +31,7 @@ const DIFFICULTY_ORDER: Record<string, number> = { beginner: 0, moderate: 1, dem
 
 type PlaygroundPage = ReturnType<typeof playgroundSource.getPages>[number]
 
-/** Gentlest next step from a candidate set — null when nothing is left. */
+/** Gentlest first — null when nothing is left. */
 const easiestOf = (candidates: readonly PlaygroundPage[]): PlaygroundPage | null =>
   [...candidates].sort(
     (a, b) =>
@@ -48,12 +48,6 @@ const hrefOfStep = (step: RecapStep, lang: string): string =>
     ? (source.getPage(step.slug.split("/"), lang)?.url ?? localizedHref(lang, `/docs/${step.slug}`))
     : localizedHref(lang, `/playground/${step.slug}`)
 
-/**
- * Shapes the path recap for the view. Its own function because the completed
- * challenge may sit anywhere in the path, and deciding whether this finished
- * it or merely advanced it is a lump of branching the page does not need to
- * carry inline.
- */
 const buildRecapForPage = async ({
   supabase,
   userId,
@@ -71,8 +65,6 @@ const buildRecapForPage = async ({
   readonly completedSlugs: ReadonlySet<string>
   readonly otherPathsHref: string
 }): Promise<PathRecap> => {
-  // Guides count towards the recap now, so the read set is needed as well as
-  // the completed challenges the page already loaded.
   const readDocSlugs = await getReadDocSlugs(supabase, userId)
   const model = buildPathRecap(matchedPath, slug, {
     completedChallengeSlugs: completedSlugs,
@@ -326,16 +318,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
           readonly description: string
         })
 
-  // The animated reveal takes over from the quiet static card above whenever
-  // this completion actually earned something — track badge or milestone,
-  // covers all 7 keys unlike `badgeInfo`, which only ever knows this
+  // Covers all 7 badge keys, unlike `badgeInfo`, which only ever knows this
   // challenge's own track.
   const newlyEarnedKey = reward?.newlyEarnedBadgeKey ?? null
   const newlyEarnedInfo = newlyEarnedKey === null ? null : dict.badges[newlyEarnedKey]
 
   return (
     <main data-pg-main className="relative z-1 min-h-full overflow-x-hidden">
-      {/* ambient glow — centered on the logo ring, not at the very top */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[520px]"
         style={{
@@ -358,16 +347,13 @@ export default async function ResultPage({ params }: ResultPageProps) {
       )}
 
       <div className="relative mx-auto max-w-[900px] px-7 pt-12 pb-20 max-[520px]:px-5">
-        {/* ── hero ── */}
         <div className="mb-16 text-center">
-          {/* logo ring */}
           <div className="mb-8 flex justify-center">
             <div className="border-ob-accent/30 bg-ob-accent/[0.07] flex size-[80px] items-center justify-center rounded-full border-[1.5px]">
               <LogoMark size={36} />
             </div>
           </div>
 
-          {/* heading */}
           <h1 className="text-fg mx-auto mb-4 max-w-[520px] text-[52px] leading-[1.08] font-semibold tracking-[-0.03em] max-[640px]:text-[38px]">
             {dict.result.heading}{" "}
             <span
@@ -380,20 +366,16 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </span>
           </h1>
 
-          {/* body */}
           <p className="text-fg-2 mx-auto mb-8 max-w-[500px] text-[16px] leading-[1.6]">
             {dict.result.body}
           </p>
 
-          {/* stat chips */}
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {/* completed */}
             <span className="bg-ob-accent/[0.12] border-ob-accent/40 text-ob-accent inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
               <CheckIcon />
               {dict.result.statCompleted}
             </span>
 
-            {/* time */}
             {elapsedDisplay !== null && (
               <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
                 <ClockIcon />
@@ -401,7 +383,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
               </span>
             )}
 
-            {/* branch */}
             {challengeBranch !== null && (
               <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
                 <BranchIcon />
@@ -410,7 +391,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
               </span>
             )}
 
-            {/* track */}
             <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
               <TrackIcon />
               {dict.category[page.data.category]} {dict.result.trackSuffix}
@@ -425,7 +405,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
             pathDict={pathsDict}
           />
 
-          {/* CTAs */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             {(buildsOnChallenge ?? newTrackChallenge) !== null && (
               <Link
@@ -445,10 +424,9 @@ export default async function ResultPage({ params }: ResultPageProps) {
           </div>
         </div>
 
-        {/* ── sections ── */}
         <div className="flex flex-col gap-4">
-          {/* A newly earned badge is celebrated by the unlock dialog instead, so
-              this quiet reference only stands in when the badge was already held. */}
+          {/* A newly earned badge gets the unlock dialog instead, so this quiet
+              reference only stands in when the badge was already held. */}
           {badgeInfo !== null && badgeKey !== newlyEarnedKey && (
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
@@ -462,7 +440,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </div>
           )}
 
-          {/* detailed scoring coming soon */}
           <div className="bg-bg-card border-line flex items-start gap-4 rounded-(--r-12) border p-5">
             <div className="bg-bg-elev border-line flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border">
               <ChartIcon />
@@ -477,7 +454,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </div>
           </div>
 
-          {/* keep going */}
           {(buildsOnChallenge !== null || newTrackChallenge !== null) && (
             <div>
               <p className="text-fg-muted mt-4 mb-4 font-mono text-[11px] tracking-[0.1em] uppercase">
@@ -553,7 +529,6 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </div>
           )}
 
-          {/* all challenges */}
           <div className="mt-4 text-center">
             <Link
               href={playgroundPath}

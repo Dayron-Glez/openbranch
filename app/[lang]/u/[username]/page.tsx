@@ -55,26 +55,19 @@ export async function generateMetadata({
 }
 
 /**
- * Everything `StatsStrip` needs, rebuilt from the public profile surface.
- *
- * Two of its nine fields are deliberately blanked rather than sourced:
- *
- * - `pointsToday` — "+40 today" is a fact about the viewer's own session. On a
- *   stranger's page read a week later it answers a question nobody asked, so
- *   the badge stays hidden at 0.
- * - `nextTrack` — it renders "next up: X", a nudge aimed at whoever is looking.
- *   The profile passes `completedSub` instead, turning that cell's sub-line
- *   from a prompt into a record of the tracks they finished in.
- *
- * `streakState` is derived rather than stored: the database already zeroes
- * `current_streak` once the last completion falls outside today-or-yesterday,
- * so a positive streak is a live one.
+ * Derived, not stored: the database already zeroes `current_streak` once the
+ * last completion falls outside today-or-yesterday, so a positive streak is live.
  */
 const streakStateOf = (overview: ProfileOverview): EngagementStats["streakState"] => {
   if (overview.completedCount === 0) return "none"
   return overview.currentStreak > 0 ? "alive" : "broken"
 }
 
+/**
+ * `pointsToday` and `nextTrack` are blanked rather than sourced: both address
+ * the viewer ("+40 today", "next up: X"), which is wrong on someone else's
+ * page. `completedSub` replaces the latter.
+ */
 const toEngagementStats = (overview: ProfileOverview, tracksStarted: number): EngagementStats => ({
   totalPoints: overview.totalPoints,
   pointsToday: 0,
@@ -88,13 +81,8 @@ const toEngagementStats = (overview: ProfileOverview, tracksStarted: number): En
 })
 
 /**
- * The sub-line under the completed count.
- *
- * "6 of 6" is the case the design mock never had to handle — it composed for a
- * catalogue eight times this one's size, where the count always reads as
- * progress. At the real scale someone can finish everything, and then the
- * number is not progress at all, so it says so outright instead of implying
- * there is more to do.
+ * At this catalogue size someone can finish everything, so "6 of 6" gets its
+ * own wording rather than reading as progress with more to do.
  */
 const completedSubLine = (
   completedCount: number,
@@ -138,8 +126,7 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
 
   const supabase = await createClient()
 
-  // Nothing below depends on who is looking — this page reads someone else's
-  // record, entirely through the public views, and works signed out.
+  // Nothing below depends on who is looking: all public views, works signed out.
   const overview = await getProfileOverview(supabase, username)
   if (overview === null) notFound()
 

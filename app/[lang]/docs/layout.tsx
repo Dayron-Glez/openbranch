@@ -18,8 +18,7 @@ export default async function Layout({ children, params }: LayoutProps<"/[lang]/
 
   return (
     <DocsUIProvider dict={docsDictionary[locale]}>
-      {/* Outside DocsLayout so the read set survives navigation between guides
-          and is fetched once per docs session, not once per guide. */}
+      {/* Outside DocsLayout so the read set survives navigation between guides. */}
       <DocReadsProvider>
         <DocsLayout
           tree={source.pageTree[lang]}

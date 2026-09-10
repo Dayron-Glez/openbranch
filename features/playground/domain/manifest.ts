@@ -13,7 +13,6 @@ export type ChallengeTrackMeta = {
   readonly iconName: string
   /** Badge awarded when any challenge in this track is completed. */
   readonly badgeKey: string
-  /** Common slug prefix shared by all challenges in this track. */
   readonly slugPrefix: string
   /** `data-track` value resolving this track's identity hue. */
   readonly colorToken: TrackColorToken
@@ -80,13 +79,12 @@ const AWARDED_BADGE_KEYS = [
   "all-tracks",
 ] as const
 
-// Badges planned for future tracks/features — displayed as locked teasers, not yet awardable.
+// Planned for future tracks — rendered as locked teasers, not yet awardable.
 const PLANNED_BADGE_KEYS = [] as const
 
 /**
- * Lives here, not in `BadgesSection.tsx`, so it stays importable from server
- * components — a `"use client"` file's plain-value exports (as opposed to
- * its component exports) aren't safe to import into server code.
+ * Lives here, not in `BadgesSection.tsx`: a `"use client"` file's plain-value
+ * exports aren't safe to import into server code.
  */
 export const BADGE_KEYS = [...AWARDED_BADGE_KEYS, ...PLANNED_BADGE_KEYS] as const
 

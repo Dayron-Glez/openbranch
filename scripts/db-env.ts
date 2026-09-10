@@ -1,11 +1,8 @@
 /**
- * Names the two Supabase projects so nobody has to type a project ref.
- *
  * Every Supabase CLI command acts on whichever project is linked, and none of
  * them accept `--project-ref`. That makes the linked project ambient state you
- * cannot see from the command you are about to run — which is fine for `push`
- * and fatal for `reset`, since resetting while linked to production drops its
- * schema. So `reset` here refuses to run unless the link points at test.
+ * cannot see from the command you are about to run — fine for `push`, fatal for
+ * `reset`, which drops the schema. So `reset` refuses unless the link is test.
  *
  * Usage:
  *   bun run db:which        — report the linked project
@@ -42,7 +39,6 @@ const fail: (message: string) => never = (message) => {
   process.exit(1)
 }
 
-/** The currently linked project, or null when the repo has never been linked. */
 const readLinkedRef = (): string | null => {
   if (!existsSync(LINK_FILE)) return null
   try {
@@ -95,10 +91,7 @@ const link = (name: ProjectName): void => {
   describeLink()
 }
 
-/**
- * Resets only a disposable database. The guard reads the link itself rather
- * than trusting the caller, so it holds however the script is invoked.
- */
+/** The guard reads the link itself, so it holds however the script is invoked. */
 const reset = (): void => {
   const project = findByRef(readLinkedRef())
   if (project === null) {

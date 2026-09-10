@@ -1,19 +1,12 @@
 /**
- * Relative dates ("hace 3 días"), bucketed by day / week / month.
- *
- * Lifted out of section-stats.ts, which grew it for the docs section cards and
- * hardcoded its two special-case literals inline. A second caller — the public
- * profile's activity feed — made that placement wrong twice over: a docs-stats
- * module is not where a date helper belongs, and copy does not belong in `lib`
- * at all. The labels now come in from the caller's dictionary.
- *
+ * Relative dates ("hace 3 días"), bucketed by day / week / month. The labels
+ * come in from the caller's dictionary — copy does not belong in `lib`.
  * `Intl.RelativeTimeFormat` covers every other case, including pluralisation.
  */
 
 export type RelativeDateLabels = {
   /** Under a day old — RelativeTimeFormat would say "in 0 days". */
   readonly today: string
-  /** No date available at all. */
   readonly unknown: string
 }
 

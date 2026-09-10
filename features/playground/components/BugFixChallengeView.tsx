@@ -320,7 +320,6 @@ export const BugFixChallengeView = ({
               showSolution ? "border-warn/40" : "border-line"
             }`}
           >
-            {/* file header */}
             <div
               className={`flex shrink-0 items-center justify-between border-b px-4 py-2.5 transition-colors duration-200 ${
                 showSolution ? "border-warn/30 bg-warn/[0.04]" : "border-line bg-bg-elev"
@@ -427,7 +426,6 @@ export const BugFixChallengeView = ({
 
               <div className="border-line border-t" />
 
-              {/* test results */}
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">

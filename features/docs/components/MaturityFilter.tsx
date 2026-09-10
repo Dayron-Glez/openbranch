@@ -35,7 +35,6 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
 
   const visible = pages.filter((p) => active.has(p.maturity))
 
-  // Only render chips for states that have at least one page.
   const nonEmptyStates = MATURITY_VALUES.filter((m) => counts[m] > 0)
 
   return (

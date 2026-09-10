@@ -1,13 +1,9 @@
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 
 /**
- * Copy for the public profile.
- *
  * Flat `{ es, en }` entries assembled by `tx`, following
  * lib/playground-dictionary.ts rather than the side-by-side locale objects of
- * dictionaries/paths.ts. With two locales holding identical key structures,
- * the side-by-side form is half duplicated lines by construction — the flat
- * form keeps both translations of a string on one line instead.
+ * dictionaries/paths.ts: the flat form keeps both translations on one line.
  *
  * It carries its own `stats` block, in `PlaygroundDict["stats"]`'s shape so
  * `StatsStrip` takes it unchanged, because every string in the playground's is
@@ -79,7 +75,7 @@ const translations = {
   "stats.best": { es: "Mejor racha", en: "Best streak" },
   "stats.bestNote": { es: "Su récord", en: "Their best" },
 
-  // Share button — see features/profiles/components/ShareProfileButton.tsx
+  // See features/profiles/components/ShareProfileButton.tsx
   "share.label": { es: "Compartir perfil", en: "Share profile" },
   "share.copied": { es: "Copiado", en: "Copied" },
   "share.text": {

@@ -26,8 +26,6 @@ type TestingEditor = {
   readonly handleFormat: () => Promise<void>
 }
 
-// Owns the editable test file: its value, autosave + autorun debounce,
-// Monaco mount wiring (source model, shortcuts) and formatting.
 export const useTestingEditor = ({
   template,
   slug,

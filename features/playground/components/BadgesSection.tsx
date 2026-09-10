@@ -22,14 +22,10 @@ type BadgesSectionProps = {
   readonly dict: PlaygroundDict["badges"]
   readonly earnedBadges: ReadonlySet<string>
   /**
-   * "Complete challenges to unlock badges" is an instruction to the person
-   * looking, which only makes sense when they are the person who would earn
-   * them. A public profile suppresses it rather than telling a stranger to go
-   * work on someone else's collection. Defaults to showing it, so the hub is
-   * unchanged.
+   * The lock message instructs the person looking, so a public profile
+   * suppresses it rather than aim it at a stranger. Defaults to showing it.
    */
   readonly showLockMessage?: boolean
-  /** Muted note beside the heading, e.g. "5 of 7". */
   readonly headingNote?: string
 }
 
@@ -58,13 +54,10 @@ export const BadgesSection = ({
   const hasLocked = BADGE_KEYS.some((key) => !earnedBadges.has(key))
 
   /**
-   * Hovering starts an earned tile's choreography; leaving the tile does
-   * *not* cut it off — it keeps playing to its natural end regardless of
-   * where the mouse goes next. So this is keyed per badge, not a single
-   * "currently hovered" value: each key's play counter is independent,
-   * bumping on every mouse-enter of *that* tile (to restart if re-hovered
-   * mid-animation) without touching any other tile's in-flight animation.
-   * `undefined` means "never triggered" — show the plain static icon.
+   * Keyed per badge rather than one "currently hovered" value: leaving a tile
+   * does *not* cut its animation off, so each counter has to bump independently
+   * on mouse-enter without disturbing another tile's in-flight play.
+   * `undefined` means never triggered — show the plain static icon.
    */
   const [playKeys, setPlayKeys] = useState<Partial<Record<BadgeKey, number>>>({})
 

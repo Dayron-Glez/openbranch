@@ -7,7 +7,6 @@ type LearningPathsBandProps = {
   readonly items: readonly PathCardItem[]
   readonly heading: string
   readonly sub: string
-  /** The index route — the band is a teaser for it, not the full catalogue. */
   readonly allHref: string
   readonly allLabel: string
   readonly cardDict: PathCardDict

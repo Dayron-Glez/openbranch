@@ -2,14 +2,6 @@ import type { createClient } from "@/lib/supabase/server"
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 
-/**
- * Sibling of `getCompletedChallengeSlugs` in path-progress.ts. Guides had no
- * completion signal until now — see the migration for why that changed.
- *
- * Like every service here: takes the client as its first argument, logs and
- * degrades rather than throwing, so a failed read renders an un-read guide
- * instead of a broken page.
- */
 export const getReadDocSlugs = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -30,12 +22,9 @@ export const getReadDocSlugs = async (
 }
 
 /**
- * One entry point taking the desired state rather than separate mark/unmark
- * calls. The caller can then serialise mutations and always send the latest
- * intent: auto-marking fires an insert, and an un-mark a moment later must not
- * be able to land before it and leave a surviving row.
- *
- * `ignoreDuplicates` keeps `lang` meaning "locale of first read".
+ * One entry point taking the desired state, so the caller can serialise
+ * mutations and always send the latest intent. `ignoreDuplicates` keeps `lang`
+ * meaning "locale of first read".
  */
 export const setDocRead = async (
   supabase: SupabaseServerClient,

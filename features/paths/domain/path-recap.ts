@@ -1,10 +1,7 @@
 import { flattenSteps, type LearningPath, type PathStep } from "./paths"
 import { isStepDone, type PathProgress } from "./path-status"
 
-/**
- * `justCompleted` is the step the user landed on this result page from —
- * worth setting apart from steps completed in earlier sessions.
- */
+/** `justCompleted` is the step this result page was reached from. */
 export type RecapStepStatus = "done" | "justCompleted" | "upcoming"
 
 export type RecapStep = {
@@ -22,11 +19,6 @@ export type PathRecapModel = {
   readonly nextStepIndex: number | null
 }
 
-/**
- * Both step types have a real signal now that reading is tracked. Guides used
- * to be judged by position — anything before the step just completed counted
- * as passed through — because nothing recorded a read.
- */
 const statusOf = (
   step: PathStep,
   index: number,
@@ -38,10 +30,9 @@ const statusOf = (
 }
 
 /**
- * The first step worth pointing at after finishing one. Normally that is
- * simply the next in reading order; if the completed step was last but work
- * remains (nothing forces in-order completion), it falls back to the earliest
- * unfinished step — a guide counts, now that an unread one is real work.
+ * Normally the next step in reading order. Nothing forces in-order completion,
+ * so when the completed step was the last one but work remains, this falls back
+ * to the earliest unfinished step.
  */
 const findNextStepIndex = (
   steps: readonly RecapStep[],

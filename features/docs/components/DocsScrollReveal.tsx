@@ -31,7 +31,6 @@ export const DocsScrollReveal = ({ children }: DocsScrollRevealProps): ReactElem
 
     elements.forEach((el) => {
       const rect = el.getBoundingClientRect()
-      // Only animate elements strictly below the current viewport.
       // Skips both in-view content and anything already scrolled past.
       if (rect.top <= window.innerHeight) return
       el.classList.add("scroll-reveal")

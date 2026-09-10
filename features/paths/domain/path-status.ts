@@ -1,16 +1,11 @@
 import type { PathStep } from "./paths"
 
-/**
- * "locked" is reserved for a future gated model (a challenge behind an
- * earlier challenge) — see specs/learning-paths-v1.md Q2. Nothing produces it
- * today; no step is ever hard-locked.
- */
+/** Nothing produces "locked" today — it is reserved for a future gated model. */
 export type StepStatus = "available" | "current" | "completed" | "locked"
 
 /**
- * One object rather than two nullable sets: `null` means signed out, and that
- * has a single meaning. Two independently-nullable parameters would make it
- * representable four ways.
+ * One object rather than two nullable sets, so `null` means signed out and
+ * nothing else. Two nullable parameters would make that representable four ways.
  */
 export type PathProgress = {
   readonly completedChallengeSlugs: ReadonlySet<string>
@@ -22,15 +17,7 @@ export const isStepDone = (step: PathStep, progress: PathProgress): boolean =>
     ? progress.readDocSlugs.has(step.slug)
     : progress.completedChallengeSlugs.has(step.slug)
 
-/**
- * Both step types are completable now that reading is tracked, so this is a
- * plain "first not-done step is current" sweep with no branch on type. Before
- * read-tracking a doc step could never be `completed` or `current` (Q3), which
- * meant the pointer skipped guides entirely.
- *
- * `progress === null` means signed out: every step renders "available", no
- * pointer.
- */
+/** `progress === null` is signed out: every step "available", no pointer. */
 export const computeStepStatuses = (
   steps: readonly PathStep[],
   progress: PathProgress | null

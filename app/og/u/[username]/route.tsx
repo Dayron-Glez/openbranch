@@ -25,9 +25,8 @@ const EXACT_RANK_LIMIT = 100
 const AVATAR_FETCH_TIMEOUT_MS = 2000
 
 /**
- * Literal transcriptions of `--color-track-*` (app/global.css) — Satori
- * accepts neither oklch() nor var(), so the hues are hardcoded here to their
- * hex equivalents, matched to the design handoff's §08 swatch table.
+ * Literal transcriptions of `--color-track-*` (app/global.css): Satori accepts
+ * neither oklch() nor var(), so the hues are hardcoded to hex.
  */
 const TRACK_HEX: Record<CategoryKey, string> = {
   git: "#7eb2ff",
@@ -63,10 +62,9 @@ const loadFonts = async (): Promise<
 const getInitials = (username: string): string => username.slice(0, 2).toUpperCase()
 
 /**
- * Fetches the avatar as a data URI so a slow or failing remote host can never
- * fail the whole ImageResponse render — there is no browser here to let an
- * <img> fail natively, so the failure has to be handled before the JSX tree
- * is built at all.
+ * Fetched as a data URI so a slow or failing host cannot fail the whole
+ * ImageResponse: there is no browser here to let an <img> fail natively, so it
+ * has to be handled before the JSX tree is built at all.
  */
 const loadAvatarDataUri = async (avatarUrl: string | null): Promise<string | null> => {
   if (avatarUrl === null) return null
@@ -106,7 +104,7 @@ type StripCell = {
   readonly track: CategoryKey
 }
 
-/** Matches the design mock's cell labels — plain `toUpperCase()` overflows the 126px cell for testing/documentation. */
+/** Hardcoded because plain `toUpperCase()` overflows the 126px cell. */
 const STRIP_LABEL: Record<CategoryKey, string> = {
   git: "GIT",
   "code-review": "REVIEW",
@@ -189,7 +187,7 @@ const Cell = ({ cell, isLast }: { readonly cell: StripCell; readonly isLast: boo
   )
 }
 
-/** Vertical "streets" of the git graph — x position and staggered y span. */
+/** Vertical "streets" of the git graph. */
 const GRAPH_STREETS: readonly { readonly x: number; readonly y1: number; readonly y2: number }[] = [
   { x: 100, y1: 38, y2: 592 },
   { x: 250, y1: 60, y2: 560 },
@@ -200,7 +198,6 @@ const GRAPH_STREETS: readonly { readonly x: number; readonly y1: number; readonl
   { x: 1110, y1: 70, y2: 560 },
 ]
 
-/** Branch arcs connecting each street to the next. */
 const GRAPH_ARCS: readonly string[] = [
   "M100 200 C 100 162, 210 162, 250 200",
   "M250 340 C 250 378, 380 378, 420 340",
@@ -210,7 +207,7 @@ const GRAPH_ARCS: readonly string[] = [
   "M950 150 C 950 112, 1070 112, 1110 150",
 ]
 
-/** Commit nodes — three per street; the accent one marks the "active" commit on odd streets. */
+/** Three per street; the accent one marks the "active" commit. */
 const GRAPH_NODES: readonly {
   readonly cx: number
   readonly cy: number
@@ -240,13 +237,10 @@ const GRAPH_NODES: readonly {
 ]
 
 /**
- * The ambient background's recognizable layer — a static git graph, the same
- * geometry `AmbientBackground` draws on the home/404 pages but with its
- * `prefers-reduced-motion` end-state baked in directly (fully drawn strokes,
- * no dash animation) since there's no motion in a rendered image anyway.
- * viewBox is rewritten to the card's own 1200×630, not sliced from the
- * source's 1600×1000 — trusting Satori's `preserveAspectRatio="slice"`
- * wasn't worth the risk for a background layer.
+ * `AmbientBackground`'s git graph with its `prefers-reduced-motion` end-state
+ * baked in — there is no motion in a rendered image. The viewBox is rewritten
+ * to the card's own 1200×630 rather than relying on Satori's
+ * `preserveAspectRatio="slice"`.
  */
 const GraphLayer = () => (
   <div

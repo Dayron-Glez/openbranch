@@ -4,17 +4,12 @@ import { PlaygroundTransition } from "./PlaygroundTransition"
 import { PlaygroundNav } from "./PlaygroundNav"
 
 /**
- * The nav-and-transition shell shared by /playground, /paths and /u.
+ * The user read here is always the *viewer* — only the nav avatar depends on
+ * it — so these routes render fine signed out, and a page showing someone
+ * else's data still gets the right nav for whoever is looking.
  *
- * All three had copied the same viewer lookup verbatim; adding the profile
- * route would have made it three. The user read here is always the *viewer* —
- * only the nav avatar depends on it — so every one of these routes renders
- * fine signed out, and a page showing someone else's data still gets the
- * right nav for whoever is looking.
- *
- * `fixed` is the challenge workspace's app-shell layout, where the page owns
- * the viewport and only the inner column scrolls. Everything else scrolls as a
- * normal document.
+ * `fixed` is the challenge workspace's layout, where the page owns the viewport
+ * and only the inner column scrolls. Everything else scrolls as a document.
  */
 export const AppShell = async ({
   lang,

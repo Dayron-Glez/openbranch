@@ -88,7 +88,6 @@ export const DocumentationChallengeView = ({
       inProgressLabel={dict.status.inProgress}
       mainContent={
         <div className="grid min-h-0 min-w-0 grid-cols-[3fr_2fr] gap-3 max-[900px]:grid-cols-1 max-[900px]:gap-4 min-[901px]:pb-10">
-          {/* GATEWAY.md — editable */}
           <div className="border-line flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border">
             <div className="border-line bg-bg-elev flex shrink-0 items-center border-b px-4 py-2.5">
               <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
@@ -110,7 +109,6 @@ export const DocumentationChallengeView = ({
             </div>
           </div>
 
-          {/* src/request.ts — read-only reference */}
           <div className="border-line flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border max-[900px]:min-h-70">
             <div className="border-line bg-bg-elev flex shrink-0 items-center gap-2 border-b px-4 py-2.5">
               <span className="text-fg-2 font-mono text-[12px]">{sourceFilename}</span>
