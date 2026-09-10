@@ -1,7 +1,6 @@
 /**
  * Keeps the challenges catalog in step with content/playground frontmatter.
  *
- * Two modes:
  *
  *   bun run db:sync-challenges    Rewrites supabase/challenges.json and emits a
  *                                 `*_sync_challenges.sql` migration that upserts
@@ -12,13 +11,12 @@
  *                                 it against supabase/challenges.json. Exits non-zero
  *                                 on drift. Runs in CI; touches no database.
  *
- * The manifest exists so CI can catch a challenge whose catalog entry was never
- * generated, without needing a database credential. It is written by the same
- * command that writes the migration, so the two cannot drift from each other —
- * only from the MDX, which is exactly what the check looks for.
+ * The manifest lets CI catch an ungenerated catalog entry without a database
+ * credential. It is written by the same command that writes the migration, so
+ * the two cannot drift from each other — only from the MDX.
  *
- * Note that applying the migration stays a maintainer step. CI verifies that the
- * catalog was generated and committed; it cannot verify that it was pushed.
+ * Applying the migration stays a maintainer step: CI verifies the catalog was
+ * generated and committed, not that it was pushed.
  */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
