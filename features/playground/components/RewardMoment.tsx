@@ -9,10 +9,9 @@ import { RewardCountUp } from "./RewardCountUp"
 import { CheckIcon, ClockIcon } from "./ResultIcons"
 
 /**
- * Declared here rather than imported from the paths feature: this component
- * is presentation-only, and `features/paths` already depends on this feature
- * for `TrackColorToken`. The result page maps the domain model onto this
- * shape, so a status added there stops compiling until it is handled here.
+ * Declared here rather than imported from `features/paths`, which already
+ * depends on this feature for `TrackColorToken`. The result page maps the
+ * domain model onto this shape, so a status added there stops compiling here.
  */
 export type PathRecapStep = {
   readonly title: string
@@ -20,10 +19,7 @@ export type PathRecapStep = {
   readonly status: "done" | "justCompleted" | "upcoming"
 }
 
-/**
- * Models both outcomes: a path finished, and a path advanced. `nextStep` is
- * what distinguishes them — `null` means there is nothing left to do.
- */
+/** `nextStep === null` is a finished path; anything else is one advanced. */
 export type PathRecap = {
   readonly track: TrackColorToken
   readonly pathHref: string
@@ -132,10 +128,6 @@ const StepRow = ({
   </div>
 )
 
-/**
- * Two outcomes, told apart by `nextStep`: a path finished, or a path
- * advanced. Claiming completion mid-path was the v1 bug this replaces.
- */
 const PathRecapCard = ({
   recap,
   dict,
@@ -204,11 +196,8 @@ export const RewardMoment = ({
 }: RewardMomentProps): React.ReactElement | null => {
   if (reward === null) return null
 
-  /**
-   * Rendered by both branches. The chips below are rewards — a repeat earns
-   * no points, leaves the streak alone and does not move your rank — but the
-   * recap answers "where am I in this path", which stays true on a repeat.
-   */
+  // Rendered by both branches: the chips below are rewards, which a repeat does
+  // not earn, but "where am I in this path" stays true on a repeat.
   const recap =
     pathRecap != null && pathDict !== undefined ? (
       <PathRecapCard recap={pathRecap} dict={pathDict} />

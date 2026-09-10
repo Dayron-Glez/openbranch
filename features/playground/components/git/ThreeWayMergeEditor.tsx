@@ -19,8 +19,6 @@ import type { GitBlockResolution } from "@/features/playground/domain/review-typ
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import "./merge-editor.css"
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 type Resolution = "left" | "right" | "both-lr" | "both-rl" | "base"
 
 export type ThreeWayMergeEditorHandle = {
@@ -34,27 +32,18 @@ export type ThreeWayMergeEditorProps = {
   left: string
   /** Right ("theirs") version. */
   right: string
-  /** Monaco language id (e.g. "typescript", "json"). */
   language?: string
-  /** Called whenever the merged result text or remaining conflict count changes. */
   onChange?: (result: string, conflictsRemaining: number) => void
-  /** Called whenever block resolutions change — for persistence. */
   onBlocksChange?: (resolutions: readonly GitBlockResolution[]) => void
   /** Resolutions from a previous session — applied over the diff3 initial blocks. */
   initialResolutions?: readonly GitBlockResolution[]
-  /** Called when the center (result) editor mounts — for type-checking integration. */
   onCenterMount?: OnMount
-  /** Called before the center editor mounts — for Monaco language/theme setup. */
   onBeforeMount?: (monaco: Monaco) => void
   /** Virtual file path for the center editor (enables TypeScript type-checking). */
   centerPath?: string
-  /** Title for the left pane. */
   leftTitle?: string
-  /** Title for the center (result) pane. */
   resultTitle?: string
-  /** Title for the right pane. */
   rightTitle?: string
-  /** Color theme. */
   theme?: "light" | "dark"
   /** Height of the editor area. Omit to fill the parent container. */
   height?: number | string
@@ -95,8 +84,6 @@ type Region = {
   rightRange: [number, number] | null
 }
 
-// ─── Pure helpers ─────────────────────────────────────────────────────────────
-
 const buildBlocks = (left: string, base: string, right: string): Block[] => {
   const merged = diff3Merge(left, base, right)
   let id = 0
@@ -107,12 +94,6 @@ const buildBlocks = (left: string, base: string, right: string): Block[] => {
   )
 }
 
-/**
- * Parses a file that contains git conflict markers (`<<<<<<<`, `=======`,
- * `>>>>>>>`) into the same `Block[]` format that `buildBlocks` produces.
- * Use this when the exercise supplies hand-crafted conflict zones that don't
- * necessarily correspond to the algorithmic diff3 output of the two branches.
- */
 const parseMarkers = (conflictedCode: string): Block[] => {
   const lines = conflictedCode.replaceAll("\r\n", "\n").split("\n")
   const blocks: Block[] = []
@@ -233,8 +214,6 @@ const renderBlocks = (blocks: Block[]): { text: string; regions: Region[]; remai
   return { text: lines.join("\n"), regions, remaining }
 }
 
-// ─── Decoration helpers ───────────────────────────────────────────────────────
-
 const zone = (
   monaco: Monaco,
   startLine: number,
@@ -253,8 +232,6 @@ const lineClass = (
   range: new monaco.Range(line, 1, line, 1),
   options: { isWholeLine: true, className },
 })
-
-// ─── Theme ────────────────────────────────────────────────────────────────────
 
 let themesDefined = false
 const defineThemes = (monaco: Monaco): void => {
@@ -279,8 +256,6 @@ const defineThemes = (monaco: Monaco): void => {
     },
   })
 }
-
-// ─── Inline SVG icons ─────────────────────────────────────────────────────────
 
 const SvgProps = {
   viewBox: "0 0 16 16",
@@ -347,8 +322,6 @@ const IconCompress = ({ className }: { className?: string }) => (
     <path d="M2 6h4V2M14 6h-4V2M2 10h4v4M14 10h-4v4" />
   </svg>
 )
-
-// ─── GutterLane ───────────────────────────────────────────────────────────────
 
 type LanePin = { id: number; top: number; resolution: Resolution | null }
 
@@ -438,8 +411,6 @@ const GutterLane = ({ side, pins, onToggle, onMouseDown }: Readonly<GutterLanePr
   )
 }
 
-// ─── Pane ─────────────────────────────────────────────────────────────────────
-
 type PaneProps = {
   title: string
   accent: "left" | "right" | "result"
@@ -512,17 +483,13 @@ const buildRegionDecorations = (
   return decorations
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
-
 /**
- * Model URI for a read-only side pane, derived from the center file's path.
- *
- * The side panes need URIs of their own, and those URIs have to keep the
- * center file's extension: Monaco hands every `typescript` model to the TS
- * worker, which rejects any path it can't recognise as a source file and
- * throws "Could not find source file: …" into the console. Both a suffix
- * *after* the extension and Monaco's auto-assigned `inmemory://model/N`
- * (what you get by passing no path at all) trip exactly that.
+ * The side panes need URIs of their own, and those URIs have to keep the center
+ * file's extension: Monaco hands every `typescript` model to the TS worker,
+ * which rejects any path it can't recognise as a source file and throws "Could
+ * not find source file: …" into the console. Both a suffix *after* the
+ * extension and Monaco's auto-assigned `inmemory://model/N` (what you get by
+ * passing no path at all) trip exactly that.
  */
 const sidePath = (centerPath: string | undefined, side: "left" | "right"): string => {
   if (centerPath === undefined) return `file:///merge-${side}.ts`
@@ -712,7 +679,6 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
 
     const themeName = theme === "light" ? "merge-light" : "merge-dark"
 
-    // Emit block resolutions for persistence.
     useEffect(() => {
       if (!onBlocksChange) return
       onBlocksChange(
@@ -897,7 +863,6 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
           className
         )}
       >
-        {/* ── Header ── */}
         <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-[#2a2a35] bg-[#1c1c26] px-3 py-2">
           <div className="flex items-center gap-2 text-sm">
             <IconGitMerge className="size-4 text-emerald-400" />
@@ -1006,7 +971,6 @@ export const ThreeWayMergeEditor = forwardRef<ThreeWayMergeEditorHandle, ThreeWa
           </TooltipProvider>
         </div>
 
-        {/* ── Editors row ── */}
         <div
           ref={editorsRowRef}
           className={cn("flex", height === undefined && "min-h-0 flex-1")}

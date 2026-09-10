@@ -6,15 +6,12 @@ import type { BadgeKey } from "@/features/playground/domain/manifest"
 import { BADGE_UNLOCK_ICON, BADGE_UNLOCK_DURATION } from "./icon-registry"
 
 /**
- * Plays a badge's unlock choreography once per `playKey` change — the caller
- * bumps `playKey` (e.g. on hover, or on mount for a fresh reveal) to
- * (re)trigger. `t` is driven by a plain GSAP tween over a plain object, not
- * over DOM refs, since the icon components consume `t` as a prop and
- * re-render on every tick — the same model the source composition used,
- * just replacing its authored global clock with a one-shot tween.
+ * Plays once per `playKey` change. `t` is tweened over a plain object rather
+ * than DOM refs, because the icon components take `t` as a prop and re-render
+ * every tick.
  *
- * `prefers-reduced-motion` jumps straight to the settled end frame — no
- * draw-on, matching `PlaygroundTransition.tsx`'s `gsap.matchMedia()` guard.
+ * `prefers-reduced-motion` jumps straight to the settled end frame, matching
+ * `PlaygroundTransition.tsx`'s `gsap.matchMedia()` guard.
  */
 export const BadgeUnlockIcon = ({
   badgeKey,

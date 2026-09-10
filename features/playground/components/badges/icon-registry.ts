@@ -19,10 +19,8 @@ export const BADGE_UNLOCK_ICON: Record<BadgeKey, ComponentType<{ readonly t: num
 }
 
 /**
- * Each icon's own natural settle point (its last `pop`/`draw` beat's end
- * time, plus a little breathing room) — not the source video's full
- * idling-loop length. A product reveal plays once and holds; it doesn't
- * loop like the composition did.
+ * Each icon's own settle point — its last beat's end plus breathing room — not
+ * the source composition's idling-loop length. A reveal plays once and holds.
  */
 export const BADGE_UNLOCK_DURATION: Record<BadgeKey, number> = {
   "first-merge": 1.6,

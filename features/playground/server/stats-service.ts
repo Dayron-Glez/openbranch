@@ -10,13 +10,12 @@ export type EngagementStats = {
   readonly totalPoints: number
   readonly pointsToday: number
   readonly completedCount: number
-  /** Streak already normalized: 0 unless the last completion was today or yesterday (UTC). */
+  /** Already normalized: 0 unless the last completion was today or yesterday (UTC). */
   readonly currentStreak: number
   readonly bestStreak: number
   readonly streakState: "alive" | "broken" | "none"
-  /** Last completion date (UTC, `YYYY-MM-DD`); null when nothing is completed yet. */
+  /** UTC `YYYY-MM-DD`; null when nothing is completed yet. */
   readonly lastCompletedOn: string | null
-  /** Distinct tracks with at least one completed challenge. */
   readonly tracksStarted: number
   /** First category (in display order) with no completions; null when every track is started. */
   readonly nextTrack: CategoryKey | null
@@ -46,9 +45,8 @@ const inferCategory = (slug: string): CategoryKey | null =>
   CHALLENGE_TRACKS.find((track) => slug.startsWith(track.slugPrefix))?.category ?? null
 
 /**
- * Points earned today (UTC): sum of catalog points over slugs whose FIRST
- * completion happened today — mirrors the DB's first-completion-only rule,
- * so repeats never light up the delta chip.
+ * Counts only slugs whose FIRST completion happened today (UTC), mirroring the
+ * DB's own rule, so repeats never light up the delta chip.
  */
 const sumPointsEarnedToday = (
   completions: ReadonlyMap<string, string>,
@@ -63,11 +61,7 @@ const sumPointsEarnedToday = (
   return sum
 }
 
-/**
- * Loads user_stats and derives the display-ready engagement numbers for the
- * hub strip. Returns null on any query error — the strip must never break
- * the hub, callers simply skip rendering it.
- */
+/** Null on any query error — the strip must never break the hub. */
 export const getEngagementStats = async (
   supabase: SupabaseServerClient,
   userId: string

@@ -1,11 +1,6 @@
-/**
- * Motion primitives for the badge unlock icons — ported verbatim (same
- * formulas, not approximated by a library) from the Claude Design
- * composition's `animations-v3.jsx`, which itself has no existence outside
- * that tool's renderer. Pure functions only: no React, no GSAP, so the icon
- * components stay a near-literal port of the source choreography and only
- * what drives `t` and where colors come from had to change.
- */
+// Ported verbatim from the Claude Design composition's `animations-v3.jsx` —
+// same formulas, not a library approximation, so the icon components stay a
+// near-literal port of the source choreography. Keep them pure.
 
 export const clamp = (value: number, min: number, max: number): number =>
   Math.max(min, Math.min(max, value))
@@ -26,12 +21,7 @@ export const Easing = {
   },
 } as const satisfies Record<string, EaseFn>
 
-/**
- * Returns a function of `t` (seconds since the icon's animation started)
- * that eases from `from` to `to` between `start` and `end`, clamped outside
- * that window. Every per-icon "beat" (a node popping in, a path drawing) is
- * one call to this.
- */
+/** `t` is seconds since the icon's animation started; clamped outside the window. */
 export const animate = ({
   from = 0,
   to = 1,
@@ -52,7 +42,6 @@ export const animate = ({
   }
 }
 
-/** The three motion shapes every badge icon composes its beats from. */
 export const MOTION = {
   enter: (start: number, dur: number) =>
     animate({ from: 0, to: 1, start, end: start + dur, ease: Easing.easeOutCubic }),
@@ -62,7 +51,6 @@ export const MOTION = {
     animate({ from: 0, to: 1, start, end: start + dur, ease: Easing.easeOutBack }),
 } as const
 
-/** SVG path-draw props for a 0→1 progress value — the dash-offset reveal every icon's strokes use. */
 export const dash = (
   progress: number
 ): { pathLength: number; strokeDasharray: number; strokeDashoffset: number } => ({

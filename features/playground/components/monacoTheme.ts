@@ -1,13 +1,12 @@
 import type * as Monaco from "monaco-editor"
 import type { BeforeMount } from "@monaco-editor/react"
 
-// Shared editor construction options for the playground code editors.
 export const EDITOR_OPTIONS: Monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: { enabled: false },
-  // Every playground editor lives in a flex column that settles *after*
-  // Monaco first measures itself. Without this it latches onto whatever it
-  // saw at mount — 5×5 when the column has not resolved yet — and never
-  // remeasures, leaving a pane that renders no code at all.
+  // Every playground editor lives in a flex column that settles *after* Monaco
+  // first measures itself. Without this it latches onto what it saw at mount —
+  // 5×5 if the column has not resolved — and never remeasures, leaving a pane
+  // that renders no code at all.
   automaticLayout: true,
   fontSize: 13,
   lineHeight: 22,
@@ -22,8 +21,6 @@ export const EDITOR_OPTIONS: Monaco.editor.IStandaloneEditorConstructionOptions 
   contextmenu: false,
 }
 
-// Shared Monaco setup for the playground code editors (bug-fix, testing):
-// strict TS compiler options + the openbranch "ob-dark" theme.
 export const configureMonaco: BeforeMount = (monaco) => {
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     target: monaco.languages.typescript.ScriptTarget.ES2020,
@@ -71,8 +68,7 @@ export const configureMonaco: BeforeMount = (monaco) => {
   })
 }
 
-// Ambient jest globals so the test editor recognises describe/it/expect/jest
-// (provided at runtime by the worker harness, unknown to Monaco otherwise).
+// Provided at runtime by the worker harness, unknown to Monaco otherwise.
 const JEST_GLOBALS_DTS = `
 declare function describe(name: string, fn: () => void): void
 declare function it(name: string, fn: () => void | Promise<void>): void
@@ -85,8 +81,6 @@ declare const jest: {
 declare const global: typeof globalThis
 `
 
-// Testing editor setup: shared config plus jest ambient types and relaxed
-// unused-symbol diagnostics (a test file may import helpers it uses later).
 export const configureTestingMonaco: BeforeMount = (monaco) => {
   configureMonaco(monaco)
   // Sync every model to the TS worker so the test file's `./request` import

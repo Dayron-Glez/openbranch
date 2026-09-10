@@ -1,9 +1,8 @@
 import type { PathStep } from "./paths"
 
 /**
- * Orthogonal to StepStatus (path-status.ts) — a step can be `completed` and
- * still need a wide viewport (finished on a laptop, now browsing on a
- * phone). Keeping this separate avoids an unrepresentable combined state.
+ * Orthogonal to `StepStatus`: a step can be `completed` and still need a wide
+ * viewport — finished on a laptop, now browsed on a phone.
  */
 export type StepRequirement = "none" | "wide-viewport"
 

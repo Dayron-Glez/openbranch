@@ -9,13 +9,12 @@ import { localizedHref } from "@/lib/landing-dictionary"
 const COPIED_DURATION_MS = 2000
 
 /**
- * Feature-detects `navigator.share` inside the click handler rather than at
- * render time, so server and client render identical markup — no
- * hydration guard needed just to know which capability the browser has.
+ * `navigator.share` is feature-detected inside the click handler, not at render
+ * time, so server and client render identical markup.
  *
- * Takes resolved strings, not the `ProfileDict` object — `ProfileDict`'s
- * template functions (`shareText`, `metaTitle`, …) can't cross the
- * server/client boundary, so the caller resolves them server-side first.
+ * Takes resolved strings rather than the `ProfileDict` object: its template
+ * functions (`shareText`, `metaTitle`, …) can't cross the server/client
+ * boundary, so the caller resolves them server-side first.
  */
 export const ShareProfileButton = ({
   username,

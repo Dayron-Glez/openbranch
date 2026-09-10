@@ -62,9 +62,9 @@ type DotToken = TrackColorToken | null
 
 /**
  * `pl-2.5` replaces the base `pl-8` that reserves room for Radix's checked dot,
- * and `[&>span:first-child]:hidden` drops that dot: it is absolutely positioned
- * at `left-2`, a different column from our own, so the selected row read as
- * misaligned. `size-4` normalises Tabler icons, which ship width/height="24".
+ * and `[&>span:first-child]:hidden` drops that dot: it is positioned at
+ * `left-2`, a different column from ours, and reads as a misaligned second dot.
+ * `size-4` normalises Tabler icons, which ship width/height="24".
  */
 const MENU_ROW_CLASS =
   "grid grid-cols-[8px_16px_1fr_auto] items-center gap-2.5 pl-2.5 data-[state=checked]:text-fg [&>span:first-child]:hidden [&_svg]:size-4 [&_svg]:shrink-0"
@@ -75,11 +75,7 @@ const dotToneClass = (colorToken: DotToken, active: boolean): string => {
   return "bg-(--track) shadow-[0_0_0_3px_var(--track-soft)]"
 }
 
-/**
- * The single dot every filter row carries. Radix's own checked-state dot is
- * hidden in the menu (it sits in a different column and reads as a misaligned
- * second dot), so this one shows selection via the same glow the tabs use.
- */
+/** Carries selection itself, via the same glow the tabs use — see MENU_ROW_CLASS. */
 const FilterDot = ({
   colorToken,
   active,
@@ -116,8 +112,8 @@ export const FilterBar = ({
     setSliderRect({ left: activeTab.offsetLeft, width: activeTab.offsetWidth })
   }
 
-  // The sliding indicator mirrors Radix's own active-trigger layout, so it has to
-  // read real DOM measurements back out after each render rather than derive from props.
+  // The sliding indicator mirrors Radix's own active-trigger layout, so it has
+  // to measure the DOM after each render rather than derive from props.
   useLayoutEffect(() => {
     measureSlider()
   }, [value])
@@ -175,8 +171,8 @@ export const FilterBar = ({
     handleSortChange(`${activeField}-${nextDir}`)
   }
 
-  // One list feeds both surfaces, so "all" can never drift out of shape from the
-  // category rows again — it is just the first option, with a null track.
+  // One list feeds both surfaces, so "all" cannot drift out of shape from the
+  // category rows — it is just the first option, with a null track.
   const filterOptions: ReadonlyArray<{
     readonly key: string
     readonly label: string
@@ -258,7 +254,6 @@ export const FilterBar = ({
 
   return (
     <div className="mb-8">
-      {/* tablet/desktop: tab strip + sort, single pill */}
       <div className="border-line-2 bg-bg-elev hidden min-w-0 items-center gap-1 rounded-(--r-10) border p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] min-[641px]:flex">
         <Tabs
           value={value}
@@ -296,7 +291,6 @@ export const FilterBar = ({
         {renderSortControl(false)}
       </div>
 
-      {/* mobile: category and sort collapse into two dropdown chips, side by side */}
       <div className="flex items-center gap-2 min-[641px]:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -17,17 +17,13 @@ export type LeaderboardData = {
   readonly ownRank: number | null
 }
 
-/**
- * The board has single-digit users at launch; pagination is a documented
- * non-goal until it approaches this cap.
- */
+/** Pagination is a documented non-goal until the board approaches this cap. */
 const MAX_ROWS = 100
 
 /**
- * Loads the public leaderboard view and resolves the signed-in user's rank.
- * Rank is the row index + 1 — the view exposes no rank column. Returns null
- * on any query error: callers render a quiet error line, never a broken page
- * and never the misleading empty state.
+ * Rank is the row index + 1 — the view exposes no rank column. Null on any
+ * query error, so callers can render an error line rather than a misleading
+ * empty board.
  */
 export const getLeaderboard = async (
   supabase: SupabaseServerClient,

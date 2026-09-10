@@ -37,7 +37,7 @@ const HIDE_ON_MOBILE = "max-[640px]:hidden"
 
 const formatRank = (rank: number): string => String(rank).padStart(2, "0")
 
-/** State-dependent sub-line for the page header; null when the board failed to load. */
+/** Null when the board failed to load. */
 export const getLeaderboardSub = (
   dict: PlaygroundDict["leaderboard"],
   data: LeaderboardData | null

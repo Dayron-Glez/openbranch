@@ -46,9 +46,8 @@ type PathStepperProps = {
   readonly track: TrackColorToken
   readonly dict: PathStepperDict
   /**
-   * Position of `steps[0]` within the whole path. Sections render their own
-   * stepper, but "step 3 of 5" has to count across the path, not restart in
-   * every section.
+   * Position of `steps[0]` in the whole path — "step 3 of 5" counts across the
+   * path rather than restarting in every section.
    */
   readonly startIndex?: number
   /** Steps in the whole path; defaults to this stepper's own count. */

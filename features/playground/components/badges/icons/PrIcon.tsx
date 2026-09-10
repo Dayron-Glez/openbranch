@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
 import { MOTION, clamp, dash } from "@/features/playground/domain/badge-motion"
 
-/** `review-corps` — the pull request arm draws out, the node lands, the arrow snaps back to the base. */
 export const PrIcon = ({ t }: { readonly t: number }): ReactNode => {
   const trunk = MOTION.draw(0, 0.4)(t)
   const arm = MOTION.draw(0.3, 0.55)(t)
@@ -23,7 +22,8 @@ export const PrIcon = ({ t }: { readonly t: number }): ReactNode => {
         d="M4 6a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"
         style={{ opacity: MOTION.enter(0, 0.3)(t) }}
       />
-      {/* The source branch's other end — present in the real static IconGitPullRequest but missing from the source composition; added so the settled frame matches it exactly. */}
+      {/* The source branch's other end, so the settled frame matches the static
+          IconGitPullRequest exactly. */}
       <path
         fill="none"
         d="M4 18a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"

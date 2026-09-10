@@ -56,8 +56,6 @@ type TestingRunner = {
   readonly runTests: (testCode: string) => void
 }
 
-// Owns the test-runner Web Worker: spawns it, translates "testing-result"
-// messages into baseline + mutation state, and exposes runTests().
 export const useTestingRunner = ({
   correctSource,
   mutants,

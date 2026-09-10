@@ -1,10 +1,6 @@
 import type { ReactNode } from "react"
 
-/**
- * The rule-under-a-mono-caption heading that `StatsStrip` and `BadgesSection`
- * already draw inline. Repeated here for the two sections this feature adds so
- * all five read as one page; the note slot carries a count ("1", "5 of 7").
- */
+/** The heading `StatsStrip` and `BadgesSection` draw inline — kept in sync by hand. */
 export const SectionLabel = ({
   children,
   note,

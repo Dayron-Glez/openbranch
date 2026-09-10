@@ -8,10 +8,6 @@ type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>
 /** Default awarded by the DB trigger when a slug is missing from the catalog. */
 const FALLBACK_POINTS = 10
 
-/**
- * Which of a set of challenge slugs the signed-in user has completed.
- * Doc steps have no equivalent signal — see specs/learning-paths-v1.md Q3.
- */
 export const getCompletedChallengeSlugs = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -34,7 +30,6 @@ export const getCompletedChallengeSlugs = async (
   return new Set((data ?? []).map((row) => row.challenge_slug as string))
 }
 
-/** Progress for a single path's challenge steps. */
 export const getPathProgress = (
   supabase: SupabaseServerClient,
   userId: string,
@@ -49,11 +44,7 @@ const docSlugsOf = (paths: readonly LearningPath[]): readonly string[] =>
       .map((step) => step.slug)
   )
 
-/**
- * Both halves of a path's progress in one call. Every surface that renders a
- * path needs both sets, and fetching them separately at each call site is how
- * the two drift apart.
- */
+/** Both halves in one call — fetching them per call site is how the two drift. */
 export const loadPathProgress = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -67,7 +58,6 @@ export const loadPathProgress = async (
   return { completedChallengeSlugs, readDocSlugs }
 }
 
-/** Points per challenge slug, for the step meta chip (e.g. "+30 pts"). */
 export const getChallengePoints = async (
   supabase: SupabaseServerClient,
   challengeSlugs: readonly string[]

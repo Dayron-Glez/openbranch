@@ -22,7 +22,7 @@ export type CompletionReward = {
   readonly currentStreak: number
   readonly firstRunElapsedDisplay: string | null
   readonly rank: number | null
-  /** The specific badge this completion just earned, across all 7 keys — null on a repeat or when nothing was newly earned. */
+  /** Null on a repeat, or when this completion earned nothing new. */
   readonly newlyEarnedBadgeKey: BadgeKey | null
 }
 
@@ -35,7 +35,6 @@ const getElapsedDisplay = (startedAt: string | null, completedAt: string | null)
   return formatElapsed(elapsedSeconds)
 }
 
-/** The track badge, if this completion is the first one in its track. */
 const detectTrackBadge = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -61,7 +60,6 @@ const detectTrackBadge = async (
   return count === 1 ? (track.badgeKey as BadgeKey) : null
 }
 
-/** `all-tracks`, if this completion is what closed the last open track. */
 const detectAllTracksBadge = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -99,11 +97,7 @@ const detectAllTracksBadge = async (
   return coveredNow && !coveredBefore ? "all-tracks" : null
 }
 
-/**
- * Mirrors awardTrackBadge's/awardMilestoneBadges' own award conditions,
- * read-only. Stops at the first match, since in practice only one badge
- * becomes newly earned by any single completion.
- */
+/** Read-only mirror of awardTrackBadge's and awardMilestoneBadges' conditions. */
 const detectNewlyEarnedBadge = async (
   supabase: SupabaseServerClient,
   userId: string,
@@ -117,11 +111,9 @@ const detectNewlyEarnedBadge = async (
 }
 
 /**
- * Loads what a just-completed challenge session earned, purely by re-reading
- * current DB state (no data passed through the completion redirect) — the
- * same idempotent-derivation approach as Surfaces 1 & 2. Returns null on any
- * critical query error: the result page simply hides the reward row and
- * keeps working exactly as it does today.
+ * Derived purely by re-reading current DB state — nothing rides the completion
+ * redirect — so it is idempotent. Null on a critical query error: the result
+ * page then hides the reward row and works as it did before.
  */
 export const getCompletionReward = async (
   supabase: SupabaseServerClient,
@@ -180,8 +172,7 @@ export const getCompletionReward = async (
   const leaderboard = await getLeaderboard(supabase, userId)
   const rank = leaderboard?.ownRank ?? null
 
-  // Non-critical. A repeat completion can never newly earn anything, so this
-  // only runs on a first completion.
+  // A repeat completion can never newly earn anything.
   const newlyEarnedBadgeKey = isFirstCompletion
     ? await detectNewlyEarnedBadge(supabase, userId, slug, currentStreak)
     : null

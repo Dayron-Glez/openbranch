@@ -2,11 +2,8 @@ import type { ReactNode } from "react"
 import { MOTION, clamp, dash } from "@/features/playground/domain/badge-motion"
 
 /**
- * `ship-it` — the rocket dips for anticipation, lifts off trailing exhaust,
- * then eases back to its resting position. The source composition let the
- * launch translation persist forever (fine for a video that keeps playing
- * past it) — here it has to return to (0,0) by the time the animation
- * settles, or the icon just sits off-center in its tile permanently.
+ * The launch translation has to return to (0,0) by the time the animation
+ * settles, or the icon sits off-center in its tile permanently.
  */
 export const RocketIcon = ({ t }: { readonly t: number }): ReactNode => {
   const draw = MOTION.draw(0, 0.6)(t)

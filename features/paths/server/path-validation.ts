@@ -4,12 +4,9 @@ import { playgroundSource } from "@/lib/playground-source"
 import { flattenSteps, type LearningPath, type PathStep } from "../domain/paths"
 import { getAllPaths } from "./path-catalog"
 
-/**
- * Zod validates a path's *shape*; nothing validates that the content it
- * points at exists. Before the MDX move, `docSlug` was a bare string and a
- * typo rendered a silently missing step. This runs from `generateStaticParams`
- * — i.e. during `next build` — so a broken reference fails the build instead.
- */
+// Zod validates a path's *shape*; nothing validates that the content it points
+// at exists, and a typo there renders a silently missing step. This runs from
+// `generateStaticParams` — i.e. during `next build` — so it fails the build.
 
 /** A step's identity for cross-locale comparison. */
 const stepKey = (step: PathStep): string => `${step.type}:${step.slug}`
@@ -54,10 +51,7 @@ const collectDuplicateIds = (path: LearningPath, lang: string): readonly string[
   return problems
 }
 
-/**
- * Throws with every problem at once rather than the first — a single failing
- * build should tell an author everything they need to fix.
- */
+/** Throws with every problem at once, so one failing build lists them all. */
 export const validatePathCatalog = (): void => {
   const problems: string[] = []
   const structureByPath = new Map<string, { readonly lang: string; readonly key: string }>()

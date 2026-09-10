@@ -9,11 +9,7 @@ import type { PathCardItem } from "../components/PathCard"
 import { isStepDone, type PathProgress } from "../domain/path-status"
 import { flattenSteps, type LearningPath, type PathStep } from "../domain/paths"
 
-/**
- * Just the number, not a full step resolution — the card only ever shows a
- * total. `resolveStep` on the path detail page does the equivalent work but
- * also resolves title/description/etc., which the card does not need.
- */
+/** `resolveStep` on the detail page does this too, but also resolves the copy. */
 const stepMinutes = async (step: PathStep, lang: string): Promise<number> => {
   if (step.type === "doc") {
     const page = source.getPage(step.slug.split("/"), lang)
@@ -30,17 +26,13 @@ const sumEstimatedMinutes = async (path: LearningPath, lang: string): Promise<nu
 
 /**
  * Shared by the index route and the hub band so the two cannot describe the
- * same path differently. `progress` is `null` when signed out, which is what
- * makes the card describe the path's shape instead of progress.
+ * same path differently. The card is handed a ready-made count rather than
+ * inferring one — "signed out" is not deducible from the data shape, and a
+ * path with no challenges would read the same as an untouched one.
  *
- * The card is handed a ready-made count rather than inferring one: deducing
- * "signed out" from the data shape broke as soon as guides carried real
- * booleans, and would also have misread a path with no challenges.
- *
- * Async because the completed-state caption needs a total time estimate,
- * which for guide steps means reading the MDX body — one `getText` per guide
- * step across every path shown, in parallel. Cheap at today's catalog size
- * (one path, two guide steps); worth revisiting if the catalog grows a lot.
+ * Async because the completed-state caption needs a time estimate, and for
+ * guide steps that means reading the MDX body: one `getText` per guide step
+ * across every path shown, in parallel. Worth revisiting if the catalog grows.
  */
 export const buildPathCardItems = async (
   paths: readonly LearningPath[],
@@ -71,7 +63,6 @@ export const buildPathCardItems = async (
     })
   )
 
-/** Every challenge slug across a set of paths — input to the progress query. */
 export const challengeSlugsAcross = (paths: readonly LearningPath[]): readonly string[] =>
   paths.flatMap((path) =>
     flattenSteps(path)
@@ -79,7 +70,6 @@ export const challengeSlugsAcross = (paths: readonly LearningPath[]): readonly s
       .map((step) => step.slug)
   )
 
-/** Every guide slug across a set of paths — input to the read-guides query. */
 export const docSlugsAcross = (paths: readonly LearningPath[]): readonly string[] =>
   paths.flatMap((path) =>
     flattenSteps(path)

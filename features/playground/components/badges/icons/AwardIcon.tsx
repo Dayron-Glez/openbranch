@@ -2,9 +2,8 @@ import type { ReactNode } from "react"
 import { MOTION, clamp, dash } from "@/features/playground/domain/badge-motion"
 
 /**
- * The five track hues converging — literal tokens, not `currentColor`: this
- * badge's whole point is "every track," so the particles have to carry each
- * track's own color, not the badge's single accent.
+ * Literal tokens, not `currentColor`: this badge means "every track", so the
+ * particles have to carry each track's own colour rather than one accent.
  */
 const TRACK_HUES = [
   "var(--color-track-git)",
@@ -14,7 +13,6 @@ const TRACK_HUES = [
   "var(--color-track-docs)",
 ]
 
-/** `all-tracks` — the five track hues converge into the medal, which pops with a shockwave. */
 export const AwardIcon = ({ t }: { readonly t: number }): ReactNode => {
   const circle = MOTION.draw(0.72, 0.45)(t)
   const rib1 = MOTION.draw(1.05, 0.4)(t)

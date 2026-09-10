@@ -11,13 +11,8 @@ type StatsStripProps = {
   readonly totalChallenges: number
   readonly lang: string
   /**
-   * Replaces the "next up: {track}" line under the completed count.
-   *
-   * That line is a nudge, which is right on your own dashboard and wrong on a
-   * public profile: it tells a stranger what someone else should do next. The
-   * profile passes the tracks they have actually finished in, turning the same
-   * cell from a prompt into a record. Omitted everywhere else, so the hub keeps
-   * its nudge.
+   * Replaces the "next up: {track}" nudge under the completed count — right on
+   * your own dashboard, wrong on someone else's profile. Omitted on the hub.
    */
   readonly completedSub?: string
 }
