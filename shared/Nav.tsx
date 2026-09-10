@@ -144,9 +144,8 @@ export function Nav({ dict, lang }: NavProps) {
             </Tooltip>
           </TooltipProvider>
 
-          {/* Full-document navigation: switching locale changes <html lang>,
-              the i18n provider and the theme script â€” a hard context switch,
-              not an in-app route change. */}
+          {/* Full-document navigation: switching locale changes <html lang>, the
+              i18n provider and the theme script. */}
           <ToggleGroup
             type="single"
             value={current}

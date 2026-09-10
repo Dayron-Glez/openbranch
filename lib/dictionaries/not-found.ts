@@ -1,9 +1,6 @@
 /**
- * Copy for the 404 page. Flat `{ es, en }` entries assembled by `tx`,
- * following `lib/playground-dictionary.ts` and `lib/dictionaries/profile.ts`
- * rather than side-by-side locale objects — with only two locales sharing
- * identical keys, the side-by-side form is half duplicated lines by
- * construction (the exact issue SonarCloud caught in the profile dictionary).
+ * Flat `{ es, en }` entries assembled by `tx`, following
+ * `lib/playground-dictionary.ts` rather than side-by-side locale objects.
  */
 
 type LocalizedEntry = { readonly es: string; readonly en: string }

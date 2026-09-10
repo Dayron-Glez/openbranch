@@ -1,9 +1,8 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared"
 import { appName, gitConfig } from "./shared"
 
-// No `links`: the docs sidebar should show only the Fumadocs page tree
-// (like fumadocs.dev itself). Top-level nav links here duplicated the tree
-// and cluttered the sidebar.
+// No `links` on purpose: they render into the docs sidebar, duplicating the
+// page tree it already shows.
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: { title: appName },

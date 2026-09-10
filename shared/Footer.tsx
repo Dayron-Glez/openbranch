@@ -13,11 +13,8 @@ type FooterProps = {
   readonly dict: LandingDict["footer"]
   readonly lang: string
   /**
-   * Skips the tagline and link columns, keeping only the bottom legal row —
-   * the sitemap makes no sense on a page whose entire point is to be a quick
-   * exit, and at ~290px tall the full footer is most of why that page needed
-   * to scroll on an ordinary viewport. Defaults to the full footer used
-   * everywhere else; today only the 404 page passes `compact`.
+   * Drops the tagline and link columns, keeping only the legal row. The full
+   * footer is ~290px tall, enough to make a single-screen page scroll.
    */
   readonly compact?: boolean
 }
@@ -27,10 +24,9 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
   return (
     <footer
       className={`border-line mx-auto max-w-300 border-t px-8 max-[520px]:px-5 ${compact ? "py-6" : "scroll-reveal pt-14 pb-9"}`}
-      // Scroll-reveal assumes there's a fold to scroll past — on a compact,
-      // single-screen page the footer sits inside the observer's own bottom
-      // rootMargin exclusion with nothing left to scroll, so it would never
-      // actually intersect and stay invisible. Skipped entirely for compact.
+      // Scroll-reveal assumes there is a fold to scroll past. On a compact,
+      // single-screen page the footer starts inside the observer's own bottom
+      // rootMargin exclusion and never intersects, so it would stay invisible.
       data-scroll-reveal={compact ? undefined : true}
     >
       {!compact && (

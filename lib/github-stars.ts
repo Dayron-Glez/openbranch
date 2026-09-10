@@ -88,11 +88,11 @@ export async function fetchGitHubContributors(repo: string): Promise<string | nu
     let count: number
 
     if (link) {
-      // Link header contains rel="last" with the total page count = total contributors
+      // With per_page=1, rel="last"'s page number is the contributor count.
       const match = /[?&]page=(\d+)>;\s*rel="last"/.exec(link)
       count = match ? Number.parseInt(match[1], 10) : 1
     } else {
-      // Fewer contributors than per_page — only one page exists
+      // No Link header means a single page.
       count = ((await res.json()) as unknown[]).length
     }
 

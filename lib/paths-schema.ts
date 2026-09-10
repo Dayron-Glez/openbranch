@@ -1,13 +1,11 @@
 import { z } from "zod"
 
 /**
- * Zod-only, relative imports, no `@/` alias: this module is pulled in by
- * `source.config.ts`, which is bundled outside Next's bundler and cannot
- * resolve path aliases. `lib/maturity.ts` is the working precedent.
- *
+ * Zod-only, relative imports, no `@/` alias: `source.config.ts` pulls this in
+ * and is bundled outside Next's bundler, so it cannot resolve path aliases.
  * The track literals are duplicated from `features/playground/domain/manifest`
- * for that same reason; `features/paths/domain/paths.ts` asserts at compile
- * time that the two lists stay identical.
+ * for the same reason; `features/paths/domain/paths.ts` asserts at compile time
+ * that the two lists stay identical.
  */
 export const PATH_TRACKS = ["git", "review", "docs", "bugfix", "test"] as const
 
@@ -18,11 +16,8 @@ export const PATH_STEP_TYPES = ["doc", "challenge"] as const
 export type PathStepType = (typeof PATH_STEP_TYPES)[number]
 
 /**
- * A step points at content that lives in another collection: `doc` slugs are
- * `section/page` paths into `content/docs`, `challenge` slugs are flat names
- * in `content/playground`. Neither is resolved here — the build-time
- * validator does that, so a bad reference fails `next build` rather than
- * rendering an empty step.
+ * Slugs are not resolved here — the build-time validator does that, so a bad
+ * reference fails `next build` rather than rendering an empty step.
  */
 export const pathStepSchema = z.object({
   type: z.enum(PATH_STEP_TYPES),

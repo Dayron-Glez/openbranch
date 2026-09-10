@@ -9,11 +9,6 @@ type NeedsWiderScreenNoteProps = {
   readonly secondaryLabel?: string
 }
 
-/**
- * Shown in place of a challenge workspace entry point below
- * WORKSPACE_MIN_WIDTH (shared/viewport.ts). Names the reason and offers an
- * exit — never just a bare refusal.
- */
 export const NeedsWiderScreenNote = ({
   title,
   body,
