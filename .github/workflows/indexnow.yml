@@ -23,11 +23,27 @@ jobs:
           # that parent is the previous main, so the diff is the merged PR.
           fetch-depth: 2
 
+      - name: Collect changed content files
+        id: changed
+        env:
+          SHA: ${{ github.event.deployment.sha }}
+        run: |
+          set -euo pipefail
+          files="$(git diff --name-only "$SHA^" "$SHA" -- content/ | tr '\n' ' ')"
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+
       - name: Setup Bun
+        if: steps.changed.outputs.files != ''
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
 
       - name: Install dependencies
+        if: steps.changed.outputs.files != ''
         run: bun install --frozen-lockfile --ignore-scripts
 
+      # Passed through the environment rather than interpolated into the
+      # command, so a crafted filename cannot become part of the shell line.
       - name: Submit
-        run: bun run scripts/indexnow.ts --since ${{ github.event.deployment.sha }}
+        if: steps.changed.outputs.files != ''
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: bun run scripts/indexnow.ts --files $FILES

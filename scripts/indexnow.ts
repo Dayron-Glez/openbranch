@@ -9,14 +9,15 @@
  * is public, so a renamed or unpublished page can never be submitted.
  *
  * Usage:
- *   bun run scripts/indexnow.ts --since <sha>      — URLs that commit touched
  *   bun run scripts/indexnow.ts --files a.mdx b... — URLs for these files
  *   bun run scripts/indexnow.ts --all              — every URL in the sitemap
  *   …with --dry-run to print the submission without sending it
+ *
+ * Which files changed is the caller's job — the workflow already holds the
+ * commit range, and computing it here would mean shelling out to git.
  */
 import { existsSync, readFileSync } from "node:fs"
 import { join } from "node:path"
-import { execFileSync } from "node:child_process"
 import { SITE_URL } from "../lib/constants"
 
 /** Public by design: it only proves control of the host that serves it. */
@@ -31,8 +32,12 @@ const CONTENT_ROUTES: Readonly<Record<string, string>> = {
   "content/playground": "/playground",
 }
 
+/**
+ * Line breaks are collapsed: messages carry API response bodies, and a forged
+ * newline in one would let it fake a log entry of its own.
+ */
 const fail: (message: string) => never = (message) => {
-  console.error(`✗ ${message}`)
+  console.error(`✗ ${message.replaceAll(/\s+/g, " ")}`)
   process.exit(1)
 }
 
@@ -54,11 +59,6 @@ const toUrlPath = (file: string): string | null => {
   const path = slug === "" ? route : `${route}/${slug}`
   return locale === "en" ? `/en${path}` : path
 }
-
-const changedFiles = (sha: string): string[] =>
-  execFileSync("git", ["diff", "--name-only", `${sha}^`, sha], { encoding: "utf8" })
-    .split("\n")
-    .filter((line) => line !== "")
 
 const sitemapUrls = async (): Promise<Set<string>> => {
   const response = await fetch(`${SITE_URL}/sitemap.xml`)
@@ -96,16 +96,9 @@ const main = async (): Promise<void> => {
   if (args.includes("--all")) {
     urls = [...published]
   } else {
-    const sinceIndex = args.indexOf("--since")
     const filesIndex = args.indexOf("--files")
-    let files: string[]
-    if (sinceIndex !== -1) {
-      files = changedFiles(args[sinceIndex + 1] ?? fail("--since needs a commit"))
-    } else if (filesIndex !== -1) {
-      files = args.slice(filesIndex + 1).filter((arg) => !arg.startsWith("--"))
-    } else {
-      fail("pass one of --since <sha>, --files <paths…> or --all")
-    }
+    if (filesIndex === -1) fail("pass --files <paths…> or --all")
+    const files = args.slice(filesIndex + 1).filter((arg) => !arg.startsWith("--"))
 
     const candidates = new Set(
       files
