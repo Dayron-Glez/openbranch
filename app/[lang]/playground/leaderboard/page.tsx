@@ -3,6 +3,7 @@ import Link from "next/link"
 import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
+import { canonicalUrl } from "@/lib/seo"
 import { createClient } from "@/lib/supabase/server"
 import {
   LeaderboardTable,
@@ -23,6 +24,7 @@ export async function generateMetadata({
   return {
     title: dict.leaderboard.metaTitle,
     description: dict.leaderboard.metaDescription,
+    alternates: { canonical: canonicalUrl(lang, "/playground/leaderboard") },
   }
 }
 

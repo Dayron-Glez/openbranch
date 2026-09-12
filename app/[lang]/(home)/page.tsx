@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import type { Metadata } from "next"
 import { Nav } from "@/shared/Nav"
 import { Hero } from "@/features/home/components/Hero"
 import { TopicCard } from "@/features/home/components/TopicCard"
@@ -11,6 +12,7 @@ import { AmbientBackground } from "@/features/home/components/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
 import { source } from "@/lib/source"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
+import { canonicalUrl } from "@/lib/seo"
 import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
 import { getWeeklyPick } from "@/lib/weekly-pick"
@@ -50,6 +52,13 @@ const sectionClass = ""
 const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
   "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
+
+export async function generateMetadata({
+  params,
+}: Readonly<PageProps<"/[lang]">>): Promise<Metadata> {
+  const { lang } = await params
+  return { alternates: { canonical: canonicalUrl(lang, "/") } }
+}
 
 export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">>) {
   const { lang } = await params

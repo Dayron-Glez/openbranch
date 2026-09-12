@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import { i18n } from "@/lib/i18n"
 import { localizedHref } from "@/lib/landing-dictionary"
+import { canonicalUrl } from "@/lib/seo"
 import { source } from "@/lib/source"
 import { playgroundSource } from "@/lib/playground-source"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
@@ -53,6 +54,7 @@ export async function generateMetadata({
   return {
     title: `${path.title} · openbranch`,
     description: path.lead,
+    alternates: { canonical: canonicalUrl(lang, `/paths/${slug}`) },
   }
 }
 
