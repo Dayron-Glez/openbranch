@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://openbranch.vercel.app"),
+  metadataBase: new URL("https://openbranch.dayronglez.dev"),
   title: {
     template: "%s — openbranch",
     default: "openbranch — The open guide to building software the right way",
