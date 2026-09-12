@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next"
 import { i18n } from "@/lib/i18n"
 import { source } from "@/lib/source"
 import { playgroundSource } from "@/lib/playground-source"
-import { canonicalUrl } from "@/lib/seo"
+import { canonicalUrl, docsPath } from "@/lib/seo"
 import { createAnonClient } from "@/lib/supabase/anon"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
 
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const url = (path: string): string => canonicalUrl(lang, path)
 
     const docs = source.getPages(lang).map((page) => ({
-      url: canonicalUrl(lang, `/docs${page.slugs.length > 0 ? `/${page.slugs.join("/")}` : ""}`),
+      url: canonicalUrl(lang, docsPath(page.slugs)),
       lastModified: (page.data as PageWithLastModified).lastModified,
     }))
 

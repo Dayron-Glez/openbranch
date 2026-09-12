@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import { getPageImage, getPageGitHubUrl, getPageMarkdownUrl, source } from "@/lib/source"
 import { SITE_URL } from "@/lib/constants"
-import { canonicalUrl } from "@/lib/seo"
+import { canonicalUrl, docsPath } from "@/lib/seo"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/features/docs/components/SuggestGuideButton"
 import { IconClock } from "@tabler/icons-react"
@@ -176,9 +176,7 @@ export async function generateMetadata(
   return {
     title: page.data.title,
     description: page.data.description,
-    alternates: {
-      canonical: canonicalUrl(lang, `/docs${slug === undefined ? "" : `/${slug.join("/")}`}`),
-    },
+    alternates: { canonical: canonicalUrl(lang, docsPath(slug)) },
     openGraph: {
       images: getPageImage(page).url,
     },

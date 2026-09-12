@@ -14,3 +14,7 @@ export const canonicalUrl = (lang: string, path: string): string => {
   const normalized = localized.length > 1 ? localized.replace(/\/$/, "") : localized
   return `${SITE_URL}${normalized}`
 }
+
+/** Route of a docs page from its slug segments; the index page has none. */
+export const docsPath = (slugs: readonly string[] | undefined): string =>
+  slugs === undefined || slugs.length === 0 ? "/docs" : `/docs/${slugs.join("/")}`
