@@ -1,0 +1,33 @@
+name: IndexNow
+
+# Fires on Vercel's own deployment status, not on push: submitting before the
+# deploy finishes would have the engines crawl the page that is being replaced.
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    name: Submit changed URLs
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+          # Needs the deployed commit and its first parent: on a merge commit
+          # that parent is the previous main, so the diff is the merged PR.
+          fetch-depth: 2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      - name: Submit
+        run: bun run scripts/indexnow.ts --since ${{ github.event.deployment.sha }}
