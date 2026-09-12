@@ -1,0 +1,49 @@
+name: IndexNow
+
+# Fires on Vercel's own deployment status, not on push: submitting before the
+# deploy finishes would have the engines crawl the page that is being replaced.
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    name: Submit changed URLs
+    if: >-
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment_status.environment == 'Production'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.deployment.sha }}
+          # Needs the deployed commit and its first parent: on a merge commit
+          # that parent is the previous main, so the diff is the merged PR.
+          fetch-depth: 2
+
+      - name: Collect changed content files
+        id: changed
+        env:
+          SHA: ${{ github.event.deployment.sha }}
+        run: |
+          set -euo pipefail
+          files="$(git diff --name-only "$SHA^" "$SHA" -- content/ | tr '\n' ' ')"
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Bun
+        if: steps.changed.outputs.files != ''
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+
+      - name: Install dependencies
+        if: steps.changed.outputs.files != ''
+        run: bun install --frozen-lockfile --ignore-scripts
+
+      # Passed through the environment rather than interpolated into the
+      # command, so a crafted filename cannot become part of the shell line.
+      - name: Submit
+        if: steps.changed.outputs.files != ''
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: bun run scripts/indexnow.ts --files $FILES
