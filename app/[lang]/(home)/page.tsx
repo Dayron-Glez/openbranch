@@ -12,7 +12,7 @@ import { AmbientBackground } from "@/features/home/components/AmbientBackground"
 import { IconBranch, IconPR, IconFlask, IconTag, IconFork, IconBulb } from "@/icons"
 import { source } from "@/lib/source"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
-import { canonicalUrl } from "@/lib/seo"
+import { alternatesFor } from "@/lib/seo"
 import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
 import { getWeeklyPick } from "@/lib/weekly-pick"
@@ -57,7 +57,7 @@ export async function generateMetadata({
   params,
 }: Readonly<PageProps<"/[lang]">>): Promise<Metadata> {
   const { lang } = await params
-  return { alternates: { canonical: canonicalUrl(lang, "/") } }
+  return { alternates: alternatesFor(lang, "/") }
 }
 
 export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">>) {
