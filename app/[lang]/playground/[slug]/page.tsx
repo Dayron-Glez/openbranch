@@ -16,6 +16,8 @@ import { getTrackColorToken } from "@/features/playground/domain/manifest"
 import { DiffBars } from "@/shared/DiffBars"
 import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
 import { NeedsWiderScreenNote } from "@/shared/NeedsWiderScreenNote"
+import { pageShellClass } from "@/shared/PageShell"
+import { cn } from "@/lib/utils"
 
 const CheckIcon = (): ReactNode => (
   <svg
@@ -132,7 +134,12 @@ export default async function ChallengePage({
       data-pg-main
       className="relative z-1 flex h-[calc(100dvh-48px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
     >
-      <div className="mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5">
+      <div
+        className={cn(
+          pageShellClass("wide"),
+          "flex min-h-0 flex-1 flex-col pt-10 max-[900px]:flex-none max-[900px]:pb-10"
+        )}
+      >
         <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
           <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
             <li>

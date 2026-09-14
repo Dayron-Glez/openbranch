@@ -35,6 +35,7 @@ import { CHALLENGE_TRACKS } from "@/features/playground/domain/manifest"
 import { createClient } from "@/lib/supabase/server"
 import { IconRoute, IconClock, IconUser } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { PageShell } from "@/shared/PageShell"
 
 export function generateStaticParams(): { lang: string; slug: string }[] {
   // Runs during `next build`, so a broken reference fails there.
@@ -208,7 +209,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
   const pathsIndexHref = localizedHref(lang, "/paths")
 
   return (
-    <main data-pg-main className="mx-auto max-w-[760px] px-7 py-10 max-[520px]:px-5">
+    <PageShell width="reading" className="py-10">
       <nav className="mb-6" aria-label="Breadcrumb">
         <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
           <li>
@@ -337,6 +338,6 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
           />
         </section>
       ))}
-    </main>
+    </PageShell>
   )
 }

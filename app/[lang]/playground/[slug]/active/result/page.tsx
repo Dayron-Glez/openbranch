@@ -22,6 +22,8 @@ import { pathForChallenge } from "@/features/paths/server/path-catalog"
 import { getReadDocSlugs } from "@/features/paths/server/doc-reads"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
+import { pageShellClass } from "@/shared/PageShell"
+import { cn } from "@/lib/utils"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -347,7 +349,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
         />
       )}
 
-      <div className="relative mx-auto max-w-[900px] px-7 pt-12 pb-20 max-[520px]:px-5">
+      <div className={cn(pageShellClass("reading"), "relative pt-12 pb-20")}>
         <div className="mb-16 text-center">
           <div className="mb-8 flex justify-center">
             <div className="border-ob-accent/30 bg-ob-accent/[0.07] flex size-[80px] items-center justify-center rounded-full border-[1.5px]">

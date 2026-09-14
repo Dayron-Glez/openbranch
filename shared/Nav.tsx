@@ -16,6 +16,8 @@ import { Kbd } from "@/components/ui/kbd"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { MobileNav } from "@/shared/MobileNav"
 import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
+import { pageShellClass } from "@/shared/PageShell"
+import { cn } from "@/lib/utils"
 
 const LOCALES = ["es", "en"] as const
 
@@ -63,7 +65,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-350 items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
+      <div className={cn(pageShellClass(), "flex items-center gap-8 py-3.5 max-[980px]:gap-4")}>
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
