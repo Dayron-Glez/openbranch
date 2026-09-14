@@ -57,7 +57,9 @@ export default async function ActiveChallengePage({
   } = await supabase.auth.getUser()
 
   if (user === null) {
-    redirect(localizedHref(lang, `/playground/${slug}`))
+    // Carries the destination instead of dropping it, so signing in comes back here.
+    const intended = localizedHref(lang, `/playground/${slug}/active`)
+    redirect(localizedHref(lang, `/login?next=${encodeURIComponent(intended)}`))
   }
 
   const { data: sessionRows } = await supabase
