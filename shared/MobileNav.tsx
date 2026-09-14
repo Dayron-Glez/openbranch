@@ -10,11 +10,20 @@ import { Menu } from "lucide-react"
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
+import { authDictionary, resolveAuthLocale } from "@/lib/dictionaries/auth"
+import { SignOutButton } from "@/shared/SignOutButton"
+import { IconGithub } from "@/icons"
 
 type MobileNavProps = {
   readonly lang: string
   readonly avatarUrl?: string | null
   readonly username?: string | null
+  /**
+   * Whether the session is known. Left undefined by the landing nav, which
+   * never reads the session — rendering "sign in" there would show it to
+   * people who are already signed in.
+   */
+  readonly signedIn?: boolean
 }
 
 const navLinkClass = (active: boolean): string =>
@@ -26,12 +35,14 @@ export const MobileNav = ({
   lang,
   avatarUrl = null,
   username = null,
+  signedIn,
 }: MobileNavProps): ReactElement => {
   const [open, setOpen] = useState<boolean>(false)
   const pathname = usePathname()
   const { setOpenSearch } = useSearchContext()
   const dict = navDictionary[resolveNavLocale(lang)]
   const navDict = getLandingDict(lang).nav
+  const authDict = authDictionary[resolveAuthLocale(lang)]
 
   const inDocs = pathname.includes("/docs")
   const inPlayground = pathname.includes("/playground")
@@ -113,6 +124,26 @@ export const MobileNav = ({
           <IconSearch />
           <span className="min-w-0 flex-1 truncate text-left">{navDict.searchPlaceholder}</span>
         </button>
+
+        {/* The challenge page's sign-in sits inside WorkspaceOnly, so below
+            900px this sheet was the only place left with room for it. */}
+        {signedIn === true && (
+          <SignOutButton
+            dict={authDict}
+            redirectTo={localizedHref(lang, "/playground")}
+            className="text-fg-muted hover:text-danger self-start text-[15px] transition-colors duration-(--d-fast) ease-(--ease)"
+          />
+        )}
+        {signedIn === false && (
+          <Link
+            href={localizedHref(lang, `/login?next=${encodeURIComponent(pathname)}`)}
+            onClick={close}
+            className="bg-ob-accent text-accent-ink inline-flex h-10 items-center justify-center gap-2 rounded-(--r-8) text-[14px] font-medium no-underline [&_svg]:size-[15px]"
+          >
+            <IconGithub />
+            {authDict.eyebrow}
+          </Link>
+        )}
       </SheetContent>
     </Sheet>
   )

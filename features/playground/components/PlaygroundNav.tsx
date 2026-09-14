@@ -16,6 +16,16 @@ import { fetchGitHubStars } from "@/lib/github-stars"
 import { GH_REPO, GH_URL, DISCORD_URL } from "@/lib/constants"
 import { MobileNav } from "@/shared/MobileNav"
 import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
+import { authDictionary, resolveAuthLocale } from "@/lib/dictionaries/auth"
+import { SignOutConfirm } from "@/shared/SignOutConfirm"
+import { IconUser, IconLogout, IconGithub } from "@/icons"
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
 
 type PlaygroundNavProps = {
   readonly lang: string
@@ -38,6 +48,8 @@ export const PlaygroundNav = ({
   const { setOpenSearch } = useSearchContext()
   const pathname = usePathname()
   const [stars, setStars] = useState<string | null>(null)
+  const [confirmingSignOut, setConfirmingSignOut] = useState<boolean>(false)
+  const authDict = authDictionary[resolveAuthLocale(lang)]
   const current: "es" | "en" = lang === "en" ? "en" : "es"
   const stripped = pathname.replace(/^\/en(?=\/|$)/, "") || "/"
   const localeHref: Record<"es" | "en", string> = {
@@ -147,26 +159,51 @@ export const PlaygroundNav = ({
             </Tooltip>
           </TooltipProvider>
 
-          {/* user avatar → own profile */}
-          {avatarUrl !== null && username !== null && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={localizedHref(lang, `/u/${username}`)}
-                    className="max-[520px]:hidden"
-                    aria-label={navDict.profileLabel}
+          {/* account menu — the only place sign-out lives outside a challenge page */}
+          {username !== null ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label={navDict.profileLabel}
+                className="focus-visible:ring-accent-ring rounded-full focus-visible:ring-2 focus-visible:outline-none max-[520px]:hidden"
+              >
+                {avatarUrl === null ? (
+                  // An account can have no avatar; before, the whole entry
+                  // vanished because it required both values.
+                  <span
+                    aria-hidden
+                    className="border-line bg-bg-elev text-fg-muted hover:ring-accent-ring inline-grid size-7 place-items-center rounded-full border font-mono text-[11px] ring-1 ring-white/10 transition-[box-shadow]"
                   >
-                    <img
-                      src={avatarUrl}
-                      alt={username}
-                      className="hover:ring-accent-ring size-7 rounded-full object-cover ring-1 ring-white/10 transition-[box-shadow]"
-                    />
+                    {username.slice(0, 1).toUpperCase()}
+                  </span>
+                ) : (
+                  <img
+                    src={avatarUrl}
+                    alt={username}
+                    className="hover:ring-accent-ring size-7 rounded-full object-cover ring-1 ring-white/10 transition-[box-shadow]"
+                  />
+                )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <DropdownMenuItem asChild>
+                  <Link href={localizedHref(lang, `/u/${username}`)}>
+                    <IconUser />
+                    {navDict.profileLabel}
                   </Link>
-                </TooltipTrigger>
-                <TooltipContent>{navDict.profileLabel}</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => setConfirmingSignOut(true)}>
+                  <IconLogout />
+                  {authDict.signOut}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="accent" className="h-8 gap-1.5 px-3 max-[520px]:hidden">
+              <Link href={localizedHref(lang, `/login?next=${encodeURIComponent(pathname)}`)}>
+                <IconGithub className="size-[14px]" />
+                {authDict.eyebrow}
+              </Link>
+            </Button>
           )}
 
           {/* language toggle */}
@@ -191,9 +228,22 @@ export const PlaygroundNav = ({
             ))}
           </ToggleGroup>
 
-          <MobileNav lang={lang} avatarUrl={avatarUrl} username={username} />
+          <MobileNav
+            lang={lang}
+            avatarUrl={avatarUrl}
+            username={username}
+            signedIn={username !== null}
+          />
         </div>
       </div>
+
+      {/* Sibling of the menu, not a child: closing the menu would unmount it. */}
+      <SignOutConfirm
+        dict={authDict}
+        open={confirmingSignOut}
+        onOpenChange={setConfirmingSignOut}
+        redirectTo={localizedHref(lang, "/playground")}
+      />
     </header>
   )
 }
