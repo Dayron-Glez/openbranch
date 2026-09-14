@@ -180,12 +180,12 @@ export default async function ChallengePage({
               {sessionStatusBadge}
             </div>
 
-            <h1 className="text-fg m-0 mb-3 text-[32px] leading-[1.08] font-medium tracking-[-0.02em] text-balance max-[640px]:text-[26px]">
+            <h1 className="text-fg mb-3 text-[32px] leading-[1.08] font-medium tracking-[-0.02em] text-balance max-[640px]:text-[26px]">
               {page.data.title}
             </h1>
 
             {page.data.description !== undefined && (
-              <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">
+              <p className="text-fg-2 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">
                 {page.data.description}
               </p>
             )}

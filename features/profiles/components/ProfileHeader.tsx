@@ -41,12 +41,10 @@ export const ProfileHeader = ({
     </Avatar>
 
     <div className="min-w-0 flex-1 pt-0.5">
-      <h1 className="text-fg m-0 text-[22px] leading-[1.15] font-semibold tracking-[-0.015em]">
+      <h1 className="text-fg text-[22px] leading-[1.15] font-semibold tracking-[-0.015em]">
         {overview.username}
       </h1>
-      <p className="text-fg-muted m-0 mt-[3px] font-mono text-[12px]">
-        github.com/{overview.username}
-      </p>
+      <p className="text-fg-muted mt-[3px] font-mono text-[12px]">github.com/{overview.username}</p>
       <div className="text-fg-muted mt-2.5 flex flex-wrap items-center gap-2 text-[12.5px]">
         <span>
           {overview.memberSince === null

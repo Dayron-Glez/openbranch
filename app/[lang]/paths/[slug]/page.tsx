@@ -251,10 +251,10 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         <span className="text-(color:--track)">{trackLabel}</span>
       </div>
 
-      <h1 className="text-fg m-0 mb-4 text-[34px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-[640px]:text-[27px]">
+      <h1 className="text-fg mb-4 text-[34px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-[640px]:text-[27px]">
         {path.title}
       </h1>
-      <p className="text-fg-2 m-0 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">{path.lead}</p>
+      <p className="text-fg-2 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">{path.lead}</p>
 
       <div className="pg-prose mb-7">
         <PathProse components={getMDXComponents()} />
@@ -304,15 +304,15 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
 
       {sections.map((section, index) => (
         <section key={section.id} className={index === 0 ? "" : "mt-10"}>
-          <div className="mb-5">
-            <p className="text-fg-muted m-0 mb-2 font-mono text-[11px] tracking-[0.1em] uppercase">
+          <div className="mb-5 flex flex-col gap-2">
+            <p className="text-fg-muted font-mono text-[11px] tracking-[0.1em] uppercase">
               {dict.sectionOf(index + 1, sections.length)}
             </p>
-            <h2 className="text-fg m-0 mb-2 text-[21px] leading-[1.2] font-semibold tracking-[-0.015em]">
+            <h2 className="text-fg text-[21px] leading-[1.2] font-semibold tracking-[-0.015em]">
               {section.title}
             </h2>
             {section.description !== undefined && (
-              <p className="text-fg-muted m-0 max-w-[64ch] text-[14px] leading-[1.6]">
+              <p className="text-fg-muted max-w-[64ch] text-[14px] leading-[1.6]">
                 {section.description}
               </p>
             )}
