@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useSearchContext } from "fumadocs-ui/contexts/search"
 import { LogoMark } from "@/shared/LogoMark"
-import { IconSearch, IconStar, IconDiscord } from "@/icons"
+import { IconSearch, IconStar, IconDiscord, IconUser, IconLogout, IconGithub } from "@/icons"
 import { Kbd } from "@/components/ui/kbd"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -18,7 +18,6 @@ import { MobileNav } from "@/shared/MobileNav"
 import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
 import { authDictionary, resolveAuthLocale } from "@/lib/dictionaries/auth"
 import { SignOutConfirm } from "@/shared/SignOutConfirm"
-import { IconUser, IconLogout, IconGithub } from "@/icons"
 import {
   DropdownMenu,
   DropdownMenuTrigger,

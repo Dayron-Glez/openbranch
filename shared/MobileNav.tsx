@@ -5,14 +5,13 @@ import { useState } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { useSearchContext } from "fumadocs-ui/contexts/search"
-import { IconSearch } from "@/icons"
+import { IconSearch, IconGithub } from "@/icons"
 import { Menu } from "lucide-react"
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import { navDictionary, resolveNavLocale } from "@/lib/dictionaries/nav"
 import { authDictionary, resolveAuthLocale } from "@/lib/dictionaries/auth"
 import { SignOutButton } from "@/shared/SignOutButton"
-import { IconGithub } from "@/icons"
 
 type MobileNavProps = {
   readonly lang: string

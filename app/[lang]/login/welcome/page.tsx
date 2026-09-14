@@ -4,32 +4,15 @@ import { redirect } from "next/navigation"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { safeNextPath } from "@/lib/safe-next"
 import { authDictionary, resolveAuthLocale } from "@/lib/dictionaries/auth"
-import { playgroundSource } from "@/lib/playground-source"
-import { source } from "@/lib/source"
 import { createClient } from "@/lib/supabase/server"
-import { CATEGORY_ORDER } from "@/features/playground/domain/manifest"
-import { StoryPanel, type StoryCounts } from "@/features/auth/components/StoryPanel"
+import { StoryPanel } from "@/features/auth/components/StoryPanel"
 import { WelcomePanel } from "@/features/auth/components/WelcomePanel"
+import { AuthShell } from "@/features/auth/components/AuthShell"
 import { AmbientBackground } from "@/features/home/components/AmbientBackground"
-
-const FEATURED_SLUG = "git-merge-conflict"
+import { countStory, featuredMinutes } from "../story-data"
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
-}
-
-const countStory = (lang: string): StoryCounts => ({
-  challenges: playgroundSource.getPages(lang).length,
-  tracks: CATEGORY_ORDER.length,
-  guides: source.getPages(lang).filter((page) => page.slugs.length >= 2).length,
-})
-
-const featuredMinutes = (lang: string): number | null => {
-  const page = playgroundSource
-    .getPages(lang)
-    .find((candidate) => candidate.slugs.join("/") === FEATURED_SLUG)
-  const minutes = (page?.data as { estimated_minutes?: number } | undefined)?.estimated_minutes
-  return typeof minutes === "number" ? minutes : null
 }
 
 /**
@@ -67,23 +50,22 @@ export default async function WelcomePage({
   if (username === null) redirect(localizedHref(lang, "/login"))
 
   return (
-    <main data-pg-main className="bg-bg text-fg relative min-h-dvh">
-      <AmbientBackground />
-      <div className="relative z-1 mx-auto grid min-h-dvh max-w-[1440px] grid-cols-[640px_minmax(0,1fr)] max-[1100px]:grid-cols-[minmax(0,520px)_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:px-6 max-[760px]:py-7">
-        <WelcomePanel
+    <AuthShell
+      background={<AmbientBackground />}
+      panel={
+        <StoryPanel
           dict={dict}
-          username={username}
-          profileHref={localizedHref(lang, `/u/${username}`)}
-          continueHref={next}
+          counts={countStory(lang)}
+          challengeMinutes={featuredMinutes(lang)}
         />
-        <div className="auth-rise-late flex p-5 pl-0 max-[760px]:hidden">
-          <StoryPanel
-            dict={dict}
-            counts={countStory(lang)}
-            challengeMinutes={featuredMinutes(lang)}
-          />
-        </div>
-      </div>
-    </main>
+      }
+    >
+      <WelcomePanel
+        dict={dict}
+        username={username}
+        profileHref={localizedHref(lang, `/u/${username}`)}
+        continueHref={next}
+      />
+    </AuthShell>
   )
 }
