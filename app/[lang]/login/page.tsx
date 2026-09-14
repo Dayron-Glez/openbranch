@@ -140,7 +140,7 @@ export default async function LoginPage({
   return (
     <main data-pg-main className="bg-bg text-fg relative min-h-dvh">
       <AmbientBackground />
-      <div className="relative z-1 mx-auto grid min-h-dvh max-w-[1440px] grid-cols-[640px_minmax(0,1fr)] max-[1100px]:grid-cols-[minmax(0,520px)_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:gap-6 max-[760px]:px-6 max-[760px]:py-7">
+      <div className="relative z-1 mx-auto grid min-h-dvh max-w-[1440px] grid-cols-[640px_minmax(0,1fr)] max-[1100px]:grid-cols-[minmax(0,520px)_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:px-6 max-[760px]:py-7">
         <LoginPanel
           dict={dict}
           next={next}
@@ -148,7 +148,7 @@ export default async function LoginPage({
           initialError={errorReason}
           errorCode={errorCode}
         />
-        <div className="auth-rise-late flex p-5 pl-0 max-[760px]:p-0">
+        <div className="auth-rise-late flex p-5 pl-0 max-[760px]:hidden">
           <StoryPanel
             dict={dict}
             counts={countStory(lang)}
