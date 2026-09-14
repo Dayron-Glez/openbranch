@@ -213,12 +213,12 @@ export const PathCard = ({
           <div className="text-fg-muted font-mono text-[10px] tracking-[0.08em] uppercase">
             {item.trackLabel}
           </div>
-          <h3 className="text-fg m-0 text-[15px] leading-snug font-medium tracking-[-0.005em]">
+          <h3 className="text-fg text-[15px] leading-snug font-medium tracking-[-0.005em]">
             {item.title}
           </h3>
         </div>
       </div>
-      <p className="text-fg-muted m-0 line-clamp-2 flex-1 text-[12.5px] leading-[1.5]">
+      <p className="text-fg-muted line-clamp-2 flex-1 text-[12.5px] leading-[1.5]">
         {item.description}
       </p>
       <div className="border-line flex min-h-16 flex-col justify-center gap-[11px] border-t pt-[15px]">

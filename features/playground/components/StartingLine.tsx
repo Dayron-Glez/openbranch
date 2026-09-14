@@ -30,21 +30,19 @@ export const StartingLine = ({
   return (
     <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-[640px]:grid-cols-1">
       <div className="flex flex-col gap-4">
-        <div>
-          <p className="text-ob-accent mb-2.5 font-mono text-[11px] tracking-[0.1em] uppercase">
+        <div className="flex flex-col gap-2">
+          <p className="text-ob-accent font-mono text-[11px] tracking-[0.1em] uppercase">
             {eyebrow}
           </p>
-          <h2 className="m-0 mb-2 text-[20px] leading-snug font-semibold tracking-[-0.015em]">
-            {heading}
-          </h2>
-          <p className="text-fg-2 m-0 max-w-[52ch] text-sm leading-[1.6]">{body}</p>
+          <h2 className="text-[20px] leading-snug font-semibold tracking-[-0.015em]">{heading}</h2>
+          <p className="text-fg-2 max-w-[52ch] text-sm leading-[1.6]">{body}</p>
         </div>
         <div className="flex items-center gap-3.5">
           <span className="border-line bg-bg-elev text-fg-2 inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border [&_svg]:size-[17px]">
             {challengeIcon}
           </span>
-          <div>
-            <p className="m-0 mb-1 text-[15px] leading-snug font-medium">{challengeTitle}</p>
+          <div className="flex flex-col gap-1">
+            <p className="text-[15px] leading-snug font-medium">{challengeTitle}</p>
             <div className="flex items-center gap-3">
               <span className="border-line bg-bg-elev text-fg-muted rounded-(--r-6) border px-2 py-0.5 font-mono text-[11px] tracking-[0.04em]">
                 {challengeCategoryLabel}

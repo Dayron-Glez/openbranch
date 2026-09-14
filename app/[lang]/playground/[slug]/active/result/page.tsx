@@ -431,11 +431,11 @@ export default async function ResultPage({ params }: ResultPageProps) {
           {badgeInfo !== null && badgeKey !== newlyEarnedKey && (
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
-              <div>
-                <p className="text-fg-muted mb-1 font-mono text-[10.5px] tracking-[0.08em] uppercase">
+              <div className="flex flex-col gap-1">
+                <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
                   {dict.result.badgeEarnedLabel}
                 </p>
-                <p className="text-fg mb-0.5 text-[14.5px] font-medium">{badgeInfo.name}</p>
+                <p className="text-fg text-[14.5px] font-medium">{badgeInfo.name}</p>
                 <p className="text-fg-2 text-[13px]">{badgeInfo.description}</p>
               </div>
             </div>

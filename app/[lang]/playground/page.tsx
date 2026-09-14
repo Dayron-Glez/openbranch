@@ -192,7 +192,7 @@ export default async function PlaygroundPage({
         {dict.hub.eyebrow}
       </p>
       <div className="mb-4.5 flex items-baseline justify-between gap-8 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
-        <h1 className="m-0 text-[42px] leading-[1.05] font-medium tracking-normal text-balance max-[980px]:text-[32px]">
+        <h1 className="text-[42px] leading-[1.05] font-medium tracking-normal text-balance max-[980px]:text-[32px]">
           {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
         </h1>
         <Link
@@ -214,7 +214,7 @@ export default async function PlaygroundPage({
           </svg>
         </Link>
       </div>
-      <p className="text-fg-2 m-0 mb-10 max-w-[56ch] text-base leading-[1.55]">{dict.hub.intro}</p>
+      <p className="text-fg-2 mb-10 max-w-[56ch] text-base leading-[1.55]">{dict.hub.intro}</p>
 
       {user === null ? (
         <div className="mb-10">

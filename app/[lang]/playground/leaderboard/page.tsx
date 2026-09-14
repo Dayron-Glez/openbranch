@@ -61,11 +61,11 @@ export default async function LeaderboardPage({
         </nav>
 
         <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5">
-          <h1 className="m-0 text-[26px] leading-[1.1] font-medium tracking-[-0.01em] max-[640px]:text-[22px]">
+          <h1 className="text-[26px] leading-[1.1] font-medium tracking-[-0.01em] max-[640px]:text-[22px]">
             {dict.leaderboard.title}{" "}
             <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
           </h1>
-          {sub !== null && <p className="text-fg-muted m-0 text-[13px] leading-[1.5]">{sub}</p>}
+          {sub !== null && <p className="text-fg-muted text-[13px] leading-[1.5]">{sub}</p>}
         </div>
 
         <LeaderboardTable

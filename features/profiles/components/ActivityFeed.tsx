@@ -55,7 +55,7 @@ export const ActivityFeed = ({
             </span>
           </div>
         ))}
-        <p className="text-fg-muted bg-bg-elev m-0 px-[18px] py-2.5 font-mono text-[11px]">
+        <p className="text-fg-muted bg-bg-elev px-[18px] py-2.5 font-mono text-[11px]">
           {items.length === 1 ? dict.activityFirst : dict.activityCaption(items.length)}
         </p>
       </div>

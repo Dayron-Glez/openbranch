@@ -14,8 +14,8 @@ export const EmptySection = ({
       {icon}
     </span>
     <div className="min-w-0">
-      <p className="text-fg-2 m-0 text-[13.5px] font-medium">{title}</p>
-      <p className="text-fg-muted m-0 mt-1 text-[12.5px] leading-[1.5]">{body}</p>
+      <p className="text-fg-2 text-[13.5px] font-medium">{title}</p>
+      <p className="text-fg-muted mt-1 text-[12.5px] leading-[1.5]">{body}</p>
     </div>
   </div>
 )

@@ -158,8 +158,8 @@ const EmptyState = ({
       <span className="border-line bg-bg-elev text-fg-muted inline-grid size-[46px] place-items-center rounded-(--r-10) border [&_svg]:size-5">
         <IconBranch aria-hidden />
       </span>
-      <h3 className="m-0 text-[19px] font-[550] tracking-[-0.01em]">{dict.emptyTitle}</h3>
-      <p className="text-fg-muted m-0 max-w-[42ch] text-[14px] leading-[1.55]">{dict.emptyBody}</p>
+      <h3 className="text-[19px] font-[550] tracking-[-0.01em]">{dict.emptyTitle}</h3>
+      <p className="text-fg-muted max-w-[42ch] text-[14px] leading-[1.55]">{dict.emptyBody}</p>
       <Link
         href={hubPath}
         className="bg-ob-accent text-accent-ink mt-1.5 inline-flex h-[38px] items-center rounded-(--r-8) px-4 text-[14px] font-medium hover:brightness-105"
@@ -182,7 +182,7 @@ export const LeaderboardTable = ({
   if (data === null) {
     return (
       <div className={CARD_CLASS}>
-        <p className="text-fg-muted m-0 px-4 py-5 font-mono text-[12.5px]">{dict.error}</p>
+        <p className="text-fg-muted px-4 py-5 font-mono text-[12.5px]">{dict.error}</p>
       </div>
     )
   }
@@ -259,7 +259,7 @@ export const LeaderboardTable = ({
             </>
           )}
         </TableBody>
-        <TableCaption className="border-line text-fg-muted m-0 border-t px-4 py-2.5 text-left font-mono text-[11px] tracking-[0.04em]">
+        <TableCaption className="border-line text-fg-muted mt-0 border-t px-4 py-2.5 text-left font-mono text-[11px] tracking-[0.04em]">
           {getFooter()}
         </TableCaption>
       </Table>

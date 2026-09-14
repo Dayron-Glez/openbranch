@@ -152,7 +152,7 @@ const PathRecapCard = ({
         </span>
       </Link>
 
-      <p className="text-fg m-0 mb-4 text-[16px] font-medium">
+      <p className="text-fg mb-4 text-[16px] font-medium">
         {finished ? dict.youFinishedThePath : dict.stepsDone(recap.doneCount, recap.totalSteps)}
       </p>
 
@@ -171,7 +171,7 @@ const PathRecapCard = ({
         </Link>
       ) : (
         <>
-          <p className="text-fg-muted m-0 mb-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
+          <p className="text-fg-muted mb-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
             {dict.nextInPath}
           </p>
           <Link
@@ -180,7 +180,7 @@ const PathRecapCard = ({
           >
             <span className="min-w-0 truncate">{dict.continuePath}</span>
           </Link>
-          <p className="text-fg-2 m-0 mt-2 text-center text-[12.5px]">{recap.nextStep.title}</p>
+          <p className="text-fg-2 mt-2 text-center text-[12.5px]">{recap.nextStep.title}</p>
         </>
       )}
     </div>

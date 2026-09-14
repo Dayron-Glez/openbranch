@@ -68,7 +68,7 @@ export default async function NotFound({
             {dict.eyebrowLabel}
           </p>
 
-          <h1 className="text-fg m-0 mb-3.5 max-w-[16ch] text-[36px] leading-[1.08] font-normal tracking-[-0.03em] text-balance max-[520px]:text-[28px]">
+          <h1 className="text-fg mb-3.5 max-w-[16ch] text-[36px] leading-[1.08] font-normal tracking-[-0.03em] text-balance max-[520px]:text-[28px]">
             {dict.headingLead} <span className="text-fg-2 font-light">{dict.headingQuiet}</span>
           </h1>
 
