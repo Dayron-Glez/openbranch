@@ -24,6 +24,8 @@ export {
   IconDeviceLaptop,
   IconLayoutGrid,
   IconShare,
+  IconAlertCircle,
+  IconLogout,
   // Git
   IconGitBranch as IconBranch,
   IconGitPullRequest as IconPR,

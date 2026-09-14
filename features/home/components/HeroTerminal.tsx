@@ -9,7 +9,7 @@ import {
   Dim,
   BranchBlock,
   Cursor,
-} from "@/features/home/components/Terminal"
+} from "@/shared/Terminal"
 import { CMD1, CMD2, useTerminalAnimation } from "@/features/home/hooks/use-terminal-animation"
 
 export function HeroTerminal() {

@@ -19,8 +19,8 @@ export function Terminal({
           <span className="bg-line-2 size-2.5 rounded-full" />
           <span className="bg-line-2 size-2.5 rounded-full" />
         </div>
-        <span className="text-fg-muted ml-2 font-mono text-xs">{title}</span>
-        <div className="ml-auto flex gap-1.5">
+        <span className="text-fg-muted ml-2 min-w-0 truncate font-mono text-xs">{title}</span>
+        <div className="ml-auto flex shrink-0 gap-1.5">
           {tags.map((tag) => (
             <span
               key={tag}
