@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
  * caller can add spacing without restating it.
  *
  * The page-section eyebrow is a different size and tracking and is not covered
- * here yet — see issue #239.
+ * here yet — see issue #240.
  */
 export const Eyebrow = ({
   children,
