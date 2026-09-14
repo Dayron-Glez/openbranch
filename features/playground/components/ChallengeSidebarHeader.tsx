@@ -11,10 +11,8 @@ export const ChallengeSidebarHeader = ({
   challengePath,
   exitLabel,
 }: ChallengeSidebarHeaderProps) => (
-  <div>
-    <h1 className="text-fg mb-2 text-[20px] leading-[1.2] font-medium tracking-[-0.02em]">
-      {title}
-    </h1>
+  <div className="flex flex-col items-start gap-2">
+    <h1 className="text-fg text-[20px] leading-[1.2] font-medium tracking-[-0.02em]">{title}</h1>
     <Link
       href={challengePath}
       className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-1.5 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
