@@ -34,7 +34,7 @@ export const SignInNudge = ({ dict, redirectPath }: SignInNudgeProps): React.Rea
       >
         <IconFlame />
       </span>
-      <p className="text-fg-2 m-0 text-[14px] leading-[1.55]">
+      <p className="text-fg-2 text-[14px] leading-[1.55]">
         {dict.lead} <span className="text-fg-muted">{dict.sub}</span>
       </p>
       <Button

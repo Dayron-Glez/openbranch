@@ -32,10 +32,8 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
         <span className="text-ob-accent font-mono text-[11px] tracking-[0.08em] uppercase">
           {guide.kicker}
         </span>
-        <h3 className="m-0 text-[28px] leading-[1.15] font-medium tracking-normal">
-          {guide.title}
-        </h3>
-        <p className="text-fg-2 m-0 max-w-[42ch] text-[14.5px] leading-[1.55]">{guide.summary}</p>
+        <h3 className="text-[28px] leading-[1.15] font-medium tracking-normal">{guide.title}</h3>
+        <p className="text-fg-2 max-w-[42ch] text-[14.5px] leading-[1.55]">{guide.summary}</p>
         <FeaturedGuideStats
           maturity={guide.maturity}
           lastModified={guide.lastModified}
@@ -57,12 +55,12 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
         aria-label={dict.previewAria}
       >
         {guide.firstHeading && (
-          <h4 className="text-fg m-0 mb-3.5 text-[20px] leading-tight font-medium tracking-normal">
+          <h4 className="text-fg mb-3.5 text-[20px] leading-tight font-medium tracking-normal">
             <span className="text-fg-faint mr-1.5 font-normal">#</span>
             {guide.firstHeading}
           </h4>
         )}
-        <p className="m-0 text-pretty">{guide.excerpt}</p>
+        <p className="text-pretty">{guide.excerpt}</p>
       </article>
     </div>
   )

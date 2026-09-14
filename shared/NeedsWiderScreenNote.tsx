@@ -20,8 +20,8 @@ export const NeedsWiderScreenNote = ({
       <IconDeviceLaptop />
     </span>
     <div className="flex-1">
-      <p className="text-fg m-0 mb-1 text-[13.5px] font-medium">{title}</p>
-      <p className="text-fg-muted m-0 text-[13px] leading-[1.55]">{body}</p>
+      <p className="text-fg mb-1 text-[13.5px] font-medium">{title}</p>
+      <p className="text-fg-muted text-[13px] leading-[1.55]">{body}</p>
       {secondaryHref !== undefined && secondaryLabel !== undefined && (
         <Link
           href={secondaryHref}

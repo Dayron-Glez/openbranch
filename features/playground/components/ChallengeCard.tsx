@@ -61,8 +61,8 @@ export const ChallengeCard = ({
         </span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <h3 className="m-0 text-[15px] leading-snug font-medium tracking-normal">{title}</h3>
-        <p className="text-fg-muted m-0 line-clamp-2 text-[13px] leading-[1.55]">{description}</p>
+        <h3 className="text-[15px] leading-snug font-medium tracking-normal">{title}</h3>
+        <p className="text-fg-muted line-clamp-2 text-[13px] leading-[1.55]">{description}</p>
       </div>
       <div className="text-fg-muted mt-auto flex items-center justify-between font-mono text-[11px] tracking-[0.04em]">
         <span className="flex items-center gap-2">

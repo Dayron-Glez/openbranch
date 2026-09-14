@@ -152,10 +152,10 @@ export const PathStepper = ({
               </span>
             </div>
 
-            <h3 className="text-fg m-0 mb-1.5 text-[18px] font-semibold tracking-[-0.01em]">
+            <h3 className="text-fg mb-1.5 text-[18px] font-semibold tracking-[-0.01em]">
               {step.title}
             </h3>
-            <p className="text-fg-muted m-0 mb-4 max-w-[64ch] text-[13.5px] leading-[1.55]">
+            <p className="text-fg-muted mb-4 max-w-[64ch] text-[13.5px] leading-[1.55]">
               {step.description}
             </p>
 

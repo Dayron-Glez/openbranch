@@ -77,7 +77,7 @@ export function MaturityFilter({ pages }: MaturityFilterProps) {
                   <BadgeInline maturity={page.maturity} />
                 </div>
                 {page.description && (
-                  <p className="text-fg-muted m-0 text-sm leading-relaxed">{page.description}</p>
+                  <p className="text-fg-muted text-sm leading-relaxed">{page.description}</p>
                 )}
               </Link>
             </li>

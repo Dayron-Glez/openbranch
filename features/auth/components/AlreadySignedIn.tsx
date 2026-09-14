@@ -80,13 +80,13 @@ export const AlreadySignedIn = ({
         </div>
 
         <div className="flex flex-col gap-2">
-          <h1 className="text-fg m-0 text-[26px] leading-[1.2] font-light tracking-[-0.015em]">
+          <h1 className="text-fg text-[26px] leading-[1.2] font-light tracking-[-0.015em]">
             {dict.signedInTitle}
           </h1>
           {openChallengeTitle === null ? (
-            <p className="text-fg-2 m-0 text-[14px] leading-[1.6]">{dict.signedInNone}</p>
+            <p className="text-fg-2 text-[14px] leading-[1.6]">{dict.signedInNone}</p>
           ) : (
-            <p className="text-fg-2 m-0 text-[14px] leading-[1.6]">
+            <p className="text-fg-2 text-[14px] leading-[1.6]">
               {dict.signedInOpen} <span className="text-fg">{openChallengeTitle}</span>
             </p>
           )}

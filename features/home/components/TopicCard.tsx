@@ -27,8 +27,8 @@ export function TopicCard({
       <span className="border-line bg-bg-elev text-ob-accent mb-1.5 inline-flex size-10 items-center justify-center rounded-(--r-8) border max-[520px]:size-8 [&_svg]:size-5 max-[520px]:[&_svg]:size-4">
         {icon}
       </span>
-      <h3 className="m-0 text-lg font-medium tracking-[0] max-[520px]:text-sm">{title}</h3>
-      <p className="text-fg-muted m-0 max-w-[36ch] text-[13.5px] leading-[1.55] max-[520px]:hidden">
+      <h3 className="text-lg font-medium tracking-[0] max-[520px]:text-sm">{title}</h3>
+      <p className="text-fg-muted max-w-[36ch] text-[13.5px] leading-[1.55] max-[520px]:hidden">
         {description}
       </p>
       <div className="text-fg-muted mt-2.5 flex items-center gap-3 font-mono text-[11px] tracking-[0.04em] max-[520px]:mt-auto max-[520px]:gap-1.5">

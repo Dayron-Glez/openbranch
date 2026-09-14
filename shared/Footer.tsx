@@ -5,7 +5,7 @@ import { localizedHref } from "@/lib/landing-dictionary"
 import { Separator } from "@/components/ui/separator"
 
 const columnTitle =
-  "m-0 mb-3.5 font-mono text-[10.5px] font-normal uppercase tracking-[0.08em] text-fg-muted"
+  "mb-3.5 font-mono text-[10.5px] font-normal uppercase tracking-[0.08em] text-fg-muted"
 const footerLink =
   "block py-1 text-[13px] text-fg-2 no-underline transition-colors duration-(--d-fast) ease-(--ease) hover:text-fg"
 

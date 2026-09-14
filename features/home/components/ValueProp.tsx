@@ -25,10 +25,8 @@ export function ValueProp({ dict }: ValuePropProps) {
               <Icon />
               {item.badge}
             </Badge>
-            <h4 className="m-0 mb-1.5 text-[17px] font-medium tracking-[0]">{item.title}</h4>
-            <p className="text-fg-muted m-0 max-w-[30ch] text-[13.5px] leading-[1.55]">
-              {item.body}
-            </p>
+            <h4 className="mb-1.5 text-[17px] font-medium tracking-[0]">{item.title}</h4>
+            <p className="text-fg-muted max-w-[30ch] text-[13.5px] leading-[1.55]">{item.body}</p>
           </div>
         )
       })}

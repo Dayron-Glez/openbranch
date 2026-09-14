@@ -29,13 +29,13 @@ export const WelcomePanel = ({
         <LogoMark size={44} />
 
         <div className="flex flex-col gap-2.5">
-          <h1 className="text-fg m-0 text-[26px] leading-[1.2] font-light tracking-[-0.015em]">
+          <h1 className="text-fg text-[26px] leading-[1.2] font-light tracking-[-0.015em]">
             {dict.welcomeTitle} <span className="text-fg font-mono text-[22px]">@{username}</span>
           </h1>
-          <p className="text-fg-2 m-0 text-[14px] leading-[1.6] text-pretty">{dict.welcomeLead}</p>
+          <p className="text-fg-2 text-[14px] leading-[1.6] text-pretty">{dict.welcomeLead}</p>
         </div>
 
-        <ul className="m-0 flex w-full list-none flex-col gap-2.5 p-0 text-left">
+        <ul className="flex w-full list-none flex-col gap-2.5 p-0 text-left">
           <li className="text-fg-2 flex items-center gap-2.5 text-[13.5px]">
             <IconCheck className="text-ob-accent size-4 shrink-0" />
             {dict.welcomePointProgress}
