@@ -9,11 +9,19 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
-/* Minimum viewport width the challenge workspace (Monaco panes, resizable
-   gutters) can actually lay out in — see shared/viewport.ts. Generates the
-   `workspace:` / `max-workspace:` variants. */
+/* The app's breakpoints. `workspace` is the minimum viewport width the challenge
+   workspace (Monaco panes, resizable gutters) can actually lay out in — see
+   shared/viewport.ts. 640px is Tailwind's own `sm`, so it needs no token here.
+   Each generates both `<name>:` and `max-<name>:`, which are exact complements —
+   unlike a hand-written `max-[640px]:` / `min-[640px]:` pair, where both apply
+   at exactly 640px. */
 @theme {
+  --breakpoint-tiny: 420px;
+  --breakpoint-narrow: 520px;
+  --breakpoint-tablet: 760px;
   --breakpoint-workspace: 900px;
+  --breakpoint-wide: 980px;
+  --breakpoint-page: 1100px;
 }
 
 /* The only page-content widths in the app. `<PageShell>` (shared/PageShell.tsx)

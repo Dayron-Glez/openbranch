@@ -86,7 +86,7 @@ export const TestingChallengeView = ({
 
   return (
     <ChallengeLayout
-      gridClassName="grid-rows-1 max-[900px]:grid-rows-none"
+      gridClassName="grid-rows-1 max-workspace:grid-rows-none"
       playgroundPath={playgroundPath}
       challengePath={challengePath}
       title={title}

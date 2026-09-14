@@ -23,9 +23,9 @@ export const WelcomePanel = ({
   profileHref,
   continueHref,
 }: WelcomePanelProps): ReactElement => (
-  <div className="flex items-center justify-center p-10 max-[1100px]:p-6 max-[760px]:p-0">
+  <div className="max-page:p-6 max-tablet:p-0 flex items-center justify-center p-10">
     <div className="flex w-[464px] max-w-full flex-col">
-      <div className="auth-rise bg-bg-card border-line flex flex-col items-center gap-7 rounded-(--r-16) border p-9 text-center shadow-(--sh-3) max-[760px]:gap-6 max-[760px]:p-6">
+      <div className="auth-rise bg-bg-card border-line max-tablet:gap-6 max-tablet:p-6 flex flex-col items-center gap-7 rounded-(--r-16) border p-9 text-center shadow-(--sh-3)">
         <LogoMark size={44} />
 
         <div className="flex flex-col gap-2.5">

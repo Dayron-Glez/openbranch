@@ -227,14 +227,14 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
       </nav>
 
       {user === null && (
-        <div className="border-line-2 bg-bg-elev mb-6 flex items-center gap-3 rounded-(--r-10) border p-4 text-[13.5px] max-[640px]:flex-wrap">
+        <div className="border-line-2 bg-bg-elev mb-6 flex items-center gap-3 rounded-(--r-10) border p-4 text-[13.5px] max-sm:flex-wrap">
           <IconUser className="text-fg-muted size-4 shrink-0" />
           <div className="text-fg-2">
             <b className="text-fg font-semibold">{dict.guestReading}</b> {dict.guestSignInPrompt}
           </div>
           <Link
             href={signInHref}
-            className="bg-ob-accent text-accent-ink ml-auto inline-flex h-8 shrink-0 items-center rounded-(--r-8) px-3 text-[12.5px] font-medium no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-105 max-[640px]:ml-0"
+            className="bg-ob-accent text-accent-ink ml-auto inline-flex h-8 shrink-0 items-center rounded-(--r-8) px-3 text-[12.5px] font-medium no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-105 max-sm:ml-0"
           >
             {dict.signIn}
           </Link>
@@ -251,7 +251,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         <span className="text-(color:--track)">{trackLabel}</span>
       </div>
 
-      <h1 className="text-fg mb-4 text-[34px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-[640px]:text-[27px]">
+      <h1 className="text-fg mb-4 text-[34px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-sm:text-[27px]">
         {path.title}
       </h1>
       <p className="text-fg-2 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">{path.lead}</p>
@@ -270,7 +270,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
           {`~${totalMinutes} min`}
         </span>
         {user !== null && (
-          <span className="text-fg-muted inline-flex items-center gap-3 font-mono text-[11.5px] max-[640px]:w-full min-[640px]:ml-auto">
+          <span className="text-fg-muted inline-flex items-center gap-3 font-mono text-[11.5px] max-sm:w-full sm:ml-auto">
             {dict.stepsDone(doneCount, totalSteps)}
             <span className="bg-bg-elev h-[5px] w-[110px] overflow-hidden rounded-full">
               <i
@@ -296,7 +296,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
         </div>
         <Link
           href={currentStep.href}
-          className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4.5 text-[14px] font-semibold text-(color:--track-ink) no-underline hover:brightness-110 max-[520px]:w-full"
+          className="max-narrow:w-full inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4.5 text-[14px] font-semibold text-(color:--track-ink) no-underline hover:brightness-110"
         >
           {dict.startThePath}
         </Link>

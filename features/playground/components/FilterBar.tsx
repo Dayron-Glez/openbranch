@@ -254,7 +254,7 @@ export const FilterBar = ({
 
   return (
     <div className="mb-8">
-      <div className="border-line-2 bg-bg-elev hidden min-w-0 items-center gap-1 rounded-(--r-10) border p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] min-[641px]:flex">
+      <div className="border-line-2 bg-bg-elev hidden min-w-0 items-center gap-1 rounded-(--r-10) border p-1 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] sm:flex">
         <Tabs
           value={value}
           onValueChange={handleValueChange}
@@ -291,7 +291,7 @@ export const FilterBar = ({
         {renderSortControl(false)}
       </div>
 
-      <div className="flex items-center gap-2 min-[641px]:hidden">
+      <div className="flex items-center gap-2 sm:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

@@ -65,7 +65,7 @@ export function FeaturedGuideStats({
   return (
     <div
       ref={ref}
-      className="flex flex-wrap items-center gap-2 max-[520px]:flex-col max-[520px]:items-start"
+      className="max-narrow:flex-col max-narrow:items-start flex flex-wrap items-center gap-2"
     >
       {authors.length > 0 && (
         <span data-stat="" className="inline-flex items-center gap-2">

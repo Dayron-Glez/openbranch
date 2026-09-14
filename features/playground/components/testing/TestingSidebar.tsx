@@ -42,9 +42,9 @@ export const TestingSidebar = ({
   const isRunning = testState.status === "running"
 
   return (
-    <aside className="max-[900px]:order-first">
+    <aside className="max-workspace:order-first">
       <ScrollArea className="h-full">
-        <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
+        <div className="workspace:pr-3 workspace:pb-10 flex flex-col gap-6">
           <ChallengeSidebarHeader
             title={title}
             challengePath={challengePath}

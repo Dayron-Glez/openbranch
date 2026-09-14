@@ -3,7 +3,7 @@ import type { LandingDict } from "@/lib/landing-dictionary"
 import { Badge } from "@/components/ui/badge"
 
 const valueClass =
-  "border-r border-line px-7 py-8 last:border-r-0 max-[980px]:border-b max-[980px]:border-r-0 max-[980px]:last:border-b-0"
+  "border-r border-line px-7 py-8 last:border-r-0 max-wide:border-b max-wide:border-r-0 max-wide:last:border-b-0"
 
 const ICONS = [IconFork, IconGlobe, IconLock]
 
@@ -13,7 +13,7 @@ type ValuePropProps = {
 
 export function ValueProp({ dict }: ValuePropProps) {
   return (
-    <div className="border-line bg-bg-card grid grid-cols-3 overflow-hidden rounded-(--r-12) border max-[980px]:grid-cols-1">
+    <div className="border-line bg-bg-card max-wide:grid-cols-1 grid grid-cols-3 overflow-hidden rounded-(--r-12) border">
       {dict.map((item, i) => {
         const Icon = ICONS[i] ?? IconFork
         return (

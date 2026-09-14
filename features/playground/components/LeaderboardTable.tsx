@@ -33,7 +33,7 @@ const HEAD_CLASS =
   "text-fg-muted h-9 font-mono text-[10.5px] font-normal tracking-[0.08em] uppercase"
 const NUMBER_CLASS = "text-fg-2 text-center font-mono text-[13px] leading-none tabular-nums"
 const RANK_CLASS = "text-fg-muted font-mono text-[12.5px] leading-none tabular-nums"
-const HIDE_ON_MOBILE = "max-[640px]:hidden"
+const HIDE_ON_MOBILE = "max-sm:hidden"
 
 const formatRank = (rank: number): string => String(rank).padStart(2, "0")
 
@@ -216,7 +216,7 @@ export const LeaderboardTable = ({
           <TableRow className="border-line hover:bg-transparent">
             <TableHead className={`w-14 pl-4 text-center ${HEAD_CLASS}`}>{dict.rank}</TableHead>
             <TableHead className={HEAD_CLASS}>{dict.builder}</TableHead>
-            <TableHead className={`w-[110px] text-center max-[640px]:w-20 ${HEAD_CLASS}`}>
+            <TableHead className={`w-[110px] text-center max-sm:w-20 ${HEAD_CLASS}`}>
               {dict.points}
             </TableHead>
             <TableHead className={`w-[110px] text-center ${HIDE_ON_MOBILE} ${HEAD_CLASS}`}>

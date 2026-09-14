@@ -82,14 +82,14 @@ export const DocumentationChallengeView = ({
     <ChallengeLayout
       // The docs editor wants the full viewport, so it opts out of the page
       // column and tightens the gutter.
-      containerClassName="max-w-none px-4 max-[520px]:px-3"
-      gridClassName="grid-cols-[1fr_300px] grid-rows-1 gap-6 max-[900px]:grid-rows-none"
+      containerClassName="max-w-none px-4 max-narrow:px-3"
+      gridClassName="grid-cols-[1fr_300px] grid-rows-1 gap-6 max-workspace:grid-rows-none"
       playgroundPath={playgroundPath}
       challengePath={challengePath}
       title={title}
       inProgressLabel={dict.status.inProgress}
       mainContent={
-        <div className="grid min-h-0 min-w-0 grid-cols-[3fr_2fr] gap-3 max-[900px]:grid-cols-1 max-[900px]:gap-4 min-[901px]:pb-10">
+        <div className="max-workspace:grid-cols-1 max-workspace:gap-4 workspace:pb-10 grid min-h-0 min-w-0 grid-cols-[3fr_2fr] gap-3">
           <div className="border-line flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border">
             <div className="border-line bg-bg-elev flex shrink-0 items-center border-b px-4 py-2.5">
               <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
@@ -111,7 +111,7 @@ export const DocumentationChallengeView = ({
             </div>
           </div>
 
-          <div className="border-line flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border max-[900px]:min-h-70">
+          <div className="border-line max-workspace:min-h-70 flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border">
             <div className="border-line bg-bg-elev flex shrink-0 items-center gap-2 border-b px-4 py-2.5">
               <span className="text-fg-2 font-mono text-[12px]">{sourceFilename}</span>
               <span className="text-fg-faint rounded bg-transparent px-1.5 py-0.5 font-mono text-[10px] ring-1 ring-current">
@@ -138,9 +138,9 @@ export const DocumentationChallengeView = ({
         </div>
       }
       sidebarContent={
-        <aside className="max-[900px]:order-first">
+        <aside className="max-workspace:order-first">
           <ScrollArea className="h-full">
-            <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
+            <div className="workspace:pr-3 workspace:pb-10 flex flex-col gap-6">
               <ChallengeSidebarHeader
                 title={title}
                 challengePath={challengePath}

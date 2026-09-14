@@ -65,7 +65,7 @@ export function Nav({ dict, lang }: NavProps) {
         scrolled ? "border-line" : "border-transparent"
       }`}
     >
-      <div className={cn(pageShellClass(), "flex items-center gap-8 py-3.5 max-[980px]:gap-4")}>
+      <div className={cn(pageShellClass(), "max-wide:gap-4 flex items-center gap-8 py-3.5")}>
         <Link
           href={homeHref}
           className="text-fg flex items-center gap-2.5 no-underline"
@@ -78,7 +78,7 @@ export function Nav({ dict, lang }: NavProps) {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-6 max-[640px]:hidden" aria-label={navDict.menuTitle}>
+        <nav className="flex items-center gap-6 max-sm:hidden" aria-label={navDict.menuTitle}>
           <Link
             href={localizedHref(lang, "/playground")}
             className={topLinkClass(pathname.includes("/playground"))}
@@ -93,9 +93,9 @@ export function Nav({ dict, lang }: NavProps) {
           </Link>
         </nav>
 
-        <div className="ml-auto flex items-center gap-4 max-[520px]:gap-2">
+        <div className="max-narrow:gap-2 ml-auto flex items-center gap-4">
           <button
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
             onClick={() => setOpenSearch(true)}
           >
@@ -135,7 +135,7 @@ export function Nav({ dict, lang }: NavProps) {
                   <a href={GH_URL} target="_blank" rel="noopener noreferrer">
                     <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
                     {stars !== null && (
-                      <span className="font-mono text-[11px] tabular-nums max-[520px]:hidden">
+                      <span className="max-narrow:hidden font-mono text-[11px] tabular-nums">
                         {stars}
                       </span>
                     )}
@@ -173,7 +173,7 @@ export function Nav({ dict, lang }: NavProps) {
             asChild
             variant="accent"
             size="nav"
-            className="group no-underline max-[520px]:hidden"
+            className="group max-narrow:hidden no-underline"
           >
             <Link href={localizedHref(lang, "/docs")}>
               {dict.getStarted}

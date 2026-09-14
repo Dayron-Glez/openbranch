@@ -73,7 +73,7 @@ export const BadgesSection = ({
           <span className="text-fg-faint font-normal tracking-[0.04em]">{headingNote}</span>
         )}
       </div>
-      <div className="mb-3 grid grid-cols-7 gap-3 max-[980px]:grid-cols-4 max-[520px]:grid-cols-2">
+      <div className="max-wide:grid-cols-4 max-narrow:grid-cols-2 mb-3 grid grid-cols-7 gap-3">
         {BADGE_KEYS.map((key) => {
           const earned = earnedBadges.has(key)
           const track = TRACK_BY_BADGE_KEY.get(key)

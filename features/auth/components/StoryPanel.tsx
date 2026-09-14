@@ -27,12 +27,12 @@ export const StoryPanel = ({ dict, counts, challengeMinutes }: StoryPanelProps):
   ].filter((stat) => stat.value > 0)
 
   return (
-    <aside className="bg-bg-elev border-line flex w-full flex-col justify-center gap-[30px] overflow-hidden rounded-(--r-16) border p-12 max-[1100px]:p-8">
+    <aside className="bg-bg-elev border-line max-page:p-8 flex w-full flex-col justify-center gap-[30px] overflow-hidden rounded-(--r-16) border p-12">
       <div className="flex flex-col gap-3">
         <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
           {dict.storyEyebrow}
         </span>
-        <h2 className="text-fg max-w-[520px] text-[30px] leading-[1.2] font-light tracking-[-0.015em] text-pretty max-[1100px]:text-[25px]">
+        <h2 className="text-fg max-page:text-[25px] max-w-[520px] text-[30px] leading-[1.2] font-light tracking-[-0.015em] text-pretty">
           {dict.storyTitle} <span className="text-fg-2">{dict.storyTitleAccent}</span>
         </h2>
         <p className="text-fg-2 max-w-[500px] text-[14.5px] leading-[1.6] text-pretty">

@@ -113,7 +113,7 @@ export const GitChallengeView = ({
 
   return (
     <main data-pg-main className="relative z-1 flex h-full flex-col overflow-hidden">
-      <div className="shrink-0 px-7 pt-8 pb-3 max-[520px]:px-5">
+      <div className="max-narrow:px-5 shrink-0 px-7 pt-8 pb-3">
         <PlaygroundBreadcrumb
           playgroundPath={playgroundPath}
           challengePath={challengePath}
@@ -122,7 +122,7 @@ export const GitChallengeView = ({
         />
       </div>
 
-      <div className="min-h-0 flex-1 px-7 max-[520px]:px-5">
+      <div className="max-narrow:px-5 min-h-0 flex-1 px-7">
         <MergeEditorPane
           template={template}
           showSolution={showSolution}

@@ -88,7 +88,7 @@ export function HeroPhrases({ phrases }: HeroPhrasesProps) {
   }
 
   return (
-    <span className="text-ob-accent inline-block w-full font-medium max-[520px]:min-h-[2.24em]">
+    <span className="text-ob-accent max-narrow:min-h-[2.24em] inline-block w-full font-medium">
       <span ref={mountTypewriter} />
       <span
         aria-hidden

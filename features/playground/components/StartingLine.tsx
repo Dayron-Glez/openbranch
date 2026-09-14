@@ -28,7 +28,7 @@ export const StartingLine = ({
   minutesLabel,
 }: StartingLineProps) => {
   return (
-    <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-[640px]:grid-cols-1">
+    <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-sm:grid-cols-1">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <p className="text-ob-accent font-mono text-[11px] tracking-[0.1em] uppercase">
@@ -55,7 +55,7 @@ export const StartingLine = ({
           </div>
         </div>
       </div>
-      <div className="max-[640px]:self-start">
+      <div className="max-sm:self-start">
         <Link
           href={href}
           className="group bg-ob-accent text-accent-ink inline-flex items-center gap-2 rounded-(--r-8) px-5 py-2.5 text-sm font-medium no-underline transition-opacity duration-(--d-fast) ease-(--ease) hover:opacity-90"

@@ -72,9 +72,9 @@ export const LoginPanel = ({
   }
 
   return (
-    <div className="flex items-center justify-center p-10 max-[1100px]:p-6 max-[760px]:p-0">
+    <div className="max-page:p-6 max-tablet:p-0 flex items-center justify-center p-10">
       <div className="flex w-[464px] max-w-full flex-col gap-5">
-        <div className="auth-rise bg-bg-card border-line flex flex-col gap-7 rounded-(--r-16) border p-9 shadow-(--sh-3) max-[760px]:gap-6 max-[760px]:p-6">
+        <div className="auth-rise bg-bg-card border-line max-tablet:gap-6 max-tablet:p-6 flex flex-col gap-7 rounded-(--r-16) border p-9 shadow-(--sh-3)">
           <Link href={next} aria-label="openbranch" className="w-fit">
             <Logo />
           </Link>
@@ -83,7 +83,7 @@ export const LoginPanel = ({
             <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
               {dict.eyebrow}
             </span>
-            <h1 className="text-fg text-[30px] leading-[1.15] font-light tracking-[-0.015em] max-[760px]:text-[26px]">
+            <h1 className="text-fg max-tablet:text-[26px] text-[30px] leading-[1.15] font-light tracking-[-0.015em]">
               {dict.title} <span className="text-fg-2">{dict.titleAccent}</span>
             </h1>
             <p className="text-fg-2 text-[14px] leading-[1.6] text-pretty">{dict.lead}</p>

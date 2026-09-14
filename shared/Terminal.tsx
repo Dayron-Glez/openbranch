@@ -31,7 +31,7 @@ export function Terminal({
           ))}
         </div>
       </div>
-      <div className="text-fg px-6 py-[22px] font-mono text-[13.5px] leading-[1.75] max-[520px]:overflow-x-auto max-[520px]:px-4">
+      <div className="text-fg max-narrow:overflow-x-auto max-narrow:px-4 px-6 py-[22px] font-mono text-[13.5px] leading-[1.75]">
         {children}
       </div>
     </div>
