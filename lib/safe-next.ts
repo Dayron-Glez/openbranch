@@ -4,8 +4,8 @@ const FIRST_PRINTABLE = 32
 /** True when the string carries a control character — a smuggled newline or NUL. */
 const hasControlCharacter = (value: string): boolean => {
   for (const character of value) {
-    const code = character.charCodeAt(0)
-    if (code < FIRST_PRINTABLE || code === DEL) return true
+    const code = character.codePointAt(0)
+    if (code !== undefined && (code < FIRST_PRINTABLE || code === DEL)) return true
   }
   return false
 }
