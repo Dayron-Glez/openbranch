@@ -80,8 +80,10 @@ export const DocumentationChallengeView = ({
 
   return (
     <ChallengeLayout
-      containerClassName="flex min-h-0 w-full flex-1 flex-col px-4 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-3"
-      gridClassName="grid min-h-0 flex-1 grid-cols-[1fr_300px] grid-rows-1 gap-6 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none"
+      // The docs editor wants the full viewport, so it opts out of the page
+      // column and tightens the gutter.
+      containerClassName="max-w-none px-4 max-[520px]:px-3"
+      gridClassName="grid-cols-[1fr_300px] grid-rows-1 gap-6 max-[900px]:grid-rows-none"
       playgroundPath={playgroundPath}
       challengePath={challengePath}
       title={title}

@@ -31,19 +31,19 @@ export const ChallengeLayout = ({
   challengePath,
   title,
   inProgressLabel,
-  mainClassName = DEFAULT_MAIN_CLASS,
-  containerClassName = DEFAULT_CONTAINER_CLASS,
-  gridClassName = DEFAULT_GRID_CLASS,
+  mainClassName,
+  containerClassName,
+  gridClassName,
 }: ChallengeLayoutProps): ReactElement => (
-  <main data-pg-main className={mainClassName}>
-    <div className={containerClassName}>
+  <main data-pg-main className={cn(DEFAULT_MAIN_CLASS, mainClassName)}>
+    <div className={cn(DEFAULT_CONTAINER_CLASS, containerClassName)}>
       <PlaygroundBreadcrumb
         playgroundPath={playgroundPath}
         challengePath={challengePath}
         title={title}
         inProgressLabel={inProgressLabel}
       />
-      <div className={gridClassName}>
+      <div className={cn(DEFAULT_GRID_CLASS, gridClassName)}>
         {mainContent}
         {sidebarContent}
       </div>

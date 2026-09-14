@@ -96,7 +96,7 @@ export const ActiveChallengeView = ({
 
   return (
     <ChallengeLayout
-      mainClassName="relative z-1 flex h-[calc(100dvh-60px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
+      mainClassName="h-[calc(100dvh-60px)]"
       playgroundPath={playgroundPath}
       challengePath={challengePath}
       title={title}
