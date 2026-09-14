@@ -3,6 +3,7 @@ import { IconFlame } from "@/icons"
 import { Badge } from "@/components/ui/badge"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { EngagementStats } from "../server/stats-service"
+import { SectionLabel } from "@/shared/SectionLabel"
 
 type StatsStripProps = {
   readonly dict: PlaygroundDict["stats"]
@@ -67,9 +68,7 @@ export const StatsStrip = ({
 
   return (
     <div>
-      <div className="text-fg-muted border-line mb-4 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
-        {dict.eyebrow}
-      </div>
+      <SectionLabel>{dict.eyebrow}</SectionLabel>
       <div className="border-line overflow-hidden rounded-(--r-12) border">
         <div className="bg-line max-wide:grid-cols-2 max-narrow:grid-cols-1 grid grid-cols-4 gap-px">
           <div className={CELL_CLASS}>

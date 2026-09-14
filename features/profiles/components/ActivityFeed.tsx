@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import { IconFlask } from "@/icons"
 import type { ProfileDict } from "@/lib/dictionaries/profile"
-import { SectionLabel } from "./SectionLabel"
+import { SectionLabel } from "@/shared/SectionLabel"
 import { EmptySection } from "./EmptySection"
 
 export type ActivityItem = {

@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 
-/** The heading `StatsStrip` and `BadgesSection` draw inline — kept in sync by hand. */
 export const SectionLabel = ({
   children,
   note,
