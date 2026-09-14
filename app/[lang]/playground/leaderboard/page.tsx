@@ -10,6 +10,7 @@ import {
   getLeaderboardSub,
 } from "@/features/playground/components/LeaderboardTable"
 import { getLeaderboard } from "@/features/playground/server/leaderboard-service"
+import { PageShell } from "@/shared/PageShell"
 
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }))
@@ -44,46 +45,39 @@ export default async function LeaderboardPage({
   const sub = getLeaderboardSub(dict.leaderboard, leaderboard)
 
   return (
-    <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 pt-10 pb-12 max-[520px]:px-5">
-      <div className="mx-auto max-w-[980px]">
-        <nav aria-label="Breadcrumb" className="mb-4">
-          <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
-            <li>
-              <Link href={hubPath} className="hover:text-fg-2 transition-colors">
-                Playground
-              </Link>
-            </li>
-            <li className="text-fg-faint" aria-hidden="true">
-              /
-            </li>
-            <li className="text-fg">{dict.leaderboard.title}</li>
-          </ol>
-        </nav>
+    <PageShell className="relative z-1 pt-10 pb-12">
+      <nav aria-label="Breadcrumb" className="mb-4">
+        <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
+          <li>
+            <Link href={hubPath} className="hover:text-fg-2 transition-colors">
+              Playground
+            </Link>
+          </li>
+          <li className="text-fg-faint" aria-hidden="true">
+            /
+          </li>
+          <li className="text-fg">{dict.leaderboard.title}</li>
+        </ol>
+      </nav>
 
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5">
-          <h1 className="text-[26px] leading-[1.1] font-medium tracking-[-0.01em] max-[640px]:text-[22px]">
-            {dict.leaderboard.title}{" "}
-            <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
-          </h1>
-          {sub !== null && <p className="text-fg-muted text-[13px] leading-[1.5]">{sub}</p>}
-        </div>
-
-        <LeaderboardTable
-          dict={dict.leaderboard}
-          data={leaderboard}
-          hubPath={hubPath}
-          lang={lang}
-        />
-
-        <div className="mt-5 flex justify-center">
-          <Link
-            href={hubPath}
-            className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-[13.5px] transition-colors"
-          >
-            <span aria-hidden>←</span> {dict.leaderboard.back}
-          </Link>
-        </div>
+      <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5">
+        <h1 className="text-[26px] leading-[1.1] font-medium tracking-[-0.01em] max-[640px]:text-[22px]">
+          {dict.leaderboard.title}{" "}
+          <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
+        </h1>
+        {sub !== null && <p className="text-fg-muted text-[13px] leading-[1.5]">{sub}</p>}
       </div>
-    </main>
+
+      <LeaderboardTable dict={dict.leaderboard} data={leaderboard} hubPath={hubPath} lang={lang} />
+
+      <div className="mt-5 flex justify-center">
+        <Link
+          href={hubPath}
+          className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-[13.5px] transition-colors"
+        >
+          <span aria-hidden>←</span> {dict.leaderboard.back}
+        </Link>
+      </div>
+    </PageShell>
   )
 }

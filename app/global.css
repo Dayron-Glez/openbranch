@@ -16,6 +16,14 @@
   --breakpoint-workspace: 900px;
 }
 
+/* The only page-content widths in the app. `<PageShell>` (shared/PageShell.tsx)
+   is the single consumer — pages never set their own max-width or gutter. */
+@theme {
+  --container-page: 68.75rem; /* 1100px — home, playground hub, leaderboard, paths index */
+  --container-reading: 53.75rem; /* 860px — path detail, profile, challenge result */
+  --container-wide: 82.5rem; /* 1320px — challenge workspace */
+}
+
 /* Fumadocs HSL bridge -> Tailwind color utilities */
 @theme {
   --color-background: hsl(var(--background));

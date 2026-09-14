@@ -30,6 +30,7 @@ import { getAllPaths } from "@/features/paths/server/path-catalog"
 import { loadPathProgress } from "@/features/paths/server/path-progress"
 import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
+import { PageShell } from "@/shared/PageShell"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -183,7 +184,7 @@ export default async function PlaygroundPage({
   }
 
   return (
-    <main data-pg-main className="relative z-1 mx-auto max-w-275 px-8 py-25 max-[520px]:px-5">
+    <PageShell className="relative z-1 py-25">
       <Suspense fallback={null}>
         <PlaygroundGridTransition />
       </Suspense>
@@ -311,6 +312,6 @@ export default async function PlaygroundPage({
           />
         </div>
       )}
-    </main>
+    </PageShell>
   )
 }

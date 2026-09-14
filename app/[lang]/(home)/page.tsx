@@ -17,6 +17,7 @@ import type { TopicItem } from "@/lib/landing-dictionary"
 import { getSectionStats, formatRelativeDate } from "@/lib/section-stats"
 import { getWeeklyPick } from "@/lib/weekly-pick"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
+import { PageShell } from "@/shared/PageShell"
 
 const TOPIC_ICONS: Record<TopicItem["icon"], ReactNode> = {
   branch: <IconBranch />,
@@ -93,7 +94,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
       <ScrollReveal />
       <AmbientBackground />
       <Nav dict={dict.nav} lang={lang} />
-      <main className="relative z-1 mx-auto grid max-w-275 gap-25 px-8 pb-25 max-[520px]:px-5">
+      <PageShell className="relative z-1 grid gap-25 pb-25">
         <Hero dict={dict.hero} lang={lang} guideCount={guideCount} />
 
         <section className={sectionClass} id="topics">
@@ -170,7 +171,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
         </section>
 
         <CommunityCTA dict={dict.community} />
-      </main>
+      </PageShell>
       <Footer dict={dict.footer} lang={lang} />
     </>
   )

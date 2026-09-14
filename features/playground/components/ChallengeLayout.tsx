@@ -1,5 +1,7 @@
 import type { ReactElement, ReactNode } from "react"
 import { PlaygroundBreadcrumb } from "./PlaygroundBreadcrumb"
+import { pageShellClass } from "@/shared/PageShell"
+import { cn } from "@/lib/utils"
 
 type ChallengeLayoutProps = {
   readonly mainContent: ReactNode
@@ -15,8 +17,10 @@ type ChallengeLayoutProps = {
 
 const DEFAULT_MAIN_CLASS =
   "relative z-1 flex h-full flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
-const DEFAULT_CONTAINER_CLASS =
-  "mx-auto flex min-h-0 w-full max-w-[1320px] flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5"
+const DEFAULT_CONTAINER_CLASS = cn(
+  pageShellClass("wide"),
+  "flex min-h-0 flex-1 flex-col pt-10 max-[900px]:flex-none max-[900px]:pb-10"
+)
 const DEFAULT_GRID_CLASS =
   "grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10 max-[900px]:grid-cols-1"
 

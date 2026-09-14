@@ -31,6 +31,7 @@ import {
 import { ProfileHeader } from "@/features/profiles/components/ProfileHeader"
 import { CompletedPaths } from "@/features/profiles/components/CompletedPaths"
 import { ActivityFeed, type ActivityItem } from "@/features/profiles/components/ActivityFeed"
+import { PageShell } from "@/shared/PageShell"
 
 /** The design's cap: a recency signal, not an archive. */
 const FEED_LENGTH = 5
@@ -156,7 +157,7 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
   )
 
   return (
-    <main data-pg-main className="mx-auto max-w-215 px-7 py-14 max-[520px]:px-5">
+    <PageShell width="reading" className="py-14">
       <div className="flex flex-col gap-6.5">
         <ProfileHeader
           overview={overview}
@@ -211,6 +212,6 @@ export default async function ProfilePage({ params }: Readonly<PageProps<"/[lang
           dict={dict}
         />
       </div>
-    </main>
+    </PageShell>
   )
 }

@@ -86,7 +86,6 @@ export const TestingChallengeView = ({
 
   return (
     <ChallengeLayout
-      containerClassName="mx-auto flex min-h-0 w-full max-w-330 flex-1 flex-col px-7 pt-10 max-[900px]:flex-none max-[900px]:pb-10 max-[520px]:px-5"
       gridClassName="grid min-h-0 flex-1 grid-cols-[1fr_340px] grid-rows-1 gap-10 max-[900px]:grid-cols-1 max-[900px]:grid-rows-none"
       playgroundPath={playgroundPath}
       challengePath={challengePath}

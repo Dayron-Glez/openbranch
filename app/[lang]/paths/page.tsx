@@ -8,6 +8,7 @@ import { loadPathProgress } from "@/features/paths/server/path-progress"
 import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { PathCard, PATH_CARD_GRID } from "@/features/paths/components/PathCard"
 import { createClient } from "@/lib/supabase/server"
+import { PageShell } from "@/shared/PageShell"
 
 export function generateStaticParams(): { lang: string }[] {
   return i18n.languages.map((lang) => ({ lang }))
@@ -41,7 +42,7 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
   const items = await buildPathCardItems(paths, lang, playgroundDict.category, progress)
 
   return (
-    <main data-pg-main className="mx-auto max-w-[1000px] px-7 py-14 max-[520px]:px-5">
+    <PageShell className="py-14">
       <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
         {dict.indexEyebrow}
       </p>
@@ -67,6 +68,6 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
           />
         ))}
       </div>
-    </main>
+    </PageShell>
   )
 }

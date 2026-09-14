@@ -3,6 +3,8 @@ import { LogoMark } from "@/shared/LogoMark"
 import type { LandingDict } from "@/lib/landing-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
 import { Separator } from "@/components/ui/separator"
+import { pageShellClass } from "@/shared/PageShell"
+import { cn } from "@/lib/utils"
 
 const columnTitle =
   "mb-3.5 font-mono text-[10.5px] font-normal uppercase tracking-[0.08em] text-fg-muted"
@@ -23,7 +25,11 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
   const homeHref = lang === "en" ? "/en" : "/"
   return (
     <footer
-      className={`border-line mx-auto max-w-300 border-t px-8 max-[520px]:px-5 ${compact ? "py-6" : "scroll-reveal pt-14 pb-9"}`}
+      className={cn(
+        pageShellClass(),
+        "border-line border-t",
+        compact ? "py-6" : "scroll-reveal pt-14 pb-9"
+      )}
       // Scroll-reveal assumes there is a fold to scroll past. On a compact,
       // single-screen page the footer starts inside the observer's own bottom
       // rootMargin exclusion and never intersects, so it would stay invisible.
