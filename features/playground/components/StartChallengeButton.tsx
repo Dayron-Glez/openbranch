@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { startChallengeSession } from "@/app/actions/playground"
 import { LogoMark } from "@/shared/LogoMark"
+import { IconGithub, IconLogout } from "@/icons"
 
 const PlayIcon = (): React.ReactElement => (
   <svg
@@ -23,21 +24,6 @@ const PlayIcon = (): React.ReactElement => (
     aria-hidden="true"
   >
     <path d="M7 5l11 7-11 7z" />
-  </svg>
-)
-
-const GitHubIcon = (): React.ReactElement => (
-  <svg
-    viewBox="0 0 24 24"
-    className="size-[17px] shrink-0"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M12 3a9 9 0 0 0-3 17.5v-2c-3 .5-3.5-1.5-3.5-1.5-.5-1-1-1.5-1-1.5-1-.5 0-.5 0-.5 1 0 1.5 1 1.5 1 1 1.5 2.5 1 3 1 0-1 .5-1.5 1-1.5-2-.5-3.5-1-3.5-4.5 0-1 .5-2 1-2.5 0-.5-.5-1.5 0-2.5 0 0 1 0 2.5 1a8 8 0 0 1 4 0c1.5-1 2.5-1 2.5-1 .5 1 0 2 0 2.5.5.5 1 1.5 1 2.5 0 3.5-1.5 4-3.5 4.5.5.5 1 1 1 2v3" />
   </svg>
 )
 
@@ -167,22 +153,7 @@ export const StartChallengeButton = ({
         <ConfirmDialog
           open={signOutOpen}
           onOpenChange={setSignOutOpen}
-          icon={
-            <svg
-              viewBox="0 0 24 24"
-              className="text-fg-2 size-9"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          }
+          icon={<IconLogout className="text-fg-2 size-9" />}
           title={dict.signOutTitle}
           description={dict.signOutBody}
           confirmLabel={dict.signOutConfirm}
@@ -222,7 +193,7 @@ export const StartChallengeButton = ({
               disabled={loading}
               className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-(--r-8) text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
             >
-              <GitHubIcon />
+              <IconGithub className="size-[17px] shrink-0" />
               {dict.authGithub}
             </Button>
 

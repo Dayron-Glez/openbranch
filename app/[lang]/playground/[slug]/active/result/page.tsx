@@ -219,7 +219,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
   } = await supabase.auth.getUser()
 
   if (user === null) {
-    redirect(localizedHref(lang, `/playground/${slug}`))
+    const intended = localizedHref(lang, `/playground/${slug}/active/result`)
+    redirect(localizedHref(lang, `/login?next=${encodeURIComponent(intended)}`))
   }
 
   const { data: completedSessions } = await supabase

@@ -176,6 +176,11 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Built in two steps so the guest banner's href is not a template literal
+  // nested inside another one.
+  const thisPath = localizedHref(lang, `/paths/${slug}`)
+  const signInHref = localizedHref(lang, `/login?next=${encodeURIComponent(thisPath)}`)
+
   const [progress, pointsBySlug] = await Promise.all([
     user !== null ? loadPathProgress(supabase, user.id, [path]) : Promise.resolve(null),
     getChallengePoints(supabase, challengeSlugsOf(path)),
@@ -221,11 +226,17 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
       </nav>
 
       {user === null && (
-        <div className="border-line-2 bg-bg-elev mb-6 flex items-center gap-3 rounded-(--r-10) border p-4 text-[13.5px]">
+        <div className="border-line-2 bg-bg-elev mb-6 flex items-center gap-3 rounded-(--r-10) border p-4 text-[13.5px] max-[640px]:flex-wrap">
           <IconUser className="text-fg-muted size-4 shrink-0" />
           <div className="text-fg-2">
             <b className="text-fg font-semibold">{dict.guestReading}</b> {dict.guestSignInPrompt}
           </div>
+          <Link
+            href={signInHref}
+            className="bg-ob-accent text-accent-ink ml-auto inline-flex h-8 shrink-0 items-center rounded-(--r-8) px-3 text-[12.5px] font-medium no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-105 max-[640px]:ml-0"
+          >
+            {dict.signIn}
+          </Link>
         </div>
       )}
 

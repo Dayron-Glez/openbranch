@@ -27,7 +27,7 @@ export const AuthTerminal = ({ minutes }: AuthTerminalProps): ReactElement => {
     >
       {/* Reserved up front: the lines appear one at a time, and without this the
           panel around them reflows on every beat. */}
-      <div className="min-h-[156px] max-[760px]:min-h-0">
+      <div className="min-h-[156px]">
         <TerminalLine>
           <Prompt />
           <span>
