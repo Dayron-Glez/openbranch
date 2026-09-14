@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import type { PageShellWidth } from "@/lib/page-widths"
 
 /**
  * The single owner of horizontal page geometry. `mx-auto`, `max-w-*` and the
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils"
  * Vertical rhythm stays with the page: pass it through `className`, which is
  * merged (not replaced) so a caller can add layout without restating the shell.
  */
-export type PageShellWidth = "page" | "reading" | "wide"
+export type { PageShellWidth }
 
 const WIDTH_CLASS: Record<PageShellWidth, string> = {
   page: "max-w-page",
