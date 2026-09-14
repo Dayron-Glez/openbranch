@@ -33,6 +33,13 @@ export const authDictionary = {
     errorRetry: "Probar otra vez con GitHub",
     errorBrowse: "Seguir explorando sin cuenta",
 
+    welcomeTitle: "Bienvenido,",
+    welcomeLead: "Tu cuenta está activa. Se han encendido tres cosas:",
+    welcomePointProgress: "Tu progreso y tus rachas se guardan a partir de ahora",
+    welcomePointBoard: "Estás en el tablero",
+    welcomePointProfile: "Perfil público en",
+    welcomeCta: "Empezar tu primer reto",
+
     signedInWith: "Sesión iniciada con GitHub",
     signedInTitle: "Ya estás dentro.",
     signedInOpen: "Tienes un reto a medias:",
@@ -74,6 +81,13 @@ export const authDictionary = {
       "Something went wrong on the way back from GitHub. Nothing was saved and no account was created.",
     errorRetry: "Try GitHub again",
     errorBrowse: "Keep browsing without an account",
+
+    welcomeTitle: "Welcome,",
+    welcomeLead: "Your account is live. Three things switched on:",
+    welcomePointProgress: "Progress and streaks are saved from now on",
+    welcomePointBoard: "You're on the leaderboard",
+    welcomePointProfile: "Public profile at",
+    welcomeCta: "Start your first challenge",
 
     signedInWith: "Signed in with GitHub",
     signedInTitle: "You're already in.",
