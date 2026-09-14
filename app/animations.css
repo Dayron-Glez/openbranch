@@ -650,3 +650,31 @@
 .pg-dialog-content[data-state="closed"] {
   animation: pg-dialog-out 180ms ease forwards;
 }
+
+/* Login entrance.
+   CSS rather than GSAP deliberately: this is the sign-in form, and a
+   rAF-driven tween that never ticks — throttled tab, background tab, a slow
+   chunk — strands it at opacity 0. An animation that fails to run simply
+   leaves the finished state on screen, which is the right failure. */
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+.auth-rise {
+  animation: auth-rise var(--d-slow) var(--ease) both;
+}
+
+/* The story panel follows the card in rather than racing it. */
+.auth-rise-late {
+  animation: auth-rise var(--d-slow) var(--ease) 110ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-rise,
+  .auth-rise-late {
+    animation: none;
+  }
+}

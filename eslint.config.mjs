@@ -98,5 +98,26 @@ export default tseslint.config(
         { patterns: [oldPathRule, crossFeature(["@/features/docs/**", "@/features/home/**"])] },
       ],
     },
+  },
+  {
+    // auth/ is presentational: the login route does the fetching and passes it
+    // down, so this feature never reaches sideways for playground data.
+    files: ["features/auth/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            oldPathRule,
+            crossFeature([
+              "@/features/docs/**",
+              "@/features/home/**",
+              "@/features/paths/**",
+              "@/features/playground/**",
+            ]),
+          ],
+        },
+      ],
+    },
   }
 )
