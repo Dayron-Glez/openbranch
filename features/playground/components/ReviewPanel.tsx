@@ -3,6 +3,7 @@
 import type React from "react"
 import type { ReviewDecision } from "@/features/playground/domain/review-types"
 import { ChallengeSubmitButton } from "@/features/playground/components/ChallengeSubmitButton"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type ReviewPanelDict = {
   readonly submitButton: string
@@ -64,9 +65,7 @@ export const ReviewPanel = ({
     <div className="flex flex-col gap-5">
       {/* decision selector */}
       <div>
-        <p className="text-fg-muted mb-2.5 font-mono text-[10.5px] tracking-[0.08em] uppercase">
-          {dict.decisionLabel}
-        </p>
+        <Eyebrow className="mb-2.5">{dict.decisionLabel}</Eyebrow>
         <div className="flex flex-col gap-1.5">
           {decisions.map(({ value, label }) => (
             <button

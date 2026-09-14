@@ -1,5 +1,6 @@
 import type React from "react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { DiffChip } from "@/features/playground/components/DiffChip"
 
 const isMac = (): boolean => typeof navigator !== "undefined" && navigator.platform.includes("Mac")
 
@@ -48,9 +49,7 @@ export const EditorToolbar = ({
       {showSolution ? (
         <div className="flex items-center gap-2.5">
           <span className="text-fg-2 font-mono text-[12px]">{editableFile}</span>
-          <span className="bg-warn/15 text-warn rounded px-1.5 py-0.5 font-mono text-[10px] tracking-widest uppercase">
-            diff
-          </span>
+          <DiffChip />
         </div>
       ) : (
         <div className="flex items-center gap-1">

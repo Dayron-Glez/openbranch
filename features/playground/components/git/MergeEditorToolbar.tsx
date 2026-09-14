@@ -1,4 +1,5 @@
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { DiffChip } from "@/features/playground/components/DiffChip"
 
 const isMac = (): boolean => typeof navigator !== "undefined" && navigator.platform.includes("Mac")
 
@@ -34,11 +35,7 @@ export const MergeEditorToolbar = ({
     >
       <div className="flex items-center gap-2.5">
         <span className="text-fg-2 font-mono text-[12px]">{editableFile}</span>
-        {showSolution && (
-          <span className="bg-warn/15 text-warn rounded px-1.5 py-0.5 font-mono text-[10px] tracking-widest uppercase">
-            diff
-          </span>
-        )}
+        {showSolution && <DiffChip />}
       </div>
 
       {showSolution

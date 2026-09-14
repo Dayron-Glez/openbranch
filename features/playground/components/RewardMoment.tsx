@@ -7,6 +7,7 @@ import type { TrackColorToken } from "../domain/manifest"
 import { IconBook, IconRoute } from "@/icons"
 import { RewardCountUp } from "./RewardCountUp"
 import { CheckIcon, ClockIcon } from "./ResultIcons"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 /**
  * Declared here rather than imported from `features/paths`, which already
@@ -171,9 +172,7 @@ const PathRecapCard = ({
         </Link>
       ) : (
         <>
-          <p className="text-fg-muted mb-2 font-mono text-[10.5px] tracking-[0.08em] uppercase">
-            {dict.nextInPath}
-          </p>
+          <Eyebrow className="mb-2">{dict.nextInPath}</Eyebrow>
           <Link
             href={recap.nextStep.href}
             className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 text-[13px] font-semibold text-(color:--track-ink) no-underline"

@@ -1,6 +1,7 @@
 import type React from "react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import type { MutationResult } from "./types"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type MutationRowProps = {
   readonly mutation: MutationResult
@@ -38,9 +39,7 @@ export const RegressionsPanel = ({
 }: RegressionsPanelProps): React.ReactElement => (
   <div className="flex flex-col gap-3">
     <div className="flex items-center justify-between">
-      <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-        {dict.active.regressionsLabel}
-      </p>
+      <Eyebrow>{dict.active.regressionsLabel}</Eyebrow>
       <span
         className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${
           allMutantsKilled ? "text-ob-accent" : "text-fg-muted"

@@ -3,6 +3,7 @@
 import type { DocsCriterion } from "@/features/playground/domain/docs-types"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import { ChallengeSubmitButton } from "@/features/playground/components/ChallengeSubmitButton"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type DocsChecklistProps = {
   readonly criteria: readonly DocsCriterion[]
@@ -31,9 +32,7 @@ export const DocsChecklist = ({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-          {dict.active.docsChecklistHeading}
-        </p>
+        <Eyebrow>{dict.active.docsChecklistHeading}</Eyebrow>
         <span
           className={`font-mono text-[11.5px] tabular-nums ${allPassed ? "text-ob-accent" : "text-fg-muted"}`}
         >
