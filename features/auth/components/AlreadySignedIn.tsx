@@ -4,7 +4,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/shared/Logo"
 import type { AuthDictionary } from "@/lib/dictionaries/auth"
-import { SignOutButton } from "./SignOutButton"
+import { SignOutButton } from "@/shared/SignOutButton"
 
 /**
  * The design paired sign-out with "use a different account". That control was
