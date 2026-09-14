@@ -83,10 +83,10 @@ export const LoginPanel = ({
             <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
               {dict.eyebrow}
             </span>
-            <h1 className="text-fg m-0 text-[30px] leading-[1.15] font-light tracking-[-0.015em] max-[760px]:text-[26px]">
+            <h1 className="text-fg text-[30px] leading-[1.15] font-light tracking-[-0.015em] max-[760px]:text-[26px]">
               {dict.title} <span className="text-fg-2">{dict.titleAccent}</span>
             </h1>
-            <p className="text-fg-2 m-0 text-[14px] leading-[1.6] text-pretty">{dict.lead}</p>
+            <p className="text-fg-2 text-[14px] leading-[1.6] text-pretty">{dict.lead}</p>
           </div>
 
           {error !== null && (
@@ -98,7 +98,7 @@ export const LoginPanel = ({
                 <IconAlertCircle className="text-danger size-[15px] shrink-0" />
                 {dict.errorTitle}
               </span>
-              <p className="text-fg-2 m-0 text-[13px] leading-[1.6] text-pretty">{errorBody()}</p>
+              <p className="text-fg-2 text-[13px] leading-[1.6] text-pretty">{errorBody()}</p>
             </div>
           )}
 
@@ -122,7 +122,7 @@ export const LoginPanel = ({
             </Button>
 
             {redirecting && (
-              <p className="text-fg-muted m-0 text-center font-mono text-[11.5px] leading-[1.6]">
+              <p className="text-fg-muted text-center font-mono text-[11.5px] leading-[1.6]">
                 {dict.redirectingNote} {nextLabel}
               </p>
             )}

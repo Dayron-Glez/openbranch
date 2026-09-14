@@ -152,12 +152,12 @@ export const PathStepper = ({
               </span>
             </div>
 
-            <h3 className="text-fg m-0 mb-1.5 text-[18px] font-semibold tracking-[-0.01em]">
-              {step.title}
-            </h3>
-            <p className="text-fg-muted m-0 mb-4 max-w-[64ch] text-[13.5px] leading-[1.55]">
-              {step.description}
-            </p>
+            <div className="mb-4 flex flex-col gap-1.5">
+              <h3 className="text-fg text-[18px] font-semibold tracking-[-0.01em]">{step.title}</h3>
+              <p className="text-fg-muted max-w-[64ch] text-[13.5px] leading-[1.55]">
+                {step.description}
+              </p>
+            </div>
 
             <div className="flex flex-wrap items-start justify-between gap-3.5 gap-y-3">
               <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[11.5px]">

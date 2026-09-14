@@ -101,7 +101,7 @@ export const BadgesSection = ({
         })}
       </div>
       {hasLocked && showLockMessage && (
-        <p className="text-fg-muted m-0 font-mono text-[12px]">{dict.lockMessage}</p>
+        <p className="text-fg-muted font-mono text-[12px]">{dict.lockMessage}</p>
       )}
     </div>
   )

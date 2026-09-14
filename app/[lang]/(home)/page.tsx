@@ -51,7 +51,7 @@ const ledClass =
 const sectionClass = ""
 const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
-  "m-0 mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
+  "mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
 
 export async function generateMetadata({
   params,
@@ -105,7 +105,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
               {dict.sections.topicsHeading}{" "}
               <span className="text-fg-2 font-light">{dict.sections.topicsHeadingAccent}</span>
             </h2>
-            <p className="text-fg-2 m-0 max-w-[56ch] text-base leading-[1.55]">
+            <p className="text-fg-2 max-w-[56ch] text-base leading-[1.55]">
               {dict.sections.topicsIntro}
             </p>
           </div>
