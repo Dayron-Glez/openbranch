@@ -27,8 +27,8 @@ type FeaturedGuideProps = {
 
 export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
   return (
-    <div className="border-line bg-bg-card mt-7 grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-(--r-12) border max-[980px]:grid-cols-1">
-      <div className="border-line flex flex-col justify-center gap-3.5 border-r px-9 py-10 max-[980px]:border-r-0 max-[980px]:border-b max-[520px]:px-6">
+    <div className="border-line bg-bg-card max-wide:grid-cols-1 mt-7 grid grid-cols-[1fr_1.1fr] overflow-hidden rounded-(--r-12) border">
+      <div className="border-line max-wide:border-r-0 max-wide:border-b max-narrow:px-6 flex flex-col justify-center gap-3.5 border-r px-9 py-10">
         <span className="text-ob-accent font-mono text-[11px] tracking-[0.08em] uppercase">
           {guide.kicker}
         </span>
@@ -51,7 +51,7 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
       </div>
 
       <article
-        className="text-fg-2 after:to-bg-card relative flex flex-col justify-center px-10 py-9 text-[14.5px] leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-[''] max-[520px]:hidden"
+        className="text-fg-2 after:to-bg-card max-narrow:hidden relative flex flex-col justify-center px-10 py-9 text-[14.5px] leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-['']"
         aria-label={dict.previewAria}
       >
         {guide.firstHeading && (

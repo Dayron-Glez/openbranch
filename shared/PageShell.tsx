@@ -19,7 +19,7 @@ const WIDTH_CLASS: Record<PageShellWidth, string> = {
   wide: "max-w-wide",
 }
 
-const GUTTER_CLASS = "mx-auto w-full px-8 max-[520px]:px-5"
+const GUTTER_CLASS = "mx-auto w-full px-8 max-narrow:px-5"
 
 /**
  * Shell classes for surfaces that cannot be a `<PageShell>` element — the nav

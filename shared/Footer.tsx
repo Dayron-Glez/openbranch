@@ -37,8 +37,8 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
     >
       {!compact && (
         <>
-          <div className="mb-14 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-12 max-[980px]:grid-cols-2 max-[520px]:grid-cols-3 max-[520px]:gap-5">
-            <div className="max-[520px]:col-span-3">
+          <div className="max-wide:grid-cols-2 max-narrow:grid-cols-3 max-narrow:gap-5 mb-14 grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-12">
+            <div className="max-narrow:col-span-3">
               <Link href={homeHref} className="text-fg flex items-center gap-2.5 no-underline">
                 <LogoMark size={22} />
                 <span className="text-base tracking-normal">
@@ -51,7 +51,7 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
               </p>
             </div>
             {dict.columns.map((column, i) => (
-              <div key={column.title} className={i === 2 ? "max-[520px]:hidden" : undefined}>
+              <div key={column.title} className={i === 2 ? "max-narrow:hidden" : undefined}>
                 <h5 className={columnTitle}>{column.title}</h5>
                 {column.links.map((link, j) =>
                   link.external ? (
@@ -60,7 +60,7 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
+                      className={`${footerLink}${j >= 2 ? "max-narrow:hidden" : ""}`}
                     >
                       {link.label}
                     </a>
@@ -68,7 +68,7 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
                     <Link
                       key={link.label}
                       href={localizedHref(lang, link.href)}
-                      className={`${footerLink}${j >= 2 ? "max-[520px]:hidden" : ""}`}
+                      className={`${footerLink}${j >= 2 ? "max-narrow:hidden" : ""}`}
                     >
                       {link.label}
                     </Link>
@@ -80,7 +80,7 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
           <Separator className="border-line mb-6" />
         </>
       )}
-      <div className="text-fg-muted flex items-center justify-between font-mono text-[11px] max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
+      <div className="text-fg-muted flex items-center justify-between font-mono text-[11px] max-sm:flex-col max-sm:items-start max-sm:gap-3">
         <span>
           {dict.legal} · {new Date().getFullYear()}
         </span>

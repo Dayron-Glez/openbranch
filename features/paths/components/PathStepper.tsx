@@ -84,7 +84,7 @@ const getStepCta = (step: ResolvedPathStep, dict: PathStepperDict): string => {
 }
 
 const ctaClass = (step: ResolvedPathStep): string =>
-  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-[420px]:w-full max-[420px]:justify-center ${
+  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-tiny:w-full max-tiny:justify-center ${
     step.status === "current"
       ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
       : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
@@ -104,11 +104,11 @@ export const PathStepper = ({
       {steps.map((step, index) => (
         <div
           key={step.href}
-          className="grid grid-cols-[48px_minmax(0,1fr)] gap-5 max-[520px]:grid-cols-[36px_minmax(0,1fr)] max-[520px]:gap-3.5"
+          className="max-narrow:grid-cols-[36px_minmax(0,1fr)] max-narrow:gap-3.5 grid grid-cols-[48px_minmax(0,1fr)] gap-5"
         >
           <div className="flex flex-col items-center">
             <div
-              className={`grid size-12 shrink-0 place-items-center rounded-full border-[1.5px] max-[520px]:size-9 [&_svg]:shrink-0 ${MARK_CLASS[step.status]}`}
+              className={`max-narrow:size-9 grid size-12 shrink-0 place-items-center rounded-full border-[1.5px] [&_svg]:shrink-0 ${MARK_CLASS[step.status]}`}
             >
               <StepMark
                 status={step.status}
@@ -120,7 +120,7 @@ export const PathStepper = ({
           </div>
 
           <div
-            className={`bg-bg-card mb-3.5 min-w-0 rounded-(--r-12) border p-5 max-[520px]:p-4 ${
+            className={`bg-bg-card max-narrow:p-4 mb-3.5 min-w-0 rounded-(--r-12) border p-5 ${
               step.status === "current" ? "border-(--track-ring)" : "border-line"
             } ${step.status === "locked" ? "opacity-60" : ""}`}
           >
@@ -136,7 +136,7 @@ export const PathStepper = ({
                 {step.type === "doc" ? <IconBook /> : step.icon}
                 {step.type === "doc" ? dict.guideLabel : dict.challengeLabel}
               </span>
-              <span className="normal-case min-[520px]:ml-auto">
+              <span className="narrow:ml-auto normal-case">
                 {step.status === "completed" && (
                   <span className="text-ob-accent inline-flex items-center gap-1.5">
                     <IconCheck className="size-3.5" />
@@ -190,7 +190,7 @@ export const PathStepper = ({
                     </Link>
                   }
                   narrow={
-                    <span className="text-fg-muted border-line-2 inline-flex h-9 shrink-0 items-center gap-1.5 rounded-(--r-8) border px-3.5 text-[12px] max-[420px]:w-full max-[420px]:justify-center">
+                    <span className="text-fg-muted border-line-2 max-tiny:w-full max-tiny:justify-center inline-flex h-9 shrink-0 items-center gap-1.5 rounded-(--r-8) border px-3.5 text-[12px]">
                       <IconDeviceLaptop className="size-3.5" />
                       {dict.needsWiderScreenTitle}
                     </span>

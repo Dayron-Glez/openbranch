@@ -27,7 +27,7 @@ export const SignInNudge = ({ dict, redirectPath }: SignInNudgeProps): React.Rea
   }
 
   return (
-    <div className="bg-bg-card border-line flex items-center gap-[18px] rounded-(--r-12) border px-[22px] py-4 max-[640px]:flex-col max-[640px]:items-start">
+    <div className="bg-bg-card border-line flex items-center gap-[18px] rounded-(--r-12) border px-[22px] py-4 max-sm:flex-col max-sm:items-start">
       <span
         aria-hidden
         className="border-accent-ring bg-accent-soft text-ob-accent inline-grid size-9 shrink-0 place-items-center rounded-(--r-10) border [&_svg]:size-[17px]"
@@ -40,7 +40,7 @@ export const SignInNudge = ({ dict, redirectPath }: SignInNudgeProps): React.Rea
       <Button
         onClick={handleGitHubSignIn}
         disabled={loading}
-        className="bg-ob-accent text-accent-ink ml-auto h-9 shrink-0 gap-2 rounded-(--r-8) text-[13px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60 max-[640px]:ml-0 max-[640px]:w-full"
+        className="bg-ob-accent text-accent-ink ml-auto h-9 shrink-0 gap-2 rounded-(--r-8) text-[13px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60 max-sm:ml-0 max-sm:w-full"
       >
         <IconGithub className="size-[15px]" />
         {dict.cta}

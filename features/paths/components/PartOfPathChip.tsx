@@ -29,10 +29,10 @@ export const PartOfPathChip = ({
       ·
     </span>
     <span className="min-w-0 truncate">{path.title}</span>
-    <span className="shrink-0 max-[520px]:hidden" aria-hidden="true">
+    <span className="max-narrow:hidden shrink-0" aria-hidden="true">
       ·
     </span>
-    <span className="shrink-0 max-[520px]:hidden">
+    <span className="max-narrow:hidden shrink-0">
       {stepOf(stepIndex + 1, flattenSteps(path).length)}
     </span>
   </Link>

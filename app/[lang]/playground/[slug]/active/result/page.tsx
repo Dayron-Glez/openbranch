@@ -357,7 +357,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </div>
           </div>
 
-          <h1 className="text-fg mx-auto mb-4 max-w-[520px] text-[52px] leading-[1.08] font-semibold tracking-[-0.03em] max-[640px]:text-[38px]">
+          <h1 className="text-fg mx-auto mb-4 max-w-[520px] text-[52px] leading-[1.08] font-semibold tracking-[-0.03em] max-sm:text-[38px]">
             {dict.result.heading}{" "}
             <span
               className="inline-block bg-clip-text text-transparent"

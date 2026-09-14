@@ -132,12 +132,12 @@ export default async function ChallengePage({
   return (
     <main
       data-pg-main
-      className="relative z-1 flex h-[calc(100dvh-48px)] flex-col overflow-hidden max-[900px]:h-auto max-[900px]:overflow-visible"
+      className="max-workspace:h-auto max-workspace:overflow-visible relative z-1 flex h-[calc(100dvh-48px)] flex-col overflow-hidden"
     >
       <div
         className={cn(
           pageShellClass("wide"),
-          "flex min-h-0 flex-1 flex-col pt-10 max-[900px]:flex-none max-[900px]:pb-10"
+          "max-workspace:flex-none max-workspace:pb-10 flex min-h-0 flex-1 flex-col pt-10"
         )}
       >
         <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
@@ -167,8 +167,8 @@ export default async function ChallengePage({
           </ol>
         </nav>
 
-        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10 max-[900px]:grid-cols-1">
-          <div className="pg-left-scroll min-[901px]:overflow-y-auto min-[901px]:pb-10">
+        <div className="max-workspace:grid-cols-1 grid min-h-0 flex-1 grid-cols-[1fr_340px] gap-10">
+          <div className="pg-left-scroll workspace:overflow-y-auto workspace:pb-10">
             <div className="mb-3.5 flex items-center gap-3">
               <span
                 data-track={colorToken}
@@ -180,7 +180,7 @@ export default async function ChallengePage({
               {sessionStatusBadge}
             </div>
 
-            <h1 className="text-fg mb-3 text-[32px] leading-[1.08] font-medium tracking-[-0.02em] text-balance max-[640px]:text-[26px]">
+            <h1 className="text-fg mb-3 text-[32px] leading-[1.08] font-medium tracking-[-0.02em] text-balance max-sm:text-[26px]">
               {page.data.title}
             </h1>
 
@@ -222,7 +222,7 @@ export default async function ChallengePage({
             )}
           </div>
 
-          <aside className="max-[900px]:order-first">
+          <aside className="max-workspace:order-first">
             <div className="flex flex-col gap-4">
               <div className="bg-bg-card border-line rounded-(--r-12) border p-[18px]">
                 <WorkspaceOnly

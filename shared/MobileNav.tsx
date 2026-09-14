@@ -56,7 +56,7 @@ export const MobileNav = ({
           type="button"
           aria-label={dict.menuAria}
           aria-expanded={open}
-          className="text-fg-2 border-line bg-bg-elev inline-flex size-8 items-center justify-center rounded-(--r-8) border min-[641px]:hidden"
+          className="text-fg-2 border-line bg-bg-elev inline-flex size-8 items-center justify-center rounded-(--r-8) border sm:hidden"
         >
           <Menu className="size-4" />
         </button>

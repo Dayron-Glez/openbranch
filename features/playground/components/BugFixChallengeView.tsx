@@ -308,13 +308,13 @@ export const BugFixChallengeView = ({
 
   return (
     <ChallengeLayout
-      gridClassName="grid-rows-1 max-[900px]:grid-rows-none"
+      gridClassName="grid-rows-1 max-workspace:grid-rows-none"
       playgroundPath={playgroundPath}
       challengePath={challengePath}
       title={title}
       inProgressLabel={dict.status.inProgress}
       mainContent={
-        <div className="min-w-0 min-[901px]:pb-10">
+        <div className="workspace:pb-10 min-w-0">
           <div
             className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
               showSolution ? "border-warn/40" : "border-line"
@@ -415,9 +415,9 @@ export const BugFixChallengeView = ({
         </div>
       }
       sidebarContent={
-        <aside className="max-[900px]:order-first">
+        <aside className="max-workspace:order-first">
           <ScrollArea className="h-full">
-            <div className="flex flex-col gap-6 min-[901px]:pr-3 min-[901px]:pb-10">
+            <div className="workspace:pr-3 workspace:pb-10 flex flex-col gap-6">
               <ChallengeSidebarHeader
                 title={title}
                 challengePath={challengePath}

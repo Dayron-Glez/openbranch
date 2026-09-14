@@ -44,7 +44,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
           </button>
         </div>
 
-        <h1 className="mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em] max-[980px]:text-[38px] max-[520px]:text-[32px]">
+        <h1 className="max-wide:text-[38px] max-narrow:text-[32px] mx-auto mb-6 text-[48px] leading-[1.12] font-normal tracking-[-0.03em]">
           {titleWords.map((word, i) => (
             <span
               key={`${word}-${i}`}
@@ -80,7 +80,7 @@ export function Hero({ dict, lang, guideCount }: HeroProps) {
 
       <div
         ref={terminalRef}
-        className="intro-terminal relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-[''] max-[520px]:hidden"
+        className="intro-terminal max-narrow:hidden relative mx-auto mt-16 max-w-230 before:absolute before:-inset-px before:-z-10 before:bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(94,227,154,.20),transparent_60%)] before:blur-2xl before:content-['']"
       >
         <HeroTerminal />
       </div>

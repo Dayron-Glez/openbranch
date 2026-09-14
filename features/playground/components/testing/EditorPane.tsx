@@ -41,7 +41,7 @@ export const EditorPane = ({
 }: EditorPaneProps): React.ReactElement => {
   const onSourceTab = activeTab === "source"
   return (
-    <div className="min-w-0 min-[901px]:pb-10">
+    <div className="workspace:pb-10 min-w-0">
       <div
         className={`flex h-full min-h-100 flex-col overflow-hidden rounded-(--r-8) border transition-colors duration-200 ${
           showSolution ? "border-warn/40" : "border-line"

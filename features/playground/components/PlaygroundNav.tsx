@@ -69,7 +69,7 @@ export const PlaygroundNav = ({
 
   return (
     <header className="border-line bg-bg/80 z-10 shrink-0 border-b backdrop-blur-xl">
-      <div className="mx-auto flex items-center gap-8 px-4 py-3.5 max-[980px]:gap-4 max-[520px]:px-3">
+      <div className="max-wide:gap-4 max-narrow:px-3 mx-auto flex items-center gap-8 px-4 py-3.5">
         {/* logo */}
         <Link
           href={homeHref}
@@ -84,10 +84,7 @@ export const PlaygroundNav = ({
         </Link>
 
         {/* nav links */}
-        <nav
-          className="flex items-center gap-6 max-[640px]:hidden"
-          aria-label="Playground navigation"
-        >
+        <nav className="flex items-center gap-6 max-sm:hidden" aria-label="Playground navigation">
           <Link href={localizedHref(lang, "/docs")} className={navLinkClass(inDocs)}>
             {navDict.docsLabel}
           </Link>
@@ -100,11 +97,11 @@ export const PlaygroundNav = ({
         </nav>
 
         {/* right */}
-        <div className="ml-auto flex items-center gap-4 max-[520px]:gap-2">
+        <div className="max-narrow:gap-2 ml-auto flex items-center gap-4">
           {/* search */}
           <button
             onClick={() => setOpenSearch(true)}
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-[980px]:w-40 max-[640px]:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={lang === "en" ? "Search challenges" : "Buscar retos"}
           >
             <IconSearch />
@@ -147,7 +144,7 @@ export const PlaygroundNav = ({
                   <a href={GH_URL} target="_blank" rel="noopener noreferrer">
                     <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
                     {stars !== null && (
-                      <span className="font-mono text-[11px] tabular-nums max-[520px]:hidden">
+                      <span className="max-narrow:hidden font-mono text-[11px] tabular-nums">
                         {stars}
                       </span>
                     )}
@@ -163,7 +160,7 @@ export const PlaygroundNav = ({
             <DropdownMenu>
               <DropdownMenuTrigger
                 aria-label={navDict.profileLabel}
-                className="focus-visible:ring-accent-ring rounded-full focus-visible:ring-2 focus-visible:outline-none max-[520px]:hidden"
+                className="focus-visible:ring-accent-ring max-narrow:hidden rounded-full focus-visible:ring-2 focus-visible:outline-none"
               >
                 {avatarUrl === null ? (
                   // An account can have no avatar; before, the whole entry
@@ -197,7 +194,7 @@ export const PlaygroundNav = ({
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="accent" className="h-8 gap-1.5 px-3 max-[520px]:hidden">
+            <Button asChild variant="accent" className="max-narrow:hidden h-8 gap-1.5 px-3">
               <Link href={localizedHref(lang, `/login?next=${encodeURIComponent(pathname)}`)}>
                 <IconGithub className="size-[14px]" />
                 {authDict.eyebrow}

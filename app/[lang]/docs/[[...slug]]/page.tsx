@@ -126,7 +126,7 @@ export default async function Page(props: Readonly<PageProps<"/[lang]/docs/[[...
       <div className="flex flex-wrap items-center gap-2 border-b pb-6">
         <MarkdownCopyButton
           markdownUrl={markdownUrl}
-          className={isSectionPage ? "max-[520px]:hidden" : undefined}
+          className={isSectionPage ? "max-narrow:hidden" : undefined}
         />
         <DocsOpenButton pageUrl={pageUrl} markdownUrl={markdownUrl} githubUrl={githubUrl} />
         {isSectionPage && <SuggestGuideButton sectionName={page.data.title} />}

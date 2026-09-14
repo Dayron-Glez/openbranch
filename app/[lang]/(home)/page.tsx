@@ -52,7 +52,7 @@ const ledClass =
 const sectionClass = ""
 const sectionHeadClass = "mb-12 max-w-[720px]"
 const headingClass =
-  "mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-[980px]:text-[32px]"
+  "mb-[18px] text-balance text-[42px] font-medium leading-[1.05] tracking-[0] max-wide:text-[32px]"
 
 export async function generateMetadata({
   params,
@@ -111,7 +111,7 @@ export default async function HomePage({ params }: Readonly<PageProps<"/[lang]">
             </p>
           </div>
           <div
-            className="scroll-reveal-stagger grid grid-cols-3 gap-3 max-[980px]:grid-cols-2 max-[520px]:[grid-auto-rows:1fr]"
+            className="scroll-reveal-stagger max-wide:grid-cols-2 max-narrow:[grid-auto-rows:1fr] grid grid-cols-3 gap-3"
             data-scroll-reveal
           >
             {dict.topics.map((topic) => {

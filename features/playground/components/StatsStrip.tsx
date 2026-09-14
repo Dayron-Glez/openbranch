@@ -71,7 +71,7 @@ export const StatsStrip = ({
         {dict.eyebrow}
       </div>
       <div className="border-line overflow-hidden rounded-(--r-12) border">
-        <div className="bg-line grid grid-cols-4 gap-px max-[980px]:grid-cols-2 max-[520px]:grid-cols-1">
+        <div className="bg-line max-wide:grid-cols-2 max-narrow:grid-cols-1 grid grid-cols-4 gap-px">
           <div className={CELL_CLASS}>
             <span className={LABEL_CLASS}>{dict.points}</span>
             <span className={VALUE_CLASS}>

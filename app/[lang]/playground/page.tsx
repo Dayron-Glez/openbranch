@@ -192,8 +192,8 @@ export default async function PlaygroundPage({
       <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
         {dict.hub.eyebrow}
       </p>
-      <div className="mb-4.5 flex items-baseline justify-between gap-8 max-[640px]:flex-col max-[640px]:items-start max-[640px]:gap-3">
-        <h1 className="text-[42px] leading-[1.05] font-medium tracking-normal text-balance max-[980px]:text-[32px]">
+      <div className="mb-4.5 flex items-baseline justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-3">
+        <h1 className="max-wide:text-[32px] text-[42px] leading-[1.05] font-medium tracking-normal text-balance">
           {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>
         </h1>
         <Link
@@ -261,7 +261,7 @@ export default async function PlaygroundPage({
       />
 
       {showFlatGrid ? (
-        <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
+        <div className="max-wide:grid-cols-2 grid grid-cols-3 gap-4 max-sm:grid-cols-1">
           {filteredChallenges.map(renderChallengeCard)}
         </div>
       ) : (
@@ -277,7 +277,7 @@ export default async function PlaygroundPage({
                 <div className="text-fg-muted border-line mb-4 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
                   {dict.category[cat]}
                 </div>
-                <div className="grid grid-cols-3 gap-4 max-[980px]:grid-cols-2 max-[640px]:grid-cols-1">
+                <div className="max-wide:grid-cols-2 grid grid-cols-3 gap-4 max-sm:grid-cols-1">
                   {categoryChallenges.map(renderChallengeCard)}
                 </div>
               </div>

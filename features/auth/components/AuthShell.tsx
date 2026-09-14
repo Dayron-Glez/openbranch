@@ -17,9 +17,9 @@ type AuthShellProps = {
 export const AuthShell = ({ background, panel, children }: AuthShellProps): ReactElement => (
   <main data-pg-main className="bg-bg text-fg relative min-h-dvh">
     {background}
-    <div className="relative z-1 mx-auto grid min-h-dvh max-w-[1440px] grid-cols-[640px_minmax(0,1fr)] max-[1100px]:grid-cols-[minmax(0,520px)_minmax(0,1fr)] max-[760px]:grid-cols-1 max-[760px]:px-6 max-[760px]:py-7">
+    <div className="max-page:grid-cols-[minmax(0,520px)_minmax(0,1fr)] max-tablet:grid-cols-1 max-tablet:px-6 max-tablet:py-7 relative z-1 mx-auto grid min-h-dvh max-w-[1440px] grid-cols-[640px_minmax(0,1fr)]">
       {children}
-      <div className="auth-rise-late flex p-5 pl-0 max-[760px]:hidden">{panel}</div>
+      <div className="auth-rise-late max-tablet:hidden flex p-5 pl-0">{panel}</div>
     </div>
   </main>
 )

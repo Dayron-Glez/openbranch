@@ -102,7 +102,7 @@ export const ActiveChallengeView = ({
       title={title}
       inProgressLabel={dict.status.inProgress}
       mainContent={
-        <div className="min-w-0 min-[901px]:overflow-y-auto min-[901px]:pb-10">
+        <div className="workspace:overflow-y-auto workspace:pb-10 min-w-0">
           {diffFiles === null ? (
             <div className="border-line bg-bg-elev flex h-full min-h-50 items-center justify-center rounded-(--r-12) border border-dashed">
               <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
@@ -124,7 +124,7 @@ export const ActiveChallengeView = ({
         </div>
       }
       sidebarContent={
-        <aside className="max-[900px]:order-first min-[901px]:overflow-y-auto min-[901px]:pb-10">
+        <aside className="max-workspace:order-first workspace:overflow-y-auto workspace:pb-10">
           <div className="flex flex-col gap-6">
             <ChallengeSidebarHeader
               title={title}
