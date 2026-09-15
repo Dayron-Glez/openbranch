@@ -13,9 +13,9 @@ const GateRow = ({ label, value, passed, index }: Readonly<GateRowProps>) => (
     className="ob-rise flex items-center justify-between"
     style={{ animationDelay: `${index * 60}ms` }}
   >
-    <span className="text-fg-muted font-mono text-[11.5px]">{label}</span>
+    <span className="text-fg-muted text-2xs font-mono">{label}</span>
     <span
-      className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${
+      className={`text-2xs font-mono font-medium tabular-nums transition-colors ${
         passed ? "text-ob-accent" : "text-fg-muted"
       }`}
     >

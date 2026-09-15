@@ -44,7 +44,7 @@ function buildAuthorsDisplay(authors: string[], lang: string): string {
 }
 
 const eyebrowClass =
-  "mb-3.5 inline-block font-mono text-[11px] uppercase tracking-[0.08em] text-fg-muted"
+  "mb-3.5 inline-block font-mono text-2xs uppercase tracking-[0.08em] text-fg-muted"
 
 const ledClass =
   "led-wave mr-2 inline-block size-1.5 rounded-full bg-ob-accent align-[1px] shadow-[0_0_0_3px_var(--color-accent-soft)]"

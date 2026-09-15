@@ -26,7 +26,7 @@ export const SignOutButton = ({
         onClick={() => setConfirming(true)}
         className={
           className ??
-          "text-fg-muted hover:text-danger font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+          "text-fg-muted hover:text-danger text-2xs font-mono transition-colors duration-(--d-fast) ease-(--ease)"
         }
       >
         {dict.signOut}

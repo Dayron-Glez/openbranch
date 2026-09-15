@@ -80,13 +80,13 @@ export const LoginPanel = ({
           </Link>
 
           <div className="flex flex-col gap-3">
-            <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
+            <span className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
               {dict.eyebrow}
             </span>
             <h1 className="text-fg max-tablet:text-[26px] text-[30px] leading-[1.15] font-light tracking-[-0.015em]">
               {dict.title} <span className="text-fg-2">{dict.titleAccent}</span>
             </h1>
-            <p className="text-fg-2 text-[14px] leading-[1.6] text-pretty">{dict.lead}</p>
+            <p className="text-fg-2 text-sm leading-[1.6] text-pretty">{dict.lead}</p>
           </div>
 
           {error !== null && (
@@ -94,11 +94,11 @@ export const LoginPanel = ({
               role="alert"
               className="border-danger-ring bg-danger-soft flex flex-col gap-2.5 rounded-(--r-10) border p-4"
             >
-              <span className="text-fg flex items-center gap-2.5 text-[14px] font-medium">
+              <span className="text-fg flex items-center gap-2.5 text-sm font-medium">
                 <IconAlertCircle className="text-danger size-[15px] shrink-0" />
                 {dict.errorTitle}
               </span>
-              <p className="text-fg-2 text-[13px] leading-[1.6] text-pretty">{errorBody()}</p>
+              <p className="text-fg-2 text-sm leading-[1.6] text-pretty">{errorBody()}</p>
             </div>
           )}
 
@@ -108,7 +108,7 @@ export const LoginPanel = ({
               size="lg"
               onClick={handleGitHubSignIn}
               disabled={redirecting}
-              className="w-full gap-2.5 px-5 text-[14px] disabled:opacity-60"
+              className="w-full gap-2.5 px-5 text-sm disabled:opacity-60"
             >
               {redirecting ? (
                 <span
@@ -122,7 +122,7 @@ export const LoginPanel = ({
             </Button>
 
             {redirecting && (
-              <p className="text-fg-muted text-center font-mono text-[11.5px] leading-[1.6]">
+              <p className="text-fg-muted text-2xs text-center font-mono leading-[1.6]">
                 {dict.redirectingNote} {nextLabel}
               </p>
             )}
@@ -131,7 +131,7 @@ export const LoginPanel = ({
           <div className="border-line -mt-1 border-t pt-5 text-center">
             <Link
               href={next}
-              className="text-fg-2 hover:text-fg text-[13.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+              className="text-fg-2 hover:text-fg text-sm transition-colors duration-(--d-fast) ease-(--ease)"
             >
               {error !== null ? dict.errorBrowse : dict.browse} →
             </Link>

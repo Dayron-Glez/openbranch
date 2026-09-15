@@ -143,7 +143,7 @@ const Caption = ({
   if (item.progress === null) {
     const challenges = item.steps.filter((step) => step.type === "challenge").length
     return (
-      <span className="text-fg-muted font-mono text-[11px]">
+      <span className="text-fg-muted text-2xs font-mono">
         {dict.shape(item.steps.length - challenges, challenges)}
       </span>
     )
@@ -152,7 +152,7 @@ const Caption = ({
   const { done, total } = item.progress
   if (total > 0 && done === total) {
     return (
-      <span className="text-fg-muted flex items-center gap-1.5 font-mono text-[11px]">
+      <span className="text-fg-muted text-2xs flex items-center gap-1.5 font-mono">
         <span className="bg-ob-accent text-accent-ink grid size-3.5 shrink-0 place-items-center rounded-full [&_svg]:size-2">
           <IconCheck />
         </span>
@@ -167,7 +167,7 @@ const Caption = ({
 
   const currentStep = item.steps.find((step) => step.done !== true)
   return (
-    <span className="text-fg-muted flex items-center gap-1.5 font-mono text-[11px]">
+    <span className="text-fg-muted text-2xs flex items-center gap-1.5 font-mono">
       <span className="text-fg-2">{dict.progressFraction(done, total)}</span>
       {currentStep !== undefined && (
         <>
@@ -210,17 +210,15 @@ export const PathCard = ({
           {item.icon}
         </span>
         <div className="min-w-0">
-          <div className="text-fg-muted font-mono text-[10px] tracking-[0.08em] uppercase">
+          <div className="text-fg-muted text-3xs font-mono tracking-[0.08em] uppercase">
             {item.trackLabel}
           </div>
-          <h3 className="text-fg text-[15px] leading-snug font-medium tracking-[-0.005em]">
+          <h3 className="text-fg text-base leading-snug font-medium tracking-[-0.005em]">
             {item.title}
           </h3>
         </div>
       </div>
-      <p className="text-fg-muted line-clamp-2 flex-1 text-[12.5px] leading-[1.5]">
-        {item.description}
-      </p>
+      <p className="text-fg-muted line-clamp-2 flex-1 text-xs leading-[1.5]">{item.description}</p>
       <div className="border-line flex min-h-16 flex-col justify-center gap-[11px] border-t pt-[15px]">
         {/* Decorative — the same information is text in the caption below. */}
         <div aria-hidden="true">

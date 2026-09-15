@@ -28,7 +28,7 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
       <div className="flex items-center justify-between">
         <Eyebrow>{dict.active.testsLabel}</Eyebrow>
         <span
-          className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
+          className={`text-2xs font-mono font-medium tabular-nums transition-colors ${countClass}`}
         >
           {testState.status === "running" ? (
             <span className="flex items-center gap-1.5">
@@ -43,10 +43,10 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
 
       {testState.compileError !== null && (
         <div className="border-danger/20 bg-danger/[0.03] rounded-(--r-8) border p-3">
-          <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
+          <p className="text-danger text-2xs mb-1 font-mono tracking-wide uppercase">
             {dict.active.syntaxError}
           </p>
-          <p className="text-fg-muted font-mono text-[11px] leading-relaxed">
+          <p className="text-fg-muted text-2xs font-mono leading-relaxed">
             {dict.active.fixSyntax}
           </p>
         </div>
@@ -54,11 +54,11 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
       {testState.compileError === null && isRunning && (
         <div className="border-line bg-bg-elev flex items-center gap-2.5 rounded-(--r-8) border p-3">
           <span className="border-fg-faint size-3.5 animate-spin rounded-full border-2 border-t-transparent" />
-          <span className="text-fg-muted font-mono text-[11.5px]">{dict.active.running}</span>
+          <span className="text-fg-muted text-2xs font-mono">{dict.active.running}</span>
         </div>
       )}
       {testState.compileError === null && !isRunning && !hasRun && (
-        <p className="text-fg-muted font-mono text-[11.5px]">{dict.active.writeTestsToStart}</p>
+        <p className="text-fg-muted text-2xs font-mono">{dict.active.writeTestsToStart}</p>
       )}
       {testState.compileError === null && !isRunning && testState.tests.length > 0 && (
         <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3">

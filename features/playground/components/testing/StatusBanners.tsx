@@ -23,12 +23,12 @@ export const StatusBanners = ({
     <>
       {canSubmit && (
         <div className={successClass}>
-          <p className="text-ob-accent font-mono text-[12px]">{dict.active.allRegressionsCaught}</p>
+          <p className="text-ob-accent font-mono text-xs">{dict.active.allRegressionsCaught}</p>
         </div>
       )}
       {showNeedMore && (
         <div className={warnClass}>
-          <p className="text-warn font-mono text-[12px]">{dict.active.needMoreTests}</p>
+          <p className="text-warn font-mono text-xs">{dict.active.needMoreTests}</p>
         </div>
       )}
     </>

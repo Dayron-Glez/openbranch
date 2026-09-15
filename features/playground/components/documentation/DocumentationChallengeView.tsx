@@ -92,7 +92,7 @@ export const DocumentationChallengeView = ({
         <div className="max-workspace:grid-cols-1 max-workspace:gap-4 workspace:pb-10 grid min-h-0 min-w-0 grid-cols-[3fr_2fr] gap-3">
           <div className="border-line flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border">
             <div className="border-line bg-bg-elev flex shrink-0 items-center border-b px-4 py-2.5">
-              <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
+              <span className="text-fg-2 font-mono text-xs">{template.editableFile}</span>
             </div>
             <div className="min-h-0 flex-1">
               <Editor
@@ -113,8 +113,8 @@ export const DocumentationChallengeView = ({
 
           <div className="border-line max-workspace:min-h-70 flex min-h-100 flex-col overflow-hidden rounded-(--r-8) border">
             <div className="border-line bg-bg-elev flex shrink-0 items-center gap-2 border-b px-4 py-2.5">
-              <span className="text-fg-2 font-mono text-[12px]">{sourceFilename}</span>
-              <span className="text-fg-faint rounded bg-transparent px-1.5 py-0.5 font-mono text-[10px] ring-1 ring-current">
+              <span className="text-fg-2 font-mono text-xs">{sourceFilename}</span>
+              <span className="text-fg-faint text-3xs rounded bg-transparent px-1.5 py-0.5 font-mono ring-1 ring-current">
                 {dict.active.readOnlyLabel}
               </span>
             </div>

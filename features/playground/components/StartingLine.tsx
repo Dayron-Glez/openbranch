@@ -31,10 +31,8 @@ export const StartingLine = ({
     <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-sm:grid-cols-1">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-ob-accent font-mono text-[11px] tracking-[0.1em] uppercase">
-            {eyebrow}
-          </p>
-          <h2 className="text-[20px] leading-snug font-semibold tracking-[-0.015em]">{heading}</h2>
+          <p className="text-ob-accent text-2xs font-mono tracking-[0.1em] uppercase">{eyebrow}</p>
+          <h2 className="text-xl leading-snug font-semibold tracking-[-0.015em]">{heading}</h2>
           <p className="text-fg-2 max-w-[52ch] text-sm leading-[1.6]">{body}</p>
         </div>
         <div className="flex items-center gap-3.5">
@@ -42,12 +40,12 @@ export const StartingLine = ({
             {challengeIcon}
           </span>
           <div className="flex flex-col gap-1">
-            <p className="text-[15px] leading-snug font-medium">{challengeTitle}</p>
+            <p className="text-base leading-snug font-medium">{challengeTitle}</p>
             <div className="flex items-center gap-3">
-              <span className="border-line bg-bg-elev text-fg-muted rounded-(--r-6) border px-2 py-0.5 font-mono text-[11px] tracking-[0.04em]">
+              <span className="border-line bg-bg-elev text-fg-muted text-2xs rounded-(--r-6) border px-2 py-0.5 font-mono tracking-[0.04em]">
                 {challengeCategoryLabel}
               </span>
-              <span className="text-fg-muted inline-flex items-center gap-1 font-mono text-[11px]">
+              <span className="text-fg-muted text-2xs inline-flex items-center gap-1 font-mono">
                 <IconClock className="size-3 shrink-0" />
                 {challengeMinutes} {minutesLabel}
               </span>

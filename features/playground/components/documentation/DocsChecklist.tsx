@@ -34,7 +34,7 @@ export const DocsChecklist = ({
       <div className="flex items-center justify-between">
         <Eyebrow>{dict.active.docsChecklistHeading}</Eyebrow>
         <span
-          className={`font-mono text-[11.5px] tabular-nums ${allPassed ? "text-ob-accent" : "text-fg-muted"}`}
+          className={`text-2xs font-mono tabular-nums ${allPassed ? "text-ob-accent" : "text-fg-muted"}`}
         >
           {passedCount}/{criteria.length}
         </span>
@@ -44,13 +44,13 @@ export const DocsChecklist = ({
         {results.map(({ criterion, passed }) => (
           <div key={criterion.id} className="flex items-start gap-2.5">
             <span
-              className={`mt-0.5 shrink-0 font-mono text-[12px] ${passed ? "text-ob-accent" : "text-fg-faint"}`}
+              className={`mt-0.5 shrink-0 font-mono text-xs ${passed ? "text-ob-accent" : "text-fg-faint"}`}
               aria-hidden="true"
             >
               {passed ? "✓" : "○"}
             </span>
             <span
-              className={`font-mono text-[12px] leading-snug ${passed ? "text-fg" : "text-fg-muted"}`}
+              className={`font-mono text-xs leading-snug ${passed ? "text-fg" : "text-fg-muted"}`}
             >
               {criterion.label}
             </span>
@@ -60,7 +60,7 @@ export const DocsChecklist = ({
 
       {allPassed && (
         <div className="border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5">
-          <p className="text-ob-accent font-mono text-[12px]">{dict.active.docsAllCriteriaMet}</p>
+          <p className="text-ob-accent font-mono text-xs">{dict.active.docsAllCriteriaMet}</p>
         </div>
       )}
 

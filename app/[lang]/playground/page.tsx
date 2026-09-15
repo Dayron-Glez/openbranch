@@ -190,7 +190,7 @@ export default async function PlaygroundPage({
         <PlaygroundGridTransition />
       </Suspense>
 
-      <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
+      <p className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
         {dict.hub.eyebrow}
       </p>
       <div className="mb-4.5 flex items-baseline justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-3">
@@ -199,7 +199,7 @@ export default async function PlaygroundPage({
         </h1>
         <Link
           href={localizedHref(lang, "/playground/leaderboard")}
-          className="text-fg-2 hover:text-fg inline-flex shrink-0 items-center gap-1.5 text-[13.5px] transition-colors"
+          className="text-fg-2 hover:text-fg inline-flex shrink-0 items-center gap-1.5 text-sm transition-colors"
         >
           {dict.hub.boardLink}
           <svg

@@ -64,7 +64,7 @@ export const GitSidebar = ({
 
           {showClean && (
             <div className="ob-rise border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5">
-              <p className="text-ob-accent font-mono text-[12px]">{dict.active.mergeClean}</p>
+              <p className="text-ob-accent font-mono text-xs">{dict.active.mergeClean}</p>
             </div>
           )}
 
@@ -79,7 +79,7 @@ export const GitSidebar = ({
           <button
             type="button"
             onClick={onReset}
-            className="text-fg-muted hover:text-fg-2 font-mono text-[12px] transition-colors"
+            className="text-fg-muted hover:text-fg-2 font-mono text-xs transition-colors"
           >
             {dict.active.resetCode}
           </button>

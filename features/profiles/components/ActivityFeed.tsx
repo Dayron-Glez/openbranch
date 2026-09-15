@@ -43,19 +43,17 @@ export const ActivityFeed = ({
                 item.track === null ? "bg-fg-faint" : "bg-(--track)"
               }`}
             />
-            <span className="min-w-0 flex-1 truncate text-[13px]">
+            <span className="min-w-0 flex-1 truncate text-sm">
               <span className="text-fg font-medium">{item.title}</span>
               <span className="text-fg-muted"> · {item.trackLabel}</span>
             </span>
-            <span className="text-fg-muted shrink-0 font-mono text-[11.5px]">
-              {item.relativeDate}
-            </span>
-            <span className="text-fg-2 shrink-0 font-mono text-[11.5px] tabular-nums">
+            <span className="text-fg-muted text-2xs shrink-0 font-mono">{item.relativeDate}</span>
+            <span className="text-fg-2 text-2xs shrink-0 font-mono tabular-nums">
               {dict.activityPoints(item.points)}
             </span>
           </div>
         ))}
-        <p className="text-fg-muted bg-bg-elev px-[18px] py-2.5 font-mono text-[11px]">
+        <p className="text-fg-muted bg-bg-elev text-2xs px-[18px] py-2.5 font-mono">
           {items.length === 1 ? dict.activityFirst : dict.activityCaption(items.length)}
         </p>
       </div>

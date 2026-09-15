@@ -9,6 +9,15 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
+/* Two steps below Tailwind's `xs`, which the dense UI needs. The rest of the
+   scale is Tailwind's own — `xs` 12px, `sm` 14px, `base` 16px — left untouched.
+   There is deliberately no 13px step: Tailwind has no slot between `xs` and
+   `sm`, and inventing one would break the convention at the most-used size. */
+@theme {
+  --text-3xs: 10px;
+  --text-2xs: 11px;
+}
+
 /* The app's breakpoints. `workspace` is the minimum viewport width the challenge
    workspace (Monaco panes, resizable gutters) can actually lay out in — see
    shared/viewport.ts. 640px is Tailwind's own `sm`, so it needs no token here.

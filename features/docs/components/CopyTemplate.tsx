@@ -39,7 +39,7 @@ const markdownComponents: Components = {
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-ob-accent mt-5 mb-2 font-mono text-[10px] font-semibold tracking-[0.08em] uppercase">
+    <h2 className="text-ob-accent text-3xs mt-5 mb-2 font-mono font-semibold tracking-[0.08em] uppercase">
       {children}
     </h2>
   ),
@@ -88,7 +88,7 @@ const markdownComponents: Components = {
       return <code className="text-fd-foreground font-mono text-xs">{children}</code>
     }
     return (
-      <code className="bg-ob-accent/10 text-ob-accent rounded px-1 py-0.5 font-mono text-[11px]">
+      <code className="bg-ob-accent/10 text-ob-accent text-2xs rounded px-1 py-0.5 font-mono">
         {children}
       </code>
     )
@@ -105,7 +105,7 @@ const markdownComponents: Components = {
   ),
   tr: ({ children }) => <tr className="border-ob-accent/10 border-b">{children}</tr>,
   th: ({ children }) => (
-    <th className="text-ob-accent pr-6 pb-2 text-left font-mono text-[10px] font-semibold tracking-[0.06em] uppercase">
+    <th className="text-ob-accent text-3xs pr-6 pb-2 text-left font-mono font-semibold tracking-[0.06em] uppercase">
       {children}
     </th>
   ),
@@ -148,7 +148,7 @@ export const CopyTemplate = ({ title, content, defaultExpanded = false }: CopyTe
   return (
     <div className="not-prose border-ob-accent/25 my-6 overflow-hidden rounded-lg border">
       <div className="border-ob-accent/25 bg-accent-soft flex items-center justify-between gap-3 border-b px-4 py-2.5">
-        <span className="text-ob-accent font-mono text-[11px] font-medium tracking-[0.08em] uppercase">
+        <span className="text-ob-accent text-2xs font-mono font-medium tracking-[0.08em] uppercase">
           {title}
         </span>
         <div className="flex items-center gap-1">
@@ -184,7 +184,7 @@ export const CopyTemplate = ({ title, content, defaultExpanded = false }: CopyTe
             </Tooltip>
             <DialogContent className="flex h-[80vh] max-w-3xl flex-col gap-0 overflow-hidden p-0 [&>button:last-child]:hidden">
               <div className="border-ob-accent/25 bg-accent-soft flex items-center justify-between gap-3 border-b px-4 py-2.5">
-                <DialogTitle className="text-ob-accent font-mono text-[11px] font-medium tracking-[0.08em] uppercase">
+                <DialogTitle className="text-ob-accent text-2xs font-mono font-medium tracking-[0.08em] uppercase">
                   {title}
                 </DialogTitle>
                 <div className="flex items-center gap-1">

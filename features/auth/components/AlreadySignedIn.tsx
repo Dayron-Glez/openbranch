@@ -54,7 +54,7 @@ export const AlreadySignedIn = ({
           {avatarUrl === null ? (
             <span
               aria-hidden
-              className="border-line-2 bg-bg-elev text-fg-muted inline-grid size-10 shrink-0 place-items-center rounded-full border font-mono text-[13px]"
+              className="border-line-2 bg-bg-elev text-fg-muted inline-grid size-10 shrink-0 place-items-center rounded-full border font-mono text-sm"
             >
               {initialsOf(username)}
             </span>
@@ -69,11 +69,11 @@ export const AlreadySignedIn = ({
             />
           )}
           <span className="flex min-w-0 flex-col gap-0.5">
-            <span className="text-fg truncate font-mono text-[13.5px]">@{username}</span>
-            <span className="text-fg-muted text-[12.5px]">{dict.signedInWith}</span>
+            <span className="text-fg truncate font-mono text-sm">@{username}</span>
+            <span className="text-fg-muted text-xs">{dict.signedInWith}</span>
           </span>
           {streak > 0 && (
-            <span className="border-accent-ring bg-accent-soft text-ob-accent ml-auto shrink-0 rounded-full border px-2.5 py-[3px] font-mono text-[10.5px] tracking-[0.06em] uppercase">
+            <span className="border-accent-ring bg-accent-soft text-ob-accent text-2xs ml-auto shrink-0 rounded-full border px-2.5 py-[3px] font-mono tracking-[0.06em] uppercase">
               {dict.streak.replace("{count}", String(streak))}
             </span>
           )}
@@ -84,16 +84,16 @@ export const AlreadySignedIn = ({
             {dict.signedInTitle}
           </h1>
           {openChallengeTitle === null ? (
-            <p className="text-fg-2 text-[14px] leading-[1.6]">{dict.signedInNone}</p>
+            <p className="text-fg-2 text-sm leading-[1.6]">{dict.signedInNone}</p>
           ) : (
-            <p className="text-fg-2 text-[14px] leading-[1.6]">
+            <p className="text-fg-2 text-sm leading-[1.6]">
               {dict.signedInOpen} <span className="text-fg">{openChallengeTitle}</span>
             </p>
           )}
         </div>
 
         <div className="flex flex-col gap-5">
-          <Button asChild variant="accent" size="lg" className="w-full px-5 text-[14px]">
+          <Button asChild variant="accent" size="lg" className="w-full px-5 text-sm">
             <Link href={continueHref}>
               {openChallengeTitle === null ? dict.signedInGo : dict.signedInContinue}
             </Link>
@@ -102,7 +102,7 @@ export const AlreadySignedIn = ({
             <SignOutButton
               dict={dict}
               redirectTo={next}
-              className="text-fg-2 hover:text-danger text-[13.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+              className="text-fg-2 hover:text-danger text-sm transition-colors duration-(--d-fast) ease-(--ease)"
             />
           </div>
         </div>

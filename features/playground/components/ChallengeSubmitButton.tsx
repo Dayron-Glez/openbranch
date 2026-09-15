@@ -17,7 +17,7 @@ export const ChallengeSubmitButton = ({
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-(--r-8) font-mono text-[13.5px] font-medium transition-opacity disabled:opacity-40"
+    className="bg-ob-accent text-accent-ink flex h-10 w-full items-center justify-center gap-2 rounded-(--r-8) font-mono text-sm font-medium transition-opacity disabled:opacity-40"
   >
     {isPending ? (
       <>

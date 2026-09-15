@@ -55,16 +55,16 @@ export const ChallengeCard = ({
         <span className="inline-grid size-9 shrink-0 place-items-center rounded-(--r-8) border border-(--track-ring) bg-(--track-soft) text-(--track) [&_svg]:size-4.25">
           {icon}
         </span>
-        <span className={`flex items-center gap-1.5 font-mono text-[11.5px] ${statusTextClass}`}>
+        <span className={`text-2xs flex items-center gap-1.5 font-mono ${statusTextClass}`}>
           <span className={`size-1.5 rounded-full ${statusDotClass}`} />
           {statusLabel}
         </span>
       </div>
       <div className="flex flex-col gap-1.5">
-        <h3 className="text-[15px] leading-snug font-medium tracking-normal">{title}</h3>
-        <p className="text-fg-muted line-clamp-2 text-[13px] leading-[1.55]">{description}</p>
+        <h3 className="text-base leading-snug font-medium tracking-normal">{title}</h3>
+        <p className="text-fg-muted line-clamp-2 text-sm leading-[1.55]">{description}</p>
       </div>
-      <div className="text-fg-muted mt-auto flex items-center justify-between font-mono text-[11px] tracking-[0.04em]">
+      <div className="text-fg-muted text-2xs mt-auto flex items-center justify-between font-mono tracking-[0.04em]">
         <span className="flex items-center gap-2">
           <DiffBars difficulty={difficulty} />
           <span>{difficultyLabel}</span>

@@ -83,7 +83,7 @@ const TrophyIcon = (): ReactNode => (
 )
 
 const CHIP_BASE =
-  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]"
+  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs"
 const CHIP_ACCENT = `${CHIP_BASE} bg-accent-soft border-accent-ring text-ob-accent`
 const CHIP_NORMAL = `${CHIP_BASE} bg-bg-card border-line text-fg-2`
 const CHIP_DIMMED = `${CHIP_BASE} bg-bg-card border-line text-fg-muted`
@@ -107,7 +107,7 @@ const StepRow = ({
   readonly step: PathRecapStep
   readonly dict: NonNullable<RewardMomentProps["pathDict"]>
 }): ReactNode => (
-  <div className="flex items-center gap-2.5 text-[13.5px]">
+  <div className="flex items-center gap-2.5 text-sm">
     <span className={stepMarkerClass(step.status)}>
       {step.status === "upcoming" ? (
         <span className="bg-fg-faint size-1.5 rounded-full" />
@@ -122,7 +122,7 @@ const StepRow = ({
     >
       {step.title}
     </span>
-    <span className="text-fg-muted inline-flex items-center gap-1 font-mono text-[10.5px]">
+    <span className="text-fg-muted text-2xs inline-flex items-center gap-1 font-mono">
       {step.type === "doc" ? <IconBook className="size-3" /> : <IconRoute className="size-3" />}
       {step.type === "doc" ? dict.guideLabel : dict.challengeLabel}
     </span>
@@ -148,12 +148,12 @@ const PathRecapCard = ({
         className="mb-4 flex items-center gap-2.5 text-inherit no-underline hover:underline"
       >
         <span className="size-2 shrink-0 rounded-full bg-(--track)" />
-        <span className="min-w-0 font-mono text-[10.5px] tracking-[0.1em] text-(color:--track) uppercase">
+        <span className="text-2xs min-w-0 font-mono tracking-[0.1em] text-(color:--track) uppercase">
           {finished ? dict.pathComplete : dict.pathInProgress} · {recap.pathTitle}
         </span>
       </Link>
 
-      <p className="text-fg mb-4 text-[16px] font-medium">
+      <p className="text-fg mb-4 text-base font-medium">
         {finished ? dict.youFinishedThePath : dict.stepsDone(recap.doneCount, recap.totalSteps)}
       </p>
 
@@ -166,7 +166,7 @@ const PathRecapCard = ({
       {recap.nextStep === null ? (
         <Link
           href={recap.otherPathsHref}
-          className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) text-[13px] font-semibold text-(color:--track-ink) no-underline"
+          className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) text-sm font-semibold text-(color:--track-ink) no-underline"
         >
           {dict.explorePaths}
         </Link>
@@ -175,11 +175,11 @@ const PathRecapCard = ({
           <Eyebrow className="mb-2">{dict.nextInPath}</Eyebrow>
           <Link
             href={recap.nextStep.href}
-            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 text-[13px] font-semibold text-(color:--track-ink) no-underline"
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 text-sm font-semibold text-(color:--track-ink) no-underline"
           >
             <span className="min-w-0 truncate">{dict.continuePath}</span>
           </Link>
-          <p className="text-fg-2 mt-2 text-center text-[12.5px]">{recap.nextStep.title}</p>
+          <p className="text-fg-2 mt-2 text-center text-xs">{recap.nextStep.title}</p>
         </>
       )}
     </div>
@@ -222,7 +222,7 @@ export const RewardMoment = ({
             </span>
           )}
         </div>
-        <p className="text-fg-muted font-mono text-[12px]">{dict.repeatNote}</p>
+        <p className="text-fg-muted font-mono text-xs">{dict.repeatNote}</p>
         {recap}
       </div>
     )
@@ -254,7 +254,7 @@ export const RewardMoment = ({
           </span>
         )}
       </div>
-      <p className="text-fg-muted font-mono text-[12px]">
+      <p className="text-fg-muted font-mono text-xs">
         {reward.totalPointsBefore} <span aria-hidden="true">→</span>{" "}
         <RewardCountUp
           from={reward.totalPointsBefore}
@@ -264,7 +264,7 @@ export const RewardMoment = ({
         {dict.totalPointsSuffix}
       </p>
       {reward.streakEffect === "started" && (
-        <p className="text-fg-muted font-mono text-[12px]">{dict.streakStartedNote}</p>
+        <p className="text-fg-muted font-mono text-xs">{dict.streakStartedNote}</p>
       )}
       {recap}
     </div>

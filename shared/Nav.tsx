@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils"
 const LOCALES = ["es", "en"] as const
 
 const topLinkClass = (active: boolean): string =>
-  `font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) ${
+  `font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
   }`
 
@@ -95,13 +95,13 @@ export function Nav({ dict, lang }: NavProps) {
 
         <div className="max-narrow:gap-2 ml-auto flex items-center gap-4">
           <button
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-xs transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={dict.searchAria}
             onClick={() => setOpenSearch(true)}
           >
             <IconSearch />
             <span className="min-w-0 flex-1 truncate text-left">{dict.searchPlaceholder}</span>
-            <Kbd className="border-line bg-bg text-fg-muted gap-0.5 rounded-(--r-6) font-mono text-[10.5px]">
+            <Kbd className="border-line bg-bg text-fg-muted text-2xs gap-0.5 rounded-(--r-6) font-mono">
               ⌘ K
             </Kbd>
           </button>
@@ -135,7 +135,7 @@ export function Nav({ dict, lang }: NavProps) {
                   <a href={GH_URL} target="_blank" rel="noopener noreferrer">
                     <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
                     {stars !== null && (
-                      <span className="max-narrow:hidden font-mono text-[11px] tabular-nums">
+                      <span className="max-narrow:hidden text-2xs font-mono tabular-nums">
                         {stars}
                       </span>
                     )}
@@ -162,7 +162,7 @@ export function Nav({ dict, lang }: NavProps) {
               <ToggleGroupItem
                 key={l}
                 value={l}
-                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted h-6 rounded-(--r-6) px-2 font-mono text-[11px] tracking-[0.04em]"
+                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted text-2xs h-6 rounded-(--r-6) px-2 font-mono tracking-[0.04em]"
               >
                 {l.toUpperCase()}
               </ToggleGroupItem>

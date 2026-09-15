@@ -105,7 +105,7 @@ export const ActiveChallengeView = ({
         <div className="workspace:overflow-y-auto workspace:pb-10 min-w-0">
           {diffFiles === null ? (
             <div className="border-line bg-bg-elev flex h-full min-h-50 items-center justify-center rounded-(--r-12) border border-dashed">
-              <p className="text-fg-muted font-mono text-[12px]">Diff not available</p>
+              <p className="text-fg-muted font-mono text-xs">Diff not available</p>
             </div>
           ) : (
             <DiffViewer

@@ -98,7 +98,7 @@ export const GuideReadIndicator = ({
   if (ctx === null || !ctx.signedIn || ctx.readSlugs?.has(docSlug) !== true) return null
 
   return (
-    <span className="border-accent-ring bg-accent-soft text-ob-accent inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono text-[11px]">
+    <span className="border-accent-ring bg-accent-soft text-ob-accent text-2xs inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-[3px] font-mono">
       <IconCheck className="size-3" />
       {label}
     </span>
@@ -193,7 +193,7 @@ export const GuideReadButton = ({ docSlug, lang, dict }: GuideReadButtonProps): 
             type="button"
             onClick={onClick}
             aria-pressed={isRead}
-            className={`inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 text-[13px] font-medium transition-colors [&_svg]:size-3.5 ${
+            className={`inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 text-sm font-medium transition-colors [&_svg]:size-3.5 ${
               isRead
                 ? "border-accent-ring bg-accent-soft text-ob-accent"
                 : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg"

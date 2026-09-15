@@ -68,16 +68,16 @@ const DiffRow = ({ line }: DiffRowProps): React.ReactElement => {
   return (
     <div className={`flex items-center pr-3 ${rowBg}`}>
       <span
-        className="w-12 shrink-0 pr-4 text-right text-[13px] leading-5.5 select-none"
+        className="w-12 shrink-0 pr-4 text-right text-sm leading-5.5 select-none"
         style={{ color: "#2D3144" }}
       >
         {line.num ?? ""}
       </span>
-      <span className={`w-4 shrink-0 text-[13px] leading-5.5 select-none ${markerClass}`}>
+      <span className={`w-4 shrink-0 text-sm leading-5.5 select-none ${markerClass}`}>
         {markerChar}
       </span>
       <span
-        className={`flex-1 text-[13px] leading-5.5 whitespace-pre ${contentClass}`}
+        className={`flex-1 text-sm leading-5.5 whitespace-pre ${contentClass}`}
         style={line.type === "unchanged" ? { color: "#ECEEF1" } : undefined}
       >
         {line.content}

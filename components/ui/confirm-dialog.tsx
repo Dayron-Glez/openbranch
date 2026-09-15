@@ -48,16 +48,16 @@ export const ConfirmDialog = ({
         <AlertDialogTitle className="text-fg mb-2.5 text-center text-[19px] font-[550] tracking-[-0.02em]">
           {title}
         </AlertDialogTitle>
-        <AlertDialogDescription className="text-fg-2 mb-7 text-center text-[13.5px] leading-[1.6]">
+        <AlertDialogDescription className="text-fg-2 mb-7 text-center text-sm leading-[1.6]">
           {description}
         </AlertDialogDescription>
         <div className="flex gap-2.5">
-          <AlertDialogCancel className="border-line bg-bg-elev text-fg-2 hover:text-fg m-0 h-10 flex-1 rounded-(--r-8) border text-[13px]">
+          <AlertDialogCancel className="border-line bg-bg-elev text-fg-2 hover:text-fg m-0 h-10 flex-1 rounded-(--r-8) border text-sm">
             {cancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className="bg-ob-accent text-accent-ink h-10 flex-1 rounded-(--r-8) text-[13px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-ob-accent text-accent-ink h-10 flex-1 rounded-(--r-8) text-sm font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             {confirmLabel}
           </AlertDialogAction>

@@ -15,7 +15,7 @@ export const PlaygroundBreadcrumb = ({
   inProgressLabel,
 }: PlaygroundBreadcrumbProps): React.ReactElement => (
   <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
-    <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
+    <ol className="text-fg-muted flex items-center gap-2 font-mono text-xs">
       <li>
         <Link href={playgroundPath} className="hover:text-fg-2 transition-colors">
           Playground

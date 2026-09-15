@@ -32,7 +32,7 @@ export function HeroStats({ labels, guideCount }: HeroStatsProps) {
         >
           <div className="text-ob-accent flex items-center gap-2 [&_svg]:size-[15px]">
             {icon}
-            <span className="text-fg-muted font-mono text-[10.5px] tracking-[0.07em] uppercase">
+            <span className="text-fg-muted text-2xs font-mono tracking-[0.07em] uppercase">
               {label}
             </span>
           </div>
@@ -45,7 +45,7 @@ export function HeroStats({ labels, guideCount }: HeroStatsProps) {
                 </span>
               )}
             </div>
-            <div className="text-fg-muted max-narrow:hidden font-mono text-[11px]">
+            <div className="text-fg-muted max-narrow:hidden text-2xs font-mono">
               {subAccent && <span className="text-ob-accent">{subAccent}</span>}
               {subText}
             </div>
