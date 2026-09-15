@@ -34,10 +34,10 @@ export const NextInPath = ({
       <Eyebrow tone="track" size="xs" as="div">
         {label}
       </Eyebrow>
-      <div className="text-fg text-base font-medium">{title}</div>
+      <div className="text-fg text-15 font-medium">{title}</div>
       <div className="text-fg-muted mt-0.5 font-mono text-xs">{meta}</div>
     </div>
-    <span className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4 text-sm font-semibold text-(color:--track-ink) max-sm:w-full">
+    <span className="text-13 inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4 font-semibold text-(color:--track-ink) max-sm:w-full">
       {cta}
     </span>
   </Link>

@@ -72,7 +72,7 @@ export const ReviewPanel = ({
               key={value}
               type="button"
               onClick={() => onDecisionChange(decision === value ? null : value)}
-              className={`flex h-[38px] w-full items-center rounded-(--r-8) border px-3 font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease) ${getDecisionClasses(value)}`}
+              className={`text-13 flex h-[38px] w-full items-center rounded-(--r-8) border px-3 font-mono transition-colors duration-(--d-fast) ease-(--ease) ${getDecisionClasses(value)}`}
             >
               {label}
             </button>
@@ -84,7 +84,7 @@ export const ReviewPanel = ({
       <div className="bg-bg-elev border-line flex items-center justify-between rounded-(--r-8) border px-3 py-2.5">
         <span className="text-fg-muted text-2xs font-mono">Inline comments</span>
         <span
-          className={`font-mono text-sm font-medium tabular-nums ${commentsCount > 0 ? "text-ob-accent" : "text-fg-muted"}`}
+          className={`text-13 font-mono font-medium tabular-nums ${commentsCount > 0 ? "text-ob-accent" : "text-fg-muted"}`}
         >
           {commentsText}
         </span>

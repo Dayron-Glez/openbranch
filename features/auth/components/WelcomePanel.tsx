@@ -49,7 +49,7 @@ export const WelcomePanel = ({
             <IconCheck className="text-ob-accent size-4 shrink-0" />
             <span>
               {dict.welcomePointProfile}{" "}
-              <Link href={profileHref} className="text-fg font-mono text-xs hover:underline">
+              <Link href={profileHref} className="text-fg text-13 font-mono hover:underline">
                 {profileHref}
               </Link>
             </span>

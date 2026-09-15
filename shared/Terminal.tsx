@@ -60,7 +60,7 @@ export function Dim({ children }: { readonly children: ReactNode }) {
 
 export function BranchBlock({ children }: { readonly children: ReactNode }) {
   return (
-    <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-xs">
+    <div className="border-line text-fg-2 text-13 my-1.5 ml-[14px] border-l pl-[14px]">
       {children}
     </div>
   )

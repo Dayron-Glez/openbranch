@@ -35,7 +35,7 @@ type PlaygroundNavProps = {
 const LOCALES = ["es", "en"] as const
 
 const navLinkClass = (active: boolean): string =>
-  `font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease) ${
+  `font-mono text-13 transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
   }`
 
@@ -101,7 +101,7 @@ export const PlaygroundNav = ({
           {/* search */}
           <button
             onClick={() => setOpenSearch(true)}
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-xs transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 text-13 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={lang === "en" ? "Search challenges" : "Buscar retos"}
           >
             <IconSearch />

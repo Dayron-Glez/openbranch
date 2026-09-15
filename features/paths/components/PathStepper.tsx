@@ -85,7 +85,7 @@ const getStepCta = (step: ResolvedPathStep, dict: PathStepperDict): string => {
 }
 
 const ctaClass = (step: ResolvedPathStep): string =>
-  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-sm font-medium no-underline transition-colors max-tiny:w-full max-tiny:justify-center ${
+  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-13 font-medium no-underline transition-colors max-tiny:w-full max-tiny:justify-center ${
     step.status === "current"
       ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
       : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"

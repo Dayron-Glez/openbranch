@@ -214,12 +214,12 @@ export const PathCard = ({
           <Eyebrow size="xs" as="div">
             {item.trackLabel}
           </Eyebrow>
-          <h3 className="text-fg text-base leading-snug font-medium tracking-[-0.005em]">
+          <h3 className="text-fg text-15 leading-snug font-medium tracking-[-0.005em]">
             {item.title}
           </h3>
         </div>
       </div>
-      <p className="text-fg-muted line-clamp-2 flex-1 text-xs leading-[1.5]">{item.description}</p>
+      <p className="text-fg-muted text-13 line-clamp-2 flex-1 leading-[1.5]">{item.description}</p>
       <div className="border-line flex min-h-16 flex-col justify-center gap-[11px] border-t pt-[15px]">
         {/* Decorative — the same information is text in the caption below. */}
         <div aria-hidden="true">

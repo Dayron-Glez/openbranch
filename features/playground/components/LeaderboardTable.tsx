@@ -31,7 +31,7 @@ type LeaderboardTableProps = {
 const CARD_CLASS = "border-line bg-bg-card overflow-hidden rounded-(--r-12) border"
 const HEAD_CLASS = "text-fg-muted h-9 font-mono text-2xs font-normal tracking-[0.08em] uppercase"
 const NUMBER_CLASS = "text-fg-2 text-center font-mono text-sm leading-none tabular-nums"
-const RANK_CLASS = "text-fg-muted font-mono text-xs leading-none tabular-nums"
+const RANK_CLASS = "text-fg-muted font-mono text-13 leading-none tabular-nums"
 const HIDE_ON_MOBILE = "max-sm:hidden"
 
 const formatRank = (rank: number): string => String(rank).padStart(2, "0")
@@ -139,7 +139,7 @@ const GhostRow = ({
     <TableCell colSpan={4} className="pr-4">
       <div className="flex items-center gap-2.5">
         <span className="border-line-2 size-6 shrink-0 rounded-full border border-dashed" />
-        <span className="text-fg-faint truncate text-sm leading-none">{label}</span>
+        <span className="text-fg-faint text-13 truncate leading-none">{label}</span>
       </div>
     </TableCell>
   </TableRow>
@@ -181,7 +181,7 @@ export const LeaderboardTable = ({
   if (data === null) {
     return (
       <div className={CARD_CLASS}>
-        <p className="text-fg-muted px-4 py-5 font-mono text-xs">{dict.error}</p>
+        <p className="text-fg-muted text-13 px-4 py-5 font-mono">{dict.error}</p>
       </div>
     )
   }

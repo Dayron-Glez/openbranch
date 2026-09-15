@@ -7,7 +7,7 @@ import type { ProfileRank } from "../server/profile-service"
 const EXACT_RANK_LIMIT = 100
 
 const CHIP_BASE =
-  "inline-flex shrink-0 items-center gap-[7px] rounded-full border px-3.5 py-[7px] font-mono text-sm leading-none [&_svg]:size-3.5"
+  "inline-flex shrink-0 items-center gap-[7px] rounded-full border px-3.5 py-[7px] font-mono text-13 leading-none [&_svg]:size-3.5"
 
 /** Rounded up, so rank 1 of 8 is "Top 13%" rather than "Top 12%". */
 const percentileOf = (rank: number, totalRanked: number): number =>

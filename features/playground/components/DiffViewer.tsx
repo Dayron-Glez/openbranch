@@ -169,7 +169,7 @@ export const DiffViewer = ({
                   <div className={`group/line flex font-mono text-xs leading-[1.75] ${bgClass}`}>
                     <div className="relative flex w-8 shrink-0 items-center justify-center">
                       <span
-                        className={`text-center text-xs transition-opacity select-none group-hover/line:opacity-0 ${prefixColorClass}`}
+                        className={`text-13 text-center transition-opacity select-none group-hover/line:opacity-0 ${prefixColorClass}`}
                       >
                         {prefix}
                       </span>
@@ -199,7 +199,7 @@ export const DiffViewer = ({
                   {isFormOpen && (
                     <div className="border-line border-ob-accent/50 border-l-2 px-4 py-3">
                       <textarea
-                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted w-full resize-y rounded-(--r-8) border p-2.5 font-mono text-xs leading-[1.6] outline-none"
+                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted text-13 w-full resize-y rounded-(--r-8) border p-2.5 font-mono leading-[1.6] outline-none"
                         placeholder={dict.commentPlaceholder}
                         value={inputText}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>

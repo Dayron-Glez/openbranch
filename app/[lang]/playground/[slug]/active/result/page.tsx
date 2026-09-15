@@ -413,7 +413,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             {(buildsOnChallenge ?? newTrackChallenge) !== null && (
               <Link
                 href={(buildsOnChallenge ?? newTrackChallenge)!.url}
-                className="bg-ob-accent text-accent-ink inline-flex h-11 items-center gap-2 rounded-(--r-8) px-5 text-sm font-medium transition-[filter] hover:brightness-105"
+                className="bg-ob-accent text-accent-ink text-15 inline-flex h-11 items-center gap-2 rounded-(--r-8) px-5 font-medium transition-[filter] hover:brightness-105"
               >
                 {dict.result.nextChallengeCta}
                 <ArrowRightIcon />
@@ -421,7 +421,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             )}
             <Link
               href={playgroundPath}
-              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg inline-flex h-11 items-center rounded-(--r-8) border px-5 text-sm font-medium transition-colors duration-(--d-fast) ease-(--ease)"
+              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg text-15 inline-flex h-11 items-center rounded-(--r-8) border px-5 font-medium transition-colors duration-(--d-fast) ease-(--ease)"
             >
               {dict.result.backToHub}
             </Link>
@@ -436,8 +436,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
               <BadgeStarIcon />
               <div className="flex flex-col gap-1">
                 <Eyebrow>{dict.result.badgeEarnedLabel}</Eyebrow>
-                <p className="text-fg text-sm font-medium">{badgeInfo.name}</p>
-                <p className="text-fg-2 text-sm">{badgeInfo.description}</p>
+                <p className="text-fg text-15 font-medium">{badgeInfo.name}</p>
+                <p className="text-fg-2 text-13">{badgeInfo.description}</p>
               </div>
             </div>
           )}
@@ -447,7 +447,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
               <ChartIcon />
             </div>
             <div>
-              <p className="text-fg mb-1 text-base font-medium">
+              <p className="text-fg text-15 mb-1 font-medium">
                 {dict.result.detailedScoringHeading}
               </p>
               <p className="text-fg-2 text-sm leading-[1.6]">{dict.result.detailedScoringBody}</p>
@@ -474,7 +474,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
                     <p className="text-fg mb-1.5 text-base leading-[1.3] font-medium">
                       {buildsOnChallenge.data.title}
                     </p>
-                    <p className="text-fg-2 mb-5 flex-1 text-sm leading-[1.55]">
+                    <p className="text-fg-2 text-13 mb-5 flex-1 leading-[1.55]">
                       {buildsOnChallenge.data.description}
                     </p>
                     <div className="flex items-center justify-between">
@@ -507,7 +507,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
                     <p className="text-fg mb-1.5 text-base leading-[1.3] font-medium">
                       {newTrackChallenge.data.title}
                     </p>
-                    <p className="text-fg-2 mb-5 flex-1 text-sm leading-[1.55]">
+                    <p className="text-fg-2 text-13 mb-5 flex-1 leading-[1.55]">
                       {newTrackChallenge.data.description}
                     </p>
                     <div className="flex items-center justify-between">
@@ -530,7 +530,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
           <div className="mt-4 text-center">
             <Link
               href={playgroundPath}
-              className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-2 font-mono text-sm transition-colors duration-(--d-fast) ease-(--ease)"
+              className="text-fg-muted hover:text-fg-2 text-13 inline-flex items-center gap-2 font-mono transition-colors duration-(--d-fast) ease-(--ease)"
             >
               <ArrowLeftIcon />
               {dict.result.allChallenges}

@@ -40,7 +40,7 @@ export const SignInNudge = ({ dict, redirectPath }: SignInNudgeProps): React.Rea
       <Button
         onClick={handleGitHubSignIn}
         disabled={loading}
-        className="bg-ob-accent text-accent-ink ml-auto h-9 shrink-0 gap-2 rounded-(--r-8) text-sm font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60 max-sm:ml-0 max-sm:w-full"
+        className="bg-ob-accent text-accent-ink text-13 ml-auto h-9 shrink-0 gap-2 rounded-(--r-8) font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60 max-sm:ml-0 max-sm:w-full"
       >
         <IconGithub className="size-[15px]" />
         {dict.cta}

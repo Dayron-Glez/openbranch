@@ -166,7 +166,7 @@ const PathRecapCard = ({
       {recap.nextStep === null ? (
         <Link
           href={recap.otherPathsHref}
-          className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) text-sm font-semibold text-(color:--track-ink) no-underline"
+          className="text-13 inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) font-semibold text-(color:--track-ink) no-underline"
         >
           {dict.explorePaths}
         </Link>
@@ -175,11 +175,11 @@ const PathRecapCard = ({
           <Eyebrow className="mb-2">{dict.nextInPath}</Eyebrow>
           <Link
             href={recap.nextStep.href}
-            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 text-sm font-semibold text-(color:--track-ink) no-underline"
+            className="text-13 inline-flex h-9 w-full items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-3 font-semibold text-(color:--track-ink) no-underline"
           >
             <span className="min-w-0 truncate">{dict.continuePath}</span>
           </Link>
-          <p className="text-fg-2 mt-2 text-center text-xs">{recap.nextStep.title}</p>
+          <p className="text-fg-2 text-13 mt-2 text-center">{recap.nextStep.title}</p>
         </>
       )}
     </div>

@@ -235,7 +235,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
           </div>
           <Link
             href={signInHref}
-            className="bg-ob-accent text-accent-ink ml-auto inline-flex h-8 shrink-0 items-center rounded-(--r-8) px-3 text-xs font-medium no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-105 max-sm:ml-0"
+            className="bg-ob-accent text-accent-ink text-13 ml-auto inline-flex h-8 shrink-0 items-center rounded-(--r-8) px-3 font-medium no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-105 max-sm:ml-0"
           >
             {dict.signIn}
           </Link>

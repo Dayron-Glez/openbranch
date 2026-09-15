@@ -34,7 +34,7 @@ export const StoryPanel = ({ dict, counts, challengeMinutes }: StoryPanelProps):
         <h2 className="text-fg max-page:text-[25px] max-w-[520px] text-[30px] leading-[1.2] font-light tracking-[-0.015em] text-pretty">
           {dict.storyTitle} <span className="text-fg-2">{dict.storyTitleAccent}</span>
         </h2>
-        <p className="text-fg-2 max-w-[500px] text-sm leading-[1.6] text-pretty">
+        <p className="text-fg-2 text-15 max-w-[500px] leading-[1.6] text-pretty">
           {dict.storyLead}
         </p>
       </div>

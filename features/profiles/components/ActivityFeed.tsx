@@ -43,7 +43,7 @@ export const ActivityFeed = ({
                 item.track === null ? "bg-fg-faint" : "bg-(--track)"
               }`}
             />
-            <span className="min-w-0 flex-1 truncate text-sm">
+            <span className="text-13 min-w-0 flex-1 truncate">
               <span className="text-fg font-medium">{item.title}</span>
               <span className="text-fg-muted"> · {item.trackLabel}</span>
             </span>

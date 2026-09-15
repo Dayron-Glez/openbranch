@@ -26,7 +26,7 @@ type MobileNavProps = {
 }
 
 const navLinkClass = (active: boolean): string =>
-  `text-base transition-colors duration-(--d-fast) ease-(--ease) ${
+  `text-15 transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
   }`
 
@@ -118,7 +118,7 @@ export const MobileNav = ({
             close()
             setOpenSearch(true)
           }}
-          className="border-line bg-bg-elev text-fg-muted inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3 text-sm [&_svg]:size-3.5 [&_svg]:shrink-0"
+          className="border-line bg-bg-elev text-fg-muted text-13 inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3 [&_svg]:size-3.5 [&_svg]:shrink-0"
         >
           <IconSearch />
           <span className="min-w-0 flex-1 truncate text-left">{navDict.searchPlaceholder}</span>
@@ -130,7 +130,7 @@ export const MobileNav = ({
           <SignOutButton
             dict={authDict}
             redirectTo={localizedHref(lang, "/playground")}
-            className="text-fg-muted hover:text-danger self-start text-base transition-colors duration-(--d-fast) ease-(--ease)"
+            className="text-fg-muted hover:text-danger text-15 self-start transition-colors duration-(--d-fast) ease-(--ease)"
           />
         )}
         {signedIn === false && (
