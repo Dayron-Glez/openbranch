@@ -52,12 +52,12 @@ export const ConfirmDialog = ({
           {description}
         </AlertDialogDescription>
         <div className="flex gap-2.5">
-          <AlertDialogCancel className="border-line bg-bg-elev text-fg-2 hover:text-fg m-0 h-10 flex-1 rounded-(--r-8) border text-sm">
+          <AlertDialogCancel className="border-line bg-bg-elev text-fg-2 hover:text-fg text-13 m-0 h-10 flex-1 rounded-(--r-8) border">
             {cancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className="bg-ob-accent text-accent-ink h-10 flex-1 rounded-(--r-8) text-sm font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="bg-ob-accent text-accent-ink text-13 h-10 flex-1 rounded-(--r-8) font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             {confirmLabel}
           </AlertDialogAction>

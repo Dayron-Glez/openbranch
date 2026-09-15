@@ -237,7 +237,7 @@ export const FilterBar = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleDirToggle}
-                className={`text-fg-muted w-7 px-0 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
+                className={`text-fg-muted text-13 w-7 px-0 font-mono focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
                 aria-label={activeDir === "asc" ? sortDict.sortDesc : sortDict.sortAsc}
               >
                 {activeDir === "asc" ? "↑" : "↓"}
@@ -275,7 +275,7 @@ export const FilterBar = ({
               <TabsTrigger
                 key={key}
                 value={key}
-                className="text-fg-2 data-[state=active]:text-ob-accent data-[state=inactive]:hover:text-fg relative z-10 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) bg-transparent px-2.5 py-1.5 text-xs shadow-none data-[state=active]:shadow-none [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
+                className="text-fg-2 data-[state=active]:text-ob-accent data-[state=inactive]:hover:text-fg text-13 relative z-10 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) bg-transparent px-2.5 py-1.5 shadow-none data-[state=active]:shadow-none [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
               >
                 <FilterDot colorToken={colorToken} active={key === value} />
                 {icon}
@@ -297,7 +297,7 @@ export const FilterBar = ({
             <Button
               variant="ghost"
               size="sm"
-              className="border-line-2 bg-bg-elev text-fg-2 min-w-0 flex-1 justify-start gap-1.5 font-mono text-xs"
+              className="border-line-2 bg-bg-elev text-fg-2 text-13 min-w-0 flex-1 justify-start gap-1.5 font-mono"
             >
               <FilterDot colorToken={activeOption.colorToken} active={false} />
               {activeOption.icon}

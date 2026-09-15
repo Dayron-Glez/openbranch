@@ -41,7 +41,7 @@ export const StartingLine = ({
             {challengeIcon}
           </span>
           <div className="flex flex-col gap-1">
-            <p className="text-base leading-snug font-medium">{challengeTitle}</p>
+            <p className="text-15 leading-snug font-medium">{challengeTitle}</p>
             <div className="flex items-center gap-3">
               <span className="border-line bg-bg-elev text-fg-muted text-2xs rounded-(--r-6) border px-2 py-0.5 font-mono tracking-[0.04em]">
                 {challengeCategoryLabel}

@@ -73,7 +73,7 @@ export const PrPreviewCard = ({ data }: PrPreviewCardProps): ReactNode => (
         <span className="border-accent-ring bg-accent-soft text-ob-accent text-2xs inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-[3px] font-mono">
           <IconPR size={12} />#{data.number} {data.status}
         </span>
-        <span className="text-fg-2 truncate font-mono text-xs">{data.title}</span>
+        <span className="text-fg-2 text-13 truncate font-mono">{data.title}</span>
       </div>
       <span className="text-fg-muted text-2xs hidden shrink-0 items-center gap-1.5 font-mono sm:inline-flex">
         <IconBranch size={12} />

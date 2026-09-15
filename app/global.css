@@ -9,13 +9,16 @@
   --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
-/* Two steps below Tailwind's `xs`, which the dense UI needs. The rest of the
-   scale is Tailwind's own — `xs` 12px, `sm` 14px, `base` 16px — left untouched.
-   There is deliberately no 13px step: Tailwind has no slot between `xs` and
-   `sm`, and inventing one would break the convention at the most-used size. */
+/* The steps Tailwind does not provide. `xs` 12px, `sm` 14px and `base` 16px are
+   Tailwind's own and stay untouched; these fill the gaps the design actually
+   uses. 13px and 15px earn a step precisely because they are the most common
+   body and card-title sizes — collapsing them onto `sm`/`base` rounded the
+   whole design up (#244). */
 @theme {
   --text-3xs: 10px;
   --text-2xs: 11px;
+  --text-13: 13px;
+  --text-15: 15px;
 }
 
 /* The app's breakpoints. `workspace` is the minimum viewport width the challenge

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 const columnTitle =
   "mb-3.5 font-mono text-2xs font-normal uppercase tracking-[0.08em] text-fg-muted"
 const footerLink =
-  "block py-1 text-sm text-fg-2 no-underline transition-colors duration-(--d-fast) ease-(--ease) hover:text-fg"
+  "block py-1 text-13 text-fg-2 no-underline transition-colors duration-(--d-fast) ease-(--ease) hover:text-fg"
 
 type FooterProps = {
   readonly dict: LandingDict["footer"]
@@ -46,7 +46,7 @@ export function Footer({ dict, lang, compact = false }: FooterProps) {
                   <span className="font-semibold">branch</span>
                 </span>
               </Link>
-              <p className="text-fg-muted mt-3.5 max-w-[32ch] text-sm leading-[1.55]">
+              <p className="text-fg-muted text-13 mt-3.5 max-w-[32ch] leading-[1.55]">
                 {dict.tagline}
               </p>
             </div>

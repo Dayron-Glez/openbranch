@@ -191,7 +191,7 @@ export const StartChallengeButton = ({
             <Button
               onClick={handleGitHubSignIn}
               disabled={loading}
-              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-(--r-8) text-base font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+              className="bg-ob-accent text-accent-ink text-15 h-[42px] w-full gap-2.5 rounded-(--r-8) font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
             >
               <IconGithub className="size-[17px] shrink-0" />
               {dict.authGithub}

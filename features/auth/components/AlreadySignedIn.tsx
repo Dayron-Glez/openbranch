@@ -55,7 +55,7 @@ export const AlreadySignedIn = ({
           {avatarUrl === null ? (
             <span
               aria-hidden
-              className="border-line-2 bg-bg-elev text-fg-muted inline-grid size-10 shrink-0 place-items-center rounded-full border font-mono text-sm"
+              className="border-line-2 bg-bg-elev text-fg-muted text-13 inline-grid size-10 shrink-0 place-items-center rounded-full border font-mono"
             >
               {initialsOf(username)}
             </span>
@@ -71,7 +71,7 @@ export const AlreadySignedIn = ({
           )}
           <span className="flex min-w-0 flex-col gap-0.5">
             <span className="text-fg truncate font-mono text-sm">@{username}</span>
-            <span className="text-fg-muted text-xs">{dict.signedInWith}</span>
+            <span className="text-fg-muted text-13">{dict.signedInWith}</span>
           </span>
           {streak > 0 && (
             <span className="border-accent-ring bg-accent-soft text-ob-accent text-2xs ml-auto shrink-0 rounded-full border px-2.5 py-[3px] font-mono tracking-[0.06em] uppercase">

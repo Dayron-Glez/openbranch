@@ -5,7 +5,7 @@ import { FeaturedGuideStats } from "@/features/home/components/FeaturedGuideStat
 import { Eyebrow } from "@/shared/Eyebrow"
 
 const ctaClass =
-  "group inline-flex h-[34px] items-center gap-2 rounded-(--r-8) border border-transparent bg-ob-accent px-3.5 text-sm font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-[1.06] [&_svg]:size-3.5"
+  "group inline-flex h-[34px] items-center gap-2 rounded-(--r-8) border border-transparent bg-ob-accent px-3.5 text-13 font-medium leading-none tracking-[0] text-accent-ink no-underline transition-[filter] duration-(--d-fast) ease-(--ease) hover:brightness-[1.06] [&_svg]:size-3.5"
 
 type FeaturedGuideDynamic = {
   readonly kicker: string
@@ -34,7 +34,7 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
           {guide.kicker}
         </Eyebrow>
         <h3 className="text-[28px] leading-[1.15] font-medium tracking-normal">{guide.title}</h3>
-        <p className="text-fg-2 max-w-[42ch] text-sm leading-[1.55]">{guide.summary}</p>
+        <p className="text-fg-2 text-15 max-w-[42ch] leading-[1.55]">{guide.summary}</p>
         <FeaturedGuideStats
           maturity={guide.maturity}
           lastModified={guide.lastModified}
@@ -52,7 +52,7 @@ export function FeaturedGuide({ dict, guide, lang }: FeaturedGuideProps) {
       </div>
 
       <article
-        className="text-fg-2 after:to-bg-card max-narrow:hidden relative flex flex-col justify-center px-10 py-9 text-sm leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-['']"
+        className="text-fg-2 after:to-bg-card max-narrow:hidden text-15 relative flex flex-col justify-center px-10 py-9 leading-[1.65] after:absolute after:inset-x-0 after:bottom-0 after:h-20 after:bg-linear-to-b after:from-transparent after:content-['']"
         aria-label={dict.previewAria}
       >
         {guide.firstHeading && (

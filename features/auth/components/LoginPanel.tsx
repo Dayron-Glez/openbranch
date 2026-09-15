@@ -98,7 +98,7 @@ export const LoginPanel = ({
                 <IconAlertCircle className="text-danger size-[15px] shrink-0" />
                 {dict.errorTitle}
               </span>
-              <p className="text-fg-2 text-sm leading-[1.6] text-pretty">{errorBody()}</p>
+              <p className="text-fg-2 text-13 leading-[1.6] text-pretty">{errorBody()}</p>
             </div>
           )}
 

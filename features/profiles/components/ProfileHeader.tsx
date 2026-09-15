@@ -45,7 +45,7 @@ export const ProfileHeader = ({
         {overview.username}
       </h1>
       <p className="text-fg-muted mt-[3px] font-mono text-xs">github.com/{overview.username}</p>
-      <div className="text-fg-muted mt-2.5 flex flex-wrap items-center gap-2 text-xs">
+      <div className="text-fg-muted text-13 mt-2.5 flex flex-wrap items-center gap-2">
         <span>
           {overview.memberSince === null
             ? dict.memberSinceUnknown

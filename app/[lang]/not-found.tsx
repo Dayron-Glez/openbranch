@@ -73,7 +73,7 @@ export default async function NotFound({
             {dict.headingLead} <span className="text-fg-2 font-light">{dict.headingQuiet}</span>
           </h1>
 
-          <p className="text-fg-2 max-narrow:text-sm mx-auto mb-7 max-w-[46ch] text-base leading-[1.55] text-pretty">
+          <p className="text-fg-2 max-narrow:text-15 mx-auto mb-7 max-w-[46ch] text-base leading-[1.55] text-pretty">
             {dict.lead}
           </p>
 
@@ -88,11 +88,11 @@ export default async function NotFound({
                   {dest.icon}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-1.5 text-base font-medium tracking-[-0.01em]">
+                  <span className="text-15 flex items-center gap-1.5 font-medium tracking-[-0.01em]">
                     {dest.title}
                     <IconArrowRight className="text-fg-faint group-hover:text-fg-2 max-narrow:hidden ml-auto size-3.5 shrink-0 transition-transform duration-(--d-fast) ease-(--ease) group-hover:translate-x-0.75" />
                   </span>
-                  <span className="text-fg-muted max-narrow:hidden mt-0.5 block text-xs leading-[1.5]">
+                  <span className="text-fg-muted max-narrow:hidden text-13 mt-0.5 block leading-[1.5]">
                     {dest.body}
                   </span>
                 </span>
@@ -102,7 +102,7 @@ export default async function NotFound({
 
           <Link
             href={homeHref}
-            className="group text-fg-muted hover:text-fg hover:bg-bg-elev inline-flex items-center gap-1.75 rounded-(--r-6) px-2.5 py-1.5 font-mono text-xs no-underline transition-colors duration-(--d-fast) ease-(--ease)"
+            className="group text-fg-muted hover:text-fg hover:bg-bg-elev text-13 inline-flex items-center gap-1.75 rounded-(--r-6) px-2.5 py-1.5 font-mono no-underline transition-colors duration-(--d-fast) ease-(--ease)"
           >
             <IconArrowLeft className="size-3.25 transition-transform duration-(--d-fast) ease-(--ease) group-hover:-translate-x-0.75" />
             {dict.back}

@@ -193,7 +193,7 @@ export const GuideReadButton = ({ docSlug, lang, dict }: GuideReadButtonProps): 
             type="button"
             onClick={onClick}
             aria-pressed={isRead}
-            className={`inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 text-sm font-medium transition-colors [&_svg]:size-3.5 ${
+            className={`text-13 inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3.5 font-medium transition-colors [&_svg]:size-3.5 ${
               isRead
                 ? "border-accent-ring bg-accent-soft text-ob-accent"
                 : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg"

@@ -30,7 +30,7 @@ const LABEL_CLASS = "text-fg-muted font-mono text-2xs tracking-[0.08em] uppercas
 const VALUE_CLASS =
   "flex items-baseline gap-2 text-[30px] leading-[1.1] font-light tracking-[-0.02em] tabular-nums"
 const UNIT_CLASS = "text-fg-muted text-sm font-normal"
-const SUB_CLASS = "text-fg-muted text-xs"
+const SUB_CLASS = "text-fg-muted text-13"
 
 const getTracksSub = (stats: EngagementStats, dict: PlaygroundDict["stats"]): string | null => {
   if (stats.tracksStarted === 0) return null
@@ -93,7 +93,7 @@ export const StatsStrip = ({
               />
               {stats.currentStreak} <span className={UNIT_CLASS}>{dict.days}</span>
             </span>
-            <span className={streakAlive ? "text-fg-2 text-xs" : SUB_CLASS}>
+            <span className={streakAlive ? "text-fg-2 text-13" : SUB_CLASS}>
               {getStreakSub(stats, dict, lang)}
             </span>
           </div>

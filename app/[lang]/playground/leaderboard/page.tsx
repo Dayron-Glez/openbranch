@@ -65,7 +65,7 @@ export default async function LeaderboardPage({
           {dict.leaderboard.title}{" "}
           <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
         </h1>
-        {sub !== null && <p className="text-fg-muted text-sm leading-[1.5]">{sub}</p>}
+        {sub !== null && <p className="text-fg-muted text-13 leading-[1.5]">{sub}</p>}
       </div>
 
       <LeaderboardTable dict={dict.leaderboard} data={leaderboard} hubPath={hubPath} lang={lang} />
