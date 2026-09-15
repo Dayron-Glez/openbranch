@@ -1,6 +1,6 @@
 # Audit: Tailwind layout and spacing
 
-**Status:** H8 shipped (#229 / PR #230) — H1–H6 open
+**Status:** Complete. Every finding shipped or, for `<Surface>`, dropped with the reasoning recorded under H5.
 **Date:** 2026-09-15
 **Owner:** @Dayron-Glez
 **Reference:** a 7-app Nuxt monorepo (565 `.vue` files) with strict container/spacing review, audited alongside this repo (148 `.tsx` files in `app/`, `features/`, `shared/`, `components/`).
@@ -132,7 +132,13 @@ The lesson generalises: a grep counts strings, not roles. Before extracting a co
 
 The site is dark-only, so the light `:root` block is dead weight that misleads: a new component using `bg-card` will not match one using `bg-bg-card`, with nothing to warn you. `--r-6/8/10/12/16` also duplicate Tailwind's `rounded-*`.
 
-**Fix:** pick one canonical system and map the other onto it. Not urgent, but every new component grows the problem.
+**Fixed in #246.** The bridge now aliases the shadcn names onto the landing tokens, so the vendored primitives keep a vocabulary that stays re-syncable with upstream while rendering the site's colours.
+
+Measuring first changed the shape of the fix. The app's own code uses the landing palette **exclusively** — 751 utility uses — while the HSL layer survived only in the 14 vendored primitives, about 35. There was no real contest over which system was canonical. The actual harm was that the two were near-identical but not equal (`#0d0e12` vs `#0b0c0e` for the page background, and so on), so a dropdown and a card were different shades of the same intent.
+
+Two pairs were already exact — `--foreground` computes to `#eceef1`, which is `--color-fg` — so they were meant to be one palette all along; the HSL block was a hand transcription that drifted.
+
+The light `:root` values were dead (`<html>` carries `dark` unconditionally), as was `--radius`. The `--r-*` radius tokens stay: 126 uses.
 
 ### H7 — Checked and dismissed
 
@@ -171,15 +177,19 @@ Three hand-tuned values plus an implicit, fragile rule ("the last child gets no 
 
 ## Order of work
 
-| #   | Work                                                     | Payoff                                    | Risk                           |
-| --- | -------------------------------------------------------- | ----------------------------------------- | ------------------------------ |
-| ✅  | Remove dead resets + migrate text stacks (H8)            | done — PR #230                            | —                              |
-| 1   | One `<PageShell>`, align Nav/Footer/main (H1)            | High — this is the "tidy margins" outcome | Low, visual and verifiable     |
-| 2   | `cn()` in `ChallengeLayout`, drop the dead override (H2) | High — unblocks the rest                  | Very low                       |
-| 3   | Name the four breakpoints and migrate (H4)               | High, mechanical                          | Low; fixes the off-by-one      |
-| ✅  | `<Eyebrow>` with `cva` (H5) — `<Surface>` dropped        | done — #239, #240                         | —                              |
-| 5   | Type scale in `@theme` (H3)                              | High but the largest                      | Medium-high, 387 substitutions |
-| 6   | Unify the two token systems (H6)                         | Medium, preventive                        | Medium                         |
+All shipped, in the order they were done. Each row was its own issue and pull request.
+
+| #   | Work                                                             | Shipped as     |
+| --- | ---------------------------------------------------------------- | -------------- |
+| 1   | Remove dead margin resets, space text stacks with `gap` (H8)     | #229 / PR #230 |
+| 2   | One `<PageShell>`, align Nav/Footer/main (H1)                    | #232 / PR #233 |
+| 3   | `cn()` in `ChallengeLayout`, drop the dead override (H2)         | #234 / PR #235 |
+| 4   | Name the breakpoints and migrate (H4)                            | #236 / PR #237 |
+| 5   | Extract the copy-pasted label recipes (H5, mechanical)           | #238 / PR #239 |
+| 6   | Type scale in `@theme` (H3)                                      | #241 / PR #242 |
+| 7   | `<Eyebrow>` variants and `AuthPanel`; `<Surface>` dropped (H5)   | #240 / PR #243 |
+| 8   | Reinstate the 13px and 15px steps after H3 rounded the design up | #244 / PR #245 |
+| 9   | One colour system (H6)                                           | #246           |
 
 ## What not to copy from the reference
 
