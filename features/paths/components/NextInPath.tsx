@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type NextInPathProps = {
   readonly track: TrackColorToken
@@ -30,9 +31,9 @@ export const NextInPath = ({
       {icon}
     </span>
     <div className="flex-1">
-      <div className="text-3xs font-mono tracking-[0.09em] text-(color:--track) uppercase">
+      <Eyebrow tone="track" size="xs" as="div">
         {label}
-      </div>
+      </Eyebrow>
       <div className="text-fg text-base font-medium">{title}</div>
       <div className="text-fg-muted mt-0.5 font-mono text-xs">{meta}</div>
     </div>

@@ -8,6 +8,8 @@ import { Logo } from "@/shared/Logo"
 import { IconGithub, IconAlertCircle } from "@/icons"
 import { createClient } from "@/lib/supabase/client"
 import type { AuthDictionary } from "@/lib/dictionaries/auth"
+import { Eyebrow } from "@/shared/Eyebrow"
+import { AuthPanel } from "@/features/auth/components/AuthPanel"
 
 /** Reasons the callback can hand back on `?error=`. Anything else is `unknown`. */
 export type AuthErrorReason = "access_denied" | "exchange_failed" | "unknown"
@@ -74,15 +76,13 @@ export const LoginPanel = ({
   return (
     <div className="max-page:p-6 max-tablet:p-0 flex items-center justify-center p-10">
       <div className="flex w-[464px] max-w-full flex-col gap-5">
-        <div className="auth-rise bg-bg-card border-line max-tablet:gap-6 max-tablet:p-6 flex flex-col gap-7 rounded-(--r-16) border p-9 shadow-(--sh-3)">
+        <AuthPanel>
           <Link href={next} aria-label="openbranch" className="w-fit">
             <Logo />
           </Link>
 
           <div className="flex flex-col gap-3">
-            <span className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
-              {dict.eyebrow}
-            </span>
+            <Eyebrow as="span">{dict.eyebrow}</Eyebrow>
             <h1 className="text-fg max-tablet:text-[26px] text-[30px] leading-[1.15] font-light tracking-[-0.015em]">
               {dict.title} <span className="text-fg-2">{dict.titleAccent}</span>
             </h1>
@@ -136,7 +136,7 @@ export const LoginPanel = ({
               {error !== null ? dict.errorBrowse : dict.browse} →
             </Link>
           </div>
-        </div>
+        </AuthPanel>
       </div>
     </div>
   )

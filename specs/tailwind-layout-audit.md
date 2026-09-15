@@ -120,7 +120,11 @@ Against 26 named variants (`sm:` ×22, `lg:` ×2, `max-workspace:` ×2).
 
 The eyebrow (small `font-mono uppercase`) is reimplemented in ~20 places with **5 different `tracking` values** (0.04 / 0.06 / 0.08 / 0.1 / 0.12em) and **5 sizes** (`10px`, `10.5px`, `11px`, `11.5px`, `text-xs`).
 
-**Fix:** `<Surface>` and `<Eyebrow>` in `shared/`, with `cva` for padding/size variants. `cva` currently lives only in the four vendored shadcn components; no piece of this project's own visual language uses it.
+**Fix, revised once the sites were read one by one:** `<Eyebrow>` in `shared/`, with `cva` for tone and size. Shipped in #238 (the identical strings) and #240 (the variants), which also collapsed eight tracking values onto one and extracted `AuthPanel` from three near-identical auth cards.
+
+**`<Surface>` was dropped, and the claim above is where this audit was wrong.** "~15 copies with 8 paddings" came from grepping `bg-bg-card`. Reading the matches individually, they are not one component: cards, chips, toolbar buttons, dialogs, icon tiles and padding-less containers, sharing only a background colour. Forcing them behind one component with padding and radius variants would be a leaky abstraction — worse than the duplication it replaces. The owner agreed to drop it (2026-09-15).
+
+The lesson generalises: a grep counts strings, not roles. Before extracting a component from a repeated class string, read the call sites and check they are the same thing.
 
 ### H6 — Two token systems in parallel, one not theme-aware
 
@@ -173,7 +177,7 @@ Three hand-tuned values plus an implicit, fragile rule ("the last child gets no 
 | 1   | One `<PageShell>`, align Nav/Footer/main (H1)            | High — this is the "tidy margins" outcome | Low, visual and verifiable     |
 | 2   | `cn()` in `ChallengeLayout`, drop the dead override (H2) | High — unblocks the rest                  | Very low                       |
 | 3   | Name the four breakpoints and migrate (H4)               | High, mechanical                          | Low; fixes the off-by-one      |
-| 4   | `<Eyebrow>` + `<Surface>` with `cva` (H5)                | High                                      | Medium, ~35 sites              |
+| ✅  | `<Eyebrow>` with `cva` (H5) — `<Surface>` dropped        | done — #239, #240                         | —                              |
 | 5   | Type scale in `@theme` (H3)                              | High but the largest                      | Medium-high, 387 substitutions |
 | 6   | Unify the two token systems (H6)                         | Medium, preventive                        | Medium                         |
 

@@ -18,6 +18,7 @@ import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
 import { NeedsWiderScreenNote } from "@/shared/NeedsWiderScreenNote"
 import { pageShellClass } from "@/shared/PageShell"
 import { cn } from "@/lib/utils"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 const CheckIcon = (): ReactNode => (
   <svg
@@ -211,9 +212,7 @@ export default async function ChallengePage({
 
             {page.data.recommended_first !== undefined && (
               <div className="mt-6">
-                <p className="text-fg-muted text-2xs mb-2 font-mono tracking-[0.08em] uppercase">
-                  {dict.detail.recommendedFirst}
-                </p>
+                <Eyebrow className="mb-2">{dict.detail.recommendedFirst}</Eyebrow>
                 <div className="flex items-center gap-2.5">
                   <CheckIcon />
                   <span className="text-fg-2 text-sm">{page.data.recommended_first}</span>
@@ -323,9 +322,7 @@ export default async function ChallengePage({
 
               {skills.length > 0 && (
                 <div className="bg-bg-card border-line rounded-(--r-12) border px-[18px] py-4">
-                  <p className="text-fg-muted text-2xs mb-3 font-mono tracking-[0.08em] uppercase">
-                    {dict.detail.youllPractice}
-                  </p>
+                  <Eyebrow className="mb-3">{dict.detail.youllPractice}</Eyebrow>
                   <div className="flex flex-col gap-[11px]">
                     {skills.map((skill) => (
                       <div key={skill} className="flex items-center gap-3">

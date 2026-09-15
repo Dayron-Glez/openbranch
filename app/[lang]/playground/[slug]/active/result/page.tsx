@@ -456,9 +456,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
 
           {(buildsOnChallenge !== null || newTrackChallenge !== null) && (
             <div>
-              <p className="text-fg-muted text-2xs mt-4 mb-4 font-mono tracking-[0.1em] uppercase">
-                {dict.result.keepGoing}
-              </p>
+              <Eyebrow className="mt-4 mb-4">{dict.result.keepGoing}</Eyebrow>
               <div className="grid grid-cols-2 gap-4 max-[600px]:grid-cols-1">
                 {buildsOnChallenge !== null && (
                   <Link

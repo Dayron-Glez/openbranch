@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Logo } from "@/shared/Logo"
 import type { AuthDictionary } from "@/lib/dictionaries/auth"
 import { SignOutButton } from "@/shared/SignOutButton"
+import { AuthPanel } from "@/features/auth/components/AuthPanel"
 
 /**
  * The design paired sign-out with "use a different account". That control was
@@ -43,7 +44,7 @@ export const AlreadySignedIn = ({
 }: AlreadySignedInProps): ReactElement => (
   <div className="max-page:p-6 max-tablet:p-0 flex items-center justify-center p-10">
     <div className="flex w-[464px] max-w-full flex-col">
-      <div className="auth-rise bg-bg-card border-line max-tablet:gap-6 max-tablet:p-6 flex flex-col gap-7 rounded-(--r-16) border p-9 shadow-(--sh-3)">
+      <AuthPanel>
         <Link href={next} aria-label="openbranch" className="w-fit">
           <Logo />
         </Link>
@@ -106,7 +107,7 @@ export const AlreadySignedIn = ({
             />
           </div>
         </div>
-      </div>
+      </AuthPanel>
     </div>
   </div>
 )

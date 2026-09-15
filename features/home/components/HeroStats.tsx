@@ -2,6 +2,7 @@
 
 import { IconBulb, IconFork, IconGlobe, IconStar } from "@/icons"
 import type { HeroStatsLabels } from "@/lib/landing-dictionary"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type HeroStatsProps = {
   readonly labels: HeroStatsLabels
@@ -32,9 +33,7 @@ export function HeroStats({ labels, guideCount }: HeroStatsProps) {
         >
           <div className="text-ob-accent flex items-center gap-2 [&_svg]:size-[15px]">
             {icon}
-            <span className="text-fg-muted text-2xs font-mono tracking-[0.07em] uppercase">
-              {label}
-            </span>
+            <Eyebrow as="span">{label}</Eyebrow>
           </div>
           <div className="max-narrow:items-center flex flex-col gap-1.5">
             <div className="max-narrow:text-base text-[27px] leading-[1.05] font-medium tracking-[-0.02em]">

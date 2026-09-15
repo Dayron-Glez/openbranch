@@ -8,6 +8,7 @@ import { AmbientBackground } from "@/features/home/components/AmbientBackground"
 import { IconArrowLeft, IconArrowRight, IconBook, IconFlask, IconRoute } from "@/icons"
 import { getLandingDict, localizedHref } from "@/lib/landing-dictionary"
 import { getNotFoundDict } from "@/lib/dictionaries/not-found"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 export default async function NotFound({
   params,
@@ -61,12 +62,12 @@ export default async function NotFound({
             <LogoMark size={48} broken />
           </div>
 
-          <p className="text-fg-muted text-2xs mb-3.5 inline-flex items-center gap-2.5 font-mono tracking-[0.08em] uppercase">
+          <Eyebrow className="mb-3.5 inline-flex items-center gap-2.5">
             <span className="bg-accent-soft text-ob-accent rounded-(--r-6) px-2 py-0.5 tracking-[0.1em]">
               {dict.eyebrowCode}
             </span>
             {dict.eyebrowLabel}
-          </p>
+          </Eyebrow>
 
           <h1 className="text-fg max-narrow:text-[28px] mb-3.5 max-w-[16ch] text-[36px] leading-[1.08] font-normal tracking-[-0.03em] text-balance">
             {dict.headingLead} <span className="text-fg-2 font-light">{dict.headingQuiet}</span>

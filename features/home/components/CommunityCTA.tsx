@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { fetchGitHubContributors, fetchGitHubContributorAvatars } from "@/lib/github-stars"
 import type { ContributorAvatar } from "@/lib/github-stars"
 import { GH_REPO, GH_URL } from "@/lib/constants"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type CommunityCTAProps = {
   readonly dict: LandingDict["community"]
@@ -35,9 +36,9 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
             "radial-gradient(ellipse 100% 80% at 50% 0%, rgba(94,227,154,.12), transparent 60%), var(--color-bg-card)",
         }}
       >
-        <span className="text-ob-accent text-2xs relative mb-3.5 inline-block font-mono tracking-[0.08em] uppercase">
+        <Eyebrow tone="accent" as="span" className="relative mb-3.5 inline-block">
           {dict.eyebrow}
-        </span>
+        </Eyebrow>
         <h3 className="max-wide:text-[28px] relative mx-auto mb-4 max-w-[22ch] text-[38px] leading-[1.1] font-medium tracking-normal text-balance">
           {dict.title}
         </h3>
@@ -63,9 +64,9 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
         {(avatars.length > 0 || count !== null) && (
           <div className="relative mt-10 flex flex-col items-center gap-3.5">
             {count !== null && (
-              <span className="text-fg-muted text-2xs font-mono tracking-[0.06em] uppercase">
+              <Eyebrow as="span">
                 {count} {dict.contributors}
-              </span>
+              </Eyebrow>
             )}
             {avatars.length > 0 && (
               <div className="inline-flex">

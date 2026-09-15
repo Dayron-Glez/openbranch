@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import Link from "next/link"
 import { IconArrowRight, IconClock } from "@/icons"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type StartingLineProps = {
   readonly href: string
@@ -31,7 +32,7 @@ export const StartingLine = ({
     <div className="border-line bg-bg-card mb-9 grid grid-cols-[1fr_auto] items-center gap-7 rounded-(--r-12) border p-6 max-sm:grid-cols-1">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-ob-accent text-2xs font-mono tracking-[0.1em] uppercase">{eyebrow}</p>
+          <Eyebrow tone="accent">{eyebrow}</Eyebrow>
           <h2 className="text-xl leading-snug font-semibold tracking-[-0.015em]">{heading}</h2>
           <p className="text-fg-2 max-w-[52ch] text-sm leading-[1.6]">{body}</p>
         </div>

@@ -9,6 +9,7 @@ import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { PathCard, PATH_CARD_GRID } from "@/features/paths/components/PathCard"
 import { createClient } from "@/lib/supabase/server"
 import { PageShell } from "@/shared/PageShell"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 export function generateStaticParams(): { lang: string }[] {
   return i18n.languages.map((lang) => ({ lang }))
@@ -43,9 +44,7 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
 
   return (
     <PageShell className="py-14">
-      <p className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
-        {dict.indexEyebrow}
-      </p>
+      <Eyebrow>{dict.indexEyebrow}</Eyebrow>
       <h1 className="text-fg mt-2 mb-4 text-[38px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-sm:text-[28px]">
         {dict.indexHeading}
       </h1>

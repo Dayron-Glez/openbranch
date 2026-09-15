@@ -5,6 +5,7 @@ import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import type { StepStatus } from "@/features/paths/domain/path-status"
 import { DiffBars } from "@/shared/DiffBars"
 import { WorkspaceOnly } from "@/shared/WorkspaceOnly"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 export type ResolvedPathStep =
   | {
@@ -124,7 +125,7 @@ export const PathStepper = ({
               step.status === "current" ? "border-(--track-ring)" : "border-line"
             } ${step.status === "locked" ? "opacity-60" : ""}`}
           >
-            <div className="text-fg-muted text-2xs mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5 font-mono tracking-[0.09em] uppercase">
+            <Eyebrow as="div" className="mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5">
               <span>{dict.stepOf(startIndex + index + 1, total)}</span>
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 [&_svg]:size-3 ${
@@ -150,7 +151,7 @@ export const PathStepper = ({
                   <span>{dict.available}</span>
                 )}
               </span>
-            </div>
+            </Eyebrow>
 
             <div className="mb-4 flex flex-col gap-1.5">
               <h3 className="text-fg text-lg font-semibold tracking-[-0.01em]">{step.title}</h3>
