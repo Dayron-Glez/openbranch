@@ -21,13 +21,13 @@ export const NeedsWiderScreenNote = ({
     </span>
     <div className="flex-1">
       <div className="flex flex-col gap-1">
-        <p className="text-fg text-[13.5px] font-medium">{title}</p>
-        <p className="text-fg-muted text-[13px] leading-[1.55]">{body}</p>
+        <p className="text-fg text-sm font-medium">{title}</p>
+        <p className="text-fg-muted text-sm leading-[1.55]">{body}</p>
       </div>
       {secondaryHref !== undefined && secondaryLabel !== undefined && (
         <Link
           href={secondaryHref}
-          className="text-fg-2 hover:text-fg mt-2 inline-block text-[13px] underline underline-offset-2"
+          className="text-fg-2 hover:text-fg mt-2 inline-block text-sm underline underline-offset-2"
         >
           {secondaryLabel}
         </Link>

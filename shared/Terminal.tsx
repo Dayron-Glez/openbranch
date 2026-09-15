@@ -24,14 +24,14 @@ export function Terminal({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="border-line text-fg-muted rounded-(--r-6) border px-2 py-0.5 font-mono text-[10.5px]"
+              className="border-line text-fg-muted text-2xs rounded-(--r-6) border px-2 py-0.5 font-mono"
             >
               {tag}
             </span>
           ))}
         </div>
       </div>
-      <div className="text-fg max-narrow:overflow-x-auto max-narrow:px-4 px-6 py-[22px] font-mono text-[13.5px] leading-[1.75]">
+      <div className="text-fg max-narrow:overflow-x-auto max-narrow:px-4 px-6 py-[22px] font-mono text-sm leading-[1.75]">
         {children}
       </div>
     </div>
@@ -60,7 +60,7 @@ export function Dim({ children }: { readonly children: ReactNode }) {
 
 export function BranchBlock({ children }: { readonly children: ReactNode }) {
   return (
-    <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-[12.5px]">
+    <div className="border-line text-fg-2 my-1.5 ml-[14px] border-l pl-[14px] text-xs">
       {children}
     </div>
   )

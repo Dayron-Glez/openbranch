@@ -9,7 +9,7 @@ type MutationRowProps = {
 
 const MutationRow = ({ mutation }: MutationRowProps): React.ReactElement => {
   const dot = mutation.killed ? (
-    <span className="text-ob-accent bg-ob-accent/10 mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full font-mono text-[11px]">
+    <span className="text-ob-accent bg-ob-accent/10 text-2xs mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded-full font-mono">
       ✓
     </span>
   ) : (
@@ -19,7 +19,7 @@ const MutationRow = ({ mutation }: MutationRowProps): React.ReactElement => {
   return (
     <div className="flex items-start gap-2.5">
       {dot}
-      <span className={`font-mono text-[11.5px] leading-[1.5] ${nameClass}`}>{mutation.label}</span>
+      <span className={`text-2xs font-mono leading-[1.5] ${nameClass}`}>{mutation.label}</span>
     </div>
   )
 }
@@ -41,7 +41,7 @@ export const RegressionsPanel = ({
     <div className="flex items-center justify-between">
       <Eyebrow>{dict.active.regressionsLabel}</Eyebrow>
       <span
-        className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${
+        className={`text-2xs font-mono font-medium tabular-nums transition-colors ${
           allMutantsKilled ? "text-ob-accent" : "text-fg-muted"
         }`}
       >

@@ -33,7 +33,7 @@ const GateChip = ({ label, value, passed, isError }: Readonly<GateChipProps>) =>
   const valueColor = passed ? "text-ob-accent" : valueColorIfNotPassed
 
   return (
-    <div className="flex items-center gap-1.5 font-mono text-[11.5px]">
+    <div className="text-2xs flex items-center gap-1.5 font-mono">
       <span className={`h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${dotColor}`} />
       <span className="text-fg-muted">{label}</span>
       <span className={`font-medium tabular-nums transition-colors ${valueColor}`}>{value}</span>
@@ -101,7 +101,7 @@ export const GitFooterBar = ({
         </div>
 
         {canSubmit && (
-          <span className="ob-rise bg-accent-soft text-ob-accent rounded px-2 py-0.5 font-mono text-[10.5px]">
+          <span className="ob-rise bg-accent-soft text-ob-accent text-2xs rounded px-2 py-0.5 font-mono">
             {dict.active.mergeClean}
           </span>
         )}
@@ -112,7 +112,7 @@ export const GitFooterBar = ({
         <button
           type="button"
           onClick={toggleHints}
-          className={`flex items-center gap-1.5 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease) ${
+          className={`text-2xs flex items-center gap-1.5 font-mono transition-colors duration-(--d-fast) ease-(--ease) ${
             hintsOpen ? "text-fg-2" : "text-fg-muted hover:text-fg-2"
           }`}
         >
@@ -138,7 +138,7 @@ export const GitFooterBar = ({
         <button
           type="button"
           onClick={onReset}
-          className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+          className="text-fg-muted hover:text-fg-2 text-2xs font-mono transition-colors duration-(--d-fast) ease-(--ease)"
         >
           {dict.active.resetCode}
         </button>
@@ -147,7 +147,7 @@ export const GitFooterBar = ({
           type="button"
           onClick={onSubmit}
           disabled={!canSubmit || isPending}
-          className="bg-ob-accent text-accent-ink flex h-8 items-center gap-2 rounded-(--r-8) px-4 font-mono text-[12px] font-medium transition-opacity disabled:opacity-40"
+          className="bg-ob-accent text-accent-ink flex h-8 items-center gap-2 rounded-(--r-8) px-4 font-mono text-xs font-medium transition-opacity disabled:opacity-40"
         >
           {isPending ? (
             <>

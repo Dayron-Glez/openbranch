@@ -29,13 +29,13 @@ export const StoryPanel = ({ dict, counts, challengeMinutes }: StoryPanelProps):
   return (
     <aside className="bg-bg-elev border-line max-page:p-8 flex w-full flex-col justify-center gap-[30px] overflow-hidden rounded-(--r-16) border p-12">
       <div className="flex flex-col gap-3">
-        <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
+        <span className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
           {dict.storyEyebrow}
         </span>
         <h2 className="text-fg max-page:text-[25px] max-w-[520px] text-[30px] leading-[1.2] font-light tracking-[-0.015em] text-pretty">
           {dict.storyTitle} <span className="text-fg-2">{dict.storyTitleAccent}</span>
         </h2>
-        <p className="text-fg-2 max-w-[500px] text-[14.5px] leading-[1.6] text-pretty">
+        <p className="text-fg-2 max-w-[500px] text-sm leading-[1.6] text-pretty">
           {dict.storyLead}
         </p>
       </div>
@@ -48,8 +48,8 @@ export const StoryPanel = ({ dict, counts, challengeMinutes }: StoryPanelProps):
             <Fragment key={stat.label}>
               {index > 0 && <span aria-hidden className="bg-line h-3.5 w-px" />}
               <span className="flex items-baseline gap-2">
-                <span className="text-fg text-[20px]">{stat.value}</span>
-                <span className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
+                <span className="text-fg text-xl">{stat.value}</span>
+                <span className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
                   {stat.label}
                 </span>
               </span>

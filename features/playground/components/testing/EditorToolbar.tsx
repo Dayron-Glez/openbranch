@@ -18,12 +18,12 @@ type EditorToolbarProps = {
 }
 
 const tabClass = (active: boolean): string =>
-  `rounded px-2 py-1 font-mono text-[12px] transition-colors duration-(--d-fast) ease-(--ease) ${
+  `rounded px-2 py-1 font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "bg-bg-card text-fg-2" : "text-fg-muted hover:text-fg-2"
   }`
 
 const actionClass =
-  "text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+  "text-fg-muted hover:text-fg-2 font-mono text-2xs transition-colors duration-(--d-fast) ease-(--ease)"
 
 export const EditorToolbar = ({
   editableFile,
@@ -48,7 +48,7 @@ export const EditorToolbar = ({
     >
       {showSolution ? (
         <div className="flex items-center gap-2.5">
-          <span className="text-fg-2 font-mono text-[12px]">{editableFile}</span>
+          <span className="text-fg-2 font-mono text-xs">{editableFile}</span>
           <DiffChip />
         </div>
       ) : (
@@ -66,7 +66,7 @@ export const EditorToolbar = ({
             className={`flex items-baseline gap-2 ${tabClass(onSourceTab)}`}
           >
             <span>{sourceFile}</span>
-            <span className="text-fg-muted text-[10px] tracking-wide">
+            <span className="text-fg-muted text-3xs tracking-wide">
               {dict.active.readOnlyLabel}
             </span>
           </button>
@@ -95,7 +95,7 @@ export const EditorToolbar = ({
           <button
             type="button"
             onClick={onRun}
-            className="border-line bg-bg-card hover:border-line-2 text-fg-2 flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+            className="border-line bg-bg-card hover:border-line-2 text-fg-2 text-2xs flex items-center gap-1.5 rounded border px-2 py-1 font-mono transition-colors duration-(--d-fast) ease-(--ease)"
           >
             {dict.active.run}
             <span className="text-fg-faint">{isMac() ? "⌘↵" : "Ctrl↵"}</span>

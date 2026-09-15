@@ -26,11 +26,11 @@ const formatStreakEndDate = (lastCompletedOn: string, lang: string): string =>
   }).format(new Date(`${lastCompletedOn}T00:00:00Z`))
 
 const CELL_CLASS = "bg-bg-card flex min-w-0 flex-col gap-2 px-6 py-5"
-const LABEL_CLASS = "text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase"
+const LABEL_CLASS = "text-fg-muted font-mono text-2xs tracking-[0.08em] uppercase"
 const VALUE_CLASS =
   "flex items-baseline gap-2 text-[30px] leading-[1.1] font-light tracking-[-0.02em] tabular-nums"
-const UNIT_CLASS = "text-fg-muted text-[14px] font-normal"
-const SUB_CLASS = "text-fg-muted text-[12.5px]"
+const UNIT_CLASS = "text-fg-muted text-sm font-normal"
+const SUB_CLASS = "text-fg-muted text-xs"
 
 const getTracksSub = (stats: EngagementStats, dict: PlaygroundDict["stats"]): string | null => {
   if (stats.tracksStarted === 0) return null
@@ -76,7 +76,7 @@ export const StatsStrip = ({
             <span className={VALUE_CLASS}>
               {stats.totalPoints}
               {stats.pointsToday > 0 && (
-                <Badge className="bg-accent-soft border-accent-ring text-ob-accent self-center rounded-full border px-2 py-0 font-mono text-[11px] font-normal">
+                <Badge className="bg-accent-soft border-accent-ring text-ob-accent text-2xs self-center rounded-full border px-2 py-0 font-mono font-normal">
                   {dict.pointsToday.replace("{points}", String(stats.pointsToday))}
                 </Badge>
               )}
@@ -93,7 +93,7 @@ export const StatsStrip = ({
               />
               {stats.currentStreak} <span className={UNIT_CLASS}>{dict.days}</span>
             </span>
-            <span className={streakAlive ? "text-fg-2 text-[12.5px]" : SUB_CLASS}>
+            <span className={streakAlive ? "text-fg-2 text-xs" : SUB_CLASS}>
               {getStreakSub(stats, dict, lang)}
             </span>
           </div>

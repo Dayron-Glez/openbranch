@@ -84,7 +84,7 @@ const getStepCta = (step: ResolvedPathStep, dict: PathStepperDict): string => {
 }
 
 const ctaClass = (step: ResolvedPathStep): string =>
-  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-[13px] font-medium no-underline transition-colors max-tiny:w-full max-tiny:justify-center ${
+  `inline-flex h-9 shrink-0 items-center gap-2 rounded-(--r-8) px-3.5 text-sm font-medium no-underline transition-colors max-tiny:w-full max-tiny:justify-center ${
     step.status === "current"
       ? "bg-(--track) text-(color:--track-ink) hover:brightness-110"
       : "border-line-2 bg-bg-elev text-fg-2 hover:text-fg border"
@@ -124,7 +124,7 @@ export const PathStepper = ({
               step.status === "current" ? "border-(--track-ring)" : "border-line"
             } ${step.status === "locked" ? "opacity-60" : ""}`}
           >
-            <div className="text-fg-muted mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5 font-mono text-[10.5px] tracking-[0.09em] uppercase">
+            <div className="text-fg-muted text-2xs mb-2.5 flex flex-wrap items-center gap-2.5 gap-y-1.5 font-mono tracking-[0.09em] uppercase">
               <span>{dict.stepOf(startIndex + index + 1, total)}</span>
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 [&_svg]:size-3 ${
@@ -153,14 +153,14 @@ export const PathStepper = ({
             </div>
 
             <div className="mb-4 flex flex-col gap-1.5">
-              <h3 className="text-fg text-[18px] font-semibold tracking-[-0.01em]">{step.title}</h3>
-              <p className="text-fg-muted max-w-[64ch] text-[13.5px] leading-[1.55]">
+              <h3 className="text-fg text-lg font-semibold tracking-[-0.01em]">{step.title}</h3>
+              <p className="text-fg-muted max-w-[64ch] text-sm leading-[1.55]">
                 {step.description}
               </p>
             </div>
 
             <div className="flex flex-wrap items-start justify-between gap-3.5 gap-y-3">
-              <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[11.5px]">
+              <div className="text-fg-muted text-2xs flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono">
                 {step.type === "doc" ? (
                   <span className="inline-flex items-center gap-1.5">
                     <IconBook className="size-3" />
@@ -190,7 +190,7 @@ export const PathStepper = ({
                     </Link>
                   }
                   narrow={
-                    <span className="text-fg-muted border-line-2 max-tiny:w-full max-tiny:justify-center inline-flex h-9 shrink-0 items-center gap-1.5 rounded-(--r-8) border px-3.5 text-[12px]">
+                    <span className="text-fg-muted border-line-2 max-tiny:w-full max-tiny:justify-center inline-flex h-9 shrink-0 items-center gap-1.5 rounded-(--r-8) border px-3.5 text-xs">
                       <IconDeviceLaptop className="size-3.5" />
                       {dict.needsWiderScreenTitle}
                     </span>

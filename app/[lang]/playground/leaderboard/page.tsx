@@ -47,7 +47,7 @@ export default async function LeaderboardPage({
   return (
     <PageShell className="relative z-1 pt-10 pb-12">
       <nav aria-label="Breadcrumb" className="mb-4">
-        <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
+        <ol className="text-fg-muted flex items-center gap-2 font-mono text-xs">
           <li>
             <Link href={hubPath} className="hover:text-fg-2 transition-colors">
               Playground
@@ -65,7 +65,7 @@ export default async function LeaderboardPage({
           {dict.leaderboard.title}{" "}
           <span className="text-fg-2 font-light">— {dict.leaderboard.titleAccent}</span>
         </h1>
-        {sub !== null && <p className="text-fg-muted text-[13px] leading-[1.5]">{sub}</p>}
+        {sub !== null && <p className="text-fg-muted text-sm leading-[1.5]">{sub}</p>}
       </div>
 
       <LeaderboardTable dict={dict.leaderboard} data={leaderboard} hubPath={hubPath} lang={lang} />
@@ -73,7 +73,7 @@ export default async function LeaderboardPage({
       <div className="mt-5 flex justify-center">
         <Link
           href={hubPath}
-          className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-[13.5px] transition-colors"
+          className="text-fg-2 hover:text-fg inline-flex items-center gap-1.5 text-sm transition-colors"
         >
           <span aria-hidden>←</span> {dict.leaderboard.back}
         </Link>

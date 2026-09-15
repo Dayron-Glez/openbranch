@@ -35,7 +35,7 @@ type PlaygroundNavProps = {
 const LOCALES = ["es", "en"] as const
 
 const navLinkClass = (active: boolean): string =>
-  `font-mono text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) ${
+  `font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
   }`
 
@@ -101,14 +101,14 @@ export const PlaygroundNav = ({
           {/* search */}
           <button
             onClick={() => setOpenSearch(true)}
-            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-[12.5px] transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
+            className="border-line bg-bg-elev text-fg-muted hover:border-line-2 hover:text-fg-2 max-wide:w-40 inline-flex h-8 w-60 cursor-pointer items-center gap-2 rounded-(--r-8) border px-3 text-xs transition-colors duration-(--d-fast) ease-(--ease) max-sm:hidden [&_svg]:size-3.5 [&_svg]:shrink-0"
             aria-label={lang === "en" ? "Search challenges" : "Buscar retos"}
           >
             <IconSearch />
             <span className="min-w-0 flex-1 truncate text-left">
               {lang === "en" ? "Search challenges..." : "Buscar retos..."}
             </span>
-            <Kbd className="border-line bg-bg text-fg-muted gap-0.5 rounded-(--r-6) font-mono text-[10.5px]">
+            <Kbd className="border-line bg-bg text-fg-muted text-2xs gap-0.5 rounded-(--r-6) font-mono">
               ⌘ K
             </Kbd>
           </button>
@@ -144,7 +144,7 @@ export const PlaygroundNav = ({
                   <a href={GH_URL} target="_blank" rel="noopener noreferrer">
                     <IconStar className="star-spin fill-amber-400 stroke-amber-400" />
                     {stars !== null && (
-                      <span className="max-narrow:hidden font-mono text-[11px] tabular-nums">
+                      <span className="max-narrow:hidden text-2xs font-mono tabular-nums">
                         {stars}
                       </span>
                     )}
@@ -167,7 +167,7 @@ export const PlaygroundNav = ({
                   // vanished because it required both values.
                   <span
                     aria-hidden
-                    className="border-line bg-bg-elev text-fg-muted hover:ring-accent-ring inline-grid size-7 place-items-center rounded-full border font-mono text-[11px] ring-1 ring-white/10 transition-[box-shadow]"
+                    className="border-line bg-bg-elev text-fg-muted hover:ring-accent-ring text-2xs inline-grid size-7 place-items-center rounded-full border font-mono ring-1 ring-white/10 transition-[box-shadow]"
                   >
                     {username.slice(0, 1).toUpperCase()}
                   </span>
@@ -217,7 +217,7 @@ export const PlaygroundNav = ({
               <ToggleGroupItem
                 key={l}
                 value={l}
-                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted h-6 rounded-(--r-6) px-2 font-mono text-[11px] tracking-[0.04em]"
+                className="data-[state=on]:bg-accent-soft data-[state=on]:text-fg data-[state=off]:text-fg-muted text-2xs h-6 rounded-(--r-6) px-2 font-mono tracking-[0.04em]"
               >
                 {l.toUpperCase()}
               </ToggleGroupItem>

@@ -20,14 +20,14 @@ export function ValueProp({ dict }: ValuePropProps) {
           <div key={item.title} className={valueClass}>
             <Badge
               variant="outline"
-              className="border-line bg-bg-elev text-fg-muted mb-4 gap-1.5 font-mono text-[10.5px] tracking-[0.04em] [&_svg]:size-[11px]"
+              className="border-line bg-bg-elev text-fg-muted text-2xs mb-4 gap-1.5 font-mono tracking-[0.04em] [&_svg]:size-[11px]"
             >
               <Icon />
               {item.badge}
             </Badge>
             <div className="flex flex-col gap-1.5">
-              <h4 className="text-[17px] font-medium tracking-[0]">{item.title}</h4>
-              <p className="text-fg-muted max-w-[30ch] text-[13.5px] leading-[1.55]">{item.body}</p>
+              <h4 className="text-base font-medium tracking-[0]">{item.title}</h4>
+              <p className="text-fg-muted max-w-[30ch] text-sm leading-[1.55]">{item.body}</p>
             </div>
           </div>
         )

@@ -165,16 +165,16 @@ const UnlockReveal = ({
       </div>
 
       <div ref={copyRef} className="mt-7 flex flex-col items-center text-center opacity-0">
-        <p className="text-fg-2 mb-2 flex items-center gap-2 font-mono text-[11px] tracking-[0.12em] uppercase">
+        <p className="text-fg-2 text-2xs mb-2 flex items-center gap-2 font-mono tracking-[0.12em] uppercase">
           {eyebrow}
-          <span className="bg-accent-soft border-accent-ring text-ob-accent rounded-full border px-1.5 py-0.5 text-[9.5px] tracking-[0.04em] normal-case">
+          <span className="bg-accent-soft border-accent-ring text-ob-accent text-3xs rounded-full border px-1.5 py-0.5 tracking-[0.04em] normal-case">
             {newTag}
           </span>
         </p>
         <DialogPrimitive.Title className="text-fg mb-2 text-[22px] font-medium">
           {name}
         </DialogPrimitive.Title>
-        <DialogPrimitive.Description className="text-fg-2 max-w-[300px] text-[14px] leading-[1.6]">
+        <DialogPrimitive.Description className="text-fg-2 max-w-[300px] text-sm leading-[1.6]">
           {description}
         </DialogPrimitive.Description>
 

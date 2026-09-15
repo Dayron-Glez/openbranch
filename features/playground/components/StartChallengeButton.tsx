@@ -105,7 +105,7 @@ export const StartChallengeButton = ({
         {sessionStatus === "in_progress" ? (
           <Link
             href={activePath}
-            className="bg-ob-accent text-accent-ink inline-flex h-[42px] w-full items-center justify-center gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105"
+            className="bg-ob-accent text-accent-ink inline-flex h-[42px] w-full items-center justify-center gap-2 rounded-(--r-8) text-sm font-medium hover:brightness-105"
           >
             <PlayIcon />
             {ctaLabel}
@@ -117,7 +117,7 @@ export const StartChallengeButton = ({
               await startChallengeSession(slug, lang, activePath)
             }}
             disabled={loading}
-            className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+            className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-sm font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
           >
             <PlayIcon />
             {ctaLabel}
@@ -136,7 +136,7 @@ export const StartChallengeButton = ({
             ) : (
               <div className="bg-bg-elev border-line size-5 rounded-full border" />
             )}
-            <span className="text-fg-2 min-w-0 truncate font-mono text-[11.5px]">
+            <span className="text-fg-2 text-2xs min-w-0 truncate font-mono">
               {authUser?.username !== null && authUser?.username !== undefined
                 ? `@${authUser.username}`
                 : "GitHub"}
@@ -144,7 +144,7 @@ export const StartChallengeButton = ({
           </div>
           <button
             onClick={() => setSignOutOpen(true)}
-            className="text-fg-muted hover:text-fg-2 shrink-0 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+            className="text-fg-muted hover:text-fg-2 text-2xs shrink-0 font-mono transition-colors duration-(--d-fast) ease-(--ease)"
           >
             {dict.signOut}
           </button>
@@ -168,7 +168,7 @@ export const StartChallengeButton = ({
     <>
       <Button
         onClick={() => setOpen(true)}
-        className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-[14px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2 rounded-(--r-8) text-sm font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0"
       >
         <PlayIcon />
         {dict.startChallenge}
@@ -184,14 +184,14 @@ export const StartChallengeButton = ({
             <DialogTitle className="text-fg mb-2.5 text-center text-[21px] font-[550] tracking-[-0.02em]">
               {dict.authTitle}
             </DialogTitle>
-            <DialogDescription className="text-fg-2 mb-6 text-center text-[14px] leading-[1.55]">
+            <DialogDescription className="text-fg-2 mb-6 text-center text-sm leading-[1.55]">
               {dict.authBody}
             </DialogDescription>
 
             <Button
               onClick={handleGitHubSignIn}
               disabled={loading}
-              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-(--r-8) text-[15px] font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
+              className="bg-ob-accent text-accent-ink h-[42px] w-full gap-2.5 rounded-(--r-8) text-base font-medium hover:brightness-105 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:opacity-60"
             >
               <IconGithub className="size-[17px] shrink-0" />
               {dict.authGithub}
@@ -199,7 +199,7 @@ export const StartChallengeButton = ({
 
             <div className="border-line my-5 h-px" />
 
-            <p className="text-fg-muted text-center font-mono text-[11.5px] leading-[1.55]">
+            <p className="text-fg-muted text-2xs text-center font-mono leading-[1.55]">
               <svg
                 viewBox="0 0 24 24"
                 className="text-ob-accent mr-1 inline-block size-[13px] align-[-2px]"

@@ -30,13 +30,13 @@ export const NextInPath = ({
       {icon}
     </span>
     <div className="flex-1">
-      <div className="font-mono text-[10px] tracking-[0.09em] text-(color:--track) uppercase">
+      <div className="text-3xs font-mono tracking-[0.09em] text-(color:--track) uppercase">
         {label}
       </div>
-      <div className="text-fg text-[15px] font-medium">{title}</div>
-      <div className="text-fg-muted mt-0.5 font-mono text-[12px]">{meta}</div>
+      <div className="text-fg text-base font-medium">{title}</div>
+      <div className="text-fg-muted mt-0.5 font-mono text-xs">{meta}</div>
     </div>
-    <span className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4 text-[13px] font-semibold text-(color:--track-ink) max-sm:w-full">
+    <span className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-(--r-8) bg-(--track) px-4 text-sm font-semibold text-(color:--track-ink) max-sm:w-full">
       {cta}
     </span>
   </Link>

@@ -108,21 +108,21 @@ export default async function ChallengePage({
   let sessionStatusBadge: React.ReactNode
   if (sessionStatus === "in_progress") {
     sessionStatusBadge = (
-      <span className="text-warn inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+      <span className="text-warn text-2xs inline-flex items-center gap-1.5 font-mono">
         <span className="bg-warn size-[6px] rounded-full" />
         {dict.status.inProgress}
       </span>
     )
   } else if (sessionStatus === "completed") {
     sessionStatusBadge = (
-      <span className="text-ob-accent inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+      <span className="text-ob-accent text-2xs inline-flex items-center gap-1.5 font-mono">
         <span className="bg-ob-accent size-[6px] rounded-full" />
         {dict.status.completed}
       </span>
     )
   } else {
     sessionStatusBadge = (
-      <span className="text-fg-muted inline-flex items-center gap-1.5 font-mono text-[11.5px]">
+      <span className="text-fg-muted text-2xs inline-flex items-center gap-1.5 font-mono">
         <span className="border-fg-faint size-[9px] rounded-full border-[1.5px]" />
         {dict.status.notStarted}
       </span>
@@ -141,7 +141,7 @@ export default async function ChallengePage({
         )}
       >
         <nav className="mb-[22px] shrink-0" aria-label="Breadcrumb">
-          <ol className="text-fg-muted flex items-center gap-2 font-mono text-[12px]">
+          <ol className="text-fg-muted flex items-center gap-2 font-mono text-xs">
             <li>
               <Link href={playgroundHref} className="hover:text-fg-2 transition-colors">
                 Playground
@@ -172,7 +172,7 @@ export default async function ChallengePage({
             <div className="mb-3.5 flex items-center gap-3">
               <span
                 data-track={colorToken}
-                className="text-fg inline-flex items-center gap-1.5 rounded-full border border-(--track-ring) bg-(--track-soft) px-2.5 py-[3px] font-mono text-[11px] [&_svg]:size-3 [&_svg]:shrink-0 [&_svg]:text-(color:--track)"
+                className="text-fg text-2xs inline-flex items-center gap-1.5 rounded-full border border-(--track-ring) bg-(--track-soft) px-2.5 py-[3px] font-mono [&_svg]:size-3 [&_svg]:shrink-0 [&_svg]:text-(color:--track)"
               >
                 {icon}
                 {categoryLabel}
@@ -185,7 +185,7 @@ export default async function ChallengePage({
             </h1>
 
             {page.data.description !== undefined && (
-              <p className="text-fg-2 mb-6 max-w-[60ch] text-[16px] leading-[1.6]">
+              <p className="text-fg-2 mb-6 max-w-[60ch] text-base leading-[1.6]">
                 {page.data.description}
               </p>
             )}
@@ -195,7 +195,7 @@ export default async function ChallengePage({
                 {skills.map((skill) => (
                   <span
                     key={skill}
-                    className="border-line-2 bg-bg-elev text-fg-2 inline-flex items-center rounded-full border px-[9px] py-[3px] font-mono text-[11px]"
+                    className="border-line-2 bg-bg-elev text-fg-2 text-2xs inline-flex items-center rounded-full border px-[9px] py-[3px] font-mono"
                   >
                     {skill}
                   </span>
@@ -211,12 +211,12 @@ export default async function ChallengePage({
 
             {page.data.recommended_first !== undefined && (
               <div className="mt-6">
-                <p className="text-fg-muted mb-2 font-mono text-[11px] tracking-[0.08em] uppercase">
+                <p className="text-fg-muted text-2xs mb-2 font-mono tracking-[0.08em] uppercase">
                   {dict.detail.recommendedFirst}
                 </p>
                 <div className="flex items-center gap-2.5">
                   <CheckIcon />
-                  <span className="text-fg-2 text-[13.5px]">{page.data.recommended_first}</span>
+                  <span className="text-fg-2 text-sm">{page.data.recommended_first}</span>
                 </div>
               </div>
             )}
@@ -238,7 +238,7 @@ export default async function ChallengePage({
                         lang={lang}
                         authUser={authUser}
                       />
-                      <p className="text-fg-muted mt-2.5 mb-4 text-center font-mono text-[11px]">
+                      <p className="text-fg-muted text-2xs mt-2.5 mb-4 text-center font-mono">
                         {dict.detail.sandboxNote}
                       </p>
                     </>
@@ -255,30 +255,30 @@ export default async function ChallengePage({
 
                 <div>
                   <div className="border-line flex items-center justify-between gap-3 border-b py-3">
-                    <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
+                    <span className="text-fg-muted text-2xs font-mono tracking-[0.04em] uppercase">
                       {dict.detail.metaCategory}
                     </span>
-                    <span className="text-fg [&_svg]:text-fg-2 inline-flex items-center gap-2 text-[13.5px] [&_svg]:size-[15px] [&_svg]:shrink-0">
+                    <span className="text-fg [&_svg]:text-fg-2 inline-flex items-center gap-2 text-sm [&_svg]:size-[15px] [&_svg]:shrink-0">
                       {icon}
                       {categoryLabel}
                     </span>
                   </div>
 
                   <div className="border-line flex items-center justify-between gap-3 border-b py-3">
-                    <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
+                    <span className="text-fg-muted text-2xs font-mono tracking-[0.04em] uppercase">
                       {dict.detail.metaDifficulty}
                     </span>
                     <span className="inline-flex items-center gap-2">
                       <DiffBars difficulty={page.data.difficulty} />
-                      <span className="text-fg text-[13.5px]">{difficultyLabel}</span>
+                      <span className="text-fg text-sm">{difficultyLabel}</span>
                     </span>
                   </div>
 
                   <div className="border-line flex items-center justify-between gap-3 border-b py-3">
-                    <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
+                    <span className="text-fg-muted text-2xs font-mono tracking-[0.04em] uppercase">
                       {dict.detail.metaTime}
                     </span>
-                    <span className="text-fg inline-flex items-center gap-2 text-[13.5px]">
+                    <span className="text-fg inline-flex items-center gap-2 text-sm">
                       <svg
                         viewBox="0 0 24 24"
                         className="text-fg-2 size-[15px] shrink-0"
@@ -297,10 +297,10 @@ export default async function ChallengePage({
                   </div>
 
                   <div className="flex items-center justify-between gap-3 py-3">
-                    <span className="text-fg-muted font-mono text-[11.5px] tracking-[0.04em] uppercase">
+                    <span className="text-fg-muted text-2xs font-mono tracking-[0.04em] uppercase">
                       {dict.detail.metaValidation}
                     </span>
-                    <span className="text-fg inline-flex items-center gap-2 text-[13.5px]">
+                    <span className="text-fg inline-flex items-center gap-2 text-sm">
                       <svg
                         viewBox="0 0 24 24"
                         className="text-fg-2 size-[15px] shrink-0"
@@ -323,14 +323,14 @@ export default async function ChallengePage({
 
               {skills.length > 0 && (
                 <div className="bg-bg-card border-line rounded-(--r-12) border px-[18px] py-4">
-                  <p className="text-fg-muted mb-3 font-mono text-[11px] tracking-[0.08em] uppercase">
+                  <p className="text-fg-muted text-2xs mb-3 font-mono tracking-[0.08em] uppercase">
                     {dict.detail.youllPractice}
                   </p>
                   <div className="flex flex-col gap-[11px]">
                     {skills.map((skill) => (
                       <div key={skill} className="flex items-center gap-3">
                         <CheckIcon />
-                        <span className="text-fg-2 text-[13.5px]">{skill}</span>
+                        <span className="text-fg-2 text-sm">{skill}</span>
                       </div>
                     ))}
                   </div>

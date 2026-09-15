@@ -328,14 +328,14 @@ export const BugFixChallengeView = ({
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
+                <span className="text-fg-2 font-mono text-xs">{template.editableFile}</span>
                 {showSolution && <DiffChip />}
                 {showSolution && (
                   <div className="flex items-center gap-3">
-                    <span className="text-ob-accent flex items-center gap-1.5 font-mono text-[10.5px]">
+                    <span className="text-ob-accent text-2xs flex items-center gap-1.5 font-mono">
                       <span className="bg-ob-accent size-1.5 rounded-full" /> added
                     </span>
-                    <span className="text-danger flex items-center gap-1.5 font-mono text-[10.5px]">
+                    <span className="text-danger text-2xs flex items-center gap-1.5 font-mono">
                       <span className="bg-danger size-1.5 rounded-full" /> removed
                     </span>
                   </div>
@@ -345,7 +345,7 @@ export const BugFixChallengeView = ({
                 <button
                   type="button"
                   onClick={handleToggleSolution}
-                  className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+                  className="text-fg-muted hover:text-fg-2 text-2xs font-mono transition-colors duration-(--d-fast) ease-(--ease)"
                 >
                   {dict.active.backToEdit}
                 </button>
@@ -357,19 +357,19 @@ export const BugFixChallengeView = ({
                       handleFormat().catch(() => undefined)
                     }}
                     disabled={isFormatting}
-                    className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease) disabled:opacity-40"
+                    className="text-fg-muted hover:text-fg-2 text-2xs font-mono transition-colors duration-(--d-fast) ease-(--ease) disabled:opacity-40"
                   >
                     {isFormatting ? "formatting…" : "format"}
                   </button>
-                  <span className="text-fg-faint font-mono text-[11.5px] select-none">·</span>
+                  <span className="text-fg-faint text-2xs font-mono select-none">·</span>
                   <button
                     type="button"
                     onClick={handleToggleSolution}
-                    className="text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+                    className="text-fg-muted hover:text-fg-2 text-2xs font-mono transition-colors duration-(--d-fast) ease-(--ease)"
                   >
                     {dict.active.viewSolution}
                   </button>
-                  <kbd className="border-line bg-bg-card text-fg-muted rounded px-1.5 py-0.5 font-mono text-[10px]">
+                  <kbd className="border-line bg-bg-card text-fg-muted text-3xs rounded px-1.5 py-0.5 font-mono">
                     {typeof navigator !== "undefined" && navigator.platform.includes("Mac")
                       ? "⌘↵ run"
                       : "Ctrl+↵ run"}
@@ -428,7 +428,7 @@ export const BugFixChallengeView = ({
                 <div className="flex items-center justify-between">
                   <Eyebrow>{dict.active.testsLabel}</Eyebrow>
                   <span
-                    className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
+                    className={`text-2xs font-mono font-medium tabular-nums transition-colors ${countClass}`}
                   >
                     {testState.status === "running" ? (
                       <span className="flex items-center gap-1.5">
@@ -443,16 +443,16 @@ export const BugFixChallengeView = ({
 
                 {testState.compileError !== null && (
                   <div className="border-danger/20 bg-danger/[0.03] rounded-(--r-8) border p-3">
-                    <p className="text-danger mb-1 font-mono text-[10.5px] tracking-wide uppercase">
+                    <p className="text-danger text-2xs mb-1 font-mono tracking-wide uppercase">
                       {dict.active.syntaxError}
                     </p>
-                    <p className="text-fg-muted font-mono text-[11px] leading-relaxed">
+                    <p className="text-fg-muted text-2xs font-mono leading-relaxed">
                       {dict.active.fixSyntax}
                     </p>
                   </div>
                 )}
                 {testState.compileError === null && testState.tests.length === 0 && (
-                  <p className="text-fg-muted font-mono text-[11.5px]">{dict.active.editToStart}</p>
+                  <p className="text-fg-muted text-2xs font-mono">{dict.active.editToStart}</p>
                 )}
                 {testState.compileError === null && testState.tests.length > 0 && (
                   <div className="border-line bg-bg-elev flex flex-col gap-3 rounded-(--r-8) border p-3">
@@ -464,14 +464,14 @@ export const BugFixChallengeView = ({
 
                 {allTestsPassing && !hasTypeErrors && (
                   <div className="border-accent-ring bg-accent-soft rounded-(--r-8) border px-3 py-2.5">
-                    <p className="text-ob-accent font-mono text-[12px]">
+                    <p className="text-ob-accent font-mono text-xs">
                       {dict.active.allTestsPassing}
                     </p>
                   </div>
                 )}
                 {allTestsPassing && hasTypeErrors && (
                   <div className="border-warn/20 bg-warn/[0.04] rounded-(--r-8) border px-3 py-2.5">
-                    <p className="text-warn font-mono text-[12px]">{dict.active.fixTypeErrors}</p>
+                    <p className="text-warn font-mono text-xs">{dict.active.fixTypeErrors}</p>
                   </div>
                 )}
               </div>

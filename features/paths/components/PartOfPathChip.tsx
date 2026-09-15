@@ -21,7 +21,7 @@ export const PartOfPathChip = ({
   <Link
     href={href}
     data-track={path.track}
-    className="inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-full border border-(--track-ring) bg-(--track-soft) px-2.5 py-[3px] font-mono text-[11px] text-(color:--track) no-underline"
+    className="text-2xs inline-flex max-w-full min-w-0 items-center gap-1.5 rounded-full border border-(--track-ring) bg-(--track-soft) px-2.5 py-[3px] font-mono text-(color:--track) no-underline"
   >
     <IconRoute className="size-3 shrink-0" />
     <span className="shrink-0">{label}</span>

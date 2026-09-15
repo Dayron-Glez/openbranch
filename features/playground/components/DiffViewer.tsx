@@ -64,7 +64,7 @@ const DiffCommentItem = ({
   deleteLabel,
 }: DiffCommentItemProps): React.ReactElement => (
   <div className="border-line border-ob-accent/40 bg-ob-accent/[0.04] group/comment flex items-start gap-3 border-l-2 px-4 py-2.5">
-    <p className="text-fg-2 flex-1 font-mono text-[12px] leading-[1.6] whitespace-pre-wrap">
+    <p className="text-fg-2 flex-1 font-mono text-xs leading-[1.6] whitespace-pre-wrap">
       {comment.content}
     </p>
     <button
@@ -132,8 +132,8 @@ export const DiffViewer = ({
         <div key={file.filename} className="border-line overflow-hidden rounded-(--r-8) border">
           {/* file header */}
           <div className="border-line bg-bg-elev flex items-center justify-between gap-4 border-b px-4 py-2.5">
-            <span className="text-fg-2 truncate font-mono text-[12px]">{file.filename}</span>
-            <span className="flex shrink-0 items-center gap-2.5 font-mono text-[11.5px]">
+            <span className="text-fg-2 truncate font-mono text-xs">{file.filename}</span>
+            <span className="text-2xs flex shrink-0 items-center gap-2.5 font-mono">
               <span className="text-ob-accent">+{file.additions}</span>
               <span className="text-danger">−{file.deletions}</span>
             </span>
@@ -152,7 +152,7 @@ export const DiffViewer = ({
                 return (
                   <div
                     key={lineKey}
-                    className="border-line bg-bg-elev text-fg-muted border-y px-4 py-0.5 font-mono text-[11.5px] select-none"
+                    className="border-line bg-bg-elev text-fg-muted text-2xs border-y px-4 py-0.5 font-mono select-none"
                   >
                     {line.content}
                   </div>
@@ -166,12 +166,10 @@ export const DiffViewer = ({
               return (
                 <div key={lineKey}>
                   {/* code line */}
-                  <div
-                    className={`group/line flex font-mono text-[12.5px] leading-[1.75] ${bgClass}`}
-                  >
+                  <div className={`group/line flex font-mono text-xs leading-[1.75] ${bgClass}`}>
                     <div className="relative flex w-8 shrink-0 items-center justify-center">
                       <span
-                        className={`text-center text-[12.5px] transition-opacity select-none group-hover/line:opacity-0 ${prefixColorClass}`}
+                        className={`text-center text-xs transition-opacity select-none group-hover/line:opacity-0 ${prefixColorClass}`}
                       >
                         {prefix}
                       </span>
@@ -201,7 +199,7 @@ export const DiffViewer = ({
                   {isFormOpen && (
                     <div className="border-line border-ob-accent/50 border-l-2 px-4 py-3">
                       <textarea
-                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted w-full resize-y rounded-(--r-8) border p-2.5 font-mono text-[12.5px] leading-[1.6] outline-none"
+                        className="border-line focus:border-ob-accent/50 bg-bg-elev text-fg-2 placeholder:text-fg-muted w-full resize-y rounded-(--r-8) border p-2.5 font-mono text-xs leading-[1.6] outline-none"
                         placeholder={dict.commentPlaceholder}
                         value={inputText}
                         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -223,7 +221,7 @@ export const DiffViewer = ({
                             setOpenFormKey(null)
                             setInputText("")
                           }}
-                          className="text-fg-muted hover:text-fg-2 px-3 py-1.5 font-mono text-[12px] transition-colors duration-(--d-fast) ease-(--ease)"
+                          className="text-fg-muted hover:text-fg-2 px-3 py-1.5 font-mono text-xs transition-colors duration-(--d-fast) ease-(--ease)"
                         >
                           {dict.cancelComment}
                         </button>
@@ -231,7 +229,7 @@ export const DiffViewer = ({
                           type="button"
                           onClick={() => handleAddComment(file.filename, lineIndex)}
                           disabled={!inputText.trim()}
-                          className="bg-ob-accent text-accent-ink rounded-(--r-8) px-3 py-1.5 font-mono text-[12px] font-medium transition-opacity disabled:opacity-40"
+                          className="bg-ob-accent text-accent-ink rounded-(--r-8) px-3 py-1.5 font-mono text-xs font-medium transition-opacity disabled:opacity-40"
                         >
                           {dict.addComment}
                         </button>

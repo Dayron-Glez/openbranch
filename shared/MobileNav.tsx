@@ -26,7 +26,7 @@ type MobileNavProps = {
 }
 
 const navLinkClass = (active: boolean): string =>
-  `text-[15px] transition-colors duration-(--d-fast) ease-(--ease) ${
+  `text-base transition-colors duration-(--d-fast) ease-(--ease) ${
     active ? "text-fg font-medium" : "text-fg-muted hover:text-fg-2"
   }`
 
@@ -66,7 +66,7 @@ export const MobileNav = ({
         className="bg-bg-card border-line flex w-[280px] flex-col gap-6 sm:max-w-sm"
       >
         <SheetHeader className="p-0">
-          <SheetTitle className="text-fg-muted font-mono text-[11px] font-medium tracking-[0.1em] uppercase">
+          <SheetTitle className="text-fg-muted text-2xs font-mono font-medium tracking-[0.1em] uppercase">
             {dict.menuTitle}
           </SheetTitle>
         </SheetHeader>
@@ -82,7 +82,7 @@ export const MobileNav = ({
               alt={username}
               className="size-8 rounded-full object-cover ring-1 ring-white/10"
             />
-            <span className="text-fg text-[14px] font-medium">{username}</span>
+            <span className="text-fg text-sm font-medium">{username}</span>
           </Link>
         )}
 
@@ -118,7 +118,7 @@ export const MobileNav = ({
             close()
             setOpenSearch(true)
           }}
-          className="border-line bg-bg-elev text-fg-muted inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3 text-[13px] [&_svg]:size-3.5 [&_svg]:shrink-0"
+          className="border-line bg-bg-elev text-fg-muted inline-flex h-9 items-center gap-2 rounded-(--r-8) border px-3 text-sm [&_svg]:size-3.5 [&_svg]:shrink-0"
         >
           <IconSearch />
           <span className="min-w-0 flex-1 truncate text-left">{navDict.searchPlaceholder}</span>
@@ -130,14 +130,14 @@ export const MobileNav = ({
           <SignOutButton
             dict={authDict}
             redirectTo={localizedHref(lang, "/playground")}
-            className="text-fg-muted hover:text-danger self-start text-[15px] transition-colors duration-(--d-fast) ease-(--ease)"
+            className="text-fg-muted hover:text-danger self-start text-base transition-colors duration-(--d-fast) ease-(--ease)"
           />
         )}
         {signedIn === false && (
           <Link
             href={localizedHref(lang, `/login?next=${encodeURIComponent(pathname)}`)}
             onClick={close}
-            className="bg-ob-accent text-accent-ink inline-flex h-10 items-center justify-center gap-2 rounded-(--r-8) text-[14px] font-medium no-underline [&_svg]:size-[15px]"
+            className="bg-ob-accent text-accent-ink inline-flex h-10 items-center justify-center gap-2 rounded-(--r-8) text-sm font-medium no-underline [&_svg]:size-[15px]"
           >
             <IconGithub />
             {authDict.eyebrow}

@@ -14,7 +14,7 @@ type MergeEditorToolbarProps = {
 }
 
 const actionClass =
-  "text-fg-muted hover:text-fg-2 font-mono text-[11.5px] transition-colors duration-(--d-fast) ease-(--ease)"
+  "text-fg-muted hover:text-fg-2 font-mono text-2xs transition-colors duration-(--d-fast) ease-(--ease)"
 
 export const MergeEditorToolbar = ({
   showSolution,
@@ -34,7 +34,7 @@ export const MergeEditorToolbar = ({
       }`}
     >
       <div className="flex items-center gap-2.5">
-        <span className="text-fg-2 font-mono text-[12px]">{editableFile}</span>
+        <span className="text-fg-2 font-mono text-xs">{editableFile}</span>
         {showSolution && <DiffChip />}
       </div>
 
@@ -65,7 +65,7 @@ export const MergeEditorToolbar = ({
                 <button
                   type="button"
                   onClick={onRun}
-                  className="border-line bg-bg-card hover:border-line-2 text-fg-2 flex items-center gap-1.5 rounded border px-2 py-1 font-mono text-[11px] transition-colors duration-(--d-fast) ease-(--ease)"
+                  className="border-line bg-bg-card hover:border-line-2 text-fg-2 text-2xs flex items-center gap-1.5 rounded border px-2 py-1 font-mono transition-colors duration-(--d-fast) ease-(--ease)"
                 >
                   {dict.active.run}
                   <span className="text-fg-faint">{isMac() ? "⌘↵" : "Ctrl↵"}</span>

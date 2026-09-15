@@ -370,32 +370,32 @@ export default async function ResultPage({ params }: ResultPageProps) {
             </span>
           </h1>
 
-          <p className="text-fg-2 mx-auto mb-8 max-w-[500px] text-[16px] leading-[1.6]">
+          <p className="text-fg-2 mx-auto mb-8 max-w-[500px] text-base leading-[1.6]">
             {dict.result.body}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="bg-ob-accent/[0.12] border-ob-accent/40 text-ob-accent inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
+            <span className="bg-ob-accent/[0.12] border-ob-accent/40 text-ob-accent inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs">
               <CheckIcon />
               {dict.result.statCompleted}
             </span>
 
             {elapsedDisplay !== null && (
-              <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
+              <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs">
                 <ClockIcon />
                 {elapsedDisplay} {dict.result.statTimeTaken}
               </span>
             )}
 
             {challengeBranch !== null && (
-              <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
+              <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs">
                 <BranchIcon />
                 <code className="font-mono">{challengeBranch}</code>
                 {dict.result.statChallengeBranch}
               </span>
             )}
 
-            <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[12px]">
+            <span className="bg-bg-card border-line text-fg-2 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-xs">
               <TrackIcon />
               {dict.category[page.data.category]} {dict.result.trackSuffix}
             </span>
@@ -413,7 +413,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             {(buildsOnChallenge ?? newTrackChallenge) !== null && (
               <Link
                 href={(buildsOnChallenge ?? newTrackChallenge)!.url}
-                className="bg-ob-accent text-accent-ink inline-flex h-11 items-center gap-2 rounded-(--r-8) px-5 text-[14.5px] font-medium transition-[filter] hover:brightness-105"
+                className="bg-ob-accent text-accent-ink inline-flex h-11 items-center gap-2 rounded-(--r-8) px-5 text-sm font-medium transition-[filter] hover:brightness-105"
               >
                 {dict.result.nextChallengeCta}
                 <ArrowRightIcon />
@@ -421,7 +421,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             )}
             <Link
               href={playgroundPath}
-              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg inline-flex h-11 items-center rounded-(--r-8) border px-5 text-[14.5px] font-medium transition-colors duration-(--d-fast) ease-(--ease)"
+              className="bg-bg-card border-line hover:bg-bg-elev text-fg-2 hover:text-fg inline-flex h-11 items-center rounded-(--r-8) border px-5 text-sm font-medium transition-colors duration-(--d-fast) ease-(--ease)"
             >
               {dict.result.backToHub}
             </Link>
@@ -436,8 +436,8 @@ export default async function ResultPage({ params }: ResultPageProps) {
               <BadgeStarIcon />
               <div className="flex flex-col gap-1">
                 <Eyebrow>{dict.result.badgeEarnedLabel}</Eyebrow>
-                <p className="text-fg text-[14.5px] font-medium">{badgeInfo.name}</p>
-                <p className="text-fg-2 text-[13px]">{badgeInfo.description}</p>
+                <p className="text-fg text-sm font-medium">{badgeInfo.name}</p>
+                <p className="text-fg-2 text-sm">{badgeInfo.description}</p>
               </div>
             </div>
           )}
@@ -447,18 +447,16 @@ export default async function ResultPage({ params }: ResultPageProps) {
               <ChartIcon />
             </div>
             <div>
-              <p className="text-fg mb-1 text-[15px] font-medium">
+              <p className="text-fg mb-1 text-base font-medium">
                 {dict.result.detailedScoringHeading}
               </p>
-              <p className="text-fg-2 text-[13.5px] leading-[1.6]">
-                {dict.result.detailedScoringBody}
-              </p>
+              <p className="text-fg-2 text-sm leading-[1.6]">{dict.result.detailedScoringBody}</p>
             </div>
           </div>
 
           {(buildsOnChallenge !== null || newTrackChallenge !== null) && (
             <div>
-              <p className="text-fg-muted mt-4 mb-4 font-mono text-[11px] tracking-[0.1em] uppercase">
+              <p className="text-fg-muted text-2xs mt-4 mb-4 font-mono tracking-[0.1em] uppercase">
                 {dict.result.keepGoing}
               </p>
               <div className="grid grid-cols-2 gap-4 max-[600px]:grid-cols-1">
@@ -471,22 +469,22 @@ export default async function ResultPage({ params }: ResultPageProps) {
                       <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border [&_svg]:size-[18px]">
                         {getChallengeIcon(buildsOnChallenge.data.icon)}
                       </div>
-                      <span className="bg-bg-elev border-line text-fg-muted shrink-0 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px]">
+                      <span className="bg-bg-elev border-line text-fg-muted text-2xs shrink-0 rounded-full border px-2.5 py-0.5 font-mono">
                         {dict.result.buildsOnThis}
                       </span>
                     </div>
-                    <p className="text-fg mb-1.5 text-[15.5px] leading-[1.3] font-medium">
+                    <p className="text-fg mb-1.5 text-base leading-[1.3] font-medium">
                       {buildsOnChallenge.data.title}
                     </p>
-                    <p className="text-fg-2 mb-5 flex-1 text-[13px] leading-[1.55]">
+                    <p className="text-fg-2 mb-5 flex-1 text-sm leading-[1.55]">
                       {buildsOnChallenge.data.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-ob-accent flex items-center gap-2 font-mono text-[12px]">
+                      <span className="text-ob-accent flex items-center gap-2 font-mono text-xs">
                         <DiffBars difficulty={buildsOnChallenge.data.difficulty} />
                         {dict.difficulty[buildsOnChallenge.data.difficulty]}
                       </span>
-                      <span className="text-fg-muted flex items-center gap-1 font-mono text-[12px]">
+                      <span className="text-fg-muted flex items-center gap-1 font-mono text-xs">
                         <ClockIcon />
                         {buildsOnChallenge.data.estimated_minutes}
                         {dict.time.minutes}
@@ -504,22 +502,22 @@ export default async function ResultPage({ params }: ResultPageProps) {
                       <div className="bg-bg-elev border-line [&_svg]:text-fg-muted flex size-9 shrink-0 items-center justify-center rounded-(--r-8) border [&_svg]:size-[18px]">
                         {getChallengeIcon(newTrackChallenge.data.icon)}
                       </div>
-                      <span className="bg-bg-elev border-line text-fg-muted shrink-0 rounded-full border px-2.5 py-0.5 font-mono text-[10.5px]">
+                      <span className="bg-bg-elev border-line text-fg-muted text-2xs shrink-0 rounded-full border px-2.5 py-0.5 font-mono">
                         {dict.result.newTrack}
                       </span>
                     </div>
-                    <p className="text-fg mb-1.5 text-[15.5px] leading-[1.3] font-medium">
+                    <p className="text-fg mb-1.5 text-base leading-[1.3] font-medium">
                       {newTrackChallenge.data.title}
                     </p>
-                    <p className="text-fg-2 mb-5 flex-1 text-[13px] leading-[1.55]">
+                    <p className="text-fg-2 mb-5 flex-1 text-sm leading-[1.55]">
                       {newTrackChallenge.data.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-ob-accent flex items-center gap-2 font-mono text-[12px]">
+                      <span className="text-ob-accent flex items-center gap-2 font-mono text-xs">
                         <DiffBars difficulty={newTrackChallenge.data.difficulty} />
                         {dict.difficulty[newTrackChallenge.data.difficulty]}
                       </span>
-                      <span className="text-fg-muted flex items-center gap-1 font-mono text-[12px]">
+                      <span className="text-fg-muted flex items-center gap-1 font-mono text-xs">
                         <ClockIcon />
                         {newTrackChallenge.data.estimated_minutes}
                         {dict.time.minutes}
@@ -534,7 +532,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
           <div className="mt-4 text-center">
             <Link
               href={playgroundPath}
-              className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-2 font-mono text-[13px] transition-colors duration-(--d-fast) ease-(--ease)"
+              className="text-fg-muted hover:text-fg-2 inline-flex items-center gap-2 font-mono text-sm transition-colors duration-(--d-fast) ease-(--ease)"
             >
               <ArrowLeftIcon />
               {dict.result.allChallenges}

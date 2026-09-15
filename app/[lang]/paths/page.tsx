@@ -43,13 +43,13 @@ export default async function PathsIndexPage({ params }: Readonly<PageProps<"/[l
 
   return (
     <PageShell className="py-14">
-      <p className="text-fg-muted font-mono text-[11px] tracking-[0.08em] uppercase">
+      <p className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
         {dict.indexEyebrow}
       </p>
       <h1 className="text-fg mt-2 mb-4 text-[38px] leading-[1.08] font-medium tracking-[-0.025em] text-balance max-sm:text-[28px]">
         {dict.indexHeading}
       </h1>
-      <p className="text-fg-2 mb-10 max-w-[62ch] text-[16px] leading-[1.6]">{dict.indexIntro}</p>
+      <p className="text-fg-2 mb-10 max-w-[62ch] text-base leading-[1.6]">{dict.indexIntro}</p>
 
       <div className={PATH_CARD_GRID}>
         {items.map((item) => (

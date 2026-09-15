@@ -91,13 +91,13 @@ export const BadgesSection = ({
                   BADGE_ICONS[key]
                 )}
               </span>
-              <span className="font-mono text-[11px]">{dict[key].name}</span>
+              <span className="text-2xs font-mono">{dict[key].name}</span>
             </div>
           )
         })}
       </div>
       {hasLocked && showLockMessage && (
-        <p className="text-fg-muted font-mono text-[12px]">{dict.lockMessage}</p>
+        <p className="text-fg-muted font-mono text-xs">{dict.lockMessage}</p>
       )}
     </div>
   )

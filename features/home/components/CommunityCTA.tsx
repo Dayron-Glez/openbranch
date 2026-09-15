@@ -35,13 +35,13 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
             "radial-gradient(ellipse 100% 80% at 50% 0%, rgba(94,227,154,.12), transparent 60%), var(--color-bg-card)",
         }}
       >
-        <span className="text-ob-accent relative mb-3.5 inline-block font-mono text-[11px] tracking-[0.08em] uppercase">
+        <span className="text-ob-accent text-2xs relative mb-3.5 inline-block font-mono tracking-[0.08em] uppercase">
           {dict.eyebrow}
         </span>
         <h3 className="max-wide:text-[28px] relative mx-auto mb-4 max-w-[22ch] text-[38px] leading-[1.1] font-medium tracking-normal text-balance">
           {dict.title}
         </h3>
-        <p className="text-fg-2 relative mx-auto mb-8 max-w-[56ch] text-[15.5px] leading-[1.55]">
+        <p className="text-fg-2 relative mx-auto mb-8 max-w-[56ch] text-base leading-[1.55]">
           {dict.body}
         </p>
         <div className="relative flex flex-wrap justify-center gap-2.5">
@@ -63,7 +63,7 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
         {(avatars.length > 0 || count !== null) && (
           <div className="relative mt-10 flex flex-col items-center gap-3.5">
             {count !== null && (
-              <span className="text-fg-muted font-mono text-[11px] tracking-[0.06em] uppercase">
+              <span className="text-fg-muted text-2xs font-mono tracking-[0.06em] uppercase">
                 {count} {dict.contributors}
               </span>
             )}
@@ -75,7 +75,7 @@ export function CommunityCTA({ dict }: CommunityCTAProps) {
                     className={`border-line-2 outline-bg-card size-8 border outline-2 ${index === 0 ? "ml-0" : "-ml-2"}`}
                   >
                     <AvatarImage src={contributor.avatarUrl} alt={contributor.login} />
-                    <AvatarFallback className="bg-bg-elev text-fg-2 font-mono text-[11px]">
+                    <AvatarFallback className="bg-bg-elev text-fg-2 text-2xs font-mono">
                       {contributor.login.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>

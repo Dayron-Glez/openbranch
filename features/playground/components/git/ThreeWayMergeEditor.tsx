@@ -368,7 +368,7 @@ const PinButton = ({ pin, side, active, onToggle }: Readonly<PinButtonProps>) =>
       title={actionLabel}
       aria-label={actionLabel}
       className={cn(
-        "absolute left-1/2 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[5px] border text-[11px] shadow-sm transition-colors",
+        "text-2xs absolute left-1/2 flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[5px] border shadow-sm transition-colors",
         stateClass
       )}
     >

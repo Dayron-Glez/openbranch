@@ -16,7 +16,7 @@ export const Eyebrow = ({
   readonly children: ReactNode
   readonly className?: string
 }): ReactNode => (
-  <p className={cn("text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase", className)}>
+  <p className={cn("text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase", className)}>
     {children}
   </p>
 )

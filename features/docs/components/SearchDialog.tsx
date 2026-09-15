@@ -84,7 +84,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
     if (searchLinks.length > 0) {
       docsContent = (
         <section>
-          <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
+          <p className="text-fd-muted-foreground text-3xs px-4 pt-2 pb-1 font-semibold tracking-wider uppercase">
             {t.suggestions}
           </p>
           {searchLinks.map(([label, href, Icon]) => (
@@ -215,7 +215,7 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
           {(filteredChallenges.length > 0 || (!isEmpty && filteredChallenges.length === 0)) && (
             <section>
               {showDivider && <div className="border-fd-border mx-4 my-1.5 border-t" />}
-              <p className="text-fd-muted-foreground px-4 pt-2 pb-1 text-[10px] font-semibold tracking-wider uppercase">
+              <p className="text-fd-muted-foreground text-3xs px-4 pt-2 pb-1 font-semibold tracking-wider uppercase">
                 {t.challenges}
               </p>
               {challengesContent}
@@ -236,11 +236,8 @@ export function CustomSearchDialog({ open, onOpenChange }: Readonly<SharedProps>
               ["Esc", t.close],
             ] as const
           ).map(([key, label]) => (
-            <span
-              key={key}
-              className="text-fd-muted-foreground flex items-center gap-1.5 text-[11px]"
-            >
-              <Kbd className="border-fd-border bg-fd-background font-mono text-[10px]">{key}</Kbd>
+            <span key={key} className="text-fd-muted-foreground text-2xs flex items-center gap-1.5">
+              <Kbd className="border-fd-border bg-fd-background text-3xs font-mono">{key}</Kbd>
               {label}
             </span>
           ))}

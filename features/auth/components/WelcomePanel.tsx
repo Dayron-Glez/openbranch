@@ -32,30 +32,30 @@ export const WelcomePanel = ({
           <h1 className="text-fg text-[26px] leading-[1.2] font-light tracking-[-0.015em]">
             {dict.welcomeTitle} <span className="text-fg font-mono text-[22px]">@{username}</span>
           </h1>
-          <p className="text-fg-2 text-[14px] leading-[1.6] text-pretty">{dict.welcomeLead}</p>
+          <p className="text-fg-2 text-sm leading-[1.6] text-pretty">{dict.welcomeLead}</p>
         </div>
 
         <ul className="flex w-full list-none flex-col gap-2.5 p-0 text-left">
-          <li className="text-fg-2 flex items-center gap-2.5 text-[13.5px]">
+          <li className="text-fg-2 flex items-center gap-2.5 text-sm">
             <IconCheck className="text-ob-accent size-4 shrink-0" />
             {dict.welcomePointProgress}
           </li>
-          <li className="text-fg-2 flex items-center gap-2.5 text-[13.5px]">
+          <li className="text-fg-2 flex items-center gap-2.5 text-sm">
             <IconCheck className="text-ob-accent size-4 shrink-0" />
             {dict.welcomePointBoard}
           </li>
-          <li className="text-fg-2 flex items-center gap-2.5 text-[13.5px]">
+          <li className="text-fg-2 flex items-center gap-2.5 text-sm">
             <IconCheck className="text-ob-accent size-4 shrink-0" />
             <span>
               {dict.welcomePointProfile}{" "}
-              <Link href={profileHref} className="text-fg font-mono text-[12.5px] hover:underline">
+              <Link href={profileHref} className="text-fg font-mono text-xs hover:underline">
                 {profileHref}
               </Link>
             </span>
           </li>
         </ul>
 
-        <Button asChild variant="accent" size="lg" className="w-full px-5 text-[14px]">
+        <Button asChild variant="accent" size="lg" className="w-full px-5 text-sm">
           <Link href={continueHref}>{dict.welcomeCta}</Link>
         </Button>
       </div>

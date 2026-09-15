@@ -70,19 +70,19 @@ export const PrPreviewCard = ({ data }: PrPreviewCardProps): ReactNode => (
     {/* header row */}
     <div className="bg-bg-elev border-line flex items-center justify-between gap-3 border-b px-4 py-[13px]">
       <div className="flex min-w-0 items-center gap-3">
-        <span className="border-accent-ring bg-accent-soft text-ob-accent inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-[3px] font-mono text-[11px]">
+        <span className="border-accent-ring bg-accent-soft text-ob-accent text-2xs inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-[3px] font-mono">
           <IconPR size={12} />#{data.number} {data.status}
         </span>
-        <span className="text-fg-2 truncate font-mono text-[12.5px]">{data.title}</span>
+        <span className="text-fg-2 truncate font-mono text-xs">{data.title}</span>
       </div>
-      <span className="text-fg-muted hidden shrink-0 items-center gap-1.5 font-mono text-[11.5px] sm:inline-flex">
+      <span className="text-fg-muted text-2xs hidden shrink-0 items-center gap-1.5 font-mono sm:inline-flex">
         <IconBranch size={12} />
         {data.branch} → {data.base}
       </span>
     </div>
 
     {/* stats row */}
-    <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-[13px] font-mono text-[12px]">
+    <div className="text-fg-muted flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-[13px] font-mono text-xs">
       <span className="inline-flex items-center gap-1.5">
         <FileIcon />
         {data.files} files

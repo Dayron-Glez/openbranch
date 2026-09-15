@@ -195,7 +195,7 @@ export const FilterBar = ({
             <Button
               variant="ghost"
               size="sm"
-              className={`text-fg-muted gap-1.5 font-mono text-[12px] focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
+              className={`text-fg-muted gap-1.5 font-mono text-xs focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -237,7 +237,7 @@ export const FilterBar = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleDirToggle}
-                className={`text-fg-muted w-7 px-0 font-mono text-[13px] focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
+                className={`text-fg-muted w-7 px-0 font-mono text-sm focus-visible:ring-0 focus-visible:ring-offset-0 ${chipClass}`}
                 aria-label={activeDir === "asc" ? sortDict.sortDesc : sortDict.sortAsc}
               >
                 {activeDir === "asc" ? "↑" : "↓"}
@@ -275,12 +275,12 @@ export const FilterBar = ({
               <TabsTrigger
                 key={key}
                 value={key}
-                className="text-fg-2 data-[state=active]:text-ob-accent data-[state=inactive]:hover:text-fg relative z-10 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) bg-transparent px-2.5 py-1.5 text-[12.5px] shadow-none data-[state=active]:shadow-none [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
+                className="text-fg-2 data-[state=active]:text-ob-accent data-[state=inactive]:hover:text-fg relative z-10 flex shrink-0 items-baseline gap-1.5 rounded-(--r-8) bg-transparent px-2.5 py-1.5 text-xs shadow-none data-[state=active]:shadow-none [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:self-center"
               >
                 <FilterDot colorToken={colorToken} active={key === value} />
                 {icon}
                 {label}
-                <span className="text-fg-muted font-mono text-[10px]">{count}</span>
+                <span className="text-fg-muted text-3xs font-mono">{count}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -297,7 +297,7 @@ export const FilterBar = ({
             <Button
               variant="ghost"
               size="sm"
-              className="border-line-2 bg-bg-elev text-fg-2 min-w-0 flex-1 justify-start gap-1.5 font-mono text-[12.5px]"
+              className="border-line-2 bg-bg-elev text-fg-2 min-w-0 flex-1 justify-start gap-1.5 font-mono text-xs"
             >
               <FilterDot colorToken={activeOption.colorToken} active={false} />
               {activeOption.icon}
@@ -313,7 +313,7 @@ export const FilterBar = ({
                     <FilterDot colorToken={colorToken} active={key === value} />
                     {icon}
                     <span className="min-w-0 truncate">{label}</span>
-                    <span className="text-fg-muted font-mono text-[10px]">{count}</span>
+                    <span className="text-fg-muted text-3xs font-mono">{count}</span>
                   </DropdownMenuRadioItem>
                 </Fragment>
               ))}
