@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { LogoMark } from "@/shared/LogoMark"
 import { IconCheck } from "@/icons"
 import type { AuthDictionary } from "@/lib/dictionaries/auth"
+import { AuthPanel } from "@/features/auth/components/AuthPanel"
 
 /**
  * Shown once, on the request that created the account. Returning users keep
@@ -25,7 +26,7 @@ export const WelcomePanel = ({
 }: WelcomePanelProps): ReactElement => (
   <div className="max-page:p-6 max-tablet:p-0 flex items-center justify-center p-10">
     <div className="flex w-[464px] max-w-full flex-col">
-      <div className="auth-rise bg-bg-card border-line max-tablet:gap-6 max-tablet:p-6 flex flex-col items-center gap-7 rounded-(--r-16) border p-9 text-center shadow-(--sh-3)">
+      <AuthPanel centered>
         <LogoMark size={44} />
 
         <div className="flex flex-col gap-2.5">
@@ -58,7 +59,7 @@ export const WelcomePanel = ({
         <Button asChild variant="accent" size="lg" className="w-full px-5 text-sm">
           <Link href={continueHref}>{dict.welcomeCta}</Link>
         </Button>
-      </div>
+      </AuthPanel>
     </div>
   </div>
 )
