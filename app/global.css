@@ -44,27 +44,30 @@
   --container-wide: 82.5rem; /* 1320px — challenge workspace */
 }
 
-/* Fumadocs HSL bridge -> Tailwind color utilities */
+/* The shadcn vocabulary, aliased onto the landing palette below rather than
+   carrying a second set of HSL triplets of its own. The vendored primitives in
+   components/ui/ keep their own class names — so they stay re-syncable with
+   upstream — but resolve to the same colours as the rest of the site. */
 @theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-fg);
+  --color-card: var(--color-bg-card);
+  --color-card-foreground: var(--color-fg);
+  --color-popover: var(--color-bg-elev);
+  --color-popover-foreground: var(--color-fg);
+  --color-primary: var(--color-ob-accent);
+  --color-primary-foreground: var(--color-accent-ink);
+  --color-secondary: var(--color-bg-elev);
+  --color-secondary-foreground: var(--color-fg-2);
+  --color-muted: var(--color-bg-hover);
+  --color-muted-foreground: var(--color-fg-muted);
+  --color-accent: var(--color-ob-accent);
+  --color-accent-foreground: var(--color-accent-ink);
+  --color-destructive: var(--color-danger);
+  --color-destructive-foreground: var(--color-fg);
+  --color-border: var(--color-line);
+  --color-input: var(--color-line);
+  --color-ring: var(--color-ob-accent);
 }
 
 /* openbranch landing tokens */
@@ -131,26 +134,6 @@
 
 @layer base {
   :root {
-    --background: 45 33% 98%;
-    --foreground: 222 14% 6%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 14% 6%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 14% 6%;
-    --primary: 140 45% 38%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 45 27% 94%;
-    --secondary-foreground: 222 14% 6%;
-    --muted: 45 27% 94%;
-    --muted-foreground: 218 6% 45%;
-    --accent: 140 45% 38%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 44 19% 89%;
-    --input: 44 19% 89%;
-    --ring: 140 45% 38%;
-    --radius: 0.625rem;
     --fg: var(--color-fg);
     --ob-accent: var(--color-ob-accent);
     --r-6: 6px;
@@ -166,28 +149,6 @@
     --d-fast: 120ms;
     --d-base: 180ms;
     --d-slow: 260ms;
-  }
-
-  .dark {
-    --background: 222 15% 6%;
-    --foreground: 216 11% 94%;
-    --card: 222 14% 9%;
-    --card-foreground: 216 11% 94%;
-    --popover: 222 13% 8%;
-    --popover-foreground: 216 11% 94%;
-    --primary: 140 63% 57%;
-    --primary-foreground: 222 15% 6%;
-    --secondary: 222 13% 8%;
-    --secondary-foreground: 216 10% 75%;
-    --muted: 220 12% 10%;
-    --muted-foreground: 218 6% 47%;
-    --accent: 140 63% 57%;
-    --accent-foreground: 222 15% 6%;
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 220 12% 15%;
-    --input: 220 12% 15%;
-    --ring: 140 63% 57%;
   }
 
   /* playground track identity — see specs/color-tokens-badges.md */
