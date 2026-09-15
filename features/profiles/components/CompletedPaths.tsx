@@ -7,7 +7,7 @@ import {
 } from "@/features/paths/components/PathCard"
 import { IconRoute } from "@/icons"
 import type { ProfileDict } from "@/lib/dictionaries/profile"
-import { SectionLabel } from "./SectionLabel"
+import { SectionLabel } from "@/shared/SectionLabel"
 import { EmptySection } from "./EmptySection"
 
 export const CompletedPaths = ({

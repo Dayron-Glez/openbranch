@@ -1,4 +1,5 @@
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type GateRowProps = {
   label: string
@@ -54,9 +55,7 @@ export const MergeGatesPanel = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-        {dict.detail.metaValidation}
-      </p>
+      <Eyebrow>{dict.detail.metaValidation}</Eyebrow>
       <div className="border-line bg-bg-elev flex flex-col gap-2.5 rounded-(--r-8) border p-3">
         <GateRow
           label={dict.active.conflictsLabel}

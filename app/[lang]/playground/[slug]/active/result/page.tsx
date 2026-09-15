@@ -24,6 +24,7 @@ import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { LogoMark } from "@/shared/LogoMark"
 import { pageShellClass } from "@/shared/PageShell"
 import { cn } from "@/lib/utils"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type ResultPageProps = {
   readonly params: Promise<{ readonly lang: string; readonly slug: string }>
@@ -434,9 +435,7 @@ export default async function ResultPage({ params }: ResultPageProps) {
             <div className="bg-bg-card border-line flex items-start gap-3 rounded-(--r-12) border p-4">
               <BadgeStarIcon />
               <div className="flex flex-col gap-1">
-                <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-                  {dict.result.badgeEarnedLabel}
-                </p>
+                <Eyebrow>{dict.result.badgeEarnedLabel}</Eyebrow>
                 <p className="text-fg text-[14.5px] font-medium">{badgeInfo.name}</p>
                 <p className="text-fg-2 text-[13px]">{badgeInfo.description}</p>
               </div>

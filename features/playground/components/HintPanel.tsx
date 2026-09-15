@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type HintPanelProps = {
   readonly hints: readonly string[]
@@ -23,9 +24,7 @@ export const HintPanel = ({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-          {hintsLabel}
-        </p>
+        <Eyebrow>{hintsLabel}</Eyebrow>
         <span className="text-fg-faint font-mono text-[10.5px]">
           {revealed}/{hints.length}
         </span>

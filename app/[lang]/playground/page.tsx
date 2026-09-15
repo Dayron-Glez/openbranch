@@ -31,6 +31,7 @@ import { loadPathProgress } from "@/features/paths/server/path-progress"
 import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
 import { PageShell } from "@/shared/PageShell"
+import { SectionLabel } from "@/shared/SectionLabel"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -274,9 +275,7 @@ export default async function PlaygroundPage({
             if (categoryChallenges.length === 0) return null
             return (
               <div key={cat}>
-                <div className="text-fg-muted border-line mb-4 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
-                  {dict.category[cat]}
-                </div>
+                <SectionLabel>{dict.category[cat]}</SectionLabel>
                 <div className="max-wide:grid-cols-2 grid grid-cols-3 gap-4 max-sm:grid-cols-1">
                   {categoryChallenges.map(renderChallengeCard)}
                 </div>

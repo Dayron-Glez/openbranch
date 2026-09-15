@@ -18,6 +18,8 @@ import { configureMonaco } from "@/features/playground/components/monacoTheme"
 import { DiffView } from "@/features/playground/components/DiffView"
 import { TestCard, INITIAL_TEST_STATE } from "@/features/playground/components/TestCard"
 import type { TestResult, TestRunState } from "@/features/playground/components/TestCard"
+import { Eyebrow } from "@/shared/Eyebrow"
+import { DiffChip } from "@/features/playground/components/DiffChip"
 
 const AUTOSAVE_DELAY_MS = 800
 const AUTORUN_DELAY_MS = 1500
@@ -327,11 +329,7 @@ export const BugFixChallengeView = ({
             >
               <div className="flex items-center gap-2.5">
                 <span className="text-fg-2 font-mono text-[12px]">{template.editableFile}</span>
-                {showSolution && (
-                  <span className="bg-warn/15 text-warn rounded px-1.5 py-0.5 font-mono text-[10px] tracking-widest uppercase">
-                    diff
-                  </span>
-                )}
+                {showSolution && <DiffChip />}
                 {showSolution && (
                   <div className="flex items-center gap-3">
                     <span className="text-ob-accent flex items-center gap-1.5 font-mono text-[10.5px]">
@@ -428,9 +426,7 @@ export const BugFixChallengeView = ({
 
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-                    {dict.active.testsLabel}
-                  </p>
+                  <Eyebrow>{dict.active.testsLabel}</Eyebrow>
                   <span
                     className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
                   >

@@ -17,6 +17,7 @@ import {
   type BadgeKey,
 } from "@/features/playground/domain/manifest"
 import { BadgeUnlockIcon } from "./badges/BadgeUnlockIcon"
+import { SectionLabel } from "@/shared/SectionLabel"
 
 type BadgesSectionProps = {
   readonly dict: PlaygroundDict["badges"]
@@ -67,12 +68,7 @@ export const BadgesSection = ({
 
   return (
     <div>
-      <div className="text-fg-muted border-line mb-4 flex items-center gap-2.5 border-b pb-2.5 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
-        {dict.heading}
-        {headingNote !== undefined && (
-          <span className="text-fg-faint font-normal tracking-[0.04em]">{headingNote}</span>
-        )}
-      </div>
+      <SectionLabel note={headingNote}>{dict.heading}</SectionLabel>
       <div className="max-wide:grid-cols-4 max-narrow:grid-cols-2 mb-3 grid grid-cols-7 gap-3">
         {BADGE_KEYS.map((key) => {
           const earned = earnedBadges.has(key)

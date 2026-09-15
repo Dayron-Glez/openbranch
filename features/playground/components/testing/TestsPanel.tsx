@@ -2,6 +2,7 @@ import type React from "react"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import { TestCard } from "@/features/playground/components/TestCard"
 import type { TestRunState } from "@/features/playground/components/TestCard"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 type TestsPanelProps = {
   readonly testState: TestRunState
@@ -25,9 +26,7 @@ export const TestsPanel = ({ testState, hasRun, dict }: TestsPanelProps): React.
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="text-fg-muted font-mono text-[10.5px] tracking-[0.08em] uppercase">
-          {dict.active.testsLabel}
-        </p>
+        <Eyebrow>{dict.active.testsLabel}</Eyebrow>
         <span
           className={`font-mono text-[11.5px] font-medium tabular-nums transition-colors ${countClass}`}
         >
