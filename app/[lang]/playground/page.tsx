@@ -32,6 +32,7 @@ import { buildPathCardItems } from "@/features/paths/server/path-cards"
 import { LearningPathsBand } from "@/features/paths/components/LearningPathsBand"
 import { PageShell } from "@/shared/PageShell"
 import { SectionLabel } from "@/shared/SectionLabel"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 const DIFFICULTY_SORT: Record<string, number> = { beginner: 0, moderate: 1, demanding: 2 }
 
@@ -190,9 +191,7 @@ export default async function PlaygroundPage({
         <PlaygroundGridTransition />
       </Suspense>
 
-      <p className="text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase">
-        {dict.hub.eyebrow}
-      </p>
+      <Eyebrow>{dict.hub.eyebrow}</Eyebrow>
       <div className="mb-4.5 flex items-baseline justify-between gap-8 max-sm:flex-col max-sm:items-start max-sm:gap-3">
         <h1 className="max-wide:text-[32px] text-[42px] leading-[1.05] font-medium tracking-normal text-balance">
           {dict.hub.heading} <span className="text-fg-2 font-light">{dict.hub.headingAccent}</span>

@@ -1,22 +1,39 @@
 import type { ReactNode } from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 /**
- * The small monospace label above a panel or a block of detail. Nine copies of
- * this string existed before it was a component; `className` is merged so a
- * caller can add spacing without restating it.
+ * The small monospace label that introduces a panel, a section or a block of
+ * detail. One tracking for the whole role: the app had reached eight values
+ * for what is visually one device.
  *
- * The page-section eyebrow is a different size and tracking and is not covered
- * here yet — see issue #240.
+ * Not covered here, because they are different devices rather than variants:
+ * `SectionLabel` (the bordered divider heading) and the `0.04em` meta labels
+ * on the challenge detail page.
  */
-export const Eyebrow = ({
-  children,
-  className,
-}: {
+const eyebrowVariants = cva("font-mono tracking-[0.08em] uppercase", {
+  variants: {
+    tone: {
+      muted: "text-fg-muted",
+      accent: "text-ob-accent",
+      track: "text-(color:--track)",
+    },
+    size: {
+      sm: "text-2xs",
+      xs: "text-3xs",
+    },
+  },
+  defaultVariants: { tone: "muted", size: "sm" },
+})
+
+type EyebrowProps = VariantProps<typeof eyebrowVariants> & {
   readonly children: ReactNode
   readonly className?: string
-}): ReactNode => (
-  <p className={cn("text-fg-muted text-2xs font-mono tracking-[0.08em] uppercase", className)}>
-    {children}
-  </p>
-)
+  /** Defaults to `p`; pass `span` where the label sits inline in a flex row. */
+  readonly as?: "p" | "span" | "div"
+}
+
+export const Eyebrow = ({ children, className, tone, size, as = "p" }: EyebrowProps): ReactNode => {
+  const Tag = as
+  return <Tag className={cn(eyebrowVariants({ tone, size }), className)}>{children}</Tag>
+}

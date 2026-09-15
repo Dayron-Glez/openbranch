@@ -148,9 +148,9 @@ const PathRecapCard = ({
         className="mb-4 flex items-center gap-2.5 text-inherit no-underline hover:underline"
       >
         <span className="size-2 shrink-0 rounded-full bg-(--track)" />
-        <span className="text-2xs min-w-0 font-mono tracking-[0.1em] text-(color:--track) uppercase">
+        <Eyebrow tone="track" as="span" className="min-w-0">
           {finished ? dict.pathComplete : dict.pathInProgress} · {recap.pathTitle}
-        </span>
+        </Eyebrow>
       </Link>
 
       <p className="text-fg mb-4 text-base font-medium">

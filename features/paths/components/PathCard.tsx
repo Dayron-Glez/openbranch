@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import Link from "next/link"
 import type { TrackColorToken } from "@/features/playground/domain/manifest"
 import { IconBook, IconCheck } from "@/icons"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 /** `done` is `null` when signed out. Guides can be done too — they are read. */
 export type PathCardStep = {
@@ -210,9 +211,9 @@ export const PathCard = ({
           {item.icon}
         </span>
         <div className="min-w-0">
-          <div className="text-fg-muted text-3xs font-mono tracking-[0.08em] uppercase">
+          <Eyebrow size="xs" as="div">
             {item.trackLabel}
-          </div>
+          </Eyebrow>
           <h3 className="text-fg text-base leading-snug font-medium tracking-[-0.005em]">
             {item.title}
           </h3>

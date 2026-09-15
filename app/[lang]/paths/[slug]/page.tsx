@@ -36,6 +36,7 @@ import { createClient } from "@/lib/supabase/server"
 import { IconRoute, IconClock, IconUser } from "@/icons"
 import type { PlaygroundDict } from "@/lib/playground-dictionary"
 import { PageShell } from "@/shared/PageShell"
+import { Eyebrow } from "@/shared/Eyebrow"
 
 export function generateStaticParams(): { lang: string; slug: string }[] {
   // Runs during `next build`, so a broken reference fails there.
@@ -305,9 +306,7 @@ export default async function PathPage({ params }: Readonly<PageProps<"/[lang]/p
       {sections.map((section, index) => (
         <section key={section.id} className={index === 0 ? "" : "mt-10"}>
           <div className="mb-5 flex flex-col gap-2">
-            <p className="text-fg-muted text-2xs font-mono tracking-[0.1em] uppercase">
-              {dict.sectionOf(index + 1, sections.length)}
-            </p>
+            <Eyebrow>{dict.sectionOf(index + 1, sections.length)}</Eyebrow>
             <h2 className="text-fg text-[21px] leading-[1.2] font-semibold tracking-[-0.015em]">
               {section.title}
             </h2>

@@ -66,7 +66,7 @@ export const MobileNav = ({
         className="bg-bg-card border-line flex w-[280px] flex-col gap-6 sm:max-w-sm"
       >
         <SheetHeader className="p-0">
-          <SheetTitle className="text-fg-muted text-2xs font-mono font-medium tracking-[0.1em] uppercase">
+          <SheetTitle className="text-fg-muted text-2xs font-mono font-medium tracking-[0.08em] uppercase">
             {dict.menuTitle}
           </SheetTitle>
         </SheetHeader>
