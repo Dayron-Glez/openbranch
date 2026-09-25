@@ -5,6 +5,9 @@ export const DISCORD_URL = "https://discord.com/channels/1505714245092769864/150
 export const DISCORD_COMMUNITY_URL =
   "https://discord.com/channels/1505714245092769864/1507974664511553608"
 
+/** The line under the name: the title, the card and the card's alt text. */
+export const SITE_TAGLINE = "The open guide to building software the right way"
+
 /**
  * Attribution for the head: `meta[name=author]` sitewide and `article:author`
  * on guides that name no one in their frontmatter.

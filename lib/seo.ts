@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
-import { SITE_URL } from "./constants"
+import { SITE_TAGLINE, SITE_URL } from "./constants"
 import { i18n } from "./i18n"
 import { localizedHref } from "./landing-dictionary"
-import { appName, siteImageRoute } from "./shared"
+import { appName, OG_HEIGHT, OG_WIDTH, siteImageRoute } from "./shared"
 
 /**
  * Absolute URL for a route, in the given locale. Canonical tags and sitemap
@@ -45,6 +45,26 @@ export const docsPath = (slugs: readonly string[] | undefined): string =>
   slugs === undefined || slugs.length === 0 ? "/docs" : `/docs/${slugs.join("/")}`
 
 /**
+ * An `og:image` with its dimensions declared, which is the difference between a
+ * large card and a thumbnail.
+ *
+ * A bare URL leaves a scraper to work the size out by fetching the file, and
+ * the ones that will not wait for that fall back to their small layout —
+ * LinkedIn stored our 1200×630 card as a 160px rendition and upscaled it.
+ * Declaring width and height lets it pick the right format up front.
+ */
+export const ogImage = (
+  url: string,
+  alt: string
+): { url: string; width: number; height: number; alt: string; type: string } => ({
+  url,
+  width: OG_WIDTH,
+  height: OG_HEIGHT,
+  alt,
+  type: "image/png",
+})
+
+/**
  * The canonical, the hreflang set and `og:url` for one route, together.
  *
  * They are three statements of the same fact, and the only way they stay in
@@ -69,7 +89,7 @@ export const seoFor = (
   openGraph: {
     type: "website",
     siteName: appName,
-    images: siteImageRoute,
+    images: ogImage(siteImageRoute, `${appName} — ${SITE_TAGLINE}`),
     url: canonicalUrl(lang, path),
     ...openGraph,
   },
