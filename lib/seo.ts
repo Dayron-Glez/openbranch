@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { SITE_URL } from "./constants"
 import { i18n } from "./i18n"
 import { localizedHref } from "./landing-dictionary"
+import { appName, siteImageRoute } from "./shared"
 
 /**
  * Absolute URL for a route, in the given locale. Canonical tags and sitemap
@@ -51,7 +52,13 @@ export const docsPath = (slugs: readonly string[] | undefined): string =>
  * at different addresses is telling a crawler and a social scraper two
  * different things about where it lives.
  *
- * `openGraph` merges on top, for the pages that also name their own card.
+ * It carries the rest of the card as well, because Next merges metadata
+ * shallowly between segments: a `generateMetadata` that returns `openGraph` at
+ * all discards every field the root layout declared under that key rather than
+ * merging into it. Naming them here is what keeps the site name, the type and
+ * the card from vanishing off any page that states its own `og:url`.
+ *
+ * `openGraph` spreads last, so a page that renders its own card still wins.
  */
 export const seoFor = (
   lang: string,
@@ -59,5 +66,11 @@ export const seoFor = (
   openGraph: NonNullable<Metadata["openGraph"]> = {}
 ): Pick<Metadata, "alternates" | "openGraph"> => ({
   alternates: alternatesFor(lang, path),
-  openGraph: { url: canonicalUrl(lang, path), ...openGraph },
+  openGraph: {
+    type: "website",
+    siteName: appName,
+    images: siteImageRoute,
+    url: canonicalUrl(lang, path),
+    ...openGraph,
+  },
 })
