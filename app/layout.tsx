@@ -3,7 +3,7 @@ import "./animations.css"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
 import { SITE_AUTHOR, SITE_AUTHOR_URL, SITE_URL } from "@/lib/constants"
-import { appName } from "@/lib/shared"
+import { appName, siteImageRoute } from "@/lib/shared"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -17,12 +17,13 @@ export const metadata: Metadata = {
   authors: [{ name: SITE_AUTHOR, url: SITE_AUTHOR_URL }],
   creator: SITE_AUTHOR,
   publisher: SITE_AUTHOR,
-  // No `images` here: `app/opengraph-image.tsx` is the sitewide card, and an
-  // entry in this object would win over it everywhere. Guides and profiles
-  // still override it from their own `generateMetadata`.
+  // The fallback for a route with no `generateMetadata` of its own. Every route
+  // that has one restates all of this through `seoFor`, because a child's
+  // `openGraph` replaces this object outright instead of merging into it.
   openGraph: {
     type: "website",
     siteName: appName,
+    images: siteImageRoute,
     url: SITE_URL,
   },
   twitter: {

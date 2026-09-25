@@ -3,21 +3,22 @@ import { GitGraphLayer, loadOgFonts, OG_HEIGHT, OG_WIDTH } from "@/lib/og-card"
 import { appName } from "@/lib/shared"
 
 /**
- * The sitewide card, inherited by every route that does not generate one of its
- * own — guides and public profiles do, everything else lands here. It replaces
- * a `/logo.svg` fallback that no scraper ever rendered: LinkedIn, X, Slack and
- * Facebook all skip SVG, which is why shares came out with no image at all.
+ * The sitewide card, named by `seoFor` for every route that does not render one
+ * of its own — guides and public profiles do, everything else lands here.
+ *
+ * A route rather than an `opengraph-image.tsx`, and under `/og` rather than
+ * beside it: the proxy matcher excludes that prefix, and an extensionless route
+ * outside it is rewritten into the `[lang]` catch-all and 404s. The two
+ * neighbours here were built this way for the same reason.
  */
-export const alt = "openbranch — The open guide to building software the right way"
-export const size = { width: OG_WIDTH, height: OG_HEIGHT }
-export const contentType = "image/png"
+export const revalidate = false
 
 /** Split by hand: Satori wraps on no width of its own here. */
 const TAGLINE_LINES: readonly string[] = ["The open guide to building", "software the right way"]
 
 const FACETS: readonly string[] = ["guides", "learning paths", "playground"]
 
-export default async function SiteOpenGraphImage(): Promise<ImageResponse> {
+export async function GET(): Promise<ImageResponse> {
   const fonts = await loadOgFonts()
 
   return new ImageResponse(
@@ -146,6 +147,6 @@ export default async function SiteOpenGraphImage(): Promise<ImageResponse> {
         </div>
       </div>
     </div>,
-    { ...size, fonts }
+    { width: OG_WIDTH, height: OG_HEIGHT, fonts }
   )
 }
