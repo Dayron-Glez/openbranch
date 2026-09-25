@@ -6,7 +6,7 @@ import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
-import { alternatesFor } from "@/lib/seo"
+import { seoFor } from "@/lib/seo"
 import { getMDXComponents } from "@/features/docs/components/mdx"
 import { StartChallengeButton } from "@/features/playground/components/StartChallengeButton"
 import { PrPreviewCard } from "@/features/playground/components/PrPreviewCard"
@@ -54,7 +54,7 @@ export async function generateMetadata({
   return {
     title: `${page.data.title} · openbranch`,
     description: page.data.description,
-    alternates: alternatesFor(lang, `/playground/${slug}`),
+    ...seoFor(lang, `/playground/${slug}`),
   }
 }
 

@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { i18n } from "@/lib/i18n"
-import { alternatesFor } from "@/lib/seo"
+import { seoFor } from "@/lib/seo"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
 import { getAllPaths } from "@/features/paths/server/path-catalog"
@@ -23,7 +23,7 @@ export async function generateMetadata({
   return {
     title: `${dict.sectionHeading} · openbranch`,
     description: dict.indexIntro,
-    alternates: alternatesFor(lang, "/paths"),
+    ...seoFor(lang, "/paths"),
   }
 }
 

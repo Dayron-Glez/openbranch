@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import { getPageImage, getPageGitHubUrl, getPageMarkdownUrl, source } from "@/lib/source"
-import { SITE_URL } from "@/lib/constants"
-import { alternatesFor, docsPath } from "@/lib/seo"
+import { SITE_AUTHOR, SITE_URL } from "@/lib/constants"
+import { docsPath, seoFor } from "@/lib/seo"
 import { getReadingTime, formatReadingTime } from "@/lib/reading-time"
 import { SuggestGuideButton } from "@/features/docs/components/SuggestGuideButton"
 import { IconClock } from "@tabler/icons-react"
@@ -166,6 +166,8 @@ export async function generateStaticParams() {
   return source.generateParams()
 }
 
+type PageWithLastModified = { lastModified?: Date }
+
 export async function generateMetadata(
   props: PageProps<"/[lang]/docs/[[...slug]]">
 ): Promise<Metadata> {
@@ -173,12 +175,32 @@ export async function generateMetadata(
   const page = source.getPage(slug, lang)
   if (!page) notFound()
 
+  const image = getPageImage(page).url
+  const authors = page.data.authors ?? [SITE_AUTHOR]
+
+  // Two segments in, and only there, the page is a guide rather than a listing
+  // of them — `article` and its dates would be a lie on `/docs` or a section.
+  const isGuide = (slug?.length ?? 0) >= 2
+  const lastModified = (page.data as PageWithLastModified).lastModified
+
   return {
     title: page.data.title,
     description: page.data.description,
-    alternates: alternatesFor(lang, docsPath(slug)),
-    openGraph: {
-      images: getPageImage(page).url,
-    },
+    authors: authors.map((name) => ({ name })),
+    ...seoFor(
+      lang,
+      docsPath(slug),
+      isGuide
+        ? {
+            type: "article",
+            images: image,
+            authors,
+            // No `publishedTime`: the git history gives the last edit and
+            // nothing records a first publication, and a scraper would read an
+            // invented one as fact.
+            modifiedTime: lastModified?.toISOString(),
+          }
+        : { images: image }
+    ),
   }
 }
