@@ -2,14 +2,15 @@ import "./global.css"
 import "./animations.css"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
-import { SITE_AUTHOR, SITE_AUTHOR_URL, SITE_URL } from "@/lib/constants"
+import { SITE_AUTHOR, SITE_AUTHOR_URL, SITE_TAGLINE, SITE_URL } from "@/lib/constants"
 import { appName, siteImageRoute } from "@/lib/shared"
+import { ogImage } from "@/lib/seo"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     template: "%s — openbranch",
-    default: "openbranch — The open guide to building software the right way",
+    default: `${appName} — ${SITE_TAGLINE}`,
   },
   description:
     "A living guide on best practices, contribution workflows, testing patterns, Git strategies, and lessons learned in real projects.",
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: appName,
-    images: siteImageRoute,
+    images: ogImage(siteImageRoute, `${appName} — ${SITE_TAGLINE}`),
     url: SITE_URL,
   },
   twitter: {

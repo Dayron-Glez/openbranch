@@ -1,12 +1,8 @@
 import fs from "node:fs/promises"
 import path from "node:path"
+import { OG_HEIGHT, OG_WIDTH } from "./shared"
 
-/**
- * The canvas every social card shares. 1200×630 is what LinkedIn, X and Slack
- * all crop against; anything else gets letterboxed by at least one of them.
- */
-export const OG_WIDTH = 1200
-export const OG_HEIGHT = 630
+export { OG_HEIGHT, OG_WIDTH }
 
 const fontDir = path.join(process.cwd(), "assets", "fonts", "og")
 

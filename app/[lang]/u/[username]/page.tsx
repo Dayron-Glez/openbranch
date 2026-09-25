@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { profileImageRoute } from "@/lib/shared"
 import { localizedHref } from "@/lib/landing-dictionary"
-import { seoFor } from "@/lib/seo"
+import { ogImage, seoFor } from "@/lib/seo"
 import { playgroundSource } from "@/lib/playground-source"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { pathsDictionary, resolvePathsLocale } from "@/lib/dictionaries/paths"
@@ -48,7 +48,7 @@ export async function generateMetadata({
     title: dict.metaTitle(username),
     description: dict.metaDescription(username),
     ...seoFor(lang, `/u/${username}`, {
-      images: `${profileImageRoute}/${username}`,
+      images: ogImage(`${profileImageRoute}/${username}`, dict.metaTitle(username)),
     }),
   }
 }

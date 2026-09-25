@@ -13,7 +13,7 @@ import { appName } from "@/lib/shared"
  */
 export const revalidate = false
 
-/** Split by hand: Satori wraps on no width of its own here. */
+/** `SITE_TAGLINE`, broken by hand: Satori wraps on no width of its own here. */
 const TAGLINE_LINES: readonly string[] = ["The open guide to building", "software the right way"]
 
 const FACETS: readonly string[] = ["guides", "learning paths", "playground"]
