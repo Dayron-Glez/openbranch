@@ -5,7 +5,7 @@ import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict, type PlaygroundDict } from "@/lib/playground-dictionary"
 import { playgroundSource } from "@/lib/playground-source"
 import { localizedHref } from "@/lib/landing-dictionary"
-import { alternatesFor } from "@/lib/seo"
+import { seoFor } from "@/lib/seo"
 import { createClient } from "@/lib/supabase/server"
 import { ChallengeCard } from "@/features/playground/components/ChallengeCard"
 import { StartingLine } from "@/features/playground/components/StartingLine"
@@ -88,7 +88,7 @@ export async function generateMetadata({
   return {
     title: dict.meta.title,
     description: dict.meta.description,
-    alternates: alternatesFor(lang, "/playground"),
+    ...seoFor(lang, "/playground"),
   }
 }
 

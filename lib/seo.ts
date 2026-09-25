@@ -31,7 +31,7 @@ export const canonicalUrl = (lang: string, path: string): string => {
  * Safe only while both translations exist for every route — they do, and the
  * pairing is enforced by the content living in `*.es.mdx`/`*.en.mdx` siblings.
  */
-export const alternatesFor = (lang: string, path: string): Metadata["alternates"] => ({
+const alternatesFor = (lang: string, path: string): Metadata["alternates"] => ({
   canonical: canonicalUrl(lang, path),
   languages: {
     ...Object.fromEntries(i18n.languages.map((code) => [code, canonicalUrl(code, path)])),
@@ -42,3 +42,22 @@ export const alternatesFor = (lang: string, path: string): Metadata["alternates"
 /** Route of a docs page from its slug segments; the index page has none. */
 export const docsPath = (slugs: readonly string[] | undefined): string =>
   slugs === undefined || slugs.length === 0 ? "/docs" : `/docs/${slugs.join("/")}`
+
+/**
+ * The canonical, the hreflang set and `og:url` for one route, together.
+ *
+ * They are three statements of the same fact, and the only way they stay in
+ * agreement is by being written once: a page whose `og:url` and canonical point
+ * at different addresses is telling a crawler and a social scraper two
+ * different things about where it lives.
+ *
+ * `openGraph` merges on top, for the pages that also name their own card.
+ */
+export const seoFor = (
+  lang: string,
+  path: string,
+  openGraph: NonNullable<Metadata["openGraph"]> = {}
+): Pick<Metadata, "alternates" | "openGraph"> => ({
+  alternates: alternatesFor(lang, path),
+  openGraph: { url: canonicalUrl(lang, path), ...openGraph },
+})

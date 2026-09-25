@@ -3,7 +3,7 @@ import Link from "next/link"
 import { i18n } from "@/lib/i18n"
 import { getPlaygroundDict } from "@/lib/playground-dictionary"
 import { localizedHref } from "@/lib/landing-dictionary"
-import { alternatesFor } from "@/lib/seo"
+import { seoFor } from "@/lib/seo"
 import { createClient } from "@/lib/supabase/server"
 import {
   LeaderboardTable,
@@ -25,7 +25,7 @@ export async function generateMetadata({
   return {
     title: dict.leaderboard.metaTitle,
     description: dict.leaderboard.metaDescription,
-    alternates: alternatesFor(lang, "/playground/leaderboard"),
+    ...seoFor(lang, "/playground/leaderboard"),
   }
 }
 
